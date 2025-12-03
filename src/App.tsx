@@ -6,6 +6,7 @@ import { Experiments } from "./pages/experiments/Experiments";
 import { VanillaDialog } from "./pages/experiments/VanillaDialog";
 import { Home } from "./pages/home/Home";
 import { FileUpload } from "./pages/experiments/FileUpload";
+import { FormValidation } from "./pages/experiments/FormValidation";
 
 const App: React.FC = () => {
   return (
@@ -21,6 +22,10 @@ const App: React.FC = () => {
             element={<VanillaDialog />}
           />
           <Route path="/experiments/fileUpload" element={<FileUpload />} />
+          <Route
+            path="/experiments/formValidation"
+            element={<FormValidation />}
+          />
         </Routes>
       </BrowserRouter>
     </>
