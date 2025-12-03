@@ -1,0 +1,22 @@
+@import 'tailwindcss';
+/* Fix hover beavior on touchscreen laptops */
+@custom-variant hover (&:hover);
+
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+/* Track */
+::-webkit-scrollbar-track {
+  background: rgba(64, 64, 64, 0);
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
