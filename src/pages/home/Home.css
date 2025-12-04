@@ -1,0 +1,21 @@
+h1 {
+  display: flex;
+  text-wrap: nowrap;
+  justify-content: center;
+  align-items: center;
+  font-size: 12vw;
+  background: url("/public/vite.svg") no-repeat center cover;
+  background-clip: text;
+  color: transparent;
+  animation: scale 3s forwards;
+}
+
+@keyframes scale {
+  from {
+    font-size: 100vw;
+  }
+  to {
+    font-size: 12vw;
+    color: white;
+  }
+}
