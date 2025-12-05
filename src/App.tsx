@@ -7,6 +7,7 @@ import { VanillaDialog } from "./pages/experiments/VanillaDialog";
 import { Home } from "./pages/home/Home";
 import { FileUpload } from "./pages/experiments/FileUpload";
 import { FormValidation } from "./pages/experiments/FormValidation";
+import { MoveLists } from "./pages/experiments/MoveLists";
 
 const App: React.FC = () => {
   return (
@@ -26,6 +27,7 @@ const App: React.FC = () => {
             path="/experiments/formValidation"
             element={<FormValidation />}
           />
+          <Route path="/experiments/moveLists" element={<MoveLists />} />
         </Routes>
       </BrowserRouter>
     </>
