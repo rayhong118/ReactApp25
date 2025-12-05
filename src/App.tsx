@@ -8,6 +8,7 @@ import { Home } from "./pages/home/Home";
 import { FileUpload } from "./pages/experiments/FileUpload";
 import { FormValidation } from "./pages/experiments/FormValidation";
 import { MoveLists } from "./pages/experiments/MoveLists";
+import { StopWatch } from "./pages/experiments/StopWatch";
 
 const App: React.FC = () => {
   return (
@@ -28,6 +29,7 @@ const App: React.FC = () => {
             element={<FormValidation />}
           />
           <Route path="/experiments/moveLists" element={<MoveLists />} />
+          <Route path="/experiments/stopWatch" element={<StopWatch />} />
         </Routes>
       </BrowserRouter>
     </>

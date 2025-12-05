@@ -37,8 +37,11 @@ export const Navigation = () => {
               </button>
             </li>
             <li className="block">
-              <button className="block cursor-pointer hover:bg-gray-100 p-1 rounded-md w-full">
-                Paste
+              <button
+                className="block cursor-pointer hover:bg-gray-100 p-1 rounded-md w-full"
+                onClick={() => navigate("/experiments/stopWatch")}
+              >
+                StopWatch
               </button>
             </li>
           </menu>
