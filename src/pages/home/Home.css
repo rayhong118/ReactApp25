@@ -1,4 +1,4 @@
-h1 {
+#homepage_title {
   display: flex;
   text-wrap: nowrap;
   justify-content: center;

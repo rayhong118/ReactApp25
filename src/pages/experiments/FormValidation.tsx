@@ -66,7 +66,7 @@ export const FormValidation = () => {
             onChange={handleChange}
             required
           />
-          <label className={"block mb-2 mt-4"} htmlFor="phoneNumber">
+          <label className={"block mb-2 mt-4"} htmlFor="date">
             Date:
           </label>
           <input

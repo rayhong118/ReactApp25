@@ -5,7 +5,7 @@ interface IItem {
   isSelected: boolean;
   side: "left" | "right";
 }
-
+// TODO: should use diff
 export const MoveLists = () => {
   const [items, setItems] = useState<IItem[]>([
     { name: "Item 1", isSelected: false, side: "left" },

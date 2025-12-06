@@ -9,6 +9,7 @@ import { FileUpload } from "./pages/experiments/FileUpload";
 import { FormValidation } from "./pages/experiments/FormValidation";
 import { MoveLists } from "./pages/experiments/MoveLists";
 import { StopWatch } from "./pages/experiments/StopWatch";
+import { ImageCarousel } from "./pages/experiments/ImageCarousel";
 
 const App: React.FC = () => {
   return (
@@ -30,6 +31,10 @@ const App: React.FC = () => {
           />
           <Route path="/experiments/moveLists" element={<MoveLists />} />
           <Route path="/experiments/stopWatch" element={<StopWatch />} />
+          <Route
+            path="/experiments/imageCarousels"
+            element={<ImageCarousel />}
+          />
         </Routes>
       </BrowserRouter>
     </>
