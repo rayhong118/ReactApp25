@@ -15,7 +15,6 @@ export const JiZiQi = () => {
   const [currentPlayer, setCurrentPlayer] = React.useState<number>(1); // 1 or 2
 
   const handleCellClick = (rowIndex: number, colIndex: number) => {
-    const currentColor = currentPlayer;
     const currentCell = gridData[rowIndex][colIndex];
     console.log(currentPlayer, rowIndex, colIndex);
     // If cell is already occupied, do nothing
