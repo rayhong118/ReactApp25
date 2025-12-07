@@ -10,14 +10,28 @@ import { FormValidation } from "./pages/experiments/FormValidation";
 import { MoveLists } from "./pages/experiments/MoveLists";
 import { StopWatch } from "./pages/experiments/StopWatch";
 import { ImageCarousel } from "./pages/experiments/ImageCarousel";
+import { AuthPage } from "./pages/auth/Auth";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "./firebase";
+import { useSetCurrentUser } from "./common/utils/AuthenticationAtoms";
+import { useEffect } from "react";
 
 const App: React.FC = () => {
+  const setCurrentUser = useSetCurrentUser();
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setCurrentUser(currentUser);
+    });
+    return () => unsubscribe();
+  }, [setCurrentUser]);
+
   return (
     <>
       <BrowserRouter>
         <Navigation />
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/auth" element={<AuthPage />} />
           <Route path="/about" element={<About />} />
           <Route path="/experiments" element={<Experiments />} />
           <Route

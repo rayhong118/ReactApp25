@@ -41,7 +41,9 @@ export const MoveLists = () => {
     setItems((items) => [...items]);
   };
 
-  const handleCheckboxChange = (e) => {
+  const handleCheckboxChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ): void => {
     console.log(e.target.checked);
     const { value, checked } = e.target;
     // handle checkbox change

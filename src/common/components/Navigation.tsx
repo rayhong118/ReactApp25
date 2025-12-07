@@ -54,6 +54,12 @@ export const Navigation = () => {
             </li>
           </menu>
         </button>
+        <button
+          onClick={() => navigate("/auth")}
+          className="cursor-pointer hover:underline p-2"
+        >
+          Auth
+        </button>
       </nav>
     </div>
   );
