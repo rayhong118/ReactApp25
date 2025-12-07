@@ -3,6 +3,8 @@ import { useGetCurrentUser } from "../../common/utils/AuthenticationAtoms";
 import {
   useFirebaseSignInWithGitHub,
   useFirebaseSignInWithGoogle,
+  useFirebseSignUp,
+  useSignOut,
 } from "../../common/utils/AuthServiceHooks";
 
 type AuthPageType = "signUp" | "signIn" | "resetPassword";
@@ -10,8 +12,14 @@ type AuthPageType = "signUp" | "signIn" | "resetPassword";
 export const AuthPage = () => {
   const currentUser = useGetCurrentUser();
   const [currentPage, setCurrentPage] = useState<AuthPageType>("signUp");
+  const signUp = useFirebseSignUp();
   const signInWithGoogle = useFirebaseSignInWithGoogle();
   const signInWithGithub = useFirebaseSignInWithGitHub();
+  const signOut = useSignOut();
+
+  const handleSignUp = async (email: string, password: string) => {
+    await signUp(email, password);
+  };
 
   // If current user is logged in
   if (currentUser) {
@@ -58,6 +66,12 @@ export const AuthPage = () => {
           <button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition">
             Reset Password
           </button>
+          <button
+            onClick={signOut}
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition"
+          >
+            Sign Out
+          </button>
         </div>
       </div>
     );
@@ -65,42 +79,166 @@ export const AuthPage = () => {
   if (currentPage === "signUp") {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gray-100">
-        Auth Page
-        <div>Sign Up with email and password</div>
-        <div>Sign Up with third party accounts</div>
-        <button
-          onClick={() => setCurrentPage("signIn")}
-          className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition"
-        >
-          Go to Sign In
-        </button>
+        <div className="bg-white rounded-lg shadow-lg p-8 w-full max-w-md">
+          <h2 className="text-2xl font-bold mb-6 text-gray-800">Sign Up</h2>
+
+          <form
+            className="space-y-4 mb-6"
+            onSubmit={(e) => {
+              e.preventDefault();
+              const formData = new FormData(e.currentTarget);
+              const email = formData.get("email") as string;
+              const password = formData.get("password") as string;
+              handleSignUp(email, password);
+            }}
+          >
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Full Name
+              </label>
+              <input
+                type="text"
+                placeholder="Enter your full name"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Email
+              </label>
+              <input
+                type="email"
+                placeholder="Enter your email"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Password
+              </label>
+              <input
+                type="password"
+                placeholder="Create a password"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+
+            <button
+              type="submit"
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition"
+            >
+              Sign Up
+            </button>
+          </form>
+
+          <div className="relative mb-6">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-gray-300"></div>
+            </div>
+            <div className="relative flex justify-center text-sm">
+              <span className="px-2 bg-white text-gray-500">
+                Or continue with
+              </span>
+            </div>
+          </div>
+
+          <div className="space-y-3 mb-6">
+            <button
+              onClick={() => signInWithGoogle()}
+              className="w-full bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 font-semibold py-2 px-4 rounded-lg transition"
+            >
+              Sign up with Google
+            </button>
+            <button
+              onClick={() => signInWithGithub()}
+              className="w-full bg-gray-800 hover:bg-gray-900 text-white font-semibold py-2 px-4 rounded-lg transition"
+            >
+              Sign up with GitHub
+            </button>
+          </div>
+
+          <button
+            onClick={() => setCurrentPage("signIn")}
+            className="w-full text-blue-600 hover:text-blue-700 font-semibold py-2 transition"
+          >
+            Already have an account? Sign In
+          </button>
+        </div>
       </div>
     );
   }
   if (currentPage === "signIn") {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gray-100">
-        Auth Page
-        <div>Sign In with email and password</div>
-        <div>Sign In with third party accounts</div>
-        <button
-          onClick={() => setCurrentPage("signUp")}
-          className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition"
-        >
-          Go to Sign Up
-        </button>
-        <button
-          onClick={() => signInWithGoogle()}
-          className=" bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition"
-        >
-          Sign in with Google
-        </button>
-        <button
-          onClick={() => signInWithGithub()}
-          className=" bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition"
-        >
-          Sign in with GitHub
-        </button>
+        <div className="bg-white rounded-lg shadow-lg p-8 w-full max-w-md">
+          <h2 className="text-2xl font-bold mb-6 text-gray-800">Sign In</h2>
+
+          <form className="space-y-4 mb-6">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Email
+              </label>
+              <input
+                type="email"
+                placeholder="Enter your email"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Password
+              </label>
+              <input
+                type="password"
+                placeholder="Enter your password"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+
+            <button
+              type="submit"
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition"
+            >
+              Sign In
+            </button>
+          </form>
+
+          <div className="relative mb-6">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-gray-300"></div>
+            </div>
+            <div className="relative flex justify-center text-sm">
+              <span className="px-2 bg-white text-gray-500">
+                Or continue with
+              </span>
+            </div>
+          </div>
+
+          <div className="space-y-3 mb-6">
+            <button
+              onClick={() => signInWithGoogle()}
+              className="w-full bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 font-semibold py-2 px-4 rounded-lg transition"
+            >
+              Sign in with Google
+            </button>
+            <button
+              onClick={() => signInWithGithub()}
+              className="w-full bg-gray-800 hover:bg-gray-900 text-white font-semibold py-2 px-4 rounded-lg transition"
+            >
+              Sign in with GitHub
+            </button>
+          </div>
+
+          <button
+            onClick={() => setCurrentPage("signUp")}
+            className="w-full text-blue-600 hover:text-blue-700 font-semibold py-2 transition"
+          >
+            Don't have an account? Sign Up
+          </button>
+        </div>
       </div>
     );
   }

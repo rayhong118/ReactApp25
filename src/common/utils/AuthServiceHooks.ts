@@ -80,3 +80,18 @@ export const useFirebaseSignInWithGitHub = () => {
     }
   }, [setCurrentUser]);
 };
+
+export const useSignOut = () => {
+  const setCurrentUser = useSetCurrentUser();
+  return useCallback(async () => {
+    try {
+      await auth.signOut();
+      setCurrentUser(null);
+      alert("User Signed Out Successfully");
+    } catch (error) {
+      alert(
+        error instanceof Error ? error.message : "An unknown error occurred"
+      );
+    }
+  }, [setCurrentUser]);
+};

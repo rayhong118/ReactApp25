@@ -1,66 +1,191 @@
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 export const Navigation = () => {
   const navigate = useNavigate();
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const wrapperRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (
+        wrapperRef.current &&
+        !wrapperRef.current.contains(e.target as Node)
+      ) {
+        setMobileOpen(false);
+        setDropdownOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const navButton = (label: string, to: string, nested: boolean = false) => (
+    <button
+      onClick={() => {
+        navigate(to);
+        setMobileOpen(false);
+        setDropdownOpen(false);
+      }}
+      className={`block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100 text-start ${
+        nested ? "w-full" : ""
+      }`}
+    >
+      {label}
+    </button>
+  );
+
   return (
-    <div className="fixed top-0 w-screen p-2 bg-white shadow-md flex flex-row px-10">
-      <button onClick={() => navigate("/")} className="cursor-pointer p-2">
-        App25
-      </button>
-      <nav className="flex flex-row gap-4 ml-10">
-        <button
-          onClick={() => navigate("/about")}
-          className="cursor-pointer hover:underline p-2"
-        >
-          About
-        </button>
-        <button
-          // onClick={() => navigate("/experiments")}
-          className="cursor-pointer hover:underline p-2 relative group"
-        >
-          Experiments
-          <menu className="absolute top-10 left-0 bg-white ring-black ring-opacity-5 rounded-md shadow-md flex flex-col w-48 py-2 scale-0 group-hover:scale-100 group-focus:scale-100 duration-300 origin-top">
-            <li className="block">
+    <div
+      ref={wrapperRef}
+      className="fixed top-0 w-full bg-white/95 backdrop-blur-sm border-b shadow-sm z-40"
+    >
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex h-16 items-center justify-between">
+          <div className="flex items-center">
+            <button
+              onClick={() => navigate("/")}
+              className="text-lg font-semibold text-gray-900 hover:text-gray-700"
+              aria-label="Go to home"
+            >
+              App25
+            </button>
+          </div>
+
+          <div className="hidden md:flex md:items-center md:space-x-4">
+            {navButton("About", "/about")}
+
+            <div className="relative">
               <button
-                className="block cursor-pointer hover:bg-gray-100 p-1 rounded-md w-full"
-                onClick={() => navigate("/experiments/formValidation")}
+                onClick={() => setDropdownOpen((s) => !s)}
+                aria-haspopup="true"
+                aria-expanded={dropdownOpen}
+                className="inline-flex items-center px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100"
               >
-                Form Validation
+                Experiments
+                <svg
+                  className="ml-2 h-4 w-4 text-gray-500"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M19 9l-7 7-7-7"
+                  />
+                </svg>
               </button>
-            </li>
-            <li className="block">
+
+              {dropdownOpen && (
+                <div className="absolute right-0 mt-2 w-48 bg-white ring-1 ring-black/5 rounded-md shadow-lg py-1">
+                  {navButton(
+                    "Form Validation",
+                    "/experiments/formValidation",
+                    true
+                  )}
+                  {navButton("MoveLists", "/experiments/moveLists", true)}
+                  {navButton("StopWatch", "/experiments/stopWatch", true)}
+                  {navButton(
+                    "ImageCarousel",
+                    "/experiments/imageCarousels",
+                    true
+                  )}
+                </div>
+              )}
+            </div>
+
+            {navButton("Auth", "/auth")}
+          </div>
+
+          {/* Mobile menu button */}
+          <div className="md:hidden">
+            <button
+              onClick={() => setMobileOpen((s) => !s)}
+              aria-label="Toggle menu"
+              className="inline-flex items-center justify-center p-2 rounded-md text-gray-700 hover:bg-gray-100"
+            >
+              <svg
+                className="h-6 w-6"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                {mobileOpen ? (
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                ) : (
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M4 6h16M4 12h16M4 18h16"
+                  />
+                )}
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Mobile panel */}
+      {mobileOpen && (
+        <div className="md:hidden border-t bg-white">
+          <div className="px-2 pt-2 pb-3 space-y-1">
+            {navButton("About", "/about")}
+
+            <div>
               <button
-                className="block cursor-pointer hover:bg-gray-100 p-1 rounded-md w-full"
-                onClick={() => navigate("/experiments/moveLists")}
+                onClick={() => setDropdownOpen((s) => !s)}
+                className="w-full text-left px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100 flex items-center justify-between"
               >
-                MoveLists
+                Experiments
+                <svg
+                  className="h-4 w-4 text-gray-500"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M19 9l-7 7-7-7"
+                  />
+                </svg>
               </button>
-            </li>
-            <li className="block">
-              <button
-                className="block cursor-pointer hover:bg-gray-100 p-1 rounded-md w-full"
-                onClick={() => navigate("/experiments/stopWatch")}
-              >
-                StopWatch
-              </button>
-            </li>
-            <li className="block">
-              <button
-                className="block cursor-pointer hover:bg-gray-100 p-1 rounded-md w-full"
-                onClick={() => navigate("/experiments/imageCarousels")}
-              >
-                ImageCarousel
-              </button>
-            </li>
-          </menu>
-        </button>
-        <button
-          onClick={() => navigate("/auth")}
-          className="cursor-pointer hover:underline p-2"
-        >
-          Auth
-        </button>
-      </nav>
+
+              {dropdownOpen && (
+                <div className="mt-1 space-y-1 pl-2">
+                  {navButton(
+                    "Form Validation",
+                    "/experiments/formValidation",
+                    true
+                  )}
+                  {navButton("MoveLists", "/experiments/moveLists", true)}
+                  {navButton("StopWatch", "/experiments/stopWatch", true)}
+                  {navButton(
+                    "ImageCarousel",
+                    "/experiments/imageCarousels",
+                    true
+                  )}
+                </div>
+              )}
+            </div>
+
+            {navButton("Auth", "/auth")}
+          </div>
+        </div>
+      )}
     </div>
   );
 };
