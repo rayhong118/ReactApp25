@@ -63,19 +63,26 @@ export const AuthPage = () => {
             </p>
           </div>
 
-          <button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition">
-            Reset Password
-          </button>
-          <button
-            onClick={signOut}
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition"
-          >
-            Sign Out
-          </button>
+          <div className="space-y-3">
+            <button
+              disabled
+              className="w-full bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Reset Password
+            </button>
+            <button
+              onClick={signOut}
+              className="w-full bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 text-white font-semibold py-2 px-4 rounded-lg transition active:bg-blue-800 cursor-pointer"
+            >
+              Sign Out
+            </button>
+          </div>
         </div>
       </div>
     );
   }
+
+  // Sign Up Page
   if (currentPage === "signUp") {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gray-100">
@@ -127,7 +134,7 @@ export const AuthPage = () => {
 
             <button
               type="submit"
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition"
+              className="w-full bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 text-white font-semibold py-2 px-4 rounded-lg transition active:bg-blue-800 cursor-pointer"
             >
               Sign Up
             </button>
@@ -147,13 +154,13 @@ export const AuthPage = () => {
           <div className="space-y-3 mb-6">
             <button
               onClick={() => signInWithGoogle()}
-              className="w-full bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 font-semibold py-2 px-4 rounded-lg transition"
+              className="w-full bg-white border border-gray-300 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 text-gray-700 font-semibold py-2 px-4 rounded-lg transition active:bg-gray-100 cursor-pointer"
             >
               Sign up with Google
             </button>
             <button
               onClick={() => signInWithGithub()}
-              className="w-full bg-gray-800 hover:bg-gray-900 text-white font-semibold py-2 px-4 rounded-lg transition"
+              className="w-full bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-600 focus:ring-offset-2 text-white font-semibold py-2 px-4 rounded-lg transition active:bg-black cursor-pointer"
             >
               Sign up with GitHub
             </button>
@@ -161,7 +168,7 @@ export const AuthPage = () => {
 
           <button
             onClick={() => setCurrentPage("signIn")}
-            className="w-full text-blue-600 hover:text-blue-700 font-semibold py-2 transition"
+            className="w-full text-blue-600 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded font-semibold py-2 transition active:text-blue-800 cursor-pointer"
           >
             Already have an account? Sign In
           </button>
@@ -169,6 +176,8 @@ export const AuthPage = () => {
       </div>
     );
   }
+
+  // Sign In Page
   if (currentPage === "signIn") {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gray-100">
@@ -200,7 +209,7 @@ export const AuthPage = () => {
 
             <button
               type="submit"
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition"
+              className="w-full bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 text-white font-semibold py-2 px-4 rounded-lg transition active:bg-blue-800 cursor-pointer"
             >
               Sign In
             </button>
@@ -220,13 +229,13 @@ export const AuthPage = () => {
           <div className="space-y-3 mb-6">
             <button
               onClick={() => signInWithGoogle()}
-              className="w-full bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 font-semibold py-2 px-4 rounded-lg transition"
+              className="w-full bg-white border border-gray-300 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 text-gray-700 font-semibold py-2 px-4 rounded-lg transition active:bg-gray-100 cursor-pointer"
             >
               Sign in with Google
             </button>
             <button
               onClick={() => signInWithGithub()}
-              className="w-full bg-gray-800 hover:bg-gray-900 text-white font-semibold py-2 px-4 rounded-lg transition"
+              className="w-full bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-600 focus:ring-offset-2 text-white font-semibold py-2 px-4 rounded-lg transition active:bg-black cursor-pointer"
             >
               Sign in with GitHub
             </button>
@@ -234,7 +243,7 @@ export const AuthPage = () => {
 
           <button
             onClick={() => setCurrentPage("signUp")}
-            className="w-full text-blue-600 hover:text-blue-700 font-semibold py-2 transition"
+            className="w-full text-blue-600 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded font-semibold py-2 transition active:text-blue-800 cursor-pointer"
           >
             Don't have an account? Sign Up
           </button>
