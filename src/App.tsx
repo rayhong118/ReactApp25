@@ -1,27 +1,28 @@
+import { onAuthStateChanged } from "firebase/auth";
+import { useEffect } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
 import { Navigation } from "./common/components/Navigation";
+import { useSetCurrentUser } from "./common/utils/AuthenticationAtoms";
+import { auth } from "./firebase";
 import { About } from "./pages/about/About";
+import { AuthPage } from "./pages/auth/Auth";
 import { Experiments } from "./pages/experiments/Experiments";
-import { VanillaDialog } from "./pages/experiments/VanillaDialog";
-import { Home } from "./pages/home/Home";
 import { FileUpload } from "./pages/experiments/FileUpload";
 import { FormValidation } from "./pages/experiments/FormValidation";
+import { ImageCarousel } from "./pages/experiments/ImageCarousel";
 import { MoveLists } from "./pages/experiments/MoveLists";
 import { StopWatch } from "./pages/experiments/StopWatch";
-import { ImageCarousel } from "./pages/experiments/ImageCarousel";
-import { AuthPage } from "./pages/auth/Auth";
-import { onAuthStateChanged } from "firebase/auth";
-import { auth } from "./firebase";
-import { useSetCurrentUser } from "./common/utils/AuthenticationAtoms";
-import { useEffect } from "react";
+import { VanillaDialog } from "./pages/experiments/VanillaDialog";
+import { Home } from "./pages/home/Home";
 
 import { library } from "@fortawesome/fontawesome-svg-core";
 
 /* import all the icons in Free Solid, Free Regular, and Brands styles */
-import { fas } from "@fortawesome/free-solid-svg-icons";
-import { far } from "@fortawesome/free-regular-svg-icons";
 import { fab } from "@fortawesome/free-brands-svg-icons";
+import { far } from "@fortawesome/free-regular-svg-icons";
+import { fas } from "@fortawesome/free-solid-svg-icons";
+import { WithAuthRequired } from "./common/components/WithAuthRequired";
 
 library.add(fas, far, fab);
 
@@ -52,7 +53,10 @@ const App: React.FC = () => {
             path="/experiments/formValidation"
             element={<FormValidation />}
           />
-          <Route path="/experiments/moveLists" element={<MoveLists />} />
+          <Route
+            path="/experiments/moveLists"
+            element={<WithAuthRequired component={MoveLists} />}
+          />
           <Route path="/experiments/stopWatch" element={<StopWatch />} />
           <Route
             path="/experiments/imageCarousels"

@@ -1,11 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useGetCurrentUser } from "../utils/AuthenticationAtoms";
 
 export const Navigation = () => {
   const navigate = useNavigate();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const wrapperRef = useRef<HTMLDivElement | null>(null);
+  const getCurrentUser = useGetCurrentUser();
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -35,6 +37,13 @@ export const Navigation = () => {
       {label}
     </button>
   );
+
+  const authButtons = () => {
+    // You can add authentication related buttons here
+    if (!getCurrentUser) {
+      return navButton("Log in / Sign Up", "/auth");
+    } else return navButton("User Settings", "/auth");
+  };
 
   return (
     <div
@@ -99,7 +108,7 @@ export const Navigation = () => {
               )}
             </div>
 
-            {navButton("Auth", "/auth")}
+            {authButtons()}
           </div>
 
           {/* Mobile menu button */}
@@ -184,7 +193,7 @@ export const Navigation = () => {
               )}
             </div>
 
-            {navButton("Auth", "/auth")}
+            {authButtons()}
           </div>
         </div>
       )}
