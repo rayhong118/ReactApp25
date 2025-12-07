@@ -1,4 +1,5 @@
 import { useState } from "react";
+import "./imageCarousel.scss";
 
 const images = [
   {
@@ -32,7 +33,7 @@ export const ImageCarousel = () => {
   const imageDisplayArray = [...images];
   const [currentIndex, setCurrentIndex] = useState(1);
   return (
-    <div className="p-20">
+    <div className="p-20" id="imageCarousel">
       <h1 className="text-2xl font-bold mb-4">Image Carousel</h1>
       <div className="flex flex-row align-center justify-center border ">
         <button className="p-4">{"<"}</button>

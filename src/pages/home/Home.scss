@@ -24,3 +24,13 @@
     color: white;
   }
 }
+
+.homepage-container {
+  overflow-x: hidden;
+  scroll-snap-type: both proximity;
+}
+
+.homepage-panel {
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
