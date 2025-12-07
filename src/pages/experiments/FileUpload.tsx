@@ -1,4 +1,5 @@
-import { PlusIcon } from "@heroicons/react/16/solid";
+import { faPlusSquare } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRef, useState } from "react";
 
 type FileUploadStatus = "idle" | "uploading" | "success" | "error";
@@ -19,7 +20,7 @@ export const FileUpload = () => {
           onClick={onUploadClick}
           className="w-xs h-xs p-30 border rounded-md border-gray-200"
         >
-          <PlusIcon />
+          <FontAwesomeIcon icon={faPlusSquare} />
         </div>
       )}
       <ProgressBar percentage={5} />

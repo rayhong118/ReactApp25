@@ -39,7 +39,7 @@ export const Navigation = () => {
   return (
     <div
       ref={wrapperRef}
-      className="fixed top-0 w-full bg-white/95 backdrop-blur-sm border-b shadow-sm z-40"
+      className="fixed top-0 w-full bg-white/95 backdrop-blur-sm shadow-sm z-40"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
@@ -94,6 +94,7 @@ export const Navigation = () => {
                     "/experiments/imageCarousels",
                     true
                   )}
+                  {navButton("File Upload", "/experiments/fileUpload", true)}
                 </div>
               )}
             </div>
@@ -138,7 +139,7 @@ export const Navigation = () => {
 
       {/* Mobile panel */}
       {mobileOpen && (
-        <div className="md:hidden border-t bg-white">
+        <div className="md:hidden bg-white">
           <div className="px-2 pt-2 pb-3 space-y-1">
             {navButton("About", "/about")}
 
@@ -171,13 +172,14 @@ export const Navigation = () => {
                     "/experiments/formValidation",
                     true
                   )}
-                  {navButton("MoveLists", "/experiments/moveLists", true)}
-                  {navButton("StopWatch", "/experiments/stopWatch", true)}
+                  {navButton("Move Lists", "/experiments/moveLists", true)}
+                  {navButton("Stop Watch", "/experiments/stopWatch", true)}
                   {navButton(
-                    "ImageCarousel",
+                    "Image Carousel",
                     "/experiments/imageCarousels",
                     true
                   )}
+                  {navButton("File Upload", "/experiments/fileUpload", true)}
                 </div>
               )}
             </div>

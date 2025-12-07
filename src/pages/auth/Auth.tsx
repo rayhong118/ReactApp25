@@ -6,6 +6,8 @@ import {
   useFirebseSignUp,
   useSignOut,
 } from "../../common/utils/AuthServiceHooks";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faGoogle, faGithub } from "@fortawesome/free-brands-svg-icons";
 
 type AuthPageType = "signUp" | "signIn" | "resetPassword";
 
@@ -156,12 +158,15 @@ export const AuthPage = () => {
               onClick={() => signInWithGoogle()}
               className="w-full bg-white border border-gray-300 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 text-gray-700 font-semibold py-2 px-4 rounded-lg transition active:bg-gray-100 cursor-pointer"
             >
+              <FontAwesomeIcon icon={faGoogle} className="px-2" />
               Sign up with Google
             </button>
             <button
               onClick={() => signInWithGithub()}
               className="w-full bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-600 focus:ring-offset-2 text-white font-semibold py-2 px-4 rounded-lg transition active:bg-black cursor-pointer"
             >
+              {" "}
+              <FontAwesomeIcon icon={faGithub} className="px-2" />
               Sign up with GitHub
             </button>
           </div>
@@ -231,12 +236,14 @@ export const AuthPage = () => {
               onClick={() => signInWithGoogle()}
               className="w-full bg-white border border-gray-300 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 text-gray-700 font-semibold py-2 px-4 rounded-lg transition active:bg-gray-100 cursor-pointer"
             >
+              <FontAwesomeIcon icon={faGoogle} className="px-2" />
               Sign in with Google
             </button>
             <button
               onClick={() => signInWithGithub()}
               className="w-full bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-600 focus:ring-offset-2 text-white font-semibold py-2 px-4 rounded-lg transition active:bg-black cursor-pointer"
             >
+              <FontAwesomeIcon icon={faGithub} className="px-2" />
               Sign in with GitHub
             </button>
           </div>

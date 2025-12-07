@@ -1,4 +1,5 @@
-import { XMarkIcon } from "@heroicons/react/16/solid";
+import { faClose } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
 
 export const VanillaDialog = () => {
@@ -49,7 +50,7 @@ const DialogComponent = (props: IDialogComponentProps) => {
           onClick={onClose}
           className="cursor-pointer hover:bg-gray-100 border-gray-200 border rounded-md "
         >
-          <XMarkIcon className="h-6 w-6 text-gray-600" />
+          <FontAwesomeIcon icon={faClose} className="h-6 w-6 text-gray-600" />
         </button>
       </div>
 
