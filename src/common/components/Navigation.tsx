@@ -2,6 +2,15 @@ import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useGetCurrentUser } from "../utils/AuthenticationAtoms";
 
+const experimentsNavItems = [
+  { label: "Form Validation", to: "/experiments/formValidation" },
+  { label: "Move Lists", to: "/experiments/moveLists" },
+  { label: "Stop Watch 秒表", to: "/experiments/stopWatch" },
+  { label: "Image Carousel", to: "/experiments/imageCarousels" },
+  { label: "File Upload", to: "/experiments/fileUpload" },
+  { label: "Tic Tac Toe 五子棋", to: "/experiments/ticTacToe" },
+];
+
 export const Navigation = () => {
   const navigate = useNavigate();
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -30,6 +39,7 @@ export const Navigation = () => {
         setMobileOpen(false);
         setDropdownOpen(false);
       }}
+      key={label}
       className={`block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100 text-start ${
         nested ? "w-full" : ""
       }`}
@@ -91,20 +101,9 @@ export const Navigation = () => {
 
               {dropdownOpen && (
                 <div className="absolute right-0 mt-2 w-48 bg-white ring-1 ring-black/5 rounded-md shadow-lg py-1">
-                  {navButton(
-                    "Form Validation",
-                    "/experiments/formValidation",
-                    true
+                  {experimentsNavItems.map((item) =>
+                    navButton(item.label, item.to, true)
                   )}
-                  {navButton("MoveLists", "/experiments/moveLists", true)}
-                  {navButton("StopWatch", "/experiments/stopWatch", true)}
-                  {navButton(
-                    "ImageCarousel",
-                    "/experiments/imageCarousels",
-                    true
-                  )}
-                  {navButton("File Upload", "/experiments/fileUpload", true)}
-                  {navButton("Tic Tac Toe", "/experiments/ticTacToe", true)}
                 </div>
               )}
             </div>
@@ -177,20 +176,9 @@ export const Navigation = () => {
 
               {dropdownOpen && (
                 <div className="mt-1 space-y-1 pl-2">
-                  {navButton(
-                    "Form Validation",
-                    "/experiments/formValidation",
-                    true
+                  {experimentsNavItems.map((item) =>
+                    navButton(item.label, item.to, true)
                   )}
-                  {navButton("Move Lists", "/experiments/moveLists", true)}
-                  {navButton("Stop Watch", "/experiments/stopWatch", true)}
-                  {navButton(
-                    "Image Carousel",
-                    "/experiments/imageCarousels",
-                    true
-                  )}
-                  {navButton("File Upload", "/experiments/fileUpload", true)}
-                  {navButton("Tic Tac Toe", "/experiments/ticTacToe", true)}
                 </div>
               )}
             </div>
