@@ -8,16 +8,18 @@ import React from "react";
 export const JiZiQi = () => {
   const totalSize = 15;
   const targetLength = 5;
-  const initGridData: number[][] = new Array(totalSize)
-    .fill(0)
-    .map(() => new Array(totalSize).fill(0));
+  const initGridData: number[][] = new Array(totalSize).fill(
+    new Array(totalSize).fill(0)
+  );
   const [gridData, setGridData] = React.useState<number[][]>(initGridData);
   const [currentPlayer, setCurrentPlayer] = React.useState<number>(1); // 1 or 2
 
   const handleCellClick = (rowIndex: number, colIndex: number) => {
-    const currentColor = gridData[rowIndex][colIndex];
+    const currentColor = currentPlayer;
+    const currentCell = gridData[rowIndex][colIndex];
+    console.log(currentPlayer, rowIndex, colIndex);
     // If cell is already occupied, do nothing
-    if (currentColor !== 0) return;
+    if (currentCell !== 0) return;
     else {
       // Update grid data
       const newGridData = gridData.map((row, rIdx) =>
@@ -37,7 +39,7 @@ export const JiZiQi = () => {
   };
 
   const victoryCheck = (rowIndex: number, colIndex: number) => {
-    const currentColor = gridData[rowIndex][colIndex];
+    const currentColor = currentPlayer;
 
     // Directions: [rowDelta, colDelta]
     const directions = [
@@ -81,7 +83,7 @@ export const JiZiQi = () => {
   };
 
   return (
-    <div>
+    <div className="p-20">
       <h1>棋子</h1>
       <div>Current player: {currentPlayer === 1 ? "X" : "O"}</div>
       <div>
@@ -91,10 +93,11 @@ export const JiZiQi = () => {
               {row.map((cell, colIndex) => {
                 return (
                   <span
+                    className="inline-block w-8 h-8 border border-gray-400 text-center leading-8 cursor-pointer select-none"
                     key={"cellIndex" + colIndex}
                     onClick={() => handleCellClick(rowIndex, colIndex)}
                   >
-                    {cell === 0 ? "." : cell === 1 ? "X" : "O"}
+                    {cell === 0 ? "" : cell === 1 ? "X" : "O"}
                   </span>
                 );
               })}

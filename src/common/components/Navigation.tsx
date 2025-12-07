@@ -104,6 +104,7 @@ export const Navigation = () => {
                     true
                   )}
                   {navButton("File Upload", "/experiments/fileUpload", true)}
+                  {navButton("Tic Tac Toe", "/experiments/ticTacToe", true)}
                 </div>
               )}
             </div>
@@ -189,6 +190,7 @@ export const Navigation = () => {
                     true
                   )}
                   {navButton("File Upload", "/experiments/fileUpload", true)}
+                  {navButton("Tic Tac Toe", "/experiments/ticTacToe", true)}
                 </div>
               )}
             </div>
