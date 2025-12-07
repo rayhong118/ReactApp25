@@ -1,3 +1,6 @@
+import { faCircle as regularCircle } from "@fortawesome/free-regular-svg-icons";
+import { faCircle as solidCircle } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 
 // interface JiZiQiProps {
@@ -84,19 +87,32 @@ export const JiZiQi = () => {
   return (
     <div className="p-20">
       <h1>棋子</h1>
-      <div>Current player: {currentPlayer === 1 ? "X" : "O"}</div>
+      <div>
+        Current player:{" "}
+        {currentPlayer === 1 ? (
+          <FontAwesomeIcon icon={regularCircle} />
+        ) : (
+          <FontAwesomeIcon icon={solidCircle} />
+        )}
+      </div>
       <div>
         {gridData.map((row, rowIndex) => {
           return (
-            <div key={"rowIndex" + rowIndex}>
+            <div key={"rowIndex" + rowIndex} className="h-8 flex flex-row">
               {row.map((cell, colIndex) => {
                 return (
                   <span
-                    className="inline-block w-8 h-8 border border-gray-400 text-center leading-8 cursor-pointer select-none"
+                    className="flex w-8 h-8 border border-gray-400 justify-center items-center cursor-pointer hover:bg-gray-200"
                     key={"cellIndex" + colIndex}
                     onClick={() => handleCellClick(rowIndex, colIndex)}
                   >
-                    {cell === 0 ? "" : cell === 1 ? "X" : "O"}
+                    {cell === 0 ? (
+                      <></>
+                    ) : cell === 1 ? (
+                      <FontAwesomeIcon icon={regularCircle} />
+                    ) : (
+                      <FontAwesomeIcon icon={solidCircle} />
+                    )}
                   </span>
                 );
               })}
