@@ -17,6 +17,12 @@ export const Home = () => {
             <h1 className="font-bold p-20">HOUDINI API</h1>
           </div>
         </div>
+        <div className="card">
+          <div className="content">
+            <h1 className="font-bold p-20">HOUDINI API</h1>
+          </div>
+        </div>
+        
       </div>
       <div className=" homepage-panel bg-gray-800 text-white min-h-screen w-full max-h-screen flex justify-center items-center">
         <h1 className="font-bold p-20">PANEL 3</h1>

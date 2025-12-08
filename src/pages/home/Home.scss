@@ -45,6 +45,12 @@
 #houdini {
   background-color: white;
   background-image: linear-gradient(black, #111);
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  gap: 2em;
+  flex-wrap: wrap;
 
   .card {
     background-image: linear-gradient(
