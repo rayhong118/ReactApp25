@@ -1,5 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import "./imageCarousel.scss";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCircle as regularCircle } from "@fortawesome/free-regular-svg-icons";
+import { faCircle as solidCircle } from "@fortawesome/free-solid-svg-icons";
 
 const images = [
   {
@@ -80,6 +83,9 @@ export const ImageCarousel = () => {
         </div>
         <button className="p-4" onClick={() => handleRightClick()}>{">"}</button>
       </div>
+      <span className="flex flex-row align-center justify-center">{images.map((_, index) => (
+        <span key={index} className="p-2 " onClick={() => moveToIndex(index)}>{index === currentIndex ? (<FontAwesomeIcon className='cursor-pointer' icon={solidCircle} />) : (<FontAwesomeIcon className='cursor-pointer' icon={regularCircle} />)}</span>
+      ))}</span>
     </div>
   );
 };
