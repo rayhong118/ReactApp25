@@ -33,4 +33,40 @@
 .homepage-panel {
   scroll-snap-align: start;
   scroll-snap-stop: always;
+  min-height: 100vh;
+}
+
+@property --background-direction {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+#houdini {
+  background-color: white;
+  background-image: linear-gradient(black, #111);
+
+  .card {
+    background-image: linear-gradient(
+      var(--background-direction),
+      #5ddcff,
+      #3c67e3 43%,
+      #4e00c2
+    );
+    animation: rotate 5s linear infinite;
+    padding: 1em;
+    border-radius: 1em;
+
+    .content {
+      border-radius: 0.5em;
+      background-color: black;
+      color: white;
+    }
+  }
+
+  @keyframes rotate {
+    to {
+      --background-direction: 360deg;
+    }
+  }
 }
