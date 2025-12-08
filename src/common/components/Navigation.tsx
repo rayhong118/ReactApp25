@@ -6,7 +6,7 @@ const experimentsNavItems = [
   { label: "Form Validation", to: "/experiments/formValidation" },
   { label: "Move Lists", to: "/experiments/moveLists" },
   { label: "Stop Watch 秒表", to: "/experiments/stopWatch" },
-  { label: "Image Carousel", to: "/experiments/imageCarousels" },
+  { label: "Image Carousel 图片轮播", to: "/experiments/imageCarousels" },
   { label: "File Upload", to: "/experiments/fileUpload" },
   { label: "Tic Tac Toe 五子棋", to: "/experiments/ticTacToe" },
 ];
