@@ -8,17 +8,17 @@ export interface IRestaurant {
    * Display name will be used as primary name if provided
    */
   displayName?: string;
-  description: string;
+  description?: string;
   address: string;
-  price: number;
+  price?: number;
   /**
    * Star ratings. Used to calculate average rating and show rating given by current user
    */
-  stars: IStarRating[];
+  stars?: IStarRating[];
   /**
    * Notes. Used to store notes given by current user
    */
-  notes: INotes[];
+  notes?: INotes[];
 }
 
 export interface IStarRating {

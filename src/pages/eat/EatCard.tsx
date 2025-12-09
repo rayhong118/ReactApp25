@@ -48,7 +48,7 @@ export const EatCard = () => {
 
         {isNotesExpanded && (
           <div>
-            {restaurant.notes.map((note, index) => (
+            {restaurant.notes?.map((note, index) => (
               <Note key={index} note={note} />
             ))}
           </div>
