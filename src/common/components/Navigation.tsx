@@ -9,6 +9,7 @@ const experimentsNavItems = [
   { label: "Image Carousel 图片轮播", to: "/experiments/imageCarousels" },
   { label: "File Upload", to: "/experiments/fileUpload" },
   { label: "Tic Tac Toe 五子棋", to: "/experiments/ticTacToe" },
+  { label: "Star Rating", to: "/experiments/starRating" },
 ];
 
 export const Navigation = () => {

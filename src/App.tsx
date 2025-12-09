@@ -24,6 +24,7 @@ import { far } from "@fortawesome/free-regular-svg-icons";
 import { fas } from "@fortawesome/free-solid-svg-icons";
 import { WithAuthRequired } from "./common/components/WithAuthRequired";
 import { JiZiQi } from "./pages/experiments/JiZiQi";
+import { StarRating } from "./pages/experiments/StarRating";
 
 library.add(fas, far, fab);
 
@@ -64,6 +65,7 @@ const App: React.FC = () => {
             element={<ImageCarousel />}
           />
           <Route path="/experiments/ticTacToe" element={<JiZiQi />} />
+          <Route path="/experiments/starRating" element={<StarRating />} />
         </Routes>
       </BrowserRouter>
     </>
