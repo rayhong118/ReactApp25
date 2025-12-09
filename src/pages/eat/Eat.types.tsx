@@ -19,6 +19,9 @@ export interface IRestaurant {
    * Notes. Used to store notes given by current user
    */
   notes?: INotes[];
+  url?: string;
+  phoneNumber?: string;
+  cityAndState?: string;
 }
 
 export interface IStarRating {

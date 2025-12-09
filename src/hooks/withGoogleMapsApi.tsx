@@ -6,6 +6,7 @@ export function withGoogleMapsApi(WrappedComponent: React.ComponentType) {
     return (
       <LoadScript
         googleMapsApiKey={googleMapsApiKey}
+        libraries={["places"]}
       >
         <WrappedComponent {...props} />
       </LoadScript>

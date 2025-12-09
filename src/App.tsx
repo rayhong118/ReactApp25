@@ -21,7 +21,7 @@ import { WithAuthRequired } from "./components/WithAuthRequired";
 import { withFontAwesome } from "./hooks/withFontAwesome";
 import { withGoogleMapsApi } from "./hooks/withGoogleMapsApi";
 import { EatCard } from "./pages/eat/EatCard";
-import { EatEditDialog } from "./pages/eat/EatEditDialog";
+import { EatEditDialog } from "./pages/eat/EatEditForm";
 import { JiZiQi } from "./pages/experiments/JiZiQi";
 import { StarRating } from "./pages/experiments/StarRating";
 

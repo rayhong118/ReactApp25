@@ -13,11 +13,62 @@ export const EatEditDialog = (props?: IEatEditDialogProps) => {
   const [isFormValid, setIsFormValid] = useState(false);
   const [googleSearchInput, setGoogleSearchInput] = useState('');
   const timeoutRef = useRef<any>(null);
+  const placeAutocompleteRef = useRef<HTMLInputElement | null>(null);
   useEffect(() => {
     if (props?.restaurant) {
       setEatData(props.restaurant);
     }
   }, [props?.restaurant]);
+
+  const administrativeAreaLevel1 = "administrative_area_level_1";
+  const locality = "locality";
+
+  useEffect(() => {
+
+    if (!placeAutocompleteRef.current) {
+      return;
+    }
+
+    const autocomplete = new window.google.maps.places.Autocomplete(placeAutocompleteRef.current, {
+      /**
+       * Restrict the autocomplete to restaurants
+       */
+      types: ["restaurant"],
+      fields: ["name", "formatted_address", "address_components", "place_id", "url", "formatted_phone_number"],
+      /**
+       * Restrict the autocomplete to the United States
+       */
+      componentRestrictions: { country: "us" }
+    });
+
+    if (!autocomplete) {
+      return;
+    }
+    autocomplete.addListener("place_changed", () => {
+      const place = autocomplete.getPlace();
+      if (place) {
+        console.log(place);
+        const city = place.address_components?.find((component) => component.types.includes(locality))?.short_name;
+        const state = place.address_components?.find((component) => component.types.includes(administrativeAreaLevel1))?.short_name;
+        const cityAndState = `${city}, ${state}`;
+        const newEatData = {
+          ...eatData,
+          id: place.place_id || '',
+          name: place.name || '',
+          address: place.formatted_address || '',
+          price: place.price_level,
+          displayName: place.name,
+          url: place.url,
+          phoneNumber: place.formatted_phone_number,
+          cityAndState: cityAndState,
+        };
+        console.log(newEatData);
+        setEatData(newEatData);
+      }
+    });
+
+
+  }, [placeAutocompleteRef])
 
   const handleGoogleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
@@ -41,7 +92,8 @@ export const EatEditDialog = (props?: IEatEditDialogProps) => {
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     setIsFormValid(validateForm());
-    setEatData({ ...eatData, [name]: value });
+    // setEatData({ ...eatData, [name]: value });
+    console.log(name, value);
   };
 
   const validateForm = () => {
@@ -63,9 +115,11 @@ export const EatEditDialog = (props?: IEatEditDialogProps) => {
         <h1>Edit</h1>
         <form onSubmit={handleSubmit}>
           <div className="labeled-input">
-            <input type="text" id="googleSearch" placeholder="" onChange={handleGoogleSearch} />
+            <input type="text" id="googleSearch" placeholder="" onChange={handleGoogleSearch} ref={placeAutocompleteRef} />
             <label htmlFor="googleSearch">Search Google Maps</label>
           </div>
+
+
           <div className="labeled-input">
             <input type="text" id="name" placeholder="" disabled value={eatData?.name} onBlur={handleChange} />
             <label htmlFor="name">Name - Populated by Google Maps</label>
