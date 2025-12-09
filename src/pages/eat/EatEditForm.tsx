@@ -110,7 +110,7 @@ export const EatEditDialog = (props?: IEatEditDialogProps) => {
     }
   };
   return (
-    <div className=' p-5 md:p-20'>
+    <div className=' px-5 py-20 md:p-20'>
       <div className="eat-edit-dialog">
         <h1>Edit</h1>
         <form onSubmit={handleSubmit}>
@@ -128,9 +128,26 @@ export const EatEditDialog = (props?: IEatEditDialogProps) => {
             <input type="text" id="displayName" placeholder="" value={eatData?.displayName} onBlur={handleChange} />
             <label htmlFor="displayName">Display Name</label>
           </div>
-
-
-
+          <div className="labeled-input">
+            <input type="text" id="description" placeholder="" value={eatData?.description} onBlur={handleChange} />
+            <label htmlFor="description">Description</label>
+          </div>
+          <div className="labeled-input">
+            <input disabled type="text" id="address" placeholder="" value={eatData?.address} onBlur={handleChange} />
+            <label htmlFor="address">Address</label>
+          </div>
+          <div className="labeled-input">
+            <input type="text" id="price" placeholder="" value={eatData?.price} onBlur={handleChange} />
+            <label htmlFor="price">Price</label>
+          </div>
+          <div className="labeled-input">
+            <input disabled type="text" id="phoneNumber" placeholder="" value={eatData?.phoneNumber} onBlur={handleChange} />
+            <label htmlFor="phoneNumber">Phone Number</label>
+          </div>
+          <div className="labeled-input">
+            <input disabled type="text" id="cityAndState" placeholder="" value={eatData?.cityAndState} onBlur={handleChange} />
+            <label htmlFor="cityAndState">City and State</label>
+          </div>
           <button disabled={!isFormValid} type="submit">Submit</button>
         </form>
       </div>
