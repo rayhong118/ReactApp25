@@ -16,19 +16,14 @@ import { StopWatch } from "./pages/experiments/StopWatch";
 import { VanillaDialog } from "./pages/experiments/VanillaDialog";
 import { Home } from "./pages/home/Home";
 
-import { library } from "@fortawesome/fontawesome-svg-core";
 
-/* import all the icons in Free Solid, Free Regular, and Brands styles */
-import { fab } from "@fortawesome/free-brands-svg-icons";
-import { far } from "@fortawesome/free-regular-svg-icons";
-import { fas } from "@fortawesome/free-solid-svg-icons";
 import { WithAuthRequired } from "./components/WithAuthRequired";
 import { JiZiQi } from "./pages/experiments/JiZiQi";
 import { StarRating } from "./pages/experiments/StarRating";
 import { EatCard } from "./pages/eat/EatCard";
 import { EatEditDialog } from "./pages/eat/EatEditDialog";
-
-library.add(fas, far, fab);
+import { withGoogleMapsApi } from "./hooks/withGoogleMapsApi";
+import { withFontAwesome } from "./hooks/withFontAwesome";
 
 const App: React.FC = () => {
   const setCurrentUser = useSetCurrentUser();
@@ -76,4 +71,4 @@ const App: React.FC = () => {
   );
 };
 
-export default App;
+export default withFontAwesome(withGoogleMapsApi(App));

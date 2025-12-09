@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { IRestaurant } from './Eat.types';
 import './EatEditDialog.scss';
 
@@ -11,17 +11,34 @@ export const EatEditDialog = (props?: IEatEditDialogProps) => {
 
   const [eatData, setEatData] = useState<IRestaurant>();
   const [isFormValid, setIsFormValid] = useState(false);
+  const [googleSearchInput, setGoogleSearchInput] = useState('');
+  const timeoutRef = useRef<any>(null);
   useEffect(() => {
     if (props?.restaurant) {
       setEatData(props.restaurant);
     }
   }, [props?.restaurant]);
 
+  const handleGoogleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = event.target;
+
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+    timeoutRef.current = setTimeout(() => {
+      setGoogleSearchInput(value);
+    }, 500);
+  }
+
+  useEffect(() => {
+    console.log('googleSearchInput', googleSearchInput);
+
+  }, [googleSearchInput]);
+
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     setIsFormValid(validateForm());
     setEatData({ ...eatData, [name]: value });
-
   };
 
   const validateForm = () => {
@@ -42,6 +59,10 @@ export const EatEditDialog = (props?: IEatEditDialogProps) => {
       <div className="eat-edit-dialog">
         <h1>Edit</h1>
         <form onSubmit={handleSubmit}>
+          <div className="labeled-input">
+            <input type="text" id="googleSearch" placeholder="" onChange={handleGoogleSearch} />
+            <label htmlFor="googleSearch">Search Google Maps</label>
+          </div>
           <div className="labeled-input">
             <input type="text" id="name" placeholder="" disabled value={eatData?.name} onBlur={handleChange} />
             <label htmlFor="name">Name - Populated by Google Maps</label>
