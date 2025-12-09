@@ -4,7 +4,7 @@ import {
   signInWithPopup,
 } from "firebase/auth";
 import { useCallback } from "react";
-import { auth, githubProvider, googleProvider } from "../../firebase";
+import { auth, githubProvider, googleProvider } from "../firebase";
 import { useSetCurrentUser } from "./AuthenticationAtoms";
 
 export function useFirebseSignUp() {

@@ -1,11 +1,11 @@
 import { useState } from "react";
-import { useGetCurrentUser } from "../../common/utils/AuthenticationAtoms";
+import { useGetCurrentUser } from "../../utils/AuthenticationAtoms";
 import {
   useFirebaseSignInWithGitHub,
   useFirebaseSignInWithGoogle,
   useFirebseSignUp,
   useSignOut,
-} from "../../common/utils/AuthServiceHooks";
+} from "../../utils/AuthServiceHooks";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGoogle, faGithub } from "@fortawesome/free-brands-svg-icons";
 
