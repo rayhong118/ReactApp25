@@ -31,7 +31,10 @@ export const EatEditDialog = (props?: IEatEditDialogProps) => {
   }
 
   useEffect(() => {
-    console.log('googleSearchInput', googleSearchInput);
+    if (googleSearchInput) {
+      console.log('googleSearchInput', googleSearchInput);
+
+    }
 
   }, [googleSearchInput]);
 

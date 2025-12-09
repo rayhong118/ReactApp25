@@ -3,7 +3,6 @@ import { useEffect } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
 import { Navigation } from "./components/Navigation";
-import { useSetCurrentUser } from "./utils/AuthenticationAtoms";
 import { auth } from "./firebase";
 import { About } from "./pages/about/About";
 import { AuthPage } from "./pages/auth/Auth";
@@ -15,15 +14,16 @@ import { MoveLists } from "./pages/experiments/MoveLists";
 import { StopWatch } from "./pages/experiments/StopWatch";
 import { VanillaDialog } from "./pages/experiments/VanillaDialog";
 import { Home } from "./pages/home/Home";
+import { useSetCurrentUser } from "./utils/AuthenticationAtoms";
 
 
 import { WithAuthRequired } from "./components/WithAuthRequired";
-import { JiZiQi } from "./pages/experiments/JiZiQi";
-import { StarRating } from "./pages/experiments/StarRating";
+import { withFontAwesome } from "./hooks/withFontAwesome";
+import { withGoogleMapsApi } from "./hooks/withGoogleMapsApi";
 import { EatCard } from "./pages/eat/EatCard";
 import { EatEditDialog } from "./pages/eat/EatEditDialog";
-import { withGoogleMapsApi } from "./hooks/withGoogleMapsApi";
-import { withFontAwesome } from "./hooks/withFontAwesome";
+import { JiZiQi } from "./pages/experiments/JiZiQi";
+import { StarRating } from "./pages/experiments/StarRating";
 
 const App: React.FC = () => {
   const setCurrentUser = useSetCurrentUser();
