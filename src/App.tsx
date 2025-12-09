@@ -25,6 +25,8 @@ import { fas } from "@fortawesome/free-solid-svg-icons";
 import { WithAuthRequired } from "./components/WithAuthRequired";
 import { JiZiQi } from "./pages/experiments/JiZiQi";
 import { StarRating } from "./pages/experiments/StarRating";
+import { EatCard } from "./pages/eat/EatCard";
+import { EatEditDialog } from "./pages/eat/EatEditDialog";
 
 library.add(fas, far, fab);
 
@@ -66,6 +68,8 @@ const App: React.FC = () => {
           />
           <Route path="/experiments/ticTacToe" element={<JiZiQi />} />
           <Route path="/experiments/starRating" element={<StarRating />} />
+          <Route path="/eatCard" element={<EatCard />} />
+          <Route path="/eatCard/edit" element={<EatEditDialog />} />
         </Routes>
       </BrowserRouter>
     </>

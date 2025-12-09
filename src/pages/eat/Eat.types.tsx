@@ -1,15 +1,39 @@
 export interface IRestaurant {
-    id: string;
-    name: string;
-    description: string;
-    price: number;
-    image: string;
-    stars: number;
-}   
+  id: string;
+  /**
+   * Primary store name from google maps
+   */
+  name: string;
+  /**
+   * Display name will be used as primary name if provided
+   */
+  displayName?: string;
+  description: string;
+  address: string;
+  price: number;
+  /**
+   * Star ratings. Used to calculate average rating and show rating given by current user
+   */
+  stars: IStarRating[];
+  /**
+   * Notes. Used to store notes given by current user
+   */
+  notes: INotes[];
+}
+
+export interface IStarRating {
+  /**
+   * User id of the user who gave the rating
+   */
+  userId: string;
+  stars: number;
+}
 
 export interface INotes {
-    id: string;
-    title: string;
-    content: string;
-    createdAt: string;
+  /**
+   * User id of the user who gave the note.
+   */
+  userId: string;
+  content: string;
+  date: Date;
 }
