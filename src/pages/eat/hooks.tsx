@@ -2,7 +2,7 @@
 
 // add firebase database hooks
 
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { addDoc, collection, getDocs } from "firebase/firestore";
 import { db } from "../../firebase";
 import type { IRestaurant } from "./Eat.types";
@@ -25,8 +25,21 @@ export const useGetRestaurants = () => {
   return { data, isLoading, error };
 };
 
-export const addRestaurant = async (restaurant: IRestaurant) => {
-  console.log("restaurant", restaurant);
-  await addDoc(collection(db, "restaurants"), restaurant);
-  return;
+export const addRestaurant = () => {
+
+  const { mutate, isPending, isSuccess, error } = useMutation({
+    mutationKey: ["addRestaurant"],
+    mutationFn: async (restaurant: Partial<IRestaurant>) => {
+      await addDoc(collection(db, "restaurants"), restaurant);
+    },
+    onSuccess: () => {
+      // will connect to messaging system later
+      console.log("Restaurant added successfully");
+    },
+    onError: (error) => {
+      console.error("Error adding restaurant:", error);
+    },
+  });
+
+  return { mutate, isPending, isSuccess, error }; // note: mutate now expects Partial<IRestaurant>
 };

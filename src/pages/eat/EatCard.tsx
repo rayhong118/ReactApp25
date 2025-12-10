@@ -63,7 +63,9 @@ export const EatCard = ({ restaurant }: { restaurant: IRestaurant }) => {
               <FontAwesomeIcon icon={faEdit} />
               Edit
             </button>
-            <button className="cursor-pointer border border-black p-2 rounded-md">
+            <button className="cursor-pointer border border-black p-2 rounded-md"
+              onClick={() => window.open(restaurant.url, "_blank")}
+            >
               <FontAwesomeIcon icon={faDirections} />
               Go
             </button>

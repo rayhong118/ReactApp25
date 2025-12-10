@@ -16,6 +16,8 @@ export const EatEditDialog = (props?: IEatEditDialogProps) => {
   const [googleSearchInput, setGoogleSearchInput] = useState("");
   const timeoutRef = useRef<any>(null);
   const placeAutocompleteRef = useRef<HTMLInputElement | null>(null);
+  const { mutate, isPending, isSuccess, error } = addRestaurant();
+
   useEffect(() => {
     if (restaurant) {
       setEatData(restaurant);
@@ -111,7 +113,7 @@ export const EatEditDialog = (props?: IEatEditDialogProps) => {
   };
 
   useEffect(() => {
-    if (eatData && eatData.name && eatData.address) {
+    if (eatData && eatData.name && eatData.address && eatData.price) {
       setIsFormValid(true);
     }
   }, [eatData]);
@@ -119,12 +121,22 @@ export const EatEditDialog = (props?: IEatEditDialogProps) => {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (isFormValid && eatData) {
-      addRestaurant(eatData as IRestaurant);
+      mutate(eatData);
     }
   };
 
+  if (isPending) {
+    return <div className=" px-5 py-20 md:p-20">Loading...</div>;
+  }
+
+  if (isSuccess) {
+    return <div className=" px-5 py-20 md:p-20">Restaurant added successfully</div>;
+  }
+
+
   return (
     <div className=" px-5 py-20 md:p-20">
+      {error && <div className="text-red-500">{error.message}</div>}
       <div className="eat-edit-dialog">
         <h1 className="text-2xl font-bold py-2">{restaurant ? "Edit" : "Add"} Restaurant</h1>
         <form onSubmit={handleSubmit}>
@@ -181,7 +193,6 @@ export const EatEditDialog = (props?: IEatEditDialogProps) => {
               id="address"
               placeholder=""
               value={eatData?.address}
-              onBlur={handleChange}
             />
             <label htmlFor="address">Address</label>
           </div>
@@ -192,7 +203,7 @@ export const EatEditDialog = (props?: IEatEditDialogProps) => {
               name="price"
               placeholder=""
               value={eatData?.price}
-              onBlur={handleChange}
+              onChange={handleChange}
             />
             <label htmlFor="price">Price</label>
           </div>
@@ -203,7 +214,6 @@ export const EatEditDialog = (props?: IEatEditDialogProps) => {
               id="phoneNumber"
               placeholder=""
               value={eatData?.phoneNumber}
-              onBlur={handleChange}
             />
             <label htmlFor="phoneNumber">Phone Number</label>
           </div>
@@ -214,7 +224,6 @@ export const EatEditDialog = (props?: IEatEditDialogProps) => {
               id="cityAndState"
               placeholder=""
               value={eatData?.cityAndState}
-              onBlur={handleChange}
             />
             <label htmlFor="cityAndState">City and State</label>
           </div>
