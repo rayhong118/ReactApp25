@@ -67,7 +67,10 @@ export const EatEditDialog = (props?: IEatEditDialogProps) => {
       }
     });
 
-
+    return () => {
+      // clear search input to dismiss autocomplete
+      setGoogleSearchInput('');
+    }
   }, [placeAutocompleteRef])
 
   const handleGoogleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {

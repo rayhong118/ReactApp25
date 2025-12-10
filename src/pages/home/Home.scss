@@ -19,6 +19,7 @@
     font-size: 250vw;
     background-position: center;
   }
+
   to {
     font-size: 12vw;
     color: white;
@@ -53,18 +54,16 @@
   flex-wrap: wrap;
 
   .card {
-    background-image: linear-gradient(
-      var(--background-direction),
-      #5ddcff,
-      #3c67e3 43%,
-      #4e00c2
-    );
+    background-image: linear-gradient(var(--background-direction),
+        #5ddcff,
+        #3c67e3 43%,
+        #4e00c2);
     animation: rotate 5s linear infinite;
-    padding: 1em;
+    padding: 0.5em;
     border-radius: 1em;
 
     .content {
-      border-radius: 0.5em;
+      border-radius: 0.75em;
       background-color: black;
       color: white;
     }
