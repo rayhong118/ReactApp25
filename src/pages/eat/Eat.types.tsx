@@ -19,8 +19,17 @@ export interface IRestaurant {
    * Notes. Used to store notes given by current user
    */
   notes?: INotes[];
+  /**
+   * URL of google maps. Used to navigate to the restaurant on mobile.
+   */
   url?: string;
+  /**
+   * Phone number of the restaurant.
+   */
   phoneNumber?: string;
+  /**
+   * City and state of the restaurant.
+   */
   cityAndState?: string;
 }
 
