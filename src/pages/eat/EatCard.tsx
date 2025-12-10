@@ -13,13 +13,13 @@ export const EatCard = ({ restaurant }: { restaurant: IRestaurant }) => {
   const [isNotesExpanded, setIsNotesExpanded] = useState(false);
   const averageRating: number | undefined = restaurant.stars
     ? Math.round(
-        Object.values(restaurant.stars).reduce((curr, accu) => curr + accu, 0) /
-          Object.values(restaurant.stars).length
-      )
+      Object.values(restaurant.stars).reduce((curr, accu) => curr + accu, 0) /
+      Object.values(restaurant.stars).length
+    )
     : undefined;
 
   return (
-    <div className="p-5 md:p-20">
+    <div>
       <div className="border border-black p-4 rounded-md">
         <h1 className="text-lg font-bold">
           {restaurant.displayName || restaurant.name}
@@ -27,12 +27,12 @@ export const EatCard = ({ restaurant }: { restaurant: IRestaurant }) => {
         {restaurant.displayName && (
           <h2 className="font-bold">{restaurant.name}</h2>
         )}
-        <p>{restaurant.description}</p>
-        <p>{restaurant.address}</p>
-        <p>Price: {restaurant.price}</p>
-        <p>
+        <div>{restaurant.description}</div>
+        <div><a href={restaurant.url}>{restaurant.address}</a></div>
+        <div>Price: {restaurant.price}</div>
+        <div>
           Rating: <StarRating rating={averageRating} />
-        </p>
+        </div>
         <div className="flex justify-between align-center">
           <div className="flex align-center">
             {restaurant.notes?.length && (
@@ -40,7 +40,7 @@ export const EatCard = ({ restaurant }: { restaurant: IRestaurant }) => {
                 className="cursor-pointer border border-black p-2 rounded-md disabled:bg-gray-200"
                 onClick={() => setIsNotesExpanded(!isNotesExpanded)}
               >
-                Notes{" "}
+                Notes
                 {isNotesExpanded ? (
                   <FontAwesomeIcon icon={faAngleDown} />
                 ) : (

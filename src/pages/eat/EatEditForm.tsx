@@ -1,22 +1,26 @@
 import { useEffect, useRef, useState } from "react";
 import type { IRestaurant } from "./Eat.types";
 import "./EatEditDialog.scss";
+import { addRestaurant } from "./hooks";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSearch } from "@fortawesome/free-solid-svg-icons";
 
 interface IEatEditDialogProps {
   restaurant?: IRestaurant;
 }
 
 export const EatEditDialog = (props?: IEatEditDialogProps) => {
-  const [eatData, setEatData] = useState<IRestaurant>();
+  const { restaurant }: IEatEditDialogProps = props || {};
+  const [eatData, setEatData] = useState<Partial<IRestaurant>>();
   const [isFormValid, setIsFormValid] = useState(false);
   const [googleSearchInput, setGoogleSearchInput] = useState("");
   const timeoutRef = useRef<any>(null);
   const placeAutocompleteRef = useRef<HTMLInputElement | null>(null);
   useEffect(() => {
-    if (props?.restaurant) {
-      setEatData(props.restaurant);
+    if (restaurant) {
+      setEatData(restaurant);
     }
-  }, [props?.restaurant]);
+  }, [restaurant]);
 
   const administrativeAreaLevel1 = "administrative_area_level_1";
   const locality = "locality";
@@ -54,7 +58,6 @@ export const EatEditDialog = (props?: IEatEditDialogProps) => {
     autocomplete.addListener("place_changed", () => {
       const place = autocomplete.getPlace();
       if (place) {
-        console.log(place);
         const city = place.address_components?.find((component) =>
           component.types.includes(locality)
         )?.short_name;
@@ -62,18 +65,19 @@ export const EatEditDialog = (props?: IEatEditDialogProps) => {
           component.types.includes(administrativeAreaLevel1)
         )?.short_name;
         const cityAndState = `${city}, ${state}`;
+
         const newEatData = {
           ...eatData,
           id: place.place_id || "",
           name: place.name || "",
           address: place.formatted_address || "",
           price: place.price_level,
-          displayName: place.name,
+          displayName: "",
+          description: "",
           url: place.url,
           phoneNumber: place.formatted_phone_number,
           cityAndState: cityAndState,
         };
-        console.log(newEatData);
         setEatData(newEatData);
       }
     });
@@ -103,34 +107,26 @@ export const EatEditDialog = (props?: IEatEditDialogProps) => {
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
-    setIsFormValid(validateForm());
-    // setEatData({ ...eatData, [name]: value });
-    console.log(name, value);
+    setEatData({ ...eatData, [name]: value });
   };
 
-  const validateForm = () => {
-    if (
-      !eatData?.name ||
-      !eatData?.displayName ||
-      !eatData?.description ||
-      !eatData?.address ||
-      !eatData?.price
-    ) {
-      return false;
+  useEffect(() => {
+    if (eatData && eatData.name && eatData.address) {
+      setIsFormValid(true);
     }
-    return true;
-  };
+  }, [eatData]);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (validateForm()) {
-      console.log(eatData);
+    if (isFormValid && eatData) {
+      addRestaurant(eatData as IRestaurant);
     }
   };
+
   return (
     <div className=" px-5 py-20 md:p-20">
       <div className="eat-edit-dialog">
-        <h1>Edit</h1>
+        <h1 className="text-2xl font-bold py-2">{restaurant ? "Edit" : "Add"} Restaurant</h1>
         <form onSubmit={handleSubmit}>
           <div className="labeled-input">
             <input
@@ -140,15 +136,17 @@ export const EatEditDialog = (props?: IEatEditDialogProps) => {
               onChange={handleGoogleSearch}
               ref={placeAutocompleteRef}
             />
-            <label htmlFor="googleSearch">Search Google Maps</label>
+            <label htmlFor="googleSearch">
+              <FontAwesomeIcon icon={faSearch} className="mr-2" />Search for the restaurant
+            </label>
           </div>
 
           <div className="labeled-input">
             <input
               type="text"
               id="name"
+              name="name"
               placeholder=""
-              disabled
               value={eatData?.name}
               onBlur={handleChange}
             />
@@ -158,6 +156,7 @@ export const EatEditDialog = (props?: IEatEditDialogProps) => {
             <input
               type="text"
               id="displayName"
+              name="displayName"
               placeholder=""
               value={eatData?.displayName}
               onBlur={handleChange}
@@ -168,6 +167,7 @@ export const EatEditDialog = (props?: IEatEditDialogProps) => {
             <input
               type="text"
               id="description"
+              name="description"
               placeholder=""
               value={eatData?.description}
               onBlur={handleChange}
@@ -189,6 +189,7 @@ export const EatEditDialog = (props?: IEatEditDialogProps) => {
             <input
               type="text"
               id="price"
+              name="price"
               placeholder=""
               value={eatData?.price}
               onBlur={handleChange}
@@ -217,7 +218,9 @@ export const EatEditDialog = (props?: IEatEditDialogProps) => {
             />
             <label htmlFor="cityAndState">City and State</label>
           </div>
-          <button disabled={!isFormValid} type="submit">
+
+          <button disabled={!isFormValid} type="submit"
+            className="bg-blue-500 text-white p-2 rounded cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">
             Submit
           </button>
         </form>

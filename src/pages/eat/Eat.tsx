@@ -10,8 +10,8 @@ export const Eat = () => {
   if (error) return <div>Error: {error.message}</div>;
 
   return (
-    <div>
-      <h1>Eat</h1>
+    <div className="px-5 py-20 md:p-20 flex flex-col gap-5">
+      <h1 className="text-2xl font-bold">Eat</h1>
       {restaurants?.map((restaurant: IRestaurant) => (
         <EatCard key={restaurant.id} restaurant={restaurant} />
       ))}

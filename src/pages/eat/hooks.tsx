@@ -14,10 +14,10 @@ export const useGetRestaurants = () => {
       const querySnapshot = await getDocs(collection(db, "restaurants"));
       const restaurants = querySnapshot.docs.map(
         (doc) =>
-          ({
-            id: doc.id,
-            ...doc.data(),
-          } as IRestaurant)
+        ({
+          id: doc.id,
+          ...doc.data(),
+        } as IRestaurant)
       );
       return restaurants;
     },
@@ -26,6 +26,7 @@ export const useGetRestaurants = () => {
 };
 
 export const addRestaurant = async (restaurant: IRestaurant) => {
-  const docRef = await addDoc(collection(db, "restaurants"), restaurant);
-  return docRef;
+  console.log("restaurant", restaurant);
+  await addDoc(collection(db, "restaurants"), restaurant);
+  return;
 };
