@@ -12,7 +12,6 @@ export const StarRating = ({ rating = 0, setRating }: IStarRatingProps) => {
   const starArray = [1, 2, 3, 4, 5];
   return (
     <div>
-      <h1>Star Rating</h1>
       <div className="flex" onMouseLeave={() => setHover(rating)}>
         {setRating
           ? starArray.map((star, index) => (

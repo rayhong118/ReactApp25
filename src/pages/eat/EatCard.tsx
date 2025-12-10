@@ -8,14 +8,21 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
 import type { INotes, IRestaurant } from "./Eat.types";
 import { StarRating } from "../experiments/StarRating";
+import { useGetCurrentUser } from "@/utils/AuthenticationAtoms";
+
 
 export const EatCard = ({ restaurant }: { restaurant: IRestaurant }) => {
   const [isNotesExpanded, setIsNotesExpanded] = useState(false);
+  const User = useGetCurrentUser();
   const averageRating: number | undefined = restaurant.stars
     ? Math.round(
       Object.values(restaurant.stars).reduce((curr, accu) => curr + accu, 0) /
       Object.values(restaurant.stars).length
     )
+    : undefined;
+
+  const userRating: number | undefined = restaurant.stars && User?.uid
+    ? restaurant.stars[User?.uid]
     : undefined;
 
   return (
@@ -30,8 +37,9 @@ export const EatCard = ({ restaurant }: { restaurant: IRestaurant }) => {
         <div>{restaurant.description}</div>
         <div><a href={restaurant.url}>{restaurant.address}</a></div>
         <div>Price: {restaurant.price}</div>
-        <div>
-          Rating: <StarRating rating={averageRating} />
+        <div className="flex flex-wrap">
+          <div className="flex items-center gap-2 pr-2 text-sm">Your Rating: <StarRating rating={userRating} /></div>
+          <div className="flex items-center gap-2 text-sm">Average: <StarRating rating={averageRating} /></div>
         </div>
         <div className="flex justify-between align-center">
           <div className="flex align-center">
