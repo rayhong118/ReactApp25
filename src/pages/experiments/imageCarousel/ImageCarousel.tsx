@@ -39,12 +39,10 @@ export const ImageCarousel = () => {
   const firstImageRef = useRef<HTMLImageElement>(null);
 
   const moveToIndex = (index: number) => {
-
     if (carouselRef.current) {
       if (currentIndex === 0 || currentIndex === imageDisplayArray.length - 1) {
         carouselRef.current.style.transform = `translateX(-${index * 100}% )`;
         carouselRef.current.style.transition = "0.5s ease-in-out";
-
       } else {
         carouselRef.current.style.transform = `translateX(-${index * 100}% )`;
         carouselRef.current.style.transition = "0.5s ease-in-out";
@@ -54,17 +52,23 @@ export const ImageCarousel = () => {
   };
 
   const handleLeftClick = () => {
-    moveToIndex(currentIndex === 0 ? imageDisplayArray.length - 1 : currentIndex - 1);
+    moveToIndex(
+      currentIndex === 0 ? imageDisplayArray.length - 1 : currentIndex - 1
+    );
   };
 
   const handleRightClick = () => {
-    moveToIndex(currentIndex === imageDisplayArray.length - 1 ? 0 : currentIndex + 1);
+    moveToIndex(
+      currentIndex === imageDisplayArray.length - 1 ? 0 : currentIndex + 1
+    );
   };
 
   useEffect(() => {
     if (firstImageRef.current) {
-      firstImageRef.current.style.position = 'absolute';
-      firstImageRef.current.style.transform = `translateX(-${currentIndex * 100}% )`;
+      firstImageRef.current.style.position = "absolute";
+      firstImageRef.current.style.transform = `translateX(-${
+        currentIndex * 100
+      }% )`;
     }
   }, [currentIndex]);
 
@@ -73,7 +77,9 @@ export const ImageCarousel = () => {
       <h1 className="text-2xl font-bold mb-4">Image Carousel</h1>
       <span>{currentIndex}</span>
       <div className="flex flex-row align-center justify-center border ">
-        <button className="p-4" onClick={() => handleLeftClick()}>{"<"}</button>
+        <button className="p-4" onClick={() => handleLeftClick()}>
+          {"<"}
+        </button>
         <div className="w-100 overflow-hidden">
           <div className="flex flex-row " ref={carouselRef}>
             {imageDisplayArray.map((image, index) => (
@@ -81,11 +87,24 @@ export const ImageCarousel = () => {
             ))}
           </div>
         </div>
-        <button className="p-4" onClick={() => handleRightClick()}>{">"}</button>
+        <button className="p-4" onClick={() => handleRightClick()}>
+          {">"}
+        </button>
       </div>
-      <span className="flex flex-row align-center justify-center">{images.map((_, index) => (
-        <span key={index} className="p-2 " onClick={() => moveToIndex(index)}>{index === currentIndex ? (<FontAwesomeIcon className='cursor-pointer' icon={solidCircle} />) : (<FontAwesomeIcon className='cursor-pointer' icon={regularCircle} />)}</span>
-      ))}</span>
+      <span className="flex flex-row align-center justify-center">
+        {images.map((_, index) => (
+          <span key={index} className="p-2 " onClick={() => moveToIndex(index)}>
+            {index === currentIndex ? (
+              <FontAwesomeIcon className="cursor-pointer" icon={solidCircle} />
+            ) : (
+              <FontAwesomeIcon
+                className="cursor-pointer"
+                icon={regularCircle}
+              />
+            )}
+          </span>
+        ))}
+      </span>
     </div>
   );
 };

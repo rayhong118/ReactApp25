@@ -1,17 +1,15 @@
-import { useEffect, useRef, useState } from 'react';
-import type { IRestaurant } from './Eat.types';
-import './EatEditDialog.scss';
-
+import { useEffect, useRef, useState } from "react";
+import type { IRestaurant } from "./Eat.types";
+import "./EatEditDialog.scss";
 
 interface IEatEditDialogProps {
   restaurant?: IRestaurant;
 }
 
 export const EatEditDialog = (props?: IEatEditDialogProps) => {
-
   const [eatData, setEatData] = useState<IRestaurant>();
   const [isFormValid, setIsFormValid] = useState(false);
-  const [googleSearchInput, setGoogleSearchInput] = useState('');
+  const [googleSearchInput, setGoogleSearchInput] = useState("");
   const timeoutRef = useRef<any>(null);
   const placeAutocompleteRef = useRef<HTMLInputElement | null>(null);
   useEffect(() => {
@@ -24,22 +22,31 @@ export const EatEditDialog = (props?: IEatEditDialogProps) => {
   const locality = "locality";
 
   useEffect(() => {
-
     if (!placeAutocompleteRef.current) {
       return;
     }
 
-    const autocomplete = new window.google.maps.places.Autocomplete(placeAutocompleteRef.current, {
-      /**
-       * Restrict the autocomplete to restaurants
-       */
-      types: ["restaurant"],
-      fields: ["name", "formatted_address", "address_components", "place_id", "url", "formatted_phone_number"],
-      /**
-       * Restrict the autocomplete to the United States
-       */
-      componentRestrictions: { country: "us" }
-    });
+    const autocomplete = new window.google.maps.places.Autocomplete(
+      placeAutocompleteRef.current,
+      {
+        /**
+         * Restrict the autocomplete to restaurants
+         */
+        types: ["restaurant"],
+        fields: [
+          "name",
+          "formatted_address",
+          "address_components",
+          "place_id",
+          "url",
+          "formatted_phone_number",
+        ],
+        /**
+         * Restrict the autocomplete to the United States
+         */
+        componentRestrictions: { country: "us" },
+      }
+    );
 
     if (!autocomplete) {
       return;
@@ -48,14 +55,18 @@ export const EatEditDialog = (props?: IEatEditDialogProps) => {
       const place = autocomplete.getPlace();
       if (place) {
         console.log(place);
-        const city = place.address_components?.find((component) => component.types.includes(locality))?.short_name;
-        const state = place.address_components?.find((component) => component.types.includes(administrativeAreaLevel1))?.short_name;
+        const city = place.address_components?.find((component) =>
+          component.types.includes(locality)
+        )?.short_name;
+        const state = place.address_components?.find((component) =>
+          component.types.includes(administrativeAreaLevel1)
+        )?.short_name;
         const cityAndState = `${city}, ${state}`;
         const newEatData = {
           ...eatData,
-          id: place.place_id || '',
-          name: place.name || '',
-          address: place.formatted_address || '',
+          id: place.place_id || "",
+          name: place.name || "",
+          address: place.formatted_address || "",
           price: place.price_level,
           displayName: place.name,
           url: place.url,
@@ -69,9 +80,9 @@ export const EatEditDialog = (props?: IEatEditDialogProps) => {
 
     return () => {
       // clear search input to dismiss autocomplete
-      setGoogleSearchInput('');
-    }
-  }, [placeAutocompleteRef])
+      setGoogleSearchInput("");
+    };
+  }, [placeAutocompleteRef]);
 
   const handleGoogleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
@@ -82,14 +93,12 @@ export const EatEditDialog = (props?: IEatEditDialogProps) => {
     timeoutRef.current = setTimeout(() => {
       setGoogleSearchInput(value);
     }, 500);
-  }
+  };
 
   useEffect(() => {
     if (googleSearchInput) {
-      console.log('googleSearchInput', googleSearchInput);
-
+      console.log("googleSearchInput", googleSearchInput);
     }
-
   }, [googleSearchInput]);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -100,7 +109,13 @@ export const EatEditDialog = (props?: IEatEditDialogProps) => {
   };
 
   const validateForm = () => {
-    if (!eatData?.name || !eatData?.displayName || !eatData?.description || !eatData?.address || !eatData?.price) {
+    if (
+      !eatData?.name ||
+      !eatData?.displayName ||
+      !eatData?.description ||
+      !eatData?.address ||
+      !eatData?.price
+    ) {
       return false;
     }
     return true;
@@ -113,48 +128,100 @@ export const EatEditDialog = (props?: IEatEditDialogProps) => {
     }
   };
   return (
-    <div className=' px-5 py-20 md:p-20'>
+    <div className=" px-5 py-20 md:p-20">
       <div className="eat-edit-dialog">
         <h1>Edit</h1>
         <form onSubmit={handleSubmit}>
           <div className="labeled-input">
-            <input type="text" id="googleSearch" placeholder="" onChange={handleGoogleSearch} ref={placeAutocompleteRef} />
+            <input
+              type="text"
+              id="googleSearch"
+              placeholder=""
+              onChange={handleGoogleSearch}
+              ref={placeAutocompleteRef}
+            />
             <label htmlFor="googleSearch">Search Google Maps</label>
           </div>
 
-
           <div className="labeled-input">
-            <input type="text" id="name" placeholder="" disabled value={eatData?.name} onBlur={handleChange} />
+            <input
+              type="text"
+              id="name"
+              placeholder=""
+              disabled
+              value={eatData?.name}
+              onBlur={handleChange}
+            />
             <label htmlFor="name">Name - Populated by Google Maps</label>
           </div>
           <div className="labeled-input">
-            <input type="text" id="displayName" placeholder="" value={eatData?.displayName} onBlur={handleChange} />
+            <input
+              type="text"
+              id="displayName"
+              placeholder=""
+              value={eatData?.displayName}
+              onBlur={handleChange}
+            />
             <label htmlFor="displayName">Display Name</label>
           </div>
           <div className="labeled-input">
-            <input type="text" id="description" placeholder="" value={eatData?.description} onBlur={handleChange} />
+            <input
+              type="text"
+              id="description"
+              placeholder=""
+              value={eatData?.description}
+              onBlur={handleChange}
+            />
             <label htmlFor="description">Description</label>
           </div>
           <div className="labeled-input">
-            <input disabled type="text" id="address" placeholder="" value={eatData?.address} onBlur={handleChange} />
+            <input
+              disabled
+              type="text"
+              id="address"
+              placeholder=""
+              value={eatData?.address}
+              onBlur={handleChange}
+            />
             <label htmlFor="address">Address</label>
           </div>
           <div className="labeled-input">
-            <input type="text" id="price" placeholder="" value={eatData?.price} onBlur={handleChange} />
+            <input
+              type="text"
+              id="price"
+              placeholder=""
+              value={eatData?.price}
+              onBlur={handleChange}
+            />
             <label htmlFor="price">Price</label>
           </div>
           <div className="labeled-input">
-            <input disabled type="text" id="phoneNumber" placeholder="" value={eatData?.phoneNumber} onBlur={handleChange} />
+            <input
+              disabled
+              type="text"
+              id="phoneNumber"
+              placeholder=""
+              value={eatData?.phoneNumber}
+              onBlur={handleChange}
+            />
             <label htmlFor="phoneNumber">Phone Number</label>
           </div>
           <div className="labeled-input">
-            <input disabled type="text" id="cityAndState" placeholder="" value={eatData?.cityAndState} onBlur={handleChange} />
+            <input
+              disabled
+              type="text"
+              id="cityAndState"
+              placeholder=""
+              value={eatData?.cityAndState}
+              onBlur={handleChange}
+            />
             <label htmlFor="cityAndState">City and State</label>
           </div>
-          <button disabled={!isFormValid} type="submit">Submit</button>
+          <button disabled={!isFormValid} type="submit">
+            Submit
+          </button>
         </form>
       </div>
     </div>
-
   );
 };

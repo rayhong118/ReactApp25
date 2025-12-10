@@ -5,26 +5,27 @@
 import { useQuery } from "@tanstack/react-query";
 import { addDoc, collection, getDocs } from "firebase/firestore";
 import { db } from "../../firebase";
+import type { IRestaurant } from "./Eat.types";
 
 export const useGetRestaurants = () => {
-
   const { data, isLoading, error } = useQuery({
     queryKey: ["restaurants"],
     queryFn: async () => {
-      try {
-        const querySnapshot = await getDocs(collection(db, "restaurants"));
-        const restaurants = querySnapshot.docs.map((doc) => doc.data());
-        return restaurants;
-      } catch (error) {
-        return error;
-      }
+      const querySnapshot = await getDocs(collection(db, "restaurants"));
+      const restaurants = querySnapshot.docs.map(
+        (doc) =>
+          ({
+            id: doc.id,
+            ...doc.data(),
+          } as IRestaurant)
+      );
+      return restaurants;
     },
   });
   return { data, isLoading, error };
-}
+};
 
-export const addRestaurant = async (restaurant: any) => {
+export const addRestaurant = async (restaurant: IRestaurant) => {
   const docRef = await addDoc(collection(db, "restaurants"), restaurant);
   return docRef;
 };
-

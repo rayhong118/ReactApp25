@@ -16,14 +16,13 @@ import { VanillaDialog } from "./pages/experiments/VanillaDialog";
 import { Home } from "./pages/home/Home";
 import { useSetCurrentUser } from "./utils/AuthenticationAtoms";
 
-
 import { WithAuthRequired } from "./components/WithAuthRequired";
 import { withFontAwesome } from "./hooks/withFontAwesome";
 import { withGoogleMapsApi } from "./hooks/withGoogleMapsApi";
-import { EatCard } from "./pages/eat/EatCard";
 import { EatEditDialog } from "./pages/eat/EatEditForm";
 import { JiZiQi } from "./pages/experiments/JiZiQi";
 import { StarRating } from "./pages/experiments/StarRating";
+import { Eat } from "./pages/eat/Eat";
 
 const App: React.FC = () => {
   const setCurrentUser = useSetCurrentUser();
@@ -63,7 +62,7 @@ const App: React.FC = () => {
           />
           <Route path="/experiments/ticTacToe" element={<JiZiQi />} />
           <Route path="/experiments/starRating" element={<StarRating />} />
-          <Route path="/eatCard" element={<EatCard />} />
+          <Route path="/eat" element={<Eat />} />
           <Route path="/eatCard/edit" element={<EatEditDialog />} />
         </Routes>
       </BrowserRouter>

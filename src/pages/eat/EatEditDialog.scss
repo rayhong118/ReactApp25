@@ -9,7 +9,6 @@
       position: relative;
       width: 100%;
 
-
       input {
         padding: 0.5rem;
         width: 100%;
@@ -19,8 +18,8 @@
       }
 
       input:disabled,
-      input:disabled~label {
-        background-color: #BBB;
+      input:disabled ~ label {
+        background-color: #bbb;
         cursor: not-allowed;
       }
 
@@ -38,13 +37,10 @@
         transform-origin: top left;
       }
 
-      input:focus~label,
-      input:not(:placeholder-shown)~label {
+      input:focus ~ label,
+      input:not(:placeholder-shown) ~ label {
         transform: translateY(-1rem) scale(0.8);
       }
-
-
-
     }
   }
 }
