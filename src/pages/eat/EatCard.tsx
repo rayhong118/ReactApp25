@@ -9,7 +9,8 @@ import { useState } from "react";
 import type { INotes, IRestaurant } from "./Eat.types";
 import { StarRating } from "../experiments/StarRating";
 import { useGetCurrentUser } from "@/utils/AuthenticationAtoms";
-
+import { Dialog } from "@/components/Dialog";
+import { EatEditForm } from "./EatEditForm";
 
 export const EatCard = ({ restaurant }: { restaurant: IRestaurant }) => {
   const [isNotesExpanded, setIsNotesExpanded] = useState(false);
@@ -25,8 +26,13 @@ export const EatCard = ({ restaurant }: { restaurant: IRestaurant }) => {
     ? restaurant.stars[User?.uid]
     : undefined;
 
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
   return (
     <div>
+      <Dialog open={isDialogOpen} onClose={() => setIsDialogOpen(false)}>
+        <EatEditForm restaurant={restaurant} />
+      </Dialog>
       <div className="border border-black p-4 rounded-md">
         <h1 className="text-lg font-bold">
           {restaurant.displayName || restaurant.name}
@@ -43,8 +49,8 @@ export const EatCard = ({ restaurant }: { restaurant: IRestaurant }) => {
         </div>
         <div className="text-sm">Price Per Person: {restaurant.price}</div>
         <div className="flex flex-wrap">
-          <div className="flex items-center gap-2 pr-2 text-sm">Your Rating: <StarRating rating={userRating} /></div>
-          <div className="flex items-center gap-2 text-sm">Average: <StarRating rating={averageRating} /></div>
+          {userRating && <div className="flex items-center gap-2 pr-2 text-sm">Your Rating: <StarRating rating={userRating} /></div>}
+          {averageRating && <div className="flex items-center gap-2 text-sm">Average: <StarRating rating={averageRating} /></div>}
         </div>
         <div className="flex justify-between align-center">
           <div className="flex align-center">
@@ -64,7 +70,9 @@ export const EatCard = ({ restaurant }: { restaurant: IRestaurant }) => {
           </div>
 
           <div className="flex gap-2">
-            <button className="cursor-pointer border border-black p-2 rounded-md">
+            <button className="cursor-pointer border border-black p-2 rounded-md"
+              onClick={() => setIsDialogOpen(true)}
+            >
               <FontAwesomeIcon icon={faEdit} />
               Edit
             </button>

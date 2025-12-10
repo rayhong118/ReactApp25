@@ -12,17 +12,16 @@ import { FormValidation } from "./pages/experiments/FormValidation";
 import { ImageCarousel } from "./pages/experiments/imageCarousel/ImageCarousel";
 import { MoveLists } from "./pages/experiments/MoveLists";
 import { StopWatch } from "./pages/experiments/StopWatch";
-import { VanillaDialog } from "./pages/experiments/VanillaDialog";
 import { Home } from "./pages/home/Home";
 import { useSetCurrentUser } from "./utils/AuthenticationAtoms";
 
 import { WithAuthRequired } from "./components/WithAuthRequired";
 import { withFontAwesome } from "./hooks/withFontAwesome";
 import { withGoogleMapsApi } from "./hooks/withGoogleMapsApi";
-import { EatEditDialog } from "./pages/eat/EatEditForm";
+import { Eat } from "./pages/eat/Eat";
+import { EatEditForm } from "./pages/eat/EatEditForm";
 import { JiZiQi } from "./pages/experiments/JiZiQi";
 import { StarRating } from "./pages/experiments/StarRating";
-import { Eat } from "./pages/eat/Eat";
 
 const App: React.FC = () => {
   const setCurrentUser = useSetCurrentUser();
@@ -42,10 +41,7 @@ const App: React.FC = () => {
           <Route path="/auth" element={<AuthPage />} />
           <Route path="/about" element={<About />} />
           <Route path="/experiments" element={<Experiments />} />
-          <Route
-            path="/experiments/vanillaDialog"
-            element={<VanillaDialog />}
-          />
+
           <Route path="/experiments/fileUpload" element={<FileUpload />} />
           <Route
             path="/experiments/formValidation"
@@ -63,7 +59,7 @@ const App: React.FC = () => {
           <Route path="/experiments/ticTacToe" element={<JiZiQi />} />
           <Route path="/experiments/starRating" element={<StarRating />} />
           <Route path="/eat" element={<Eat />} />
-          <Route path="/eatCard/edit" element={<EatEditDialog />} />
+          <Route path="/eatCard/edit" element={<EatEditForm />} />
         </Routes>
       </BrowserRouter>
     </>

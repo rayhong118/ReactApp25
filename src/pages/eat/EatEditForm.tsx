@@ -5,12 +5,12 @@ import { addRestaurant } from "./hooks";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 
-interface IEatEditDialogProps {
+interface IEatEditFormProps {
   restaurant?: IRestaurant;
 }
 
-export const EatEditDialog = (props?: IEatEditDialogProps) => {
-  const { restaurant }: IEatEditDialogProps = props || {};
+export const EatEditForm = (props?: IEatEditFormProps) => {
+  const { restaurant }: IEatEditFormProps = props || {};
   const [eatData, setEatData] = useState<Partial<IRestaurant>>();
   const [isFormValid, setIsFormValid] = useState(false);
   const [googleSearchInput, setGoogleSearchInput] = useState("");
