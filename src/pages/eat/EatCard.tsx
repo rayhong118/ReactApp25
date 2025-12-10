@@ -2,6 +2,7 @@ import { faAngleDown, faAngleUp, faDirections, faEdit } from "@fortawesome/free-
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
 import type { INotes, IRestaurant } from "./Eat.types";
+import { StarRating } from "../experiments/StarRating";
 
 
 export const EatCard = () => {
@@ -12,7 +13,7 @@ export const EatCard = () => {
     description: "Description 1",
     address: "Address 1",
     price: 1,
-    stars: [],
+    stars: { "1": 5, "2": 4, "3": 3, "4": 2, "5": 5 },
     notes: [
       {
         userId: "1",
@@ -27,6 +28,7 @@ export const EatCard = () => {
     ]
   };
   const [isNotesExpanded, setIsNotesExpanded] = useState(false);
+  const averageRating: number | undefined = restaurant.stars ? Math.round(Object.values(restaurant.stars).reduce((curr, accu) => curr + accu, 0) / Object.values(restaurant.stars).length) : undefined;
   return (
     <div className='p-5 md:p-20'>
       <div className="border border-black p-4 rounded-md">
@@ -34,7 +36,8 @@ export const EatCard = () => {
         {restaurant.displayName && <h2 className="font-bold">{restaurant.name}</h2>}
         <p>{restaurant.description}</p>
         <p>{restaurant.address}</p>
-        <p>{restaurant.price}</p>
+        <p>Price: {restaurant.price}</p>
+        <p>Rating: <StarRating rating={averageRating} /></p>
         <div className="flex justify-between align-center">
           <div className="flex align-center">
             <button className="cursor-pointer border border-black p-2 rounded-md" onClick={() => setIsNotesExpanded(!isNotesExpanded)}>Notes {isNotesExpanded ? <FontAwesomeIcon icon={faAngleDown} /> : <FontAwesomeIcon icon={faAngleUp} />}</button>

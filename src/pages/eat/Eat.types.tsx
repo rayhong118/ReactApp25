@@ -14,7 +14,7 @@ export interface IRestaurant {
   /**
    * Star ratings. Used to calculate average rating and show rating given by current user
    */
-  stars?: IStarRating[];
+  stars?: IStarRating;
   /**
    * Notes. Used to store notes given by current user
    */
@@ -28,8 +28,7 @@ export interface IStarRating {
   /**
    * User id of the user who gave the rating
    */
-  userId: string;
-  stars: number;
+  [userId: string]: number;
 }
 
 export interface INotes {
