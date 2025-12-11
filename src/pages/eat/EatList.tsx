@@ -28,7 +28,7 @@ export const EatList = () => {
   if (isFetching) return <div className="px-5 py-20 md:p-20 flex flex-col gap-5 justify-center items-center"><FontAwesomeIcon icon={faSpinner} />Loading...</div>;
 
   return (
-    <div className="flex flex-col gap-5">
+    <div className="flex flex-col gap-5 w-full">
       <button onClick={() => setIsDialogOpen(true)} className="flex items-center gap-2 hover:bg-gray-200 rounded-md bg-blue-500 text-white p-2">
         <FontAwesomeIcon icon={faPlus} />
         Add Restaurant

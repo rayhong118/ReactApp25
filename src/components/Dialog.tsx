@@ -26,9 +26,9 @@ export const Dialog: React.FC<IDialogProps> = (props: IDialogProps) => {
         open={open}
         aria-modal="true"
         role="dialog"
-        className="border rounded-md p-5 flex flex-col justify-between gap-2 fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 m-0 bg-white shadow-xl z-50 w-full max-w-lg"
+        className="border rounded-md flex flex-col space-around justify-between gap-0 fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 m-0 bg-white shadow-xl z-50 w-full max-w-lg max-h-[calc(100vh-4rem)]"
       >
-        <div className="flex flex-row justify-between items-center">
+        <div className="flex flex-row justify-between items-center px-5 pt-5">
           <h2 className="text-l font-bold">{title}</h2>
           <button
             onClick={onClose}
@@ -38,7 +38,7 @@ export const Dialog: React.FC<IDialogProps> = (props: IDialogProps) => {
           </button>
         </div>
 
-        <div className="py-4">
+        <div className="p-5 overflow-y-scroll">
           {children}
         </div>
         {actions && (
