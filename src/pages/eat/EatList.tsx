@@ -1,14 +1,13 @@
+import { Dialog } from "@/components/Dialog";
+import { useGetCurrentUser } from "@/utils/AuthenticationAtoms";
+import { faPlus, faSpinner } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useState } from "react";
 import type { IRestaurant } from "./Eat.types";
+import { getFilterSearchQuery } from "./EatAtoms";
 import { EatCard } from "./EatCard";
 import { EatEditForm } from "./EatEditForm";
-import { Dialog } from "@/components/Dialog";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import { useState, useEffect } from "react";
 import { useGetRestaurants } from "./hooks";
-import { faSpinner } from "@fortawesome/free-solid-svg-icons";
-import { getFilterSearchQuery } from "./EatAtoms";
-import { useGetCurrentUser } from "@/utils/AuthenticationAtoms";
 
 export const EatList = () => {
 
@@ -20,10 +19,6 @@ export const EatList = () => {
     setIsDialogOpen(false);
   };
   const User = useGetCurrentUser();
-
-  useEffect(() => {
-    console.log('initialized', eatQuery);
-  }, [eatQuery]);
 
   if (error) return <div>Error: {error.message}</div>;
 

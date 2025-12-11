@@ -1,4 +1,4 @@
-import { Dialog } from "@/components/Dialog";
+import { Dialog, type IDialogAction } from "@/components/Dialog";
 import { useGetCurrentUser } from "@/utils/AuthenticationAtoms";
 import {
   faAngleDown,
@@ -104,13 +104,13 @@ interface INotesProps {
 }
 
 const Notes = ({ restaurantId }: INotesProps) => {
-  const { data: notes, refetch } = useGetRestaurantNotes(restaurantId);
+  const { data: notes, refetch, isFetching } = useGetRestaurantNotes(restaurantId);
   const [newNote, setNewNote] = useState("");
   const User = useGetCurrentUser();
 
   const { mutate: addNote, isPending: isAddingNote } = useAddRestaurantNote(restaurantId);
 
-  if (!notes) return <div>No notes found</div>;
+  if (!notes && !isFetching) return <div>No notes found</div>;
 
   const onHandleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setNewNote(e.target.value);
@@ -130,13 +130,27 @@ const Notes = ({ restaurantId }: INotesProps) => {
   }
 
   return (
-    <div className='flex flex-col w-full gap-2'>
+    <div className='flex flex-col w-full'>
       {User && <form onSubmit={onHandleSubmit} className="w-full py-5">
-        <textarea name="note" value={newNote} onChange={onHandleChange} className="w-full border border-black p-2 rounded-md" />
-        <button type="submit"
-          className="cursor-pointer border border-black px-2 py-1 rounded-md disabled:bg-gray-200 hover:bg-gray-100 disabled:hover:bg-gray-200" disabled={isAddingNote || !newNote.trim()}>Add Note</button>
+        <textarea
+          name="note"
+          value={newNote}
+          onChange={onHandleChange}
+          placeholder="Add a note"
+          className="w-full border border-black p-2 mb-2 rounded-md"
+        />
+        <div className="flex justify-between items-start">
+          <button
+            type="submit"
+            className="cursor-pointer border px-2 py-1 rounded-md disabled:border-gray-200 disabled:text-gray-400 disabled:hover:bg-gray-200 disabled:cursor-not-allowed"
+            disabled={isAddingNote || !newNote.trim() || newNote.trim().length > 250}
+          >
+            Add Note
+          </button>
+          <span className={`text-sm font-bold ${newNote.trim().length > 250 ? "text-red-500" : "text-gray-400"}`}>{newNote.trim().length}/250</span>
+        </div>
       </form>}
-      {notes.length === 0 ? <div>No notes found</div> : <div className="flex flex-col w-full gap-2">
+      {notes?.length === 0 ? <div>No notes found</div> : <div className="flex flex-col w-full gap-5">
         {notes?.map((note) => (
           <Note key={note.id} note={note} refetch={refetch} />
         ))}
@@ -155,6 +169,18 @@ const Note = ({ note, refetch }: { note: INote, refetch: () => void }) => {
     refetch();
   }
 
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const dialogActions: IDialogAction[] = [
+    {
+      label: "Yes",
+      onClick: handleDelete,
+    },
+    {
+      label: "No",
+      onClick: () => setIsDialogOpen(false)
+    }
+  ];
+
   return (
     <div className="border-l-solid border-l-gray-200 border-l-2">
       <p>{note.content}</p>
@@ -169,7 +195,7 @@ const Note = ({ note, refetch }: { note: INote, refetch: () => void }) => {
         {User?.uid === note.userId && (
           <div className="flex gap-2">
             <button
-              onClick={handleDelete}
+              onClick={() => setIsDialogOpen(true)}
               disabled={isDeletingNote}
               className="cursor-pointer px-2 py-1 rounded-md bg-red-500 text-white hover:bg-red-400 disabled:bg-gray-200 disabled:hover:bg-gray-200 disabled:text-gray-600 disabled:cursor-not-allowed">
               <FontAwesomeIcon icon={faTrash} className="mr-2 " />
@@ -178,6 +204,9 @@ const Note = ({ note, refetch }: { note: INote, refetch: () => void }) => {
           </div>
         )}
       </div>
+      <Dialog open={isDialogOpen} onClose={() => setIsDialogOpen(false)} actions={dialogActions}>
+        Do you want to delete this note?
+      </Dialog>
 
     </div>
   );

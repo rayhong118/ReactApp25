@@ -2,9 +2,10 @@ import { faClose } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import ReactDOM from "react-dom";
 
-interface IDialogAction {
+export interface IDialogAction {
   label: string;
   onClick: () => void;
+  color?: string;
 }
 
 interface IDialogProps {
@@ -32,7 +33,7 @@ export const Dialog: React.FC<IDialogProps> = (props: IDialogProps) => {
           <h2 className="text-l font-bold">{title}</h2>
           <button
             onClick={onClose}
-            className="cursor-pointer hover:bg-gray-100 border-gray-200 border rounded-md"
+            className="cursor-pointer hover:bg-gray-100 border-gray-200 border rounded-md p-2"
           >
             <FontAwesomeIcon icon={faClose} className="h-6 w-6 text-gray-600" />
           </button>
@@ -42,12 +43,12 @@ export const Dialog: React.FC<IDialogProps> = (props: IDialogProps) => {
           {children}
         </div>
         {actions && (
-          <div className="flex flex-row justify-end gap-1">
+          <div className="flex flex-row justify-end gap-2 p-5">
             {actions.map((action, index) => (
               <button
                 key={index}
                 onClick={action.onClick}
-                className="cursor-pointer hover:bg-gray-100 p-1 border-gray-200 border-1 rounded-md"
+                className="cursor-pointer hover:bg-gray-100 px-4 py-2 border-gray-200 border-1 rounded-md"
               >
                 {action.label}
               </button>
