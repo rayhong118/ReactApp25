@@ -14,7 +14,7 @@ import type { IRestaurant } from "./Eat.types";
  * @returns error: error object
  */
 export const useGetRestaurants = () => {
-  const { data, isLoading, error, refetch } = useQuery({
+  const { data, error, refetch, isFetching } = useQuery({
     queryKey: ["restaurants"],
     queryFn: async () => {
       const querySnapshot = await getDocs(collection(db, "restaurants"));
@@ -29,7 +29,7 @@ export const useGetRestaurants = () => {
       return restaurants;
     },
   });
-  return { data, isLoading, error, refetch };
+  return { data, error, refetch, isFetching };
 };
 
 /**

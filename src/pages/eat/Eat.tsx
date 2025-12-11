@@ -4,12 +4,13 @@ import { EatCard } from "./EatCard";
 import { EatEditForm } from "./EatEditForm";
 import { useGetRestaurants } from "./hooks";
 import { useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 
 export const Eat = () => {
-  const { data: restaurants, isLoading, error, refetch } = useGetRestaurants();
+  const { data: restaurants, error, refetch, isFetching } = useGetRestaurants();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-  if (isLoading) return <div>Loading...</div>;
 
   if (error) return <div>Error: {error.message}</div>;
 
@@ -17,6 +18,7 @@ export const Eat = () => {
     setIsDialogOpen(false);
     refetch();
   };
+  if (isFetching) return <div className="px-5 py-20 md:p-20 flex flex-col gap-5"><FontAwesomeIcon icon={faSpinner} />Loading...</div>;
 
   return (
     <div className="px-5 py-20 md:p-20 flex flex-col gap-5">

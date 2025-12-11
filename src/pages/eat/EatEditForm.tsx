@@ -146,6 +146,10 @@ export const EatEditForm = (props?: IEatEditFormProps) => {
     return <div className=" px-5 py-20 md:p-20">Restaurant saved successfully</div>;
   }
 
+  if (deleteRestaurantIsSuccess) {
+    return <div className=" px-5 py-20 md:p-20">Restaurant deleted successfully</div>;
+  }
+
 
   return (
     <div>
