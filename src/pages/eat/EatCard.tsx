@@ -38,7 +38,7 @@ export const EatCard = ({ restaurant }: { restaurant: IRestaurant }) => {
           {restaurant.displayName || restaurant.name}
         </h1>
         {restaurant.displayName && (
-          <h2 className="font-bold">{restaurant.name}</h2>
+          <h2 className="text-xs font-bold">{restaurant.name}</h2>
         )}
         <div>{restaurant.description}</div>
         <div className="flex flex-wrap align-center items-center">
