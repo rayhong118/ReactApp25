@@ -9,7 +9,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Timestamp } from "firebase/firestore";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { StarRating } from "../experiments/StarRating";
 import type { INote, IRestaurant } from "./Eat.types";
 import { EatEditForm } from "./EatEditForm";
@@ -73,7 +73,8 @@ export const EatCard = ({ restaurant }: { restaurant: IRestaurant }) => {
           </div>
 
           <div className="flex gap-2">
-            <button className="cursor-pointer px-2 py-1 rounded-md hover:bg-gray-100"
+            <button className="cursor-pointer px-2 py-1 rounded-md hover:bg-gray-100 disabled:text-gray-400 disabled:hover:bg-gray-200 disabled:cursor-not-allowed"
+              disabled={!User}
               onClick={() => setIsDialogOpen(true)}
             >
               <FontAwesomeIcon icon={faEdit} className="mr-2" />
@@ -130,14 +131,14 @@ const Notes = ({ restaurantId }: INotesProps) => {
 
   return (
     <div className='flex flex-col w-full gap-2'>
-      <form onSubmit={onHandleSubmit} className="w-full py-5">
+      {User && <form onSubmit={onHandleSubmit} className="w-full py-5">
         <textarea name="note" value={newNote} onChange={onHandleChange} className="w-full border border-black p-2 rounded-md" />
         <button type="submit"
           className="cursor-pointer border border-black px-2 py-1 rounded-md disabled:bg-gray-200 hover:bg-gray-100 disabled:hover:bg-gray-200" disabled={isAddingNote || !newNote.trim()}>Add Note</button>
-      </form>
+      </form>}
       {notes.length === 0 ? <div>No notes found</div> : <div className="flex flex-col w-full gap-2">
         {notes?.map((note) => (
-          <Note key={note.id} note={note} />
+          <Note key={note.id} note={note} refetch={refetch} />
         ))}
       </div>}
 
@@ -145,9 +146,14 @@ const Notes = ({ restaurantId }: INotesProps) => {
   )
 }
 
-const Note = ({ note }: { note: INote }) => {
+const Note = ({ note, refetch }: { note: INote, refetch: () => void }) => {
   const User = useGetCurrentUser();
-  const { mutate: deleteNote } = useDeleteRestaurantNote();
+  const { mutate: deleteNote, isPending: isDeletingNote } = useDeleteRestaurantNote();
+
+  const handleDelete = () => {
+    deleteNote(note.id!);
+    refetch();
+  }
 
   return (
     <div className="border-l-solid border-l-gray-200 border-l-2">
@@ -162,7 +168,10 @@ const Note = ({ note }: { note: INote }) => {
         </p>
         {User?.uid === note.userId && (
           <div className="flex gap-2">
-            <button onClick={() => deleteNote(note.id!)} className="cursor-pointer px-2 py-1 rounded-md bg-red-500 text-white hover:bg-red-400">
+            <button
+              onClick={handleDelete}
+              disabled={isDeletingNote}
+              className="cursor-pointer px-2 py-1 rounded-md bg-red-500 text-white hover:bg-red-400 disabled:bg-gray-200 disabled:hover:bg-gray-200 disabled:text-gray-600 disabled:cursor-not-allowed">
               <FontAwesomeIcon icon={faTrash} className="mr-2 " />
               Delete
             </button>

@@ -8,6 +8,7 @@ import { useState, useEffect } from "react";
 import { useGetRestaurants } from "./hooks";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { getFilterSearchQuery } from "./EatAtoms";
+import { useGetCurrentUser } from "@/utils/AuthenticationAtoms";
 
 export const EatList = () => {
 
@@ -18,6 +19,7 @@ export const EatList = () => {
   const handleDialogClose = () => {
     setIsDialogOpen(false);
   };
+  const User = useGetCurrentUser();
 
   useEffect(() => {
     console.log('initialized', eatQuery);
@@ -29,7 +31,10 @@ export const EatList = () => {
 
   return (
     <div className="flex flex-col gap-5 w-full">
-      <button onClick={() => setIsDialogOpen(true)} className="flex items-center gap-2 hover:bg-gray-200 rounded-md bg-blue-500 text-white p-2">
+      <button
+        disabled={!User}
+        onClick={() => setIsDialogOpen(true)}
+        className="flex items-center gap-2 hover:bg-blue-600 rounded-md bg-blue-500 text-white p-2 disabled:bg-gray-200 disabled:hover:bg-gray-200 disabled:text-gray-600 disabled:cursor-not-allowed">
         <FontAwesomeIcon icon={faPlus} />
         Add Restaurant
       </button>
