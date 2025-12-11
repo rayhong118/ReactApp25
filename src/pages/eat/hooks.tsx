@@ -5,7 +5,7 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { addDoc, collection, deleteDoc, doc, getDocs, query, updateDoc, where, type QueryConstraint } from "firebase/firestore";
 import { db } from "../../firebase";
-import type { INotes, IRestaurant } from "./Eat.types";
+import type { INote, IRestaurant } from "./Eat.types";
 import type { IEatQuery } from "./Eat.types";
 
 /**      
@@ -151,7 +151,7 @@ export const useGetRestaurantNotes = (restaurantId: string) => {
         ({
           id: doc.id,
           ...doc.data(),
-        } as INotes)
+        } as INote)
       );
       console.log("Restaurant notes", notes);
       return notes || [];
@@ -171,9 +171,9 @@ export const useGetRestaurantNotes = (restaurantId: string) => {
 export const useAddRestaurantNote = (restaurantId: string) => {
   const { mutate, isPending, isSuccess, error } = useMutation({
     mutationKey: ["addNote", restaurantId],
-    mutationFn: async (note: INotes) => {
+    mutationFn: async (note: INote) => {
       console.log("Adding note", note);
-      await addDoc(collection(db, "restaurant-notes", restaurantId), note);
+      await addDoc(collection(db, "restaurant-notes"), note);
     },
     onSuccess: () => {
       console.log("Note added successfully");
@@ -184,4 +184,30 @@ export const useAddRestaurantNote = (restaurantId: string) => {
   });
 
   return { mutate, isPending, isSuccess, error }; // note: mutate now expects Partial<INotes>
+};
+
+
+/**
+ * This hook handles delete note from restaurant
+ * @returns mutate: function to delete note
+ * @returns isPending: boolean
+ * @returns isSuccess: boolean
+ * @returns error: error object
+ */
+export const useDeleteRestaurantNote = () => {
+  const { mutate, isPending, isSuccess, error } = useMutation({
+    mutationKey: ["deleteNote"],
+    mutationFn: async (noteId: string) => {
+      console.log("Deleting note", noteId);
+      await deleteDoc(doc(db, "restaurant-notes", noteId));
+    },
+    onSuccess: () => {
+      console.log("Note deleted successfully");
+    },
+    onError: (error) => {
+      console.error("Error deleting note:", error);
+    },
+  });
+
+  return { mutate, isPending, isSuccess, error }; // note: mutate now expects id
 };

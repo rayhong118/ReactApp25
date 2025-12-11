@@ -1,17 +1,22 @@
 import { Dialog } from "@/components/Dialog";
 import { useGetCurrentUser } from "@/utils/AuthenticationAtoms";
 import {
+  faAngleDown,
+  faAngleUp,
   faDirections,
-  faEdit
+  faEdit,
+  faTrash
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useState } from "react";
+import { Timestamp } from "firebase/firestore";
+import { useEffect, useState } from "react";
 import { StarRating } from "../experiments/StarRating";
-import type { IRestaurant } from "./Eat.types";
+import type { INote, IRestaurant } from "./Eat.types";
 import { EatEditForm } from "./EatEditForm";
+import { useAddRestaurantNote, useDeleteRestaurantNote, useGetRestaurantNotes } from "./hooks";
 
 export const EatCard = ({ restaurant }: { restaurant: IRestaurant }) => {
-  // const [isNotesExpanded, setIsNotesExpanded] = useState(false);
+  const [isNotesExpanded, setIsNotesExpanded] = useState(false);
   const User = useGetCurrentUser();
   const averageRating: number | undefined = restaurant.stars
     ? Math.round(
@@ -43,7 +48,7 @@ export const EatCard = ({ restaurant }: { restaurant: IRestaurant }) => {
           {restaurant.cityAndState && <div className="text-sm px-2 py-0.5 bg-blue-200 rounded-md">
             {restaurant.cityAndState}
           </div>}
-          <div className="text-xs">{restaurant.address}</div>
+          <div className="text-sm">{restaurant.address}</div>
         </div>
         <div className="text-sm">Price Per Person: {restaurant.price}</div>
         <div className="flex flex-wrap">
@@ -52,57 +57,119 @@ export const EatCard = ({ restaurant }: { restaurant: IRestaurant }) => {
         </div>
         <div className="flex justify-between align-center">
           <div className="flex align-center">
-            {/* {restaurant.notes?.length && (
-              <button
-                className="cursor-pointer border border-black p-2 rounded-md disabled:bg-gray-200"
-                onClick={() => setIsNotesExpanded(!isNotesExpanded)}
-              >
-                Notes
-                {isNotesExpanded ? (
-                  <FontAwesomeIcon icon={faAngleDown} />
-                ) : (
-                  <FontAwesomeIcon icon={faAngleUp} />
-                )}
-              </button>
-            )} */}
+
+            <button
+              className="cursor-pointer p-2 rounded-md disabled:bg-gray-200 hover:bg-gray-100"
+              onClick={() => setIsNotesExpanded(!isNotesExpanded)}
+            >
+              Notes
+              {isNotesExpanded ? (
+                <FontAwesomeIcon icon={faAngleDown} className="ml-2" />
+              ) : (
+                <FontAwesomeIcon icon={faAngleUp} className="ml-2" />
+              )}
+            </button>
+
           </div>
 
           <div className="flex gap-2">
-            <button className="cursor-pointer border border-black p-2 rounded-md"
+            <button className="cursor-pointer px-2 py-1 rounded-md hover:bg-gray-100"
               onClick={() => setIsDialogOpen(true)}
             >
-              <FontAwesomeIcon icon={faEdit} />
+              <FontAwesomeIcon icon={faEdit} className="mr-2" />
               Edit
             </button>
-            <button className="cursor-pointer border border-black p-2 rounded-md"
+            <button className="cursor-pointer px-2 py-1 rounded-md hover:bg-gray-100"
               onClick={() => window.open(restaurant.url, "_blank")}
             >
-              <FontAwesomeIcon icon={faDirections} />
+              <FontAwesomeIcon icon={faDirections} className="mr-2" />
               Go
             </button>
           </div>
         </div>
 
-        {/* {isNotesExpanded && (
+        {isNotesExpanded && (
           <div>
+            <Notes restaurantId={restaurant.id!} />
           </div>
-        )} */}
+        )}
       </div>
     </div>
   );
 };
 
-// const Note = ({ note }: { note: INotes }) => {
-//   return (
-//     <div className="border-l-solid border-l-gray-200 border-l-2 my-2">
-//       <p>{note.content}</p>
-//       <p>
-//         {note.date.toLocaleDateString("en-US", {
-//           year: "numeric",
-//           month: "long",
-//           day: "numeric",
-//         })}
-//       </p>
-//     </div>
-//   );
-// };
+interface INotesProps {
+  restaurantId: string;
+}
+
+const Notes = ({ restaurantId }: INotesProps) => {
+  const { data: notes, refetch } = useGetRestaurantNotes(restaurantId);
+  const [newNote, setNewNote] = useState("");
+  const User = useGetCurrentUser();
+
+  const { mutate: addNote, isPending: isAddingNote } = useAddRestaurantNote(restaurantId);
+
+  if (!notes) return <div>No notes found</div>;
+
+  const onHandleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setNewNote(e.target.value);
+  }
+
+  const onHandleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!newNote) return;
+    addNote({
+      content: newNote,
+      userId: User?.uid!,
+      date: Timestamp.now(),
+      restaurantId
+    });
+    setNewNote("");
+    refetch();
+  }
+
+  return (
+    <div className='flex flex-col w-full gap-2'>
+      <form onSubmit={onHandleSubmit} className="w-full py-5">
+        <textarea name="note" value={newNote} onChange={onHandleChange} className="w-full border border-black p-2 rounded-md" />
+        <button type="submit"
+          className="cursor-pointer border border-black px-2 py-1 rounded-md disabled:bg-gray-200 hover:bg-gray-100 disabled:hover:bg-gray-200" disabled={isAddingNote || !newNote.trim()}>Add Note</button>
+      </form>
+      {notes.length === 0 ? <div>No notes found</div> : <div className="flex flex-col w-full gap-2">
+        {notes?.map((note) => (
+          <Note key={note.id} note={note} />
+        ))}
+      </div>}
+
+    </div>
+  )
+}
+
+const Note = ({ note }: { note: INote }) => {
+  const User = useGetCurrentUser();
+  const { mutate: deleteNote } = useDeleteRestaurantNote();
+
+  return (
+    <div className="border-l-solid border-l-gray-200 border-l-2">
+      <p>{note.content}</p>
+      <div className="flex justify-between items-center">
+        <p>
+          {note.date.toDate().toLocaleDateString("en-US", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          })}
+        </p>
+        {User?.uid === note.userId && (
+          <div className="flex gap-2">
+            <button onClick={() => deleteNote(note.id!)} className="cursor-pointer px-2 py-1 rounded-md bg-red-500 text-white hover:bg-red-400">
+              <FontAwesomeIcon icon={faTrash} className="mr-2 " />
+              Delete
+            </button>
+          </div>
+        )}
+      </div>
+
+    </div>
+  );
+};
