@@ -110,9 +110,17 @@ export const EatEditForm = (props?: IEatEditFormProps) => {
   }, [googleSearchInput]);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value, valueAsNumber } = event.target;
-    console.log("handleChange", name, value, typeof value, valueAsNumber);
-    setEatData({ ...eatData, [name]: valueAsNumber || value });
+    const { name, value, valueAsNumber, type } = event.target;
+    let actualValue;
+    switch (type) {
+      case "number":
+        actualValue = valueAsNumber;
+        break;
+      default:
+        actualValue = value;
+    }
+
+    setEatData({ ...eatData, [name]: actualValue });
   };
 
   useEffect(() => {

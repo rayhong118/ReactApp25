@@ -9,7 +9,6 @@ const experimentsNavItems = [
   { label: "Image Carousel 图片轮播", to: "/experiments/imageCarousels" },
   { label: "File Upload", to: "/experiments/fileUpload" },
   { label: "Tic Tac Toe 五子棋", to: "/experiments/ticTacToe" },
-  { label: "Star Rating", to: "/experiments/starRating" },
 ];
 
 export const Navigation = () => {
@@ -41,9 +40,8 @@ export const Navigation = () => {
         setDropdownOpen(false);
       }}
       key={label}
-      className={`block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100 text-start ${
-        nested ? "w-full" : ""
-      }`}
+      className={`block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100 text-start ${nested ? "w-full" : ""
+        }`}
     >
       {label}
     </button>
@@ -75,6 +73,7 @@ export const Navigation = () => {
 
           <div className="hidden md:flex md:items-center md:space-x-4">
             {navButton("About", "/about")}
+            {navButton("Restaurants", "/eat")}
 
             <div className="relative">
               <button
@@ -152,7 +151,7 @@ export const Navigation = () => {
         <div className="md:hidden bg-white">
           <div className="px-2 pt-2 pb-3 space-y-1">
             {navButton("About", "/about")}
-
+            {navButton("Restaurants", "/eat")}
             <div>
               <button
                 onClick={() => setDropdownOpen((s) => !s)}

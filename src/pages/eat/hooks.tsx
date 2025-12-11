@@ -5,7 +5,7 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { addDoc, collection, deleteDoc, doc, getDocs, query, updateDoc, where, type QueryConstraint } from "firebase/firestore";
 import { db } from "../../firebase";
-import type { IRestaurant } from "./Eat.types";
+import type { INotes, IRestaurant } from "./Eat.types";
 import type { IEatQuery } from "./Eat.types";
 
 /**      
@@ -56,7 +56,7 @@ export const useGetRestaurants = (eatQuery?: IEatQuery) => {
  * @returns isSuccess: boolean
  * @returns error: error object
  */
-export const addRestaurant = () => {
+export const useAddRestaurant = () => {
 
   const { mutate, isPending, isSuccess, error } = useMutation({
     mutationKey: ["addRestaurant"],
@@ -83,7 +83,7 @@ export const addRestaurant = () => {
  * @returns isSuccess: boolean
  * @returns error: error object
  */
-export const editRestaurant = () => {
+export const useEditRestaurant = () => {
   const { mutate, isPending, isSuccess, error } = useMutation({
     mutationKey: ["editRestaurant"],
     mutationFn: async (restaurant: Partial<IRestaurant>) => {
@@ -104,6 +104,7 @@ export const editRestaurant = () => {
   return { mutate, isPending, isSuccess, error }; // note: mutate now expects Partial<IRestaurant>
 };
 
+
 /**
  * This hook handles delete restaurant
  * @returns mutate: function to delete restaurant
@@ -111,7 +112,7 @@ export const editRestaurant = () => {
  * @returns isSuccess: boolean
  * @returns error: error object
  */
-export const deleteRestaurant = () => {
+export const useDeleteRestaurant = () => {
 
   const { mutate, isPending, isSuccess, error } = useMutation({
     mutationKey: ["deleteRestaurant"],
@@ -129,4 +130,58 @@ export const deleteRestaurant = () => {
   });
 
   return { mutate, isPending, isSuccess, error }; // note: mutate now expects id
+};
+
+/**
+ * This hook handles get restaurant notes
+ * @param restaurantId: string, used to query in db
+ * @returns data: array of notes
+ * @returns isLoading: boolean
+ * @returns error: error object
+ */
+export const useGetRestaurantNotes = (restaurantId: string) => {
+  const { data, error, refetch, isFetching } = useQuery({
+    queryKey: ["restaurant-notes", restaurantId],
+    queryFn: async () => {
+      console.log("Fetching restaurant notes");
+      const q = query(collection(db, "restaurant-notes"), where("restaurantId", "==", restaurantId));
+      const querySnapshot = await getDocs(q);
+      const notes = querySnapshot.docs.map(
+        (doc) =>
+        ({
+          id: doc.id,
+          ...doc.data(),
+        } as INotes)
+      );
+      console.log("Restaurant notes", notes);
+      return notes || [];
+    },
+    refetchOnWindowFocus: false,
+  });
+  return { data, error, refetch, isFetching };
+};
+
+/**
+ * This hook handles add note to restaurant
+ * @returns mutate: function to add note
+ * @returns isPending: boolean
+ * @returns isSuccess: boolean
+ * @returns error: error object
+ */
+export const useAddRestaurantNote = (restaurantId: string) => {
+  const { mutate, isPending, isSuccess, error } = useMutation({
+    mutationKey: ["addNote", restaurantId],
+    mutationFn: async (note: INotes) => {
+      console.log("Adding note", note);
+      await addDoc(collection(db, "restaurant-notes", restaurantId), note);
+    },
+    onSuccess: () => {
+      console.log("Note added successfully");
+    },
+    onError: (error) => {
+      console.error("Error adding note:", error);
+    },
+  });
+
+  return { mutate, isPending, isSuccess, error }; // note: mutate now expects Partial<INotes>
 };

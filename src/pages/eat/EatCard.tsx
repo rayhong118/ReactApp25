@@ -54,7 +54,7 @@ export const EatCard = ({ restaurant }: { restaurant: IRestaurant }) => {
         </div>
         <div className="flex justify-between align-center">
           <div className="flex align-center">
-            {restaurant.notes?.length && (
+            {/* {restaurant.notes?.length && (
               <button
                 className="cursor-pointer border border-black p-2 rounded-md disabled:bg-gray-200"
                 onClick={() => setIsNotesExpanded(!isNotesExpanded)}
@@ -66,7 +66,7 @@ export const EatCard = ({ restaurant }: { restaurant: IRestaurant }) => {
                   <FontAwesomeIcon icon={faAngleUp} />
                 )}
               </button>
-            )}
+            )} */}
           </div>
 
           <div className="flex gap-2">
@@ -87,9 +87,6 @@ export const EatCard = ({ restaurant }: { restaurant: IRestaurant }) => {
 
         {isNotesExpanded && (
           <div>
-            {restaurant.notes?.map((note, index) => (
-              <Note key={index} note={note} />
-            ))}
           </div>
         )}
       </div>
