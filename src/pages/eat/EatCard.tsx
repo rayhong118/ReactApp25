@@ -33,7 +33,11 @@ export const EatCard = ({ restaurant }: { restaurant: IRestaurant }) => {
 
   return (
     <div>
-      <Dialog open={isDialogOpen} onClose={() => setIsDialogOpen(false)}>
+      <Dialog
+        open={isDialogOpen}
+        onClose={() => setIsDialogOpen(false)}
+        title="Edit Restaurant"
+      >
         <EatEditForm restaurant={restaurant} />
       </Dialog>
       <div className="border border-black p-4 rounded-md">
@@ -80,7 +84,8 @@ export const EatCard = ({ restaurant }: { restaurant: IRestaurant }) => {
               <FontAwesomeIcon icon={faEdit} className="mr-2" />
               Edit
             </button>
-            <button className="cursor-pointer px-2 py-1 rounded-md hover:bg-gray-100"
+            <button
+              className="cursor-pointer px-2 py-1 rounded-md hover:bg-gray-100"
               onClick={() => window.open(restaurant.url, "_blank")}
             >
               <FontAwesomeIcon icon={faDirections} className="mr-2" />
@@ -147,7 +152,11 @@ const Notes = ({ restaurantId }: INotesProps) => {
           >
             Add Note
           </button>
-          <span className={`text-sm font-bold ${newNote.trim().length > 250 ? "text-red-500" : "text-gray-400"}`}>{newNote.trim().length}/250</span>
+          <span
+            className={`text-sm font-bold ${newNote.trim().length > 250 ? "text-red-500" : "text-gray-400"}`}
+          >
+            {newNote.trim().length}/250
+          </span>
         </div>
       </form>}
       {notes?.length === 0 ? <div>No notes found</div> : <div className="flex flex-col w-full gap-5">
@@ -182,7 +191,7 @@ const Note = ({ note, refetch }: { note: INote, refetch: () => void }) => {
   ];
 
   return (
-    <div className="border-l-solid border-l-gray-200 border-l-2">
+    <div className="border-l-solid border-l-gray-200 border-l-5 px-2">
       <p>{note.content}</p>
       <div className="flex justify-between items-center">
         <p>
@@ -204,7 +213,12 @@ const Note = ({ note, refetch }: { note: INote, refetch: () => void }) => {
           </div>
         )}
       </div>
-      <Dialog open={isDialogOpen} onClose={() => setIsDialogOpen(false)} actions={dialogActions}>
+      <Dialog
+        open={isDialogOpen}
+        onClose={() => setIsDialogOpen(false)}
+        actions={dialogActions}
+        title="Delete Note"
+      >
         Do you want to delete this note?
       </Dialog>
 

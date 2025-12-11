@@ -29,7 +29,7 @@ export const EatList = () => {
       <button
         disabled={!User}
         onClick={() => setIsDialogOpen(true)}
-        className="flex items-center gap-2 hover:bg-blue-600 rounded-md bg-blue-500 text-white p-2 disabled:bg-gray-200 disabled:hover:bg-gray-200 disabled:text-gray-600 disabled:cursor-not-allowed">
+        className="flex items-center gap-2 hover:bg-blue-600 rounded-md bg-blue-500 text-white p-2 cursor-pointer disabled:bg-gray-200 disabled:hover:bg-gray-200 disabled:text-gray-600 disabled:cursor-not-allowed">
         <FontAwesomeIcon icon={faPlus} />
         Add Restaurant
       </button>

@@ -30,7 +30,7 @@ export const Dialog: React.FC<IDialogProps> = (props: IDialogProps) => {
         className="border rounded-md flex flex-col space-around justify-between gap-0 fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 m-0 bg-white shadow-xl z-50 w-full max-w-lg max-h-[calc(100vh-4rem)]"
       >
         <div className="flex flex-row justify-between items-center px-5 pt-5">
-          <h2 className="text-l font-bold">{title}</h2>
+          <h1 className="text-xl font-bold">{title}</h1>
           <button
             onClick={onClose}
             className="cursor-pointer hover:bg-gray-100 border-gray-200 border rounded-md p-2"
@@ -43,7 +43,7 @@ export const Dialog: React.FC<IDialogProps> = (props: IDialogProps) => {
           {children}
         </div>
         {actions && (
-          <div className="flex flex-row justify-end gap-2 p-5">
+          <div className="flex flex-row justify-end gap-2 px-5 pb-5">
             {actions.map((action, index) => (
               <button
                 key={index}

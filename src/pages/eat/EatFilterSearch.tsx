@@ -11,7 +11,9 @@ export const EatFilterSearch = () => {
       <EatFilterSearchForm />
     </div>
     <div className="md:hidden">
-      <button onClick={() => setIsExpanded(!isExpanded)} className="flex items-center gap-2 hover:bg-blue-600 rounded-md bg-blue-500 text-white p-2 mb-5">
+      <button
+        onClick={() => setIsExpanded(!isExpanded)}
+        className="flex items-center gap-2 hover:bg-blue-600 rounded-md bg-blue-500 text-white p-2 cursor-pointer mb-5">
         <FontAwesomeIcon icon={faFilter} />
         Filter
       </button>
@@ -59,8 +61,20 @@ const EatFilterSearchForm = () => {
 
       <label>Price Range</label>
       <div className="flex gap-2">
-        <input type="number" placeholder="Price min" className="p-2 border border-black w-1/2 rounded-md" onChange={handleQueryChange} name="priceRangeLower" />
-        <input type="number" placeholder="Price max" className="p-2 border border-black w-1/2 rounded-md" onChange={handleQueryChange} name="priceRangeUpper" />
+        <input
+          type="number"
+          placeholder="Price min"
+          className="p-2 border border-black w-1/2 rounded-md"
+          onChange={handleQueryChange}
+          name="priceRangeLower"
+        />
+        <input
+          type="number"
+          placeholder="Price max"
+          className="p-2 border border-black w-1/2 rounded-md"
+          onChange={handleQueryChange}
+          name="priceRangeUpper"
+        />
       </div>
     </div>
   );

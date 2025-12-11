@@ -255,11 +255,15 @@ export const EatEditForm = (props?: IEatEditFormProps) => {
             <label htmlFor="cityAndState">City and State - <text className="text-xs">Populated by Google Maps</text></label>
           </div>
 
-          <button disabled={!isFormValid} type="submit"
+          <button
+            disabled={!isFormValid}
+            type="submit"
             className="bg-blue-500 text-white p-2 rounded cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">
             Submit
           </button>
-          {restaurant && <button type="button" onClick={handleDelete}
+          {restaurant && <button
+            type="button"
+            onClick={handleDelete}
             className="bg-red-500 text-white p-2 rounded cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">
             Delete
           </button>}
