@@ -4,18 +4,24 @@ import { EatEditForm } from "./EatEditForm";
 import { Dialog } from "@/components/Dialog";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useGetRestaurants } from "./hooks";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
+import { getFilterSearchQuery } from "./EatAtoms";
 
 export const EatList = () => {
 
-  const { data: restaurants, error, isFetching } = useGetRestaurants();
+  const eatQuery = getFilterSearchQuery();
+  const { data: restaurants, error, isFetching } = useGetRestaurants(eatQuery);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const handleDialogClose = () => {
     setIsDialogOpen(false);
   };
+
+  useEffect(() => {
+    console.log('initialized', eatQuery);
+  }, [eatQuery]);
 
   if (error) return <div>Error: {error.message}</div>;
 

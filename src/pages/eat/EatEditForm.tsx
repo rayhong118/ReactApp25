@@ -75,7 +75,7 @@ export const EatEditForm = (props?: IEatEditFormProps) => {
           ...eatData,
           name: place.name || "",
           address: place.formatted_address || "",
-          price: place.price_level,
+          price: place.price_level || 0,
           displayName: "",
           description: "",
           url: place.url,
@@ -110,8 +110,9 @@ export const EatEditForm = (props?: IEatEditFormProps) => {
   }, [googleSearchInput]);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target;
-    setEatData({ ...eatData, [name]: value });
+    const { name, value, valueAsNumber } = event.target;
+    console.log("handleChange", name, value, typeof value, valueAsNumber);
+    setEatData({ ...eatData, [name]: valueAsNumber || value });
   };
 
   useEffect(() => {
@@ -216,14 +217,14 @@ export const EatEditForm = (props?: IEatEditFormProps) => {
           </div>
           <div className="labeled-input">
             <input
-              type="text"
+              type="number"
               id="price"
               name="price"
               placeholder=""
               value={eatData?.price}
               onChange={handleChange}
             />
-            <label htmlFor="price">Price</label>
+            <label htmlFor="price">Price per person</label>
           </div>
           <div className="labeled-input">
             <input

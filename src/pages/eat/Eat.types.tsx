@@ -51,3 +51,23 @@ export interface INotes {
   content: string;
   date: Date;
 }
+
+export interface IEatQuery {
+  /**
+   * Does not work since firebase does not support partial string search
+   * Name of the restaurant
+   */
+  name?: string;
+  /**
+   * City and state of the restaurant
+   */
+  cityAndState?: string;
+  /**
+   * Price range upper bound
+   */
+  priceRangeUpper?: number;
+  /**
+   * Price range lower bound
+   */
+  priceRangeLower?: number;
+}

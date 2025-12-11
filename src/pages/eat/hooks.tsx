@@ -3,21 +3,37 @@
 // add firebase database hooks
 
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { addDoc, collection, deleteDoc, doc, getDocs, updateDoc } from "firebase/firestore";
+import { addDoc, collection, deleteDoc, doc, getDocs, query, updateDoc, where, type QueryConstraint } from "firebase/firestore";
 import { db } from "../../firebase";
 import type { IRestaurant } from "./Eat.types";
+import type { IEatQuery } from "./Eat.types";
 
-/**
+/**      
  * This hook handles get restaurants
  * @returns data: array of restaurants
  * @returns isLoading: boolean
  * @returns error: error object
  */
-export const useGetRestaurants = () => {
+export const useGetRestaurants = (eatQuery?: IEatQuery) => {
   const { data, error, refetch, isFetching } = useQuery({
-    queryKey: ["restaurants"],
+    queryKey: ["restaurants", eatQuery?.cityAndState, eatQuery?.priceRangeLower, eatQuery?.priceRangeUpper],
     queryFn: async () => {
-      const querySnapshot = await getDocs(collection(db, "restaurants"));
+      console.log("Fetching restaurants");
+      const constraints: QueryConstraint[] = [];
+      if (eatQuery?.name) {
+        constraints.push(where("name", "==", eatQuery.name));
+      }
+      if (eatQuery?.cityAndState) {
+        constraints.push(where("cityAndState", "==", eatQuery.cityAndState));
+      }
+      if (eatQuery?.priceRangeLower) {
+        constraints.push(where("price", ">=", eatQuery.priceRangeLower));
+      }
+      if (eatQuery?.priceRangeUpper) {
+        constraints.push(where("price", "<=", eatQuery.priceRangeUpper));
+      }
+      const q = query(collection(db, "restaurants"), ...constraints);
+      const querySnapshot = await getDocs(q);
       const restaurants = querySnapshot.docs.map(
         (doc) =>
         ({
@@ -26,8 +42,9 @@ export const useGetRestaurants = () => {
         } as IRestaurant)
       );
       console.log("Restaurants", restaurants);
-      return restaurants;
+      return restaurants || [];
     },
+    refetchOnWindowFocus: false,
   });
   return { data, error, refetch, isFetching };
 };
@@ -44,6 +61,7 @@ export const addRestaurant = () => {
   const { mutate, isPending, isSuccess, error } = useMutation({
     mutationKey: ["addRestaurant"],
     mutationFn: async (restaurant: Partial<IRestaurant>) => {
+      console.log("Adding restaurant", restaurant);
       await addDoc(collection(db, "restaurants"), restaurant);
     },
     onSuccess: () => {
@@ -69,6 +87,7 @@ export const editRestaurant = () => {
   const { mutate, isPending, isSuccess, error } = useMutation({
     mutationKey: ["editRestaurant"],
     mutationFn: async (restaurant: Partial<IRestaurant>) => {
+      console.log("Editing restaurant", restaurant);
       if (!restaurant.id) {
         throw new Error("Restaurant ID is required");
       }
