@@ -19,6 +19,10 @@ export interface IRestaurant {
    */
   stars?: IStarRating;
   /**
+   * Average rating of the restaurant. Should be read only, and only be modified by the firebase functions on user submit.
+   */
+  averageStarts?: number;
+  /**
    * Notes. Used to store notes given by current user
    */
   notes?: INotes[];
@@ -70,4 +74,9 @@ export interface IEatQuery {
    * Price range lower bound
    */
   priceRangeLower?: number;
+}
+
+export interface IUserRatings {
+  storeId: string;
+  rating: number;
 }

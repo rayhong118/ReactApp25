@@ -13,14 +13,24 @@ export const EatFilterSearch = () => {
       clearTimeout(timeoutRef.current);
     }
     timeoutRef.current = setTimeout(() => {
-      const { name, value, valueAsNumber } = event.target;
-      console.log("handleChange", name, value, typeof value, valueAsNumber);
-      setTempQuery((prev) => ({ ...prev, [name]: valueAsNumber || value }));
+      const { name, value, valueAsNumber, valueAsDate, type } = event.target;
+      let actualValue;
+      switch (type) {
+        case "number":
+          actualValue = valueAsNumber;
+          break;
+        case "date":
+          actualValue = valueAsDate;
+          break;
+        default:
+          actualValue = value;
+      }
+
+      setTempQuery((prev) => ({ ...prev, [name]: actualValue }));
     }, 500);
   };
 
   useEffect(() => {
-    console.log("tempQuery", tempQuery);
     setFilterQuery(tempQuery);
   }, [tempQuery]);
 
