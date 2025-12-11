@@ -1,19 +1,17 @@
+import { Dialog } from "@/components/Dialog";
+import { useGetCurrentUser } from "@/utils/AuthenticationAtoms";
 import {
-  faAngleDown,
-  faAngleUp,
   faDirections,
-  faEdit,
+  faEdit
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
-import type { INotes, IRestaurant } from "./Eat.types";
 import { StarRating } from "../experiments/StarRating";
-import { useGetCurrentUser } from "@/utils/AuthenticationAtoms";
-import { Dialog } from "@/components/Dialog";
+import type { IRestaurant } from "./Eat.types";
 import { EatEditForm } from "./EatEditForm";
 
 export const EatCard = ({ restaurant }: { restaurant: IRestaurant }) => {
-  const [isNotesExpanded, setIsNotesExpanded] = useState(false);
+  // const [isNotesExpanded, setIsNotesExpanded] = useState(false);
   const User = useGetCurrentUser();
   const averageRating: number | undefined = restaurant.stars
     ? Math.round(
@@ -85,26 +83,26 @@ export const EatCard = ({ restaurant }: { restaurant: IRestaurant }) => {
           </div>
         </div>
 
-        {isNotesExpanded && (
+        {/* {isNotesExpanded && (
           <div>
           </div>
-        )}
+        )} */}
       </div>
     </div>
   );
 };
 
-const Note = ({ note }: { note: INotes }) => {
-  return (
-    <div className="border-l-solid border-l-gray-200 border-l-2 my-2">
-      <p>{note.content}</p>
-      <p>
-        {note.date.toLocaleDateString("en-US", {
-          year: "numeric",
-          month: "long",
-          day: "numeric",
-        })}
-      </p>
-    </div>
-  );
-};
+// const Note = ({ note }: { note: INotes }) => {
+//   return (
+//     <div className="border-l-solid border-l-gray-200 border-l-2 my-2">
+//       <p>{note.content}</p>
+//       <p>
+//         {note.date.toLocaleDateString("en-US", {
+//           year: "numeric",
+//           month: "long",
+//           day: "numeric",
+//         })}
+//       </p>
+//     </div>
+//   );
+// };

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import type { IRestaurant } from "./Eat.types";
 import "./EatEditDialog.scss";
-import { addRestaurant, deleteRestaurant, editRestaurant } from "./hooks";
+import { useAddRestaurant, useDeleteRestaurant, useEditRestaurant } from "./hooks";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 
@@ -16,9 +16,9 @@ export const EatEditForm = (props?: IEatEditFormProps) => {
   const [googleSearchInput, setGoogleSearchInput] = useState("");
   const timeoutRef = useRef<any>(null);
   const placeAutocompleteRef = useRef<HTMLInputElement | null>(null);
-  const { mutate: addRestaurantMutate, isPending: addRestaurantIsPending, isSuccess: addRestaurantIsSuccess, error: addRestaurantError } = addRestaurant();
-  const { mutate: editRestaurantMutate, isPending: editRestaurantIsPending, isSuccess: editRestaurantIsSuccess, error: editRestaurantError } = editRestaurant();
-  const { mutate: deleteRestaurantMutate, isPending: deleteRestaurantIsPending, isSuccess: deleteRestaurantIsSuccess, error: deleteRestaurantError } = deleteRestaurant();
+  const { mutate: addRestaurantMutate, isPending: addRestaurantIsPending, isSuccess: addRestaurantIsSuccess, error: addRestaurantError } = useAddRestaurant();
+  const { mutate: editRestaurantMutate, isPending: editRestaurantIsPending, isSuccess: editRestaurantIsSuccess, error: editRestaurantError } = useEditRestaurant();
+  const { mutate: deleteRestaurantMutate, isSuccess: deleteRestaurantIsSuccess } = useDeleteRestaurant();
 
 
   useEffect(() => {

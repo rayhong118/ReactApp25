@@ -20,7 +20,7 @@ export const FileUpload = () => {
           onClick={onUploadClick}
           className="w-xs h-xs p-30 border rounded-md border-gray-200"
         >
-          <FontAwesomeIcon icon={faPlusSquare} />
+          <FontAwesomeIcon icon={faPlusSquare} onClick={() => setFileUploadStatus("success")} />
         </div>
       )}
       <ProgressBar percentage={5} />
