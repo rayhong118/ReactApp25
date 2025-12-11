@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import type { IRestaurant } from "./Eat.types";
 import "./EatEditDialog.scss";
-import { addRestaurant } from "./hooks";
+import { addRestaurant, deleteRestaurant, editRestaurant } from "./hooks";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 
@@ -16,7 +16,10 @@ export const EatEditForm = (props?: IEatEditFormProps) => {
   const [googleSearchInput, setGoogleSearchInput] = useState("");
   const timeoutRef = useRef<any>(null);
   const placeAutocompleteRef = useRef<HTMLInputElement | null>(null);
-  const { mutate, isPending, isSuccess, error } = addRestaurant();
+  const { mutate: addRestaurantMutate, isPending: addRestaurantIsPending, isSuccess: addRestaurantIsSuccess, error: addRestaurantError } = addRestaurant();
+  const { mutate: editRestaurantMutate, isPending: editRestaurantIsPending, isSuccess: editRestaurantIsSuccess, error: editRestaurantError } = editRestaurant();
+  const { mutate: deleteRestaurantMutate, isPending: deleteRestaurantIsPending, isSuccess: deleteRestaurantIsSuccess, error: deleteRestaurantError } = deleteRestaurant();
+
 
   useEffect(() => {
     if (restaurant) {
@@ -70,7 +73,6 @@ export const EatEditForm = (props?: IEatEditFormProps) => {
 
         const newEatData = {
           ...eatData,
-          id: place.place_id || "",
           name: place.name || "",
           address: place.formatted_address || "",
           price: place.price_level,
@@ -121,24 +123,35 @@ export const EatEditForm = (props?: IEatEditFormProps) => {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (isFormValid && eatData) {
-      mutate(eatData);
+      if (eatData.id) {
+        editRestaurantMutate(eatData);
+      } else {
+        addRestaurantMutate(eatData);
+      }
     }
   };
 
-  if (isPending) {
-    return <div className=" px-5 py-20 md:p-20">Loading...</div>;
+  const handleDelete = () => {
+    console.log("delete");
+    if (restaurant?.id) {
+      deleteRestaurantMutate(restaurant.id);
+    }
+  };
+
+  if (addRestaurantIsPending || editRestaurantIsPending) {
+    return <div className=" px-5 py-20 md:p-20">Saving restaurant...</div>;
   }
 
-  if (isSuccess) {
-    return <div className=" px-5 py-20 md:p-20">Restaurant added successfully</div>;
+  if (addRestaurantIsSuccess || editRestaurantIsSuccess) {
+    return <div className=" px-5 py-20 md:p-20">Restaurant saved successfully</div>;
   }
 
 
   return (
-    <div className=" px-5 py-20 md:p-20">
-      {error && <div className="text-red-500">{error.message}</div>}
+    <div>
+      {addRestaurantError && <div className="text-red-500">{addRestaurantError.message}</div>}
+      {editRestaurantError && <div className="text-red-500">{editRestaurantError.message}</div>}
       <div className="eat-edit-dialog">
-        <h1 className="text-2xl font-bold py-2">{restaurant ? "Edit" : "Add"} Restaurant</h1>
         <form onSubmit={handleSubmit}>
           <div className="labeled-input">
             <input
@@ -155,6 +168,7 @@ export const EatEditForm = (props?: IEatEditFormProps) => {
 
           <div className="labeled-input">
             <input
+              disabled
               type="text"
               id="name"
               name="name"
@@ -162,7 +176,7 @@ export const EatEditForm = (props?: IEatEditFormProps) => {
               value={eatData?.name}
               onBlur={handleChange}
             />
-            <label htmlFor="name">Name - Populated by Google Maps</label>
+            <label htmlFor="name">Name - <text className="text-xs">Populated by Google Maps</text></label>
           </div>
           <div className="labeled-input">
             <input
@@ -171,7 +185,7 @@ export const EatEditForm = (props?: IEatEditFormProps) => {
               name="displayName"
               placeholder=""
               value={eatData?.displayName}
-              onBlur={handleChange}
+              onChange={handleChange}
             />
             <label htmlFor="displayName">Display Name</label>
           </div>
@@ -194,7 +208,7 @@ export const EatEditForm = (props?: IEatEditFormProps) => {
               placeholder=""
               value={eatData?.address}
             />
-            <label htmlFor="address">Address</label>
+            <label htmlFor="address">Address - <text className="text-xs">Populated by Google Maps</text></label>
           </div>
           <div className="labeled-input">
             <input
@@ -215,7 +229,7 @@ export const EatEditForm = (props?: IEatEditFormProps) => {
               placeholder=""
               value={eatData?.phoneNumber}
             />
-            <label htmlFor="phoneNumber">Phone Number</label>
+            <label htmlFor="phoneNumber">Phone Number - <text className="text-xs">Populated by Google Maps</text></label>
           </div>
           <div className="labeled-input">
             <input
@@ -225,13 +239,17 @@ export const EatEditForm = (props?: IEatEditFormProps) => {
               placeholder=""
               value={eatData?.cityAndState}
             />
-            <label htmlFor="cityAndState">City and State</label>
+            <label htmlFor="cityAndState">City and State - <text className="text-xs">Populated by Google Maps</text></label>
           </div>
 
           <button disabled={!isFormValid} type="submit"
             className="bg-blue-500 text-white p-2 rounded cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">
             Submit
           </button>
+          {restaurant && <button type="button" onClick={handleDelete}
+            className="bg-red-500 text-white p-2 rounded cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">
+            Delete
+          </button>}
         </form>
       </div>
     </div>

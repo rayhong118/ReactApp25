@@ -29,10 +29,10 @@ export const Dialog: React.FC<IDialogProps> = (props: IDialogProps) => {
         className="border rounded-md p-5 flex flex-col justify-between gap-2 fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 m-0 bg-white shadow-xl z-50 w-full max-w-lg"
       >
         <div className="flex flex-row justify-between items-center">
-          <h2>{title}</h2>
+          <h2 className="text-l font-bold">{title}</h2>
           <button
             onClick={onClose}
-            className="cursor-pointer hover:bg-gray-100 border-gray-200 border rounded-md "
+            className="cursor-pointer hover:bg-gray-100 border-gray-200 border rounded-md"
           >
             <FontAwesomeIcon icon={faClose} className="h-6 w-6 text-gray-600" />
           </button>
