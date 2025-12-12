@@ -64,9 +64,10 @@ export const Navigation = () => {
           <div className="flex items-center">
             <button
               onClick={() => navigate("/")}
-              className="text-md font-semibold text-gray-900 hover:text-gray-700 cursor-pointer px-3 py-2"
+              className="flex items-center gap-2 text-md font-semibold text-gray-900 hover:text-gray-700 cursor-pointer px-3 py-2"
               aria-label="Go to home"
             >
+              <img className="w-8 h-8" src="2017dh.png" alt="DogheadPortal logo" />
               DogheadPortal
             </button>
           </div>
