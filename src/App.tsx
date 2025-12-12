@@ -16,13 +16,17 @@ import { Home } from "./pages/home/Home";
 import { useSetCurrentUser } from "./utils/AuthenticationAtoms";
 
 import { WithAuthRequired } from "./components/WithAuthRequired";
+import { MessageBarsContainer } from "./hooks/MessageBarsContainer";
+import { withDefaultPagePadding } from "./hooks/withDefaultPagePadding";
 import { withFontAwesome } from "./hooks/withFontAwesome";
+import { withFooter } from "./hooks/withFooter";
 import { withGoogleMapsApi } from "./hooks/withGoogleMapsApi";
 import { Eat } from "./pages/eat/Eat";
 import { EatEditForm } from "./pages/eat/EatEditForm";
 import { JiZiQi } from "./pages/experiments/JiZiQi";
 import { StarRating } from "./pages/experiments/StarRating";
-import { MessageBarsContainer } from "./hooks/MessageBarsContainer";
+import ScrollToTop from "./utils/ScrollToTop";
+
 
 const App: React.FC = () => {
   const setCurrentUser = useSetCurrentUser();
@@ -36,12 +40,13 @@ const App: React.FC = () => {
   return (
     <>
       <BrowserRouter>
+        <ScrollToTop />
         <Navigation />
         <MessageBarsContainer />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/auth" element={<AuthPage />} />
-          <Route path="/about" element={<About />} />
+          <Route path="/about" element={withDefaultPagePadding(<About />)} />
           <Route path="/experiments" element={<Experiments />} />
 
           <Route path="/experiments/fileUpload" element={<FileUpload />} />
@@ -53,14 +58,14 @@ const App: React.FC = () => {
             path="/experiments/moveLists"
             element={<WithAuthRequired component={MoveLists} />}
           />
-          <Route path="/experiments/stopWatch" element={<StopWatch />} />
+          <Route path="/experiments/stopWatch" element={withDefaultPagePadding(<StopWatch />)} />
           <Route
             path="/experiments/imageCarousels"
-            element={<ImageCarousel />}
+            element={withDefaultPagePadding(<ImageCarousel />)}
           />
-          <Route path="/experiments/ticTacToe" element={<JiZiQi />} />
+          <Route path="/experiments/ticTacToe" element={withDefaultPagePadding(<JiZiQi />)} />
           <Route path="/experiments/starRating" element={<StarRating />} />
-          <Route path="/eat" element={<Eat />} />
+          <Route path="/eat" element={withDefaultPagePadding(<Eat />)} />
           <Route path="/eatCard/edit" element={<EatEditForm />} />
         </Routes>
       </BrowserRouter>
@@ -68,4 +73,4 @@ const App: React.FC = () => {
   );
 };
 
-export default withFontAwesome(withGoogleMapsApi(App));
+export default withFontAwesome(withGoogleMapsApi(withFooter(App)));

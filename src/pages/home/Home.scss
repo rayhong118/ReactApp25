@@ -14,10 +14,13 @@
   background-attachment: fixed;
 }
 
+
+
 @keyframes scale {
   from {
     font-size: 250vw;
     background-position: center;
+
   }
 
   to {
@@ -26,14 +29,31 @@
   }
 }
 
+#homepage_subtitle {
+  animation: fade-in 3s ease-in-out forwards;
+  animation-delay: 3s;
+  opacity: 0;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+
 .homepage-container {
   overflow-x: hidden;
-  scroll-snap-type: both proximity;
+  // scroll-snap-type: both proximity;
 }
 
 .homepage-panel {
-  scroll-snap-align: start;
-  scroll-snap-stop: always;
+  // scroll-snap-align: start;
+  // scroll-snap-stop: always;
   min-height: 100vh;
 }
 
@@ -54,13 +74,11 @@
   flex-wrap: wrap;
 
   .card {
-    background-image: linear-gradient(
-      var(--background-direction),
-      #5ddcff,
-      #3c67e3 43%,
-      #4e00c2
-    );
-    animation: rotate 5s linear infinite;
+    background-image: linear-gradient(var(--background-direction),
+        #5ddcff,
+        #3c67e3 43%,
+        #4e00c2);
+    animation: rotate 2s linear infinite;
     padding: 0.5em;
     border-radius: 1em;
 

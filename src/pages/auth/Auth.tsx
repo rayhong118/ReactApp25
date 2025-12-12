@@ -52,11 +52,10 @@ export const AuthPage = () => {
             <p className="text-gray-600">
               <span className="font-semibold">Status:</span>
               <span
-                className={`ml-2 px-3 py-1 rounded-full text-sm font-medium ${
-                  currentUser.emailVerified
-                    ? "bg-green-100 text-green-800"
-                    : "bg-yellow-100 text-yellow-800"
-                }`}
+                className={`ml-2 px-3 py-1 rounded-full text-sm font-medium ${currentUser.emailVerified
+                  ? "bg-green-100 text-green-800"
+                  : "bg-yellow-100 text-yellow-800"
+                  }`}
               >
                 {currentUser.emailVerified
                   ? "Email Verified"
@@ -88,7 +87,7 @@ export const AuthPage = () => {
   if (currentPage === "signUp") {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gray-100">
-        <div className="bg-white rounded-lg shadow-lg p-8 w-full max-w-md">
+        <div className="bg-white rounded-lg shadow-lg p-8 mt-20 m-2 w-full max-w-md">
           <h2 className="text-2xl font-bold mb-6 text-gray-800">Sign Up</h2>
 
           <form

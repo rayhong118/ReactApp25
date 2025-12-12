@@ -94,7 +94,7 @@ export const JiZiQi = () => {
   };
 
   return (
-    <div className="p-20">
+    < >
       <h1>棋子</h1>
       <div>
         Current player:{" "}
@@ -137,6 +137,6 @@ export const JiZiQi = () => {
           Reset Game
         </button>
       </div>
-    </div>
+    </>
   );
 };
