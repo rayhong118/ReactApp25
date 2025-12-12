@@ -175,7 +175,6 @@ export const EatEditForm = (props?: IEatEditFormProps) => {
               name="name"
               placeholder=""
               value={eatData?.name}
-              onBlur={handleChange}
             />
             <label htmlFor="name">Name - <text className="text-xs">Populated by Google Maps</text></label>
           </div>
