@@ -22,7 +22,7 @@ export const EatList = () => {
 
   if (error) return <div>Error: {error.message}</div>;
 
-  if (isFetching) return <div className="px-5 py-20 md:p-20 flex flex-col gap-5 justify-center items-center"><FontAwesomeIcon icon={faSpinner} />Loading...</div>;
+  if (isFetching) return <div className="px-5 py-20 md:p-20 flex flex-col gap-5 justify-center items-center w-full h-full"><FontAwesomeIcon icon={faSpinner} />Loading...</div>;
 
   return (
     <div className="flex flex-col gap-5 w-full">

@@ -22,6 +22,7 @@ import { Eat } from "./pages/eat/Eat";
 import { EatEditForm } from "./pages/eat/EatEditForm";
 import { JiZiQi } from "./pages/experiments/JiZiQi";
 import { StarRating } from "./pages/experiments/StarRating";
+import { MessageBarsContainer } from "./hooks/MessageBarsContainer";
 
 const App: React.FC = () => {
   const setCurrentUser = useSetCurrentUser();
@@ -36,6 +37,7 @@ const App: React.FC = () => {
     <>
       <BrowserRouter>
         <Navigation />
+        <MessageBarsContainer />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/auth" element={<AuthPage />} />

@@ -24,7 +24,7 @@ export const EatFilterSearch = () => {
 
 const EatFilterSearchForm = () => {
 
-  const timeoutRef = useRef<number | null>(null);
+  const timeoutRef = useRef<NodeJS.Timeout>(null);
   const [tempQuery, setTempQuery] = useState<IEatQuery>({});
   const setFilterQuery = setFilterSearchQuery();
 

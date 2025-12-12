@@ -7,6 +7,7 @@ import { addDoc, collection, deleteDoc, doc, getDocs, query, updateDoc, where, t
 import { db } from "../../firebase";
 import type { INote, IRestaurant } from "./Eat.types";
 import type { IEatQuery } from "./Eat.types";
+import { useAddMessageBars } from "@/utils/MessageBarsAtom";
 
 /**      
  * This hook handles get restaurants
@@ -57,6 +58,7 @@ export const useGetRestaurants = (eatQuery?: IEatQuery) => {
  * @returns error: error object
  */
 export const useAddRestaurant = () => {
+  const addMessageBars = useAddMessageBars();
 
   const { mutate, isPending, isSuccess, error } = useMutation({
     mutationKey: ["addRestaurant"],
@@ -65,11 +67,24 @@ export const useAddRestaurant = () => {
       await addDoc(collection(db, "restaurants"), restaurant);
     },
     onSuccess: () => {
-      // will connect to messaging system later
-      console.log("Restaurant added successfully");
+      addMessageBars([
+        {
+          id: new Date().toISOString(),
+          message: "Restaurant added successfully",
+          type: "success",
+          autoDismiss: true,
+        },
+      ]);
     },
     onError: (error) => {
-      console.error("Error adding restaurant:", error);
+      addMessageBars([
+        {
+          id: new Date().toISOString(),
+          message: "Error adding restaurant: " + error.message,
+          type: "error",
+          autoDismiss: true,
+        },
+      ]);
     },
   });
 
@@ -84,6 +99,7 @@ export const useAddRestaurant = () => {
  * @returns error: error object
  */
 export const useEditRestaurant = () => {
+  const addMessageBars = useAddMessageBars();
   const { mutate, isPending, isSuccess, error } = useMutation({
     mutationKey: ["editRestaurant"],
     mutationFn: async (restaurant: Partial<IRestaurant>) => {
@@ -94,10 +110,24 @@ export const useEditRestaurant = () => {
       await updateDoc(doc(db, "restaurants", restaurant.id), restaurant);
     },
     onSuccess: () => {
-      console.log("Restaurant edited successfully");
+      addMessageBars([
+        {
+          id: new Date().toISOString(),
+          message: "Restaurant edited successfully",
+          type: "success",
+          autoDismiss: true,
+        },
+      ]);
     },
     onError: (error) => {
-      console.error("Error editing restaurant:", error);
+      addMessageBars([
+        {
+          id: new Date().toISOString(),
+          message: "Error editing restaurant: " + error.message,
+          type: "error",
+          autoDismiss: true,
+        },
+      ]);
     },
   });
 
@@ -113,7 +143,7 @@ export const useEditRestaurant = () => {
  * @returns error: error object
  */
 export const useDeleteRestaurant = () => {
-
+  const addMessageBars = useAddMessageBars();
   const { mutate, isPending, isSuccess, error } = useMutation({
     mutationKey: ["deleteRestaurant"],
     mutationFn: async (id: string) => {
@@ -122,10 +152,24 @@ export const useDeleteRestaurant = () => {
       await deleteDoc(doc(db, "restaurants", id));
     },
     onSuccess: () => {
-      console.log("Restaurant deleted successfully");
+      addMessageBars([
+        {
+          id: new Date().toISOString(),
+          message: "Restaurant deleted successfully",
+          type: "success",
+          autoDismiss: true,
+        },
+      ]);
     },
     onError: (error) => {
-      console.error("Error deleting restaurant:", error);
+      addMessageBars([
+        {
+          id: new Date().toISOString(),
+          message: "Error deleting restaurant: " + error.message,
+          type: "error",
+          autoDismiss: true,
+        },
+      ]);
     },
   });
 
@@ -169,6 +213,7 @@ export const useGetRestaurantNotes = (restaurantId: string) => {
  * @returns error: error object
  */
 export const useAddRestaurantNote = (restaurantId: string) => {
+  const addMessageBars = useAddMessageBars();
   const { mutate, isPending, isSuccess, error } = useMutation({
     mutationKey: ["addNote", restaurantId],
     mutationFn: async (note: INote) => {
@@ -176,10 +221,24 @@ export const useAddRestaurantNote = (restaurantId: string) => {
       await addDoc(collection(db, "restaurant-notes"), note);
     },
     onSuccess: () => {
-      console.log("Note added successfully");
+      addMessageBars([
+        {
+          id: new Date().toISOString(),
+          message: "Note added successfully",
+          type: "success",
+          autoDismiss: true,
+        },
+      ]);
     },
     onError: (error) => {
-      console.error("Error adding note:", error);
+      addMessageBars([
+        {
+          id: new Date().toISOString(),
+          message: "Error adding note: " + error.message,
+          type: "error",
+          autoDismiss: true,
+        },
+      ]);
     },
   });
 
@@ -195,6 +254,7 @@ export const useAddRestaurantNote = (restaurantId: string) => {
  * @returns error: error object
  */
 export const useDeleteRestaurantNote = () => {
+  const addMessageBars = useAddMessageBars();
   const { mutate, isPending, isSuccess, error } = useMutation({
     mutationKey: ["deleteNote"],
     mutationFn: async (noteId: string) => {
@@ -202,10 +262,24 @@ export const useDeleteRestaurantNote = () => {
       await deleteDoc(doc(db, "restaurant-notes", noteId));
     },
     onSuccess: () => {
-      console.log("Note deleted successfully");
+      addMessageBars([
+        {
+          id: new Date().toISOString(),
+          message: "Note deleted successfully",
+          type: "success",
+          autoDismiss: true,
+        },
+      ]);
     },
     onError: (error) => {
-      console.error("Error deleting note:", error);
+      addMessageBars([
+        {
+          id: new Date().toISOString(),
+          message: "Error deleting note: " + error.message,
+          type: "error",
+          autoDismiss: true,
+        },
+      ]);
     },
   });
 

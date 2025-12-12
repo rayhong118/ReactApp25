@@ -16,10 +16,9 @@ export const EatEditForm = (props?: IEatEditFormProps) => {
   const [googleSearchInput, setGoogleSearchInput] = useState("");
   const timeoutRef = useRef<any>(null);
   const placeAutocompleteRef = useRef<HTMLInputElement | null>(null);
-  const { mutate: addRestaurantMutate, isPending: addRestaurantIsPending, isSuccess: addRestaurantIsSuccess, error: addRestaurantError } = useAddRestaurant();
-  const { mutate: editRestaurantMutate, isPending: editRestaurantIsPending, isSuccess: editRestaurantIsSuccess, error: editRestaurantError } = useEditRestaurant();
-  const { mutate: deleteRestaurantMutate, isSuccess: deleteRestaurantIsSuccess } = useDeleteRestaurant();
-
+  const { mutate: addRestaurantMutate, isPending: addRestaurantIsPending } = useAddRestaurant();
+  const { mutate: editRestaurantMutate, isPending: editRestaurantIsPending } = useEditRestaurant();
+  const { mutate: deleteRestaurantMutate } = useDeleteRestaurant();
 
   useEffect(() => {
     if (restaurant) {
@@ -151,19 +150,8 @@ export const EatEditForm = (props?: IEatEditFormProps) => {
     return <div className=" px-5 py-20 md:p-20">Saving restaurant...</div>;
   }
 
-  if (addRestaurantIsSuccess || editRestaurantIsSuccess) {
-    return <div className=" px-5 py-20 md:p-20">Restaurant saved successfully</div>;
-  }
-
-  if (deleteRestaurantIsSuccess) {
-    return <div className=" px-5 py-20 md:p-20">Restaurant deleted successfully</div>;
-  }
-
-
   return (
     <div>
-      {addRestaurantError && <div className="text-red-500">{addRestaurantError.message}</div>}
-      {editRestaurantError && <div className="text-red-500">{editRestaurantError.message}</div>}
       <div className="eat-edit-dialog">
         <form onSubmit={handleSubmit}>
           <div className="labeled-input">

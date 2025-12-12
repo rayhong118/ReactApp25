@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useAddMessageBars } from "@/utils/MessageBarsAtom";
 
 export const StopWatch = () => {
   const [time, setTime] = useState(0);
@@ -24,6 +25,8 @@ export const StopWatch = () => {
     }
   }, [isRunning]);
 
+  const addMessageBars = useAddMessageBars();
+
   return (
     <div className="p-20">
       StopWatch Experiment Page
@@ -41,6 +44,16 @@ export const StopWatch = () => {
       >
         Reset
       </button>
+
+      <button onClick={() => addMessageBars([
+        {
+          id: new Date().toISOString(),
+          message: "Note added successfully",
+          type: "success",
+          autoDismiss: true,
+          autoDismissTimeout: 5000,
+        },
+      ])}> add a new message bar</button>
     </div>
   );
 };
