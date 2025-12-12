@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useAddMessageBars } from "@/utils/MessageBarsAtom";
 
-export const StopWatch = () => {
+const StopWatch = () => {
   const [time, setTime] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
 
@@ -57,3 +57,6 @@ export const StopWatch = () => {
     </div>
   );
 };
+
+export default StopWatch;
+

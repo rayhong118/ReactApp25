@@ -1,17 +1,10 @@
 import { onAuthStateChanged } from "firebase/auth";
-import { useEffect } from "react";
+import { lazy, Suspense, useEffect } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
 import { Navigation } from "./components/Navigation";
 import { auth } from "./firebase";
 import { About } from "./pages/about/About";
-import { AuthPage } from "./pages/auth/Auth";
-import { Experiments } from "./pages/experiments/Experiments";
-import { FileUpload } from "./pages/experiments/FileUpload";
-import { FormValidation } from "./pages/experiments/FormValidation";
-import { ImageCarousel } from "./pages/experiments/imageCarousel/ImageCarousel";
-import { MoveLists } from "./pages/experiments/MoveLists";
-import { StopWatch } from "./pages/experiments/StopWatch";
 import { Home } from "./pages/home/Home";
 import { useSetCurrentUser } from "./utils/AuthenticationAtoms";
 
@@ -20,13 +13,18 @@ import { MessageBarsContainer } from "./hooks/MessageBarsContainer";
 import { withDefaultPagePadding } from "./hooks/withDefaultPagePadding";
 import { withFontAwesome } from "./hooks/withFontAwesome";
 import { withFooter } from "./hooks/withFooter";
-import { withGoogleMapsApi } from "./hooks/withGoogleMapsApi";
-import { Eat } from "./pages/eat/Eat";
-import { EatEditForm } from "./pages/eat/EatEditForm";
-import { JiZiQi } from "./pages/experiments/JiZiQi";
-import { StarRating } from "./pages/experiments/StarRating";
+
+import { Loading } from "./components/Loading";
 import ScrollToTop from "./utils/ScrollToTop";
 
+const JiZiQi = lazy(() => import("./pages/experiments/JiZiQi"));
+const Eat = lazy(() => import("./pages/eat/Eat"));
+const StopWatch = lazy(() => import("./pages/experiments/StopWatch"));
+const FileUpload = lazy(() => import("./pages/experiments/FileUpload"));
+const FormValidation = lazy(() => import("./pages/experiments/FormValidation"));
+const ImageCarousel = lazy(() => import("./pages/experiments/imageCarousel/ImageCarousel"));
+const MoveLists = lazy(() => import("./pages/experiments/MoveLists"));
+const AuthPage = lazy(() => import("./pages/auth/Auth"));
 
 const App: React.FC = () => {
   const setCurrentUser = useSetCurrentUser();
@@ -43,34 +41,34 @@ const App: React.FC = () => {
         <ScrollToTop />
         <Navigation />
         <MessageBarsContainer />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/auth" element={<AuthPage />} />
-          <Route path="/about" element={withDefaultPagePadding(<About />)} />
-          <Route path="/experiments" element={<Experiments />} />
+        <Suspense fallback={withDefaultPagePadding(<Loading />)}>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/auth" element={<AuthPage />} />
+            <Route path="/about" element={withDefaultPagePadding(<About />)} />
 
-          <Route path="/experiments/fileUpload" element={<FileUpload />} />
-          <Route
-            path="/experiments/formValidation"
-            element={<FormValidation />}
-          />
-          <Route
-            path="/experiments/moveLists"
-            element={<WithAuthRequired component={MoveLists} />}
-          />
-          <Route path="/experiments/stopWatch" element={withDefaultPagePadding(<StopWatch />)} />
-          <Route
-            path="/experiments/imageCarousels"
-            element={withDefaultPagePadding(<ImageCarousel />)}
-          />
-          <Route path="/experiments/ticTacToe" element={withDefaultPagePadding(<JiZiQi />)} />
-          <Route path="/experiments/starRating" element={<StarRating />} />
-          <Route path="/eat" element={withDefaultPagePadding(<Eat />)} />
-          <Route path="/eatCard/edit" element={<EatEditForm />} />
-        </Routes>
-      </BrowserRouter>
+            <Route path="/experiments/fileUpload" element={<FileUpload />} />
+            <Route
+              path="/experiments/formValidation"
+              element={<FormValidation />}
+            />
+            <Route
+              path="/experiments/moveLists"
+              element={<WithAuthRequired component={MoveLists} />}
+            />
+            <Route path="/experiments/stopWatch" element={withDefaultPagePadding(<StopWatch />)} />
+            <Route
+              path="/experiments/imageCarousels"
+              element={withDefaultPagePadding(<ImageCarousel />)}
+            />
+            <Route path="/experiments/ticTacToe" element={withDefaultPagePadding(<JiZiQi />)} />
+            <Route path="/eat" element={withDefaultPagePadding(<Eat />)} />
+
+          </Routes>
+        </Suspense>
+      </BrowserRouter >
     </>
   );
 };
 
-export default withFontAwesome(withGoogleMapsApi(withFooter(App)));
+export default withFontAwesome(withFooter(App));

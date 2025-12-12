@@ -11,7 +11,7 @@ import { faGoogle, faGithub } from "@fortawesome/free-brands-svg-icons";
 
 type AuthPageType = "signUp" | "signIn" | "resetPassword";
 
-export const AuthPage = () => {
+const AuthPage = () => {
   const currentUser = useGetCurrentUser();
   const [currentPage, setCurrentPage] = useState<AuthPageType>("signUp");
   const signUp = useFirebseSignUp();
@@ -258,3 +258,5 @@ export const AuthPage = () => {
     );
   }
 };
+
+export default AuthPage;

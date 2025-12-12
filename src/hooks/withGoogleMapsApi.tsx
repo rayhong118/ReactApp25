@@ -1,15 +1,20 @@
 import { googleMapsApiKey } from "@/apikeys";
-import { LoadScript } from "@react-google-maps/api";
+import { LoadScript, useJsApiLoader } from "@react-google-maps/api";
 
 export function withGoogleMapsApi(WrappedComponent: React.ComponentType) {
   return function (props: any) {
+    const { isLoaded } = useJsApiLoader({
+      id: "google-map-script",
+      googleMapsApiKey: googleMapsApiKey
+    });
     return (
-      <LoadScript
-        googleMapsApiKey={googleMapsApiKey}
-        libraries={["places"]}
-      >
-        <WrappedComponent {...props} />
-      </LoadScript>
+      !isLoaded ?
+        <LoadScript
+          googleMapsApiKey={googleMapsApiKey}
+          libraries={["places"]}
+        >
+          <WrappedComponent {...props} />
+        </LoadScript> : <WrappedComponent {...props} />
     );
   };
 }

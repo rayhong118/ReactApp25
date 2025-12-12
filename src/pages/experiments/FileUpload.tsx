@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRef, useState } from "react";
 
 type FileUploadStatus = "idle" | "uploading" | "success" | "error";
-export const FileUpload = () => {
+const FileUpload = () => {
   const [FileUploadStatus, setFileUploadStatus] =
     useState<FileUploadStatus>("idle");
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -36,3 +36,5 @@ const ProgressBar = (props: { percentage: number }) => {
     </div>
   );
 };
+
+export default FileUpload;

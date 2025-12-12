@@ -31,7 +31,7 @@ const images = [
   },
 ];
 
-export const ImageCarousel = () => {
+const ImageCarousel = () => {
   const imageDisplayArray = [...images];
   // const imageDisplayArray = [...images];
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -66,9 +66,8 @@ export const ImageCarousel = () => {
   useEffect(() => {
     if (firstImageRef.current) {
       firstImageRef.current.style.position = "absolute";
-      firstImageRef.current.style.transform = `translateX(-${
-        currentIndex * 100
-      }% )`;
+      firstImageRef.current.style.transform = `translateX(-${currentIndex * 100
+        }% )`;
     }
   }, [currentIndex]);
 
@@ -108,3 +107,6 @@ export const ImageCarousel = () => {
     </div>
   );
 };
+
+export default ImageCarousel;
+

@@ -6,7 +6,7 @@ interface IItem {
   side: "left" | "right";
 }
 // TODO: should use diff
-export const MoveLists = () => {
+const MoveLists = () => {
   const [items, setItems] = useState<IItem[]>([
     { name: "Item 1", isSelected: false, side: "left" },
     { name: "Item 2", isSelected: false, side: "left" },
@@ -102,3 +102,5 @@ export const MoveLists = () => {
     </div>
   );
 };
+
+export default MoveLists;

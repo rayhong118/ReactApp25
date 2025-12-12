@@ -8,7 +8,7 @@ import React from "react";
 //   targetLength: number;
 // }
 
-export const JiZiQi = () => {
+const JiZiQi = () => {
   const totalSize = 15;
   const targetLength = 5;
   const initGridData: number[][] = new Array(totalSize).fill(
@@ -140,3 +140,5 @@ export const JiZiQi = () => {
     </>
   );
 };
+
+export default JiZiQi;

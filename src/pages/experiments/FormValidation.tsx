@@ -8,7 +8,7 @@ interface IFormData {
   date?: string;
 }
 
-export const FormValidation = () => {
+const FormValidation = () => {
   const [formData, setFormData] = useState<IFormData>();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -97,3 +97,5 @@ export const FormValidation = () => {
     </div>
   );
 };
+
+export default FormValidation;
