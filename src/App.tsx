@@ -1,5 +1,5 @@
 import { onAuthStateChanged } from "firebase/auth";
-import { lazy, Suspense, useEffect } from "react";
+import { lazy, useEffect } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
 import { Navigation } from "./components/Navigation";
@@ -14,7 +14,7 @@ import { withDefaultPagePadding } from "./hooks/withDefaultPagePadding";
 import { withFontAwesome } from "./hooks/withFontAwesome";
 import { withFooter } from "./hooks/withFooter";
 
-import { Loading } from "./components/Loading";
+import { withSuspense } from "./hooks/withSuspense";
 import ScrollToTop from "./utils/ScrollToTop";
 
 const JiZiQi = lazy(() => import("./pages/experiments/JiZiQi"));
@@ -41,31 +41,31 @@ const App: React.FC = () => {
         <ScrollToTop />
         <Navigation />
         <MessageBarsContainer />
-        <Suspense fallback={withDefaultPagePadding(<Loading />)}>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/auth" element={<AuthPage />} />
-            <Route path="/about" element={withDefaultPagePadding(<About />)} />
 
-            <Route path="/experiments/fileUpload" element={<FileUpload />} />
-            <Route
-              path="/experiments/formValidation"
-              element={<FormValidation />}
-            />
-            <Route
-              path="/experiments/moveLists"
-              element={<WithAuthRequired component={MoveLists} />}
-            />
-            <Route path="/experiments/stopWatch" element={withDefaultPagePadding(<StopWatch />)} />
-            <Route
-              path="/experiments/imageCarousels"
-              element={withDefaultPagePadding(<ImageCarousel />)}
-            />
-            <Route path="/experiments/ticTacToe" element={withDefaultPagePadding(<JiZiQi />)} />
-            <Route path="/eat" element={withDefaultPagePadding(<Eat />)} />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/auth" element={withSuspense(<AuthPage />)} />
+          <Route path="/about" element={withDefaultPagePadding(<About />)} />
 
-          </Routes>
-        </Suspense>
+          <Route path="/experiments/fileUpload" element={withSuspense(<FileUpload />)} />
+          <Route
+            path="/experiments/formValidation"
+            element={withSuspense(<FormValidation />)}
+          />
+          <Route
+            path="/experiments/moveLists"
+            element={withSuspense(<WithAuthRequired component={MoveLists} />)}
+          />
+          <Route path="/experiments/stopWatch" element={withSuspense(withDefaultPagePadding(<StopWatch />))} />
+          <Route
+            path="/experiments/imageCarousels"
+            element={withSuspense(withDefaultPagePadding(<ImageCarousel />))}
+          />
+          <Route path="/experiments/ticTacToe" element={withSuspense(withDefaultPagePadding(<JiZiQi />))} />
+          <Route path="/eat" element={withSuspense(withDefaultPagePadding(<Eat />))} />
+
+        </Routes>
+
       </BrowserRouter >
     </>
   );

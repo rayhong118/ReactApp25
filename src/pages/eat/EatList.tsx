@@ -8,6 +8,7 @@ import { getFilterSearchQuery } from "./EatAtoms";
 import { EatCard } from "./EatCard";
 import { EatEditForm } from "./EatEditForm";
 import { useGetRestaurants } from "./hooks";
+import { Loading } from "@/components/Loading";
 
 export const EatList = () => {
 
@@ -22,7 +23,7 @@ export const EatList = () => {
 
   if (error) return <div>Error: {error.message}</div>;
 
-  if (isFetching) return <div className="px-5 py-20 md:p-20 flex flex-col gap-5 justify-center items-center w-full h-full"><FontAwesomeIcon icon={faSpinner} />Loading...</div>;
+  if (isFetching) return <Loading />;
 
   return (
     <div className="flex flex-col gap-5 w-full">
