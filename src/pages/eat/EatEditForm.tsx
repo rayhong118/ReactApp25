@@ -7,18 +7,19 @@ import { faSearch } from "@fortawesome/free-solid-svg-icons";
 
 interface IEatEditFormProps {
   restaurant?: IRestaurant;
+  closeDialog?: () => void;
 }
 
 export const EatEditForm = (props?: IEatEditFormProps) => {
-  const { restaurant }: IEatEditFormProps = props || {};
+  const { restaurant, closeDialog }: IEatEditFormProps = props || {};
   const [eatData, setEatData] = useState<Partial<IRestaurant>>();
   const [isFormValid, setIsFormValid] = useState(false);
   const [googleSearchInput, setGoogleSearchInput] = useState("");
   const timeoutRef = useRef<any>(null);
   const placeAutocompleteRef = useRef<HTMLInputElement | null>(null);
-  const { mutate: addRestaurantMutate, isPending: addRestaurantIsPending } = useAddRestaurant();
-  const { mutate: editRestaurantMutate, isPending: editRestaurantIsPending } = useEditRestaurant();
-  const { mutate: deleteRestaurantMutate } = useDeleteRestaurant();
+  const { mutate: addRestaurantMutate, isPending: addRestaurantIsPending, isSuccess: addRestaurantIsSuccess } = useAddRestaurant();
+  const { mutate: editRestaurantMutate, isPending: editRestaurantIsPending, isSuccess: editRestaurantIsSuccess } = useEditRestaurant();
+  const { mutate: deleteRestaurantMutate, isSuccess: deleteRestaurantIsSuccess } = useDeleteRestaurant();
 
   useEffect(() => {
     if (restaurant) {
@@ -146,9 +147,11 @@ export const EatEditForm = (props?: IEatEditFormProps) => {
     }
   };
 
-  if (addRestaurantIsPending || editRestaurantIsPending) {
-    return <div className=" px-5 py-20 md:p-20">Saving restaurant...</div>;
-  }
+  useEffect(() => {
+    if (addRestaurantIsSuccess || editRestaurantIsSuccess || deleteRestaurantIsSuccess) {
+      closeDialog?.();
+    }
+  }, [addRestaurantIsSuccess, editRestaurantIsSuccess, deleteRestaurantIsSuccess]);
 
   return (
     <div>
@@ -243,13 +246,14 @@ export const EatEditForm = (props?: IEatEditFormProps) => {
           </div>
 
           <button
-            disabled={!isFormValid}
+            disabled={!isFormValid || addRestaurantIsPending || editRestaurantIsPending}
             type="submit"
             className="bg-blue-500 text-white p-2 rounded cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">
             Submit
           </button>
           {restaurant && <button
             type="button"
+            disabled={addRestaurantIsPending || editRestaurantIsPending}
             onClick={handleDelete}
             className="bg-red-500 text-white p-2 rounded cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">
             Delete

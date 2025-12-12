@@ -1,6 +1,7 @@
 import { Dialog } from "@/components/Dialog";
+import { Loading } from "@/components/Loading";
 import { useGetCurrentUser } from "@/utils/AuthenticationAtoms";
-import { faPlus, faSpinner } from "@fortawesome/free-solid-svg-icons";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
 import type { IRestaurant } from "./Eat.types";
@@ -8,16 +9,16 @@ import { getFilterSearchQuery } from "./EatAtoms";
 import { EatCard } from "./EatCard";
 import { EatEditForm } from "./EatEditForm";
 import { useGetRestaurants } from "./hooks";
-import { Loading } from "@/components/Loading";
 
 export const EatList = () => {
 
   const eatQuery = getFilterSearchQuery();
-  const { data: restaurants, error, isFetching } = useGetRestaurants(eatQuery);
+  const { data: restaurants, error, isFetching, refetch } = useGetRestaurants(eatQuery);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const handleDialogClose = () => {
     setIsDialogOpen(false);
+    refetch();
   };
   const User = useGetCurrentUser();
 

@@ -38,7 +38,7 @@ export const EatCard = ({ restaurant }: { restaurant: IRestaurant }) => {
         onClose={() => setIsDialogOpen(false)}
         title="Edit Restaurant"
       >
-        <EatEditForm restaurant={restaurant} />
+        <EatEditForm restaurant={restaurant} closeDialog={() => setIsDialogOpen(false)} />
       </Dialog>
       <div className="border border-black p-4 rounded-md">
         <h1 className="text-lg font-bold">

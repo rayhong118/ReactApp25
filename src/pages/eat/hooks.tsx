@@ -2,7 +2,7 @@
 
 // add firebase database hooks
 
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { addDoc, collection, deleteDoc, doc, getDocs, query, updateDoc, where, type QueryConstraint } from "firebase/firestore";
 import { db } from "../../firebase";
 import type { INote, IRestaurant } from "./Eat.types";
@@ -59,6 +59,7 @@ export const useGetRestaurants = (eatQuery?: IEatQuery) => {
  */
 export const useAddRestaurant = () => {
   const addMessageBars = useAddMessageBars();
+  const queryClient = useQueryClient();
 
   const { mutate, isPending, isSuccess, error } = useMutation({
     mutationKey: ["addRestaurant"],
@@ -67,6 +68,7 @@ export const useAddRestaurant = () => {
       await addDoc(collection(db, "restaurants"), restaurant);
     },
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["restaurants"] });
       addMessageBars([
         {
           id: new Date().toISOString(),
@@ -100,6 +102,8 @@ export const useAddRestaurant = () => {
  */
 export const useEditRestaurant = () => {
   const addMessageBars = useAddMessageBars();
+  const queryClient = useQueryClient();
+
   const { mutate, isPending, isSuccess, error } = useMutation({
     mutationKey: ["editRestaurant"],
     mutationFn: async (restaurant: Partial<IRestaurant>) => {
@@ -110,6 +114,7 @@ export const useEditRestaurant = () => {
       await updateDoc(doc(db, "restaurants", restaurant.id), restaurant);
     },
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["restaurants"] });
       addMessageBars([
         {
           id: new Date().toISOString(),
@@ -144,6 +149,8 @@ export const useEditRestaurant = () => {
  */
 export const useDeleteRestaurant = () => {
   const addMessageBars = useAddMessageBars();
+  const queryClient = useQueryClient();
+
   const { mutate, isPending, isSuccess, error } = useMutation({
     mutationKey: ["deleteRestaurant"],
     mutationFn: async (id: string) => {
@@ -152,6 +159,7 @@ export const useDeleteRestaurant = () => {
       await deleteDoc(doc(db, "restaurants", id));
     },
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["restaurants"] });
       addMessageBars([
         {
           id: new Date().toISOString(),
