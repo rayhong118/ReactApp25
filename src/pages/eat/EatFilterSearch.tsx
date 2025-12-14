@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import type { IEatQuery } from "./Eat.types";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFilter } from "@fortawesome/free-solid-svg-icons";
+import { SecondaryButton } from "@/components/Buttons";
 
 export const EatFilterSearch = () => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -11,12 +12,12 @@ export const EatFilterSearch = () => {
       <EatFilterSearchForm />
     </div>
     <div className="md:hidden">
-      <button
+      <SecondaryButton
         onClick={() => setIsExpanded(!isExpanded)}
-        className="flex items-center gap-2 hover:bg-blue-600 rounded-md bg-blue-500 text-white p-2 cursor-pointer mb-5">
-        <FontAwesomeIcon icon={faFilter} />
+      >
+        <FontAwesomeIcon icon={faFilter} className="mr-2" />
         Filter
-      </button>
+      </SecondaryButton>
       {isExpanded && <EatFilterSearchForm />}
     </div>
   </div>);

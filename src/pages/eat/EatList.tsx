@@ -9,6 +9,7 @@ import { getFilterSearchQuery } from "./EatAtoms";
 import { EatCard } from "./EatCard";
 import { EatEditForm } from "./EatEditForm";
 import { useGetRestaurants } from "./hooks";
+import { PrimaryButton } from "@/components/Buttons";
 
 export const EatList = () => {
 
@@ -28,13 +29,13 @@ export const EatList = () => {
 
   return (
     <div className="flex flex-col gap-5 w-full">
-      <button
+      <PrimaryButton
         disabled={!User}
         onClick={() => setIsDialogOpen(true)}
-        className="flex items-center gap-2 hover:bg-blue-600 rounded-md bg-blue-500 text-white p-2 cursor-pointer disabled:bg-gray-200 disabled:hover:bg-gray-200 disabled:text-gray-600 disabled:cursor-not-allowed">
-        <FontAwesomeIcon icon={faPlus} />
+      >
+        <FontAwesomeIcon icon={faPlus} className="mr-2" />
         Add Restaurant
-      </button>
+      </PrimaryButton>
       {restaurants?.map((restaurant: IRestaurant) => (
         <EatCard key={restaurant.id} restaurant={restaurant} />
       ))}

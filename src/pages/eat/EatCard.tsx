@@ -14,6 +14,7 @@ import { StarRating } from "../experiments/StarRating";
 import type { INote, IRestaurant } from "./Eat.types";
 import { EatEditForm } from "./EatEditForm";
 import { useAddRestaurantNote, useDeleteRestaurantNote, useGetRestaurantNotes } from "./hooks";
+import { CustomizedButton } from "@/components/Buttons";
 
 export const EatCard = ({ restaurant }: { restaurant: IRestaurant }) => {
   const [isNotesExpanded, setIsNotesExpanded] = useState(false);
@@ -62,8 +63,7 @@ export const EatCard = ({ restaurant }: { restaurant: IRestaurant }) => {
         <div className="flex justify-between align-center">
           <div className="flex align-center">
 
-            <button
-              className="cursor-pointer p-2 rounded-md disabled:bg-gray-200 hover:bg-gray-100"
+            <CustomizedButton
               onClick={() => setIsNotesExpanded(!isNotesExpanded)}
             >
               Notes
@@ -72,25 +72,24 @@ export const EatCard = ({ restaurant }: { restaurant: IRestaurant }) => {
               ) : (
                 <FontAwesomeIcon icon={faAngleUp} className="ml-2" />
               )}
-            </button>
+            </CustomizedButton>
 
           </div>
 
           <div className="flex gap-2">
-            <button className="cursor-pointer px-2 py-1 rounded-md hover:bg-gray-100 disabled:text-gray-400 disabled:hover:bg-gray-200 disabled:cursor-not-allowed"
+            <CustomizedButton
               disabled={!User}
               onClick={() => setIsDialogOpen(true)}
             >
               <FontAwesomeIcon icon={faEdit} className="mr-2" />
               Edit
-            </button>
-            <button
-              className="cursor-pointer px-2 py-1 rounded-md hover:bg-gray-100"
+            </CustomizedButton>
+            <CustomizedButton
               onClick={() => window.open(restaurant.url, "_blank")}
             >
               <FontAwesomeIcon icon={faDirections} className="mr-2" />
               Go
-            </button>
+            </CustomizedButton>
           </div>
         </div>
 
@@ -145,13 +144,12 @@ const Notes = ({ restaurantId }: INotesProps) => {
           className="w-full border border-black p-2 mb-2 rounded-md"
         />
         <div className="flex justify-between items-start">
-          <button
+          <CustomizedButton
             type="submit"
-            className="cursor-pointer border px-2 py-1 rounded-md disabled:border-gray-200 disabled:text-gray-400 disabled:hover:bg-gray-200 disabled:cursor-not-allowed"
             disabled={isAddingNote || !newNote.trim() || newNote.trim().length > 250}
           >
             Add Note
-          </button>
+          </CustomizedButton>
           <span
             className={`text-sm font-bold ${newNote.trim().length > 250 ? "text-red-500" : "text-gray-400"}`}
           >
@@ -203,13 +201,14 @@ const Note = ({ note, refetch }: { note: INote, refetch: () => void }) => {
         </p>
         {User?.uid === note.userId && (
           <div className="flex gap-2">
-            <button
+            <CustomizedButton
               onClick={() => setIsDialogOpen(true)}
               disabled={isDeletingNote}
-              className="cursor-pointer px-2 py-1 rounded-md bg-red-500 text-white hover:bg-red-400 disabled:bg-gray-200 disabled:hover:bg-gray-200 disabled:text-gray-600 disabled:cursor-not-allowed">
+              className="bg-red-500 text-white hover:bg-red-700"
+            >
               <FontAwesomeIcon icon={faTrash} className="mr-2 " />
               Delete
-            </button>
+            </CustomizedButton>
           </div>
         )}
       </div>
