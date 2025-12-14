@@ -30,3 +30,6 @@ setGlobalOptions({ maxInstances: 10 });
 //   logger.info("Hello logs!", {structuredData: true});
 //   response.send("Hello from Firebase!");
 // });
+
+const admin = require('firebase-admin');
+admin.initializeApp();
