@@ -14,12 +14,11 @@ import { PrimaryButton } from "@/components/Buttons";
 export const EatList = () => {
 
   const eatQuery = getFilterSearchQuery();
-  const { data: restaurants, error, isFetching, refetch } = useGetRestaurants(eatQuery);
+  const { data: restaurants, error, isFetching } = useGetRestaurants(eatQuery);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const handleDialogClose = () => {
     setIsDialogOpen(false);
-    refetch();
   };
   const User = useGetCurrentUser();
 
