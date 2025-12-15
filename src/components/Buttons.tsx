@@ -14,7 +14,7 @@ export const PrimaryButton = (props: IButtonProps) => {
       onClick={props.onClick}
       disabled={props.disabled}
       type={props.type}
-      className="bg-blue-600 text-white font-semibold py-2 px-4 rounded hover:bg-blue-700"
+      className="bg-blue-600 text-white font-semibold py-1 px-2 rounded hover:bg-blue-700"
     >
       {props.children}
     </button>
@@ -40,7 +40,7 @@ export const CustomizedButton = (props: IButtonProps) => {
       onClick={props.onClick}
       disabled={props.disabled}
       type={props.type}
-      className={"py-1 px-2 rounded hover:bg-gray-100 text-sm " + props.className}
+      className={"py-1 px-2 rounded hover:bg-gray-100" + props.className}
     >
       {props.children}
     </button>

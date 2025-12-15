@@ -4,6 +4,7 @@ import "./EatEditDialog.scss";
 import { useAddRestaurant, useDeleteRestaurant, useEditRestaurant } from "./hooks";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
+import { CustomizedButton, PrimaryButton } from "@/components/Buttons";
 
 interface IEatEditFormProps {
   restaurant?: IRestaurant;
@@ -245,19 +246,18 @@ export const EatEditForm = (props?: IEatEditFormProps) => {
             <label htmlFor="cityAndState">City and State - <text className="text-xs">Populated by Google Maps</text></label>
           </div>
 
-          <button
+          <PrimaryButton
             disabled={!isFormValid || addRestaurantIsPending || editRestaurantIsPending}
-            type="submit"
-            className="bg-blue-500 text-white p-2 rounded cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">
+            type="submit">
             Submit
-          </button>
-          {restaurant && <button
+          </PrimaryButton>
+          {restaurant && <CustomizedButton
             type="button"
             disabled={addRestaurantIsPending || editRestaurantIsPending}
             onClick={handleDelete}
-            className="bg-red-500 text-white p-2 rounded cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">
+            className="text-base bg-red-600 text-white font-semibold p-2 rounded cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed hover:bg-red-700">
             Delete
-          </button>}
+          </CustomizedButton>}
         </form>
       </div>
     </div>
