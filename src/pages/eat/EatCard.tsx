@@ -141,7 +141,7 @@ const Notes = ({ restaurantId }: INotesProps) => {
           value={newNote}
           onChange={onHandleChange}
           placeholder="Add a note"
-          className="w-full border border-black p-2 mb-2 rounded-md"
+          className="w-full border border-black p-2 rounded-md"
         />
         <div className="flex justify-between items-start">
           <CustomizedButton
@@ -192,7 +192,7 @@ const Note = ({ note, refetch }: { note: INote, refetch: () => void }) => {
     <div className="border-l-solid border-l-gray-200 border-l-5 px-2">
       <p>{note.content}</p>
       <div className="flex justify-between items-center">
-        <p>
+        <p className="text-sm font-bold">
           {note.date.toDate().toLocaleDateString("en-US", {
             year: "numeric",
             month: "long",
@@ -200,16 +200,14 @@ const Note = ({ note, refetch }: { note: INote, refetch: () => void }) => {
           })}
         </p>
         {User?.uid === note.userId && (
-          <div className="flex gap-2">
-            <CustomizedButton
-              onClick={() => setIsDialogOpen(true)}
-              disabled={isDeletingNote}
-              className="bg-red-500 text-white hover:bg-red-700"
-            >
-              <FontAwesomeIcon icon={faTrash} className="mr-2 " />
-              Delete
-            </CustomizedButton>
-          </div>
+          <CustomizedButton
+            onClick={() => setIsDialogOpen(true)}
+            disabled={isDeletingNote}
+            className="bg-red-600 text-white hover:bg-red-700"
+          >
+            <FontAwesomeIcon icon={faTrash} className="mr-2 " />
+            Delete
+          </CustomizedButton>
         )}
       </div>
       <Dialog

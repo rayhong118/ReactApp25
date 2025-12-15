@@ -40,7 +40,7 @@ export const CustomizedButton = (props: IButtonProps) => {
       onClick={props.onClick}
       disabled={props.disabled}
       type={props.type}
-      className={"py-1 px-2 rounded hover:bg-gray-100 text-sm" + props.className}
+      className={"py-1 px-2 rounded hover:bg-gray-100 text-sm " + props.className}
     >
       {props.children}
     </button>
