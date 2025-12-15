@@ -27,7 +27,7 @@ export const SecondaryButton = (props: IButtonProps) => {
       onClick={props.onClick}
       disabled={props.disabled}
       type={props.type}
-      className="bg-blue-600 text-white font-semibold py-2 px-4 rounded hover:bg-blue-700"
+      className="text-gray-600 font-semibold py-1 px-2 rounded hover:bg-gray-100"
     >
       {props.children}
     </button>

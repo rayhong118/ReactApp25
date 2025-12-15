@@ -19,6 +19,7 @@
     "@tailwindcss/vite": "^4.1.17",
     "@tanstack/react-query": "^5.90.12",
     "firebase": "^12.6.0",
+    "focus-trap-react": "^11.0.4",
     "jotai": "^2.15.2",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",

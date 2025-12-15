@@ -12,13 +12,14 @@
         padding: 0.5rem;
         width: 100%;
         border: 1px solid black;
-        border-radius: 4px;
+        border-radius: 6px;
         background-color: transparent;
       }
 
       input:disabled,
       input:disabled~label {
-        background-color: #bbb;
+        color: #999;
+        border-color: #999;
         cursor: not-allowed;
       }
 
