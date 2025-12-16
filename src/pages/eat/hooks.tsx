@@ -5,7 +5,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { addDoc, collection, deleteDoc, doc, getDocs, query, updateDoc, where, type QueryConstraint } from "firebase/firestore";
 import { db } from "../../firebase";
-import type { INote, IRestaurant } from "./Eat.types";
+import type { ILocationTag, INote, IRestaurant } from "./Eat.types";
 import type { IEatQuery } from "./Eat.types";
 import { useAddMessageBars } from "@/utils/MessageBarsAtom";
 
@@ -292,4 +292,26 @@ export const useDeleteRestaurantNote = () => {
   });
 
   return { mutate, isPending, isSuccess, error }; // note: mutate now expects id
+};
+
+export const useGetRestaurantLocationTags = () => {
+  const { data, error, refetch, isFetching } = useQuery({
+    queryKey: ["restaurant-location-tags"],
+    queryFn: async () => {
+      console.log("Fetching restaurant location tags");
+      const q = query(collection(db, "restaurant-location-tags"));
+      const querySnapshot = await getDocs(q);
+      const locationTags = querySnapshot.docs.map(
+        (doc) =>
+        ({
+          value: doc.data().value,
+          count: doc.data().count,
+        } as ILocationTag)
+      );
+      console.log("Restaurant location tags", locationTags);
+      return locationTags || [];
+    },
+    refetchOnWindowFocus: false,
+  });
+  return { data, error, refetch, isFetching };
 };

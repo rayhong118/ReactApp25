@@ -8,8 +8,9 @@
  */
 
 import {setGlobalOptions} from "firebase-functions";
-import {onRequest} from "firebase-functions/https";
-import * as logger from "firebase-functions/logger";
+// import {onRequest} from "firebase-functions/https";
+// import * as logger from "firebase-functions/logger";
+import * as admin from 'firebase-admin';
 
 // Start writing functions
 // https://firebase.google.com/docs/functions/typescript
@@ -31,5 +32,8 @@ setGlobalOptions({ maxInstances: 10 });
 //   response.send("Hello from Firebase!");
 // });
 
-const admin = require('firebase-admin');
+
+
 admin.initializeApp();
+
+export { handleRestaurantLocationTags } from './eat/eatFunctions';

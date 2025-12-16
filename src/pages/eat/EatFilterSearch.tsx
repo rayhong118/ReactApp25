@@ -4,6 +4,7 @@ import type { IEatQuery } from "./Eat.types";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFilter } from "@fortawesome/free-solid-svg-icons";
 import { SecondaryButton } from "@/components/Buttons";
+import { useGetRestaurantLocationTags } from "./hooks";
 
 export const EatFilterSearch = () => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -55,6 +56,8 @@ const EatFilterSearchForm = () => {
     setFilterQuery(tempQuery);
   }, [tempQuery]);
 
+  const { data } = useGetRestaurantLocationTags();
+
   return (
     <div className="flex flex-col gap-2 max-w-sm">
       <input type="text" disabled placeholder="Search - does not work" className="p-2 border border-black rounded-md" onChange={handleQueryChange} />
@@ -77,6 +80,12 @@ const EatFilterSearchForm = () => {
           name="priceRangeUpper"
         />
       </div>
+
+      {data?.map((tag) => (
+        <label key={tag.value}>
+          {tag.value} - {tag.count}
+        </label>
+      ))}
     </div>
   );
 }

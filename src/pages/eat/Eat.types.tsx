@@ -93,3 +93,8 @@ export interface IUserRatings {
   storeId: string;
   rating: number;
 }
+
+export interface ILocationTag {
+  value: string;
+  count: number;
+}
