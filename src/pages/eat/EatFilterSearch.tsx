@@ -81,11 +81,13 @@ const EatFilterSearchForm = () => {
         />
       </div>
 
-      {data?.map((tag) => (
-        <label key={tag.value}>
-          {tag.value} - {tag.count}
-        </label>
-      ))}
+      <div className="flex flex-wrap gap-2">
+        {data?.map((tag) => (
+          <label className="flex gap-2 px-2 py-1 rounded-md bg-gray-200 cursor-pointer text-sm" key={tag.value}>
+            {tag.value} - {tag.count}
+          </label>
+        ))}
+      </div>
     </div>
   );
 }

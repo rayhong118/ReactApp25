@@ -61,8 +61,10 @@ export const EatEditForm = (props?: IEatEditFormProps) => {
     if (!autocomplete) {
       return;
     }
-    autocomplete.addListener("place_changed", () => {
+    const placeChangedListener = autocomplete.addListener("place_changed", () => {
+
       const place = autocomplete.getPlace();
+      console.log("place_changed", place);
       if (place) {
         const city = place.address_components?.find((component) =>
           component.types.includes(locality)
@@ -90,6 +92,7 @@ export const EatEditForm = (props?: IEatEditFormProps) => {
     return () => {
       // clear search input to dismiss autocomplete
       setGoogleSearchInput("");
+      placeChangedListener.remove();
     };
   }, [placeAutocompleteRef]);
 
