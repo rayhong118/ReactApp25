@@ -128,7 +128,7 @@ export const EatEditForm = (props?: IEatEditFormProps) => {
   };
 
   useEffect(() => {
-    if (eatData && eatData.name && eatData.address && eatData.price) {
+    if (eatData && eatData.name && eatData.address && eatData.price && eatData.price !== 0) {
       setIsFormValid(true);
     }
   }, [eatData]);
@@ -226,7 +226,7 @@ export const EatEditForm = (props?: IEatEditFormProps) => {
               value={eatData?.price}
               onChange={handleChange}
             />
-            <label htmlFor="price">Price per person</label>
+            <label htmlFor="price">Price per person <text className="text-red-500 font-bold">*</text></label>
           </div>
           <div className="labeled-input">
             <input

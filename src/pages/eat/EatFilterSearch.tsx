@@ -1,9 +1,9 @@
-import { setFilterSearchQuery } from "./EatAtoms";
+import { SecondaryButton } from "@/components/Buttons";
+import { faFilter } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useRef, useState } from "react";
 import type { IEatQuery } from "./Eat.types";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faFilter } from "@fortawesome/free-solid-svg-icons";
-import { SecondaryButton } from "@/components/Buttons";
+import { getFilterSearchQuery, setFilterSearchQuery, useSetFilterSearchQueryCityAndState } from "./EatAtoms";
 import { useGetRestaurantLocationTags } from "./hooks";
 
 export const EatFilterSearch = () => {
@@ -56,8 +56,6 @@ const EatFilterSearchForm = () => {
     setFilterQuery(tempQuery);
   }, [tempQuery]);
 
-  const { data } = useGetRestaurantLocationTags();
-
   return (
     <div className="flex flex-col gap-2 max-w-sm">
       <input type="text" disabled placeholder="Search - does not work" className="p-2 border border-black rounded-md" onChange={handleQueryChange} />
@@ -81,13 +79,29 @@ const EatFilterSearchForm = () => {
         />
       </div>
 
-      <div className="flex flex-wrap gap-2">
-        {data?.map((tag) => (
-          <label className="flex gap-2 px-2 py-1 rounded-md bg-gray-200 cursor-pointer text-sm" key={tag.value}>
-            {tag.value} - {tag.count}
-          </label>
-        ))}
-      </div>
+      <LocationTagsList />
+    </div>
+  );
+}
+
+const LocationTagsList = () => {
+  const { data } = useGetRestaurantLocationTags();
+  const { cityAndState } = getFilterSearchQuery();
+  const updateLocationTags = useSetFilterSearchQueryCityAndState();
+
+  const handleTagToggle = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const tagSelected = cityAndState?.includes(e.target.value);
+    const newTagsList = tagSelected ? cityAndState?.filter(tag => tag !== e.target.value) : [...cityAndState || [], e.target.value];
+    updateLocationTags(newTagsList || []);
+  }
+  return (
+    <div className="flex flex-wrap gap-2">
+      {data?.map((tag) => (
+        <label className="flex gap-2 px-2 py-1 items-center rounded-md bg-gray-200 cursor-pointer text-sm" key={tag.value}>
+          <input type="checkbox" className="w-4 h-4" value={tag.value} checked={cityAndState?.includes(tag.value)} onChange={handleTagToggle} />
+          {tag.value} - {tag.count}
+        </label>
+      ))}
     </div>
   );
 }

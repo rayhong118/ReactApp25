@@ -78,7 +78,7 @@ export interface IEatQuery {
   /**
    * City and state of the restaurant
    */
-  cityAndState?: string;
+  cityAndState?: string[];
   /**
    * Price range upper bound
    */

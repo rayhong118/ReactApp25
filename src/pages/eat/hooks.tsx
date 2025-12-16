@@ -24,8 +24,8 @@ export const useGetRestaurants = (eatQuery?: IEatQuery) => {
       if (eatQuery?.name) {
         constraints.push(where("name", "==", eatQuery.name));
       }
-      if (eatQuery?.cityAndState) {
-        constraints.push(where("cityAndState", "==", eatQuery.cityAndState));
+      if (eatQuery?.cityAndState && eatQuery?.cityAndState.length > 0) {
+        constraints.push(where("cityAndState", "in", eatQuery.cityAndState));
       }
       if (eatQuery?.priceRangeLower) {
         constraints.push(where("price", ">=", eatQuery.priceRangeLower));
