@@ -1,5 +1,6 @@
 import { onDocumentWritten } from "firebase-functions/v2/firestore";
 import * as admin from 'firebase-admin';
+import { FieldValue } from 'firebase-admin/firestore';
 
 // on restaurant document creation, add cityAndState to cityAndStateList
 // handle count of restaurants per cityAndState on document creation, deletion and update
@@ -24,8 +25,7 @@ export const handleRestaurantLocationTags = onDocumentWritten("restaurants/{city
         // Tag exists
         if (beforeTag !== afterTag) {
             // Only increment if it's a new tag for this doc (change or creation)
-             const afterTagData = afterTagSnapshot.docs[0].data() as { count: number };
-             await locationTagsCollectionRef.doc(afterTag).update({ count: afterTagData.count + 1 });
+             await afterTagSnapshot.docs[0].ref.update({ count: FieldValue.increment(1) });
         }
     }
   }
@@ -34,9 +34,8 @@ export const handleRestaurantLocationTags = onDocumentWritten("restaurants/{city
   if (beforeTag && beforeTag !== afterTag) {
       const beforeTagSnapshot = await locationTagsCollectionRef.where('value', '==', beforeTag).get();
       if (!beforeTagSnapshot.empty) {
-          const beforeTagData = beforeTagSnapshot.docs[0].data() as { count: number };
-          // Optional: delete tag if count goes to 0? For now just decrement.
-          await locationTagsCollectionRef.doc(beforeTag).update({ count: Math.max(0, beforeTagData.count - 1) });
+          // decrement count for beforeTag using the found document reference
+          await beforeTagSnapshot.docs[0].ref.update({ count: FieldValue.increment(-1) });
       }
   }
 });
