@@ -42,7 +42,7 @@ const EatFilterSearchForm = () => {
       let actualValue;
       switch (type) {
         case "number":
-          actualValue = valueAsNumber;
+          actualValue = valueAsNumber < 0 ? 0 : valueAsNumber;
           break;
         case "date":
           actualValue = valueAsDate;
@@ -70,9 +70,9 @@ const EatFilterSearchForm = () => {
           <input
             type="number"
             id="priceRangeLower"
-            placeholder="Price min"
-            className="p-2 border border-black w-1/2 rounded-md"
+            placeholder=""
             onChange={handleQueryChange}
+            value={tempQuery.priceRangeLower}
             name="priceRangeLower"
           />
           <label htmlFor="priceRangeLower">Price min</label>
@@ -81,9 +81,9 @@ const EatFilterSearchForm = () => {
           <input
             type="number"
             id="priceRangeUpper"
-            placeholder="Price max"
-            className="p-2 border border-black w-1/2 rounded-md"
+            placeholder=""
             onChange={handleQueryChange}
+            value={tempQuery.priceRangeUpper}
             name="priceRangeUpper"
           />
           <label htmlFor="priceRangeUpper">Price max</label>
@@ -113,7 +113,7 @@ const LocationTagsList = () => {
 
     <div className="flex flex-wrap gap-2">
       <div className="material-labeled-input">
-        <input type="text" id="tagNameFilter" placeholder="Filter tags" onChange={(e) => setTagNameFilter(e.target.value)} value={tagNameFilter} />
+        <input type="text" id="tagNameFilter" placeholder="" onChange={(e) => setTagNameFilter(e.target.value)} value={tagNameFilter} />
         <label htmlFor="tagNameFilter">Location Tags</label>
       </div>
       {displayedData?.map((tag) => (
