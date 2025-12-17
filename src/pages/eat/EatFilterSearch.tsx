@@ -72,8 +72,8 @@ const EatFilterSearchForm = () => {
             id="priceRangeLower"
             placeholder=""
             onChange={handleQueryChange}
-            value={tempQuery.priceRangeLower}
             name="priceRangeLower"
+            min={0}
           />
           <label htmlFor="priceRangeLower">Price min</label>
         </div>
@@ -83,8 +83,8 @@ const EatFilterSearchForm = () => {
             id="priceRangeUpper"
             placeholder=""
             onChange={handleQueryChange}
-            value={tempQuery.priceRangeUpper}
             name="priceRangeUpper"
+            min={0}
           />
           <label htmlFor="priceRangeUpper">Price max</label>
         </div>

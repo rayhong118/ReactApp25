@@ -19,7 +19,6 @@ export const useGetRestaurants = (eatQuery?: IEatQuery) => {
   const { data, error, refetch, isFetching } = useQuery({
     queryKey: ["restaurants", eatQuery?.cityAndState, eatQuery?.priceRangeLower, eatQuery?.priceRangeUpper],
     queryFn: async () => {
-      console.log("Fetching restaurants");
       const constraints: QueryConstraint[] = [];
       if (eatQuery?.name) {
         constraints.push(where("name", "==", eatQuery.name));
@@ -42,7 +41,6 @@ export const useGetRestaurants = (eatQuery?: IEatQuery) => {
           ...doc.data(),
         } as IRestaurant)
       );
-      console.log("Restaurants", restaurants);
       return restaurants || [];
     },
     refetchOnWindowFocus: false,
@@ -64,7 +62,6 @@ export const useAddRestaurant = () => {
   const { mutateAsync, isPending, isSuccess, error } = useMutation({
     mutationKey: ["addRestaurant"],
     mutationFn: async (restaurant: Partial<IRestaurant>) => {
-      console.log("Adding restaurant", restaurant);
       await addDoc(collection(db, "restaurants"), restaurant);
     },
     onSuccess: () => {
@@ -107,7 +104,6 @@ export const useEditRestaurant = () => {
   const { mutateAsync, isPending, isSuccess, error } = useMutation({
     mutationKey: ["editRestaurant"],
     mutationFn: async (restaurant: Partial<IRestaurant>) => {
-      console.log("Editing restaurant", restaurant);
       if (!restaurant.id) {
         throw new Error("Restaurant ID is required");
       }
@@ -154,8 +150,6 @@ export const useDeleteRestaurant = () => {
   const { mutateAsync, isPending, isSuccess, error } = useMutation({
     mutationKey: ["deleteRestaurant"],
     mutationFn: async (id: string) => {
-      console.log("Deleting restaurant", id);
-
       await deleteDoc(doc(db, "restaurants", id));
     },
     onSuccess: () => {
@@ -195,7 +189,6 @@ export const useGetRestaurantNotes = (restaurantId: string) => {
   const { data, error, refetch, isFetching } = useQuery({
     queryKey: ["restaurant-notes", restaurantId],
     queryFn: async () => {
-      console.log("Fetching restaurant notes");
       const q = query(collection(db, "restaurant-notes"), where("restaurantId", "==", restaurantId));
       const querySnapshot = await getDocs(q);
       const notes = querySnapshot.docs.map(
@@ -205,7 +198,6 @@ export const useGetRestaurantNotes = (restaurantId: string) => {
           ...doc.data(),
         } as INote)
       );
-      console.log("Restaurant notes", notes);
       return notes || [];
     },
     refetchOnWindowFocus: false,
@@ -225,7 +217,6 @@ export const useAddRestaurantNote = (restaurantId: string) => {
   const { mutate, isPending, isSuccess, error } = useMutation({
     mutationKey: ["addNote", restaurantId],
     mutationFn: async (note: INote) => {
-      console.log("Adding note", note);
       await addDoc(collection(db, "restaurant-notes"), note);
     },
     onSuccess: () => {
@@ -266,7 +257,6 @@ export const useDeleteRestaurantNote = () => {
   const { mutate, isPending, isSuccess, error } = useMutation({
     mutationKey: ["deleteNote"],
     mutationFn: async (noteId: string) => {
-      console.log("Deleting note", noteId);
       await deleteDoc(doc(db, "restaurant-notes", noteId));
     },
     onSuccess: () => {
@@ -298,7 +288,6 @@ export const useGetRestaurantLocationTags = () => {
   const { data, error, refetch, isFetching } = useQuery({
     queryKey: ["restaurant-location-tags"],
     queryFn: async () => {
-      console.log("Fetching restaurant location tags");
       const q = query(collection(db, "restaurant-location-tags"));
       const querySnapshot = await getDocs(q);
       const locationTags = querySnapshot.docs.map(
@@ -308,7 +297,6 @@ export const useGetRestaurantLocationTags = () => {
           count: doc.data().count,
         } as ILocationTag)
       );
-      console.log("Restaurant location tags", locationTags);
       return locationTags || [];
     },
     refetchOnWindowFocus: false,
