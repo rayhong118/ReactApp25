@@ -60,7 +60,7 @@ const EatFilterSearchForm = () => {
   }, [tempQuery]);
 
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-2 md:max-w-sm">
       <input type="text" disabled placeholder="Search - does not work" className="p-2 border border-black rounded-md" onChange={handleQueryChange} />
       firebase does not support partial string search.
 
