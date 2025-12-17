@@ -8,19 +8,19 @@ import { CustomizedButton, PrimaryButton } from "@/components/Buttons";
 
 interface IEatEditFormProps {
   restaurant?: IRestaurant;
-  closeDialog?: () => void;
+  closeDialog: () => void;
 }
 
-export const EatEditForm = (props?: IEatEditFormProps) => {
-  const { restaurant, closeDialog }: IEatEditFormProps = props || {};
+export const EatEditForm = (props: IEatEditFormProps) => {
+  const { restaurant, closeDialog } = props;
   const [eatData, setEatData] = useState<Partial<IRestaurant>>();
   const [isFormValid, setIsFormValid] = useState(false);
   const [googleSearchInput, setGoogleSearchInput] = useState("");
   const timeoutRef = useRef<any>(null);
   const placeAutocompleteRef = useRef<HTMLInputElement | null>(null);
-  const { mutate: addRestaurantMutate, isPending: addRestaurantIsPending, isSuccess: addRestaurantIsSuccess } = useAddRestaurant();
-  const { mutate: editRestaurantMutate, isPending: editRestaurantIsPending, isSuccess: editRestaurantIsSuccess } = useEditRestaurant();
-  const { mutate: deleteRestaurantMutate, isSuccess: deleteRestaurantIsSuccess } = useDeleteRestaurant();
+  const { mutateAsync: addRestaurantMutate, isPending: addRestaurantIsPending } = useAddRestaurant();
+  const { mutateAsync: editRestaurantMutate, isPending: editRestaurantIsPending } = useEditRestaurant();
+  const { mutateAsync: deleteRestaurantMutate } = useDeleteRestaurant();
 
   useEffect(() => {
     if (restaurant) {
@@ -133,29 +133,34 @@ export const EatEditForm = (props?: IEatEditFormProps) => {
     }
   }, [eatData]);
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (isFormValid && eatData) {
-      if (eatData.id) {
-        editRestaurantMutate(eatData);
-      } else {
-        addRestaurantMutate(eatData);
+    try {
+      if (isFormValid && eatData) {
+        if (eatData.id) {
+          await editRestaurantMutate(eatData);
+          closeDialog();
+        } else {
+          await addRestaurantMutate(eatData);
+          closeDialog();
+        }
+      }
+    } catch (error) {
+      console.error("Error submitting form", error);
+    }
+  };
+
+  const handleDelete = async () => {
+    if (restaurant?.id) {
+      try {
+        await deleteRestaurantMutate(restaurant.id);
+        closeDialog();
+      } catch (error) {
+        console.error("Error deleting restaurant", error);
       }
     }
   };
 
-  const handleDelete = () => {
-    console.log("delete");
-    if (restaurant?.id) {
-      deleteRestaurantMutate(restaurant.id);
-    }
-  };
-
-  useEffect(() => {
-    if (addRestaurantIsSuccess || editRestaurantIsSuccess || deleteRestaurantIsSuccess) {
-      closeDialog?.();
-    }
-  }, [addRestaurantIsSuccess, editRestaurantIsSuccess, deleteRestaurantIsSuccess]);
 
   return (
     <div>

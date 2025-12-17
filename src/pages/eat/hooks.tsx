@@ -61,7 +61,7 @@ export const useAddRestaurant = () => {
   const addMessageBars = useAddMessageBars();
   const queryClient = useQueryClient();
 
-  const { mutate, isPending, isSuccess, error } = useMutation({
+  const { mutateAsync, isPending, isSuccess, error } = useMutation({
     mutationKey: ["addRestaurant"],
     mutationFn: async (restaurant: Partial<IRestaurant>) => {
       console.log("Adding restaurant", restaurant);
@@ -90,7 +90,7 @@ export const useAddRestaurant = () => {
     },
   });
 
-  return { mutate, isPending, isSuccess, error }; // note: mutate now expects Partial<IRestaurant>
+  return { mutateAsync, isPending, isSuccess, error }; // note: mutate now expects Partial<IRestaurant>
 };
 
 /**
@@ -104,7 +104,7 @@ export const useEditRestaurant = () => {
   const addMessageBars = useAddMessageBars();
   const queryClient = useQueryClient();
 
-  const { mutate, isPending, isSuccess, error } = useMutation({
+  const { mutateAsync, isPending, isSuccess, error } = useMutation({
     mutationKey: ["editRestaurant"],
     mutationFn: async (restaurant: Partial<IRestaurant>) => {
       console.log("Editing restaurant", restaurant);
@@ -136,7 +136,7 @@ export const useEditRestaurant = () => {
     },
   });
 
-  return { mutate, isPending, isSuccess, error }; // note: mutate now expects Partial<IRestaurant>
+  return { mutateAsync, isPending, isSuccess, error }; // note: mutate now expects Partial<IRestaurant>
 };
 
 
@@ -151,7 +151,7 @@ export const useDeleteRestaurant = () => {
   const addMessageBars = useAddMessageBars();
   const queryClient = useQueryClient();
 
-  const { mutate, isPending, isSuccess, error } = useMutation({
+  const { mutateAsync, isPending, isSuccess, error } = useMutation({
     mutationKey: ["deleteRestaurant"],
     mutationFn: async (id: string) => {
       console.log("Deleting restaurant", id);
@@ -181,7 +181,7 @@ export const useDeleteRestaurant = () => {
     },
   });
 
-  return { mutate, isPending, isSuccess, error }; // note: mutate now expects id
+  return { mutateAsync, isPending, isSuccess, error }; // note: mutate now expects id
 };
 
 /**

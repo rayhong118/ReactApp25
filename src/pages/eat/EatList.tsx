@@ -43,7 +43,7 @@ export const EatList = () => {
         open={isDialogOpen}
         onClose={handleDialogClose}
         title="Add Restaurant">
-        <EatEditForm restaurant={undefined} />
+        <EatEditForm restaurant={undefined} closeDialog={handleDialogClose} />
       </Dialog>
     </div>
   );
