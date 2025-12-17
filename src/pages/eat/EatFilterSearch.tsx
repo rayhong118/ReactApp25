@@ -1,5 +1,5 @@
 import { SecondaryButton } from "@/components/Buttons";
-import { faFilter } from "@fortawesome/free-solid-svg-icons";
+import { faClose, faFilter } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useRef, useState } from "react";
 import type { IEatQuery } from "./Eat.types";
@@ -116,6 +116,12 @@ const LocationTagsList = () => {
         <input type="text" id="tagNameFilter" placeholder="" onChange={(e) => setTagNameFilter(e.target.value)} value={tagNameFilter} />
         <label htmlFor="tagNameFilter">Location Tags</label>
       </div>
+
+      <SecondaryButton onClick={() => updateLocationTags([])}>
+        <FontAwesomeIcon icon={faClose} />
+        Clear
+      </SecondaryButton>
+
       {displayedData?.map((tag) => (
         <label className="flex gap-2 px-2 py-1 items-center rounded-md bg-gray-200 cursor-pointer text-sm" key={tag.value}>
           <input type="checkbox" className="w-4 h-4" value={tag.value} checked={cityAndState?.includes(tag.value)} onChange={handleTagToggle} />

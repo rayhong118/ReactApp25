@@ -46,17 +46,17 @@ export const EatCard = ({ restaurant }: { restaurant: IRestaurant }) => {
           {restaurant.displayName || restaurant.name}
         </h1>
         {restaurant.displayName && (
-          <h2 className="text-xs font-bold">{restaurant.name}</h2>
+          <h2 className="text-sm font-bold">{restaurant.name}</h2>
         )}
         <div>{restaurant.description}</div>
-        <div className="flex flex-wrap align-center items-center">
-          {restaurant.cityAndState && <div className="text-sm px-2 py-0.5 bg-blue-200 rounded-md">
+
+        {restaurant.cityAndState &&
+          <span className="text-sm px-2 py-0.5 bg-blue-200 rounded-md">
             {restaurant.cityAndState}
-          </div>}
-          <div className="text-sm">{restaurant.address}</div>
-        </div>
+          </span>}
+        <div className="text-sm">{restaurant.address}</div>
         <div className="text-sm">Price Per Person: {restaurant.price}</div>
-        <div className="flex flex-wrap">
+        <div className="flex flex-wrap gap-2">
           {userRating && <div className="flex items-center gap-2 pr-2 text-sm">Your Rating: <StarRating rating={userRating} /></div>}
           {averageRating && <div className="flex items-center gap-2 text-sm">Average: <StarRating rating={averageRating} /></div>}
         </div>

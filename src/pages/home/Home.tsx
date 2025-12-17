@@ -20,15 +20,6 @@ export const Home = () => {
           </div>
         </div>
       </div>
-      <div className=" homepage-panel bg-gray-800 text-white min-h-screen w-full max-h-screen flex justify-center items-center">
-        <h1 className="font-bold p-20">PANEL 3</h1>
-      </div>
-      <div className=" homepage-panel bg-white-800 min-h-screen w-full max-h-screen flex justify-center items-center">
-        <h1 className="font-bold p-20">PANEL 4</h1>
-      </div>
-      <div className=" homepage-panel bg-gray-800 text-white min-h-screen w-full max-h-screen flex justify-center items-center">
-        <h1 className="font-bold p-20">PANEL 5</h1>
-      </div>
     </div>
   );
 };
