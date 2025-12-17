@@ -2,6 +2,7 @@ import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
 import { useDismissMessageBar } from "../utils/MessageBarsAtom";
+import "./MessageBar.scss";
 
 export interface IMessageBarProps {
   id: string;
@@ -12,22 +13,29 @@ export interface IMessageBarProps {
 }
 
 export const MessageBar = ({ id, type, message, autoDismiss, autoDismissTimeout }: IMessageBarProps) => {
-  const [isDismissed, setIsDismissed] = useState(false);
+  const [isFadingOut, setIsFadingOut] = useState(false);
   const dismissMessageBar = useDismissMessageBar();
 
   useEffect(() => {
     let timeout: NodeJS.Timeout;
+    let fadeOutTimeout: NodeJS.Timeout;
+    const fadeOutTimeoutDuration = (autoDismissTimeout || 5000) - 1000;
+
     if (autoDismiss) {
+      fadeOutTimeout = setTimeout(() => {
+        setIsFadingOut(true);
+      }, fadeOutTimeoutDuration);
       timeout = setTimeout(() => {
-        setIsDismissed(true);
+        dismissMessageBar(id);
       }, autoDismissTimeout || 5000);
     }
-    return () => clearTimeout(timeout);
-  }, [autoDismiss]);
+    return () => {
+      clearTimeout(timeout);
+      clearTimeout(fadeOutTimeout);
+    };
+  }, [autoDismiss, autoDismissTimeout, id]);
 
-  if (isDismissed) return null;
-
-  const baseClass = "flex items-center justify-between gap-2 p-2 mx-5 rounded-md shadow-lg pointer-events-auto";
+  const baseClass = "flex items-center justify-between gap-2 px-4 py-2 mx-5 rounded-md shadow-lg pointer-events-auto";
   const typeClass = () => {
     switch (type) {
       case "success":
@@ -44,7 +52,8 @@ export const MessageBar = ({ id, type, message, autoDismiss, autoDismissTimeout 
   return (
     <div className={`
     ${baseClass} 
-    ${typeClass()}
+    ${typeClass()} 
+    ${isFadingOut ? "message-bar-fade-out" : ""}
     `}>
       <p>{message}</p>
       <button onClick={() => dismissMessageBar(id)}><FontAwesomeIcon icon={faXmark} /></button>

@@ -51,7 +51,16 @@ const StopWatch = () => {
           message: "Note added successfully",
           type: "success",
           autoDismiss: true,
-          autoDismissTimeout: 5000,
+          autoDismissTimeout: 2000,
+        },
+      ])}> add a new message bar</button>
+      <button onClick={() => addMessageBars([
+        {
+          id: new Date().toISOString(),
+          message: "Error added successfully",
+          type: "error",
+          autoDismiss: true,
+          autoDismissTimeout: 2000,
         },
       ])}> add a new message bar</button>
     </div>
