@@ -14,13 +14,10 @@
   background-attachment: fixed;
 }
 
-
-
 @keyframes scale {
   from {
     font-size: 250vw;
     background-position: center;
-
   }
 
   to {
@@ -55,6 +52,23 @@
   // scroll-snap-align: start;
   // scroll-snap-stop: always;
   min-height: 100vh;
+}
+
+.homepage-panel:nth-child(1) {
+  background: url("/seattle.jpg") no-repeat center/cover fixed;
+  animation: background-fade-in 6s ease-in-out forwards;
+}
+
+@keyframes background-fade-in {
+  from {
+    background-blend-mode: color;
+    background-color: rgba(0, 0, 0, 1);
+  }
+
+  to {
+    background-blend-mode: color;
+    background-color: rgba(0, 0, 0, 0.25);
+  }
 }
 
 @property --background-direction {
