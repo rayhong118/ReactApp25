@@ -40,7 +40,7 @@ export const Navigation = () => {
         setDropdownOpen(false);
       }}
       key={label}
-      className={`block px-3 py-2 rounded-md text-md font-medium text-gray-700 hover:bg-gray-100 text-start ${nested ? "w-full" : ""
+      className={`block px-3 py-2 rounded-md text-md font-medium text-gray-700 hover:bg-gray-100 text-start whitespace-nowrap ${nested ? "w-full" : ""
         }`}
     >
       {label}
@@ -74,7 +74,7 @@ export const Navigation = () => {
 
           <div className="hidden md:flex md:items-center md:space-x-4">
             {navButton("About", "/about")}
-            {navButton("Restaurants", "/eat")}
+            {navButton("Restaurants 吃什么", "/eat")}
 
             <div className="relative">
               <button
@@ -152,7 +152,7 @@ export const Navigation = () => {
         <div className="md:hidden bg-white">
           <div className="px-2 pt-2 pb-3 space-y-1">
             {navButton("About", "/about", true)}
-            {navButton("Restaurants", "/eat", true)}
+            {navButton("Restaurants 吃什么", "/eat", true)}
             <div>
               <button
                 onClick={() => setDropdownOpen((s) => !s)}

@@ -25,6 +25,7 @@ const FormValidation = lazy(() => import("./pages/experiments/FormValidation"));
 const ImageCarousel = lazy(() => import("./pages/experiments/imageCarousel/ImageCarousel"));
 const MoveLists = lazy(() => import("./pages/experiments/MoveLists"));
 const AuthPage = lazy(() => import("./pages/auth/Auth"));
+const NotFound = lazy(() => import("./pages/notFound/NotFound"));
 
 const App: React.FC = () => {
   const setCurrentUser = useSetCurrentUser();
@@ -63,7 +64,7 @@ const App: React.FC = () => {
           />
           <Route path="/experiments/ticTacToe" element={withSuspense(withDefaultPagePadding(<JiZiQi />))} />
           <Route path="/eat" element={withSuspense(withDefaultPagePadding(<Eat />))} />
-
+          <Route path="*" element={withSuspense(withDefaultPagePadding(<NotFound />))} />
         </Routes>
 
       </BrowserRouter >
