@@ -16,6 +16,7 @@ import { withFooter } from "./hooks/withFooter";
 
 import { withSuspense } from "./hooks/withSuspense";
 import ScrollToTop from "./utils/ScrollToTop";
+import { withGoogleReCaptchaProvider } from "./hooks/withGoogleReCaptchaProvider";
 
 const JiZiQi = lazy(() => import("./pages/experiments/JiZiQi"));
 const Eat = lazy(() => import("./pages/eat/Eat"));
@@ -72,4 +73,4 @@ const App: React.FC = () => {
   );
 };
 
-export default withFontAwesome(withFooter(App));
+export default withFontAwesome(withFooter(withGoogleReCaptchaProvider(App)));

@@ -284,6 +284,12 @@ export const useDeleteRestaurantNote = () => {
   return { mutate, isPending, isSuccess, error }; // note: mutate now expects id
 };
 
+/**
+ * This hook handles get restaurant location tags
+ * @returns data: array of location tags
+ * @returns isLoading: boolean
+ * @returns error: error object
+ */
 export const useGetRestaurantLocationTags = () => {
   const { data, error, refetch, isFetching } = useQuery({
     queryKey: ["restaurant-location-tags"],
@@ -298,6 +304,21 @@ export const useGetRestaurantLocationTags = () => {
         } as ILocationTag)
       );
       return locationTags || [];
+    },
+    refetchOnWindowFocus: false,
+  });
+  return { data, error, refetch, isFetching };
+};
+
+export const useGetRestaurantRecommendationNL = (userPrompt?: string) => {
+  const { data, error, refetch, isFetching } = useQuery({
+    queryKey: ["restaurant-recommendation-nl", userPrompt],
+    queryFn: async () => {
+      const q = query(collection(db, "restaurant-recommendation-nl"));
+      const querySnapshot = await getDocs(q);
+
+
+      return {};
     },
     refetchOnWindowFocus: false,
   });

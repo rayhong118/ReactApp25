@@ -6,6 +6,7 @@ import type { IEatQuery } from "./Eat.types";
 import { getFilterSearchQuery, setFilterSearchQuery, useSetFilterSearchQueryCityAndState } from "./EatAtoms";
 import { useGetRestaurantLocationTags } from "./hooks";
 import "./EatFilterSearch.scss";
+import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 
 export const EatFilterSearch = () => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -61,8 +62,7 @@ const EatFilterSearchForm = () => {
 
   return (
     <div className="flex flex-col gap-2 md:max-w-sm">
-      <input type="text" disabled placeholder="Search - does not work" className="p-2 border border-black rounded-md" onChange={handleQueryChange} />
-      firebase does not support partial string search.
+      <UserPromptSection />
 
       <label>Price Range</label>
       <div className="flex gap-2">
@@ -91,6 +91,41 @@ const EatFilterSearchForm = () => {
       </div>
 
       <LocationTagsList />
+    </div>
+  );
+}
+
+const UserPromptSection = () => {
+  const [userPrompt, setUserPrompt] = useState("");
+  const { executeRecaptcha } = useGoogleReCaptcha();
+
+  const handleUserPromptSubmit = async () => {
+    if (!executeRecaptcha) {
+      return;
+    }
+    const recaptchaToken = await executeRecaptcha("generateRecommendation");
+    const response = await fetch('https://us-central1-dogheadportal.cloudfunctions.net/verifyRecaptcha', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token: recaptchaToken })
+    });
+
+    const result = await response.json();
+
+    if (result.success) {
+      // Now it's safe to trigger your Gemini API logic!
+      console.log("Verified! Proceeding to Gemini...");
+    } else {
+      alert("Sorry, we think you're a bot!");
+    }
+
+  }
+
+  return (
+    <div>
+      <h2>Recommendation</h2>
+      <input type="text" placeholder="User Prompt" onChange={(e) => setUserPrompt(e.target.value)} />
+      <button onClick={handleUserPromptSubmit}>Generate</button>
     </div>
   );
 }

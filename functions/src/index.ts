@@ -12,6 +12,8 @@ import {setGlobalOptions} from "firebase-functions";
 // import * as logger from "firebase-functions/logger";
 import * as admin from 'firebase-admin';
 
+
+
 // Start writing functions
 // https://firebase.google.com/docs/functions/typescript
 
@@ -37,3 +39,5 @@ setGlobalOptions({ maxInstances: 10 });
 admin.initializeApp();
 
 export { handleRestaurantLocationTags } from './eat/eatFunctions';
+export { verifyRecaptcha } from './reCaptcha/reCaptcha';
+

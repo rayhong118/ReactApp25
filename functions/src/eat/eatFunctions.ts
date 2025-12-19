@@ -39,3 +39,4 @@ export const handleRestaurantLocationTags = onDocumentWritten("restaurants/{city
     }
   }
 });
+
