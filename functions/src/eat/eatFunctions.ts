@@ -1,6 +1,8 @@
 import { onDocumentWritten } from "firebase-functions/v2/firestore";
 import * as admin from 'firebase-admin';
 import { FieldValue } from 'firebase-admin/firestore';
+import { onRequest } from "firebase-functions/https";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 
 // on restaurant document creation, add cityAndState to cityAndStateList
 // handle count of restaurants per cityAndState on document creation, deletion and update
@@ -40,3 +42,15 @@ export const handleRestaurantLocationTags = onDocumentWritten("restaurants/{city
   }
 });
 
+
+export const generateSuggestionBasedOnUserPrompt = onRequest({
+  secrets: ["GEMINI_API_KEY"], // Function now has access to process.env.GEMINI_API_KEY
+  cors: true,
+}, async (req, res) => {
+  const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
+  const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+  const content = req.body.content;
+  const prompt = model.generateContent(content);
+  const result = await prompt.response;
+  res.send(result.text());
+})

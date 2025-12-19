@@ -1,8 +1,9 @@
 import { initializeApp } from "firebase/app";
-import { getAuth, GoogleAuthProvider, GithubAuthProvider } from "firebase/auth";
+import { initializeAppCheck, ReCaptchaV3Provider } from "firebase/app-check";
+import { getAuth, GithubAuthProvider, GoogleAuthProvider } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
-
-import { firebaseApiKey } from "./apikeys.ts";
+import { getAI, getGenerativeModel } from "firebase/ai";
+import { firebaseApiKey, googleReCaptchaSiteKey } from "./apikeys.ts";
 
 const firebaseConfig = {
   apiKey: firebaseApiKey,
@@ -15,7 +16,13 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
+export const appCheck = initializeAppCheck(app, {
+  provider: new ReCaptchaV3Provider(googleReCaptchaSiteKey), // Use your Public Site Key
+  isTokenAutoRefreshEnabled: true // Automatically refreshes the token in the background
+});
+export const ai = getAI(app);
 export const auth = getAuth(app);
 export const googleProvider = new GoogleAuthProvider();
 export const githubProvider = new GithubAuthProvider();
 export const db = getFirestore(app);
+export const geminiModel = getGenerativeModel(ai, { model: "gemini-1.5-flash" });

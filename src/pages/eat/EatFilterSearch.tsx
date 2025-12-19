@@ -114,7 +114,7 @@ const UserPromptSection = () => {
 
     if (result.success) {
       // Now it's safe to trigger your Gemini API logic!
-      console.log("Verified! Proceeding to Gemini...");
+      console.log("Verified! Proceeding to Gemini...", userPrompt);
     } else {
       alert("Sorry, we think you're a bot!");
     }

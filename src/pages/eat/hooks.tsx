@@ -310,17 +310,17 @@ export const useGetRestaurantLocationTags = () => {
   return { data, error, refetch, isFetching };
 };
 
-export const useGetRestaurantRecommendationNL = (userPrompt?: string) => {
-  const { data, error, refetch, isFetching } = useQuery({
-    queryKey: ["restaurant-recommendation-nl", userPrompt],
-    queryFn: async () => {
-      const q = query(collection(db, "restaurant-recommendation-nl"));
-      const querySnapshot = await getDocs(q);
+// export const useGetRestaurantRecommendationNL = (userPrompt?: string) => {
+//   const { data, error, refetch, isFetching } = useQuery({
+//     queryKey: ["restaurant-recommendation-nl", userPrompt],
+//     queryFn: async () => {
+//       const q = query(collection(db, "restaurant-recommendation-nl"));
+//       const querySnapshot = await getDocs(q);
 
 
-      return {};
-    },
-    refetchOnWindowFocus: false,
-  });
-  return { data, error, refetch, isFetching };
-};
+//       return {};
+//     },
+//     refetchOnWindowFocus: false,
+//   });
+//   return { data, error, refetch, isFetching };
+// };
