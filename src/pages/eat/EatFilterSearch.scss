@@ -2,7 +2,8 @@
   position: relative;
   width: 100%;
 
-  input {
+  input,
+  textarea {
     padding: 0.5rem;
     width: 100%;
     border: 1px solid black;
@@ -11,7 +12,9 @@
   }
 
   input:disabled,
-  input:disabled~label {
+  input:disabled~label,
+  textarea:disabled,
+  textarea:disabled~label {
     color: #999;
     border-color: #999;
     cursor: not-allowed;
@@ -33,7 +36,9 @@
   }
 
   input:focus~label,
-  input:not(:placeholder-shown)~label {
+  input:not(:placeholder-shown)~label,
+  textarea:focus~label,
+  textarea:not(:placeholder-shown)~label {
     transform: translateY(-1rem) scale(0.8);
   }
 }

@@ -110,13 +110,15 @@ const UserPromptSection = () => {
   }, [data]);
 
   return (
-    <div>
-      <h2>Recommendation</h2>
+    <div className="flex flex-col gap-2">
+      <h2>Ask AI</h2>
       <div className="material-labeled-input">
-        <input type="text" placeholder="" onChange={(e) => setUserPromptInput(e.target.value)} />
-        <label htmlFor="userPrompt">User Prompt</label>
+        <textarea placeholder="" onChange={(e) => setUserPromptInput(e.target.value)} />
+        <label htmlFor="userPrompt">Your Prompt</label>
       </div>
-      <button onClick={handleUserPromptSubmit}>Generate</button>
+      <div>
+        <SecondaryButton onClick={handleUserPromptSubmit}>Generate</SecondaryButton>
+      </div>
     </div>
   );
 }
