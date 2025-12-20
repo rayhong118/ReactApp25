@@ -58,13 +58,14 @@ export const EatEditForm = (props: IEatEditFormProps) => {
       }
     );
 
+
+
     if (!autocomplete) {
       return;
     }
     const placeChangedListener = autocomplete.addListener("place_changed", () => {
 
       const place = autocomplete.getPlace();
-      console.log("place_changed", place);
       if (place) {
         const city = place.address_components?.find((component) =>
           component.types.includes(locality)
@@ -196,7 +197,7 @@ export const EatEditForm = (props: IEatEditFormProps) => {
               id="displayName"
               name="displayName"
               placeholder=""
-              value={eatData?.displayName}
+              value={eatData?.displayName || ""}
               onChange={handleChange}
             />
             <label htmlFor="displayName">Display Name</label>
@@ -207,7 +208,7 @@ export const EatEditForm = (props: IEatEditFormProps) => {
               id="description"
               name="description"
               placeholder=""
-              value={eatData?.description}
+              value={eatData?.description || ""}
               onBlur={handleChange}
             />
             <label htmlFor="description">Description</label>
@@ -218,7 +219,7 @@ export const EatEditForm = (props: IEatEditFormProps) => {
               type="text"
               id="address"
               placeholder=""
-              value={eatData?.address}
+              value={eatData?.address || ""}
             />
             <label htmlFor="address">Address - <text className="text-xs">Populated by Google Maps</text></label>
           </div>
@@ -228,7 +229,7 @@ export const EatEditForm = (props: IEatEditFormProps) => {
               id="price"
               name="price"
               placeholder=""
-              value={eatData?.price}
+              value={eatData?.price || ""}
               onChange={handleChange}
             />
             <label htmlFor="price">Price per person <text className="text-red-500 font-bold">*</text></label>
@@ -239,7 +240,7 @@ export const EatEditForm = (props: IEatEditFormProps) => {
               type="text"
               id="phoneNumber"
               placeholder=""
-              value={eatData?.phoneNumber}
+              value={eatData?.phoneNumber || ""}
             />
             <label htmlFor="phoneNumber">Phone Number - <text className="text-xs">Populated by Google Maps</text></label>
           </div>
@@ -249,7 +250,7 @@ export const EatEditForm = (props: IEatEditFormProps) => {
               type="text"
               id="cityAndState"
               placeholder=""
-              value={eatData?.cityAndState}
+              value={eatData?.cityAndState || ""}
             />
             <label htmlFor="cityAndState">City and State - <text className="text-xs">Populated by Google Maps</text></label>
           </div>

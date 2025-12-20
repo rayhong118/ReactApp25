@@ -77,7 +77,6 @@ export const generateSuggestionBasedOnUserPrompt = onCall({
     });
 
     // 3. Proper Response Handling
-    // In the 2025 SDK, response.text is a property, not a function
     const rawResponse = result.text; 
 
     if (!rawResponse) {

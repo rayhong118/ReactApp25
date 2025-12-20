@@ -122,31 +122,34 @@ const UserPromptSection = () => {
           id: "error",
           message: error?.message || "Error fetching restaurant recommendation",
           type: "error",
+          autoDismiss: true,
         }
       ]);
     }
   }, [isError, error]);
 
-  return (<>
-    <Dialog open={!!selectedRestaurant} title="AI Recommendation" onClose={() => setSelectedRestaurant(null)}>
-      <div>
-
-        <EatCard restaurant={selectedRestaurant!} />
+  return (
+    <>
+      <Dialog open={!!selectedRestaurant} title="AI Recommendation" onClose={() => setSelectedRestaurant(null)}>
+        <div>
+          <p>{data?.reason}</p>
+          <EatCard restaurant={selectedRestaurant!} />
+        </div>
+      </Dialog>
+      <div className="flex flex-col gap-2">
+        <p>Ask AI for a restaurant recommendation based on your preferences. If there are multiple options, AI will pick the "best" one (not randomly).</p>
+        <div className="material-labeled-input">
+          <textarea placeholder="" onChange={(e) => setUserPromptInput(e.target.value)} disabled={isFetching} />
+          <label htmlFor="userPrompt">Your Prompt</label>
+        </div>
+        <div>
+          <SecondaryButton onClick={handleUserPromptSubmit} disabled={isFetching || !userPromptInput}>
+            {isFetching && <FontAwesomeIcon icon={faSpinner} spin={true} className="mr-2" />}
+            Pick
+          </SecondaryButton>
+        </div>
       </div>
-    </Dialog>
-    <div className="flex flex-col gap-2">
-      <h2>Ask AI</h2>
-      <div className="material-labeled-input">
-        <textarea placeholder="" onChange={(e) => setUserPromptInput(e.target.value)} disabled={isFetching} />
-        <label htmlFor="userPrompt">Your Prompt</label>
-      </div>
-      <div>
-        <SecondaryButton onClick={handleUserPromptSubmit} disabled={isFetching || !userPromptInput}>
-          {isFetching && <FontAwesomeIcon icon={faSpinner} spin={true} className="mr-2" />}
-          Pick
-        </SecondaryButton>
-      </div>
-    </div> </>
+    </>
   );
 }
 

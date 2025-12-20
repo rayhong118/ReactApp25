@@ -345,19 +345,22 @@ export const useGetRestaurantRecommendationNL = (userPrompt?: string) => {
       const { restaurantId: pickedRestaurantId, reason } = result.data;
 
       const pickedRestaurant = restaurants.find((restaurant) => restaurant.id === pickedRestaurantId);
-      console.log(pickedRestaurant);
-      console.log(reason);
 
       const response = {
         restaurant: pickedRestaurant,
         reason,
       }
+
       if (!pickedRestaurant) {
         throw (new Error(reason));
       }
       return response;
     },
     refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+    retry: false,
+    staleTime: Infinity,
     enabled: !!userPrompt,
 
   });
