@@ -1,11 +1,14 @@
 import { SecondaryButton } from "@/components/Buttons";
-import { faClose, faFilter } from "@fortawesome/free-solid-svg-icons";
+import { faClose, faFilter, faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useRef, useState } from "react";
-import type { IEatQuery } from "./Eat.types";
+import type { IEatQuery, IRestaurant } from "./Eat.types";
 import { getFilterSearchQuery, setFilterSearchQuery, useSetFilterSearchQueryCityAndState } from "./EatAtoms";
 import "./EatFilterSearch.scss";
 import { useGetRestaurantLocationTags, useGetRestaurantRecommendationNL } from "./hooks";
+import { Dialog } from "@/components/Dialog";
+import { EatCard } from "./EatCard";
+import { useAddMessageBars } from "@/utils/MessageBarsAtom";
 
 export const EatFilterSearch = () => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -97,29 +100,53 @@ const EatFilterSearchForm = () => {
 const UserPromptSection = () => {
   const [userPromptInput, setUserPromptInput] = useState("");
   const [userPrompt, setUserPrompt] = useState("");
-  const { data } = useGetRestaurantRecommendationNL(userPrompt);
+  const [selectedRestaurant, setSelectedRestaurant] = useState<IRestaurant | null>(null);
+  const { data, isError, error, isFetching } = useGetRestaurantRecommendationNL(userPrompt);
+  const addMessageBars = useAddMessageBars();
 
   const handleUserPromptSubmit = async () => {
+    if (!userPromptInput) return;
     setUserPrompt(userPromptInput);
   }
 
   useEffect(() => {
-    if (data) {
-      console.log(data);
+    if (data && data.restaurant) {
+      setSelectedRestaurant(data.restaurant);
     }
   }, [data]);
 
-  return (
+  useEffect(() => {
+    if (isError) {
+      addMessageBars([
+        {
+          id: "error",
+          message: error?.message || "Error fetching restaurant recommendation",
+          type: "error",
+        }
+      ]);
+    }
+  }, [isError, error]);
+
+  return (<>
+    <Dialog open={!!selectedRestaurant} title="AI Recommendation" onClose={() => setSelectedRestaurant(null)}>
+      <div>
+
+        <EatCard restaurant={selectedRestaurant!} />
+      </div>
+    </Dialog>
     <div className="flex flex-col gap-2">
       <h2>Ask AI</h2>
       <div className="material-labeled-input">
-        <textarea placeholder="" onChange={(e) => setUserPromptInput(e.target.value)} />
+        <textarea placeholder="" onChange={(e) => setUserPromptInput(e.target.value)} disabled={isFetching} />
         <label htmlFor="userPrompt">Your Prompt</label>
       </div>
       <div>
-        <SecondaryButton onClick={handleUserPromptSubmit}>Generate</SecondaryButton>
+        <SecondaryButton onClick={handleUserPromptSubmit} disabled={isFetching || !userPromptInput}>
+          {isFetching && <FontAwesomeIcon icon={faSpinner} spin={true} className="mr-2" />}
+          Pick
+        </SecondaryButton>
       </div>
-    </div>
+    </div> </>
   );
 }
 

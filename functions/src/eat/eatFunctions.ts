@@ -63,8 +63,8 @@ export const generateSuggestionBasedOnUserPrompt = onCall({
       USER_REQUEST: "${userPrompt}"
       RESTAURANT_LIST: ${JSON.stringify(restaurants)}
       
-      Task: Pick the best restaurant and explain why.
-      Return ONLY a JSON object: {"winnerId": "string", "reason": "string"}
+      Task: Pick the best restaurant and explain why. If you don't have a clear and resonable pick, return reason only.
+      Return ONLY a JSON object: {"restaurantId": "string", "reason": "string"}
     `;
 
     // 2. Call the Model

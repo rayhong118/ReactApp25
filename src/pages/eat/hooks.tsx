@@ -318,10 +318,10 @@ export const useGetRestaurantLocationTags = () => {
  * @returns error: error object
  */
 export const useGetRestaurantRecommendationNL = (userPrompt?: string) => {
-  const { data, error, refetch, isFetching } = useQuery({
+  const { data, isError, error, refetch, isFetching } = useQuery({
     queryKey: ["restaurant-recommendation-nl", userPrompt],
     queryFn: async () => {
-      if (!userPrompt) return {};
+      if (!userPrompt) return null;
       const q = query(collection(db, "restaurants"));
       const querySnapshot = await getDocs(q);
       const restaurants = querySnapshot.docs.map(
@@ -339,13 +339,27 @@ export const useGetRestaurantRecommendationNL = (userPrompt?: string) => {
       }));
       const restaurantContextJson = JSON.stringify(restaurantContext);
       console.log(restaurantContextJson);
-      const generateSuggestionBasedOnUserPrompt = httpsCallable(firebaseFunctions, "generateSuggestionBasedOnUserPrompt");
+      const generateSuggestionBasedOnUserPrompt = httpsCallable<{ userPrompt: string, restaurants: string }, { restaurantId: string, reason: string }>(firebaseFunctions, "generateSuggestionBasedOnUserPrompt");
       const result = await generateSuggestionBasedOnUserPrompt({ userPrompt, restaurants: restaurantContextJson });
-      console.log(result.data);
-      return result.data;
+
+      const { restaurantId: pickedRestaurantId, reason } = result.data;
+
+      const pickedRestaurant = restaurants.find((restaurant) => restaurant.id === pickedRestaurantId);
+      console.log(pickedRestaurant);
+      console.log(reason);
+
+      const response = {
+        restaurant: pickedRestaurant,
+        reason,
+      }
+      if (!pickedRestaurant) {
+        throw (new Error(reason));
+      }
+      return response;
     },
     refetchOnWindowFocus: false,
     enabled: !!userPrompt,
+
   });
-  return { data, error, refetch, isFetching };
+  return { data, isError, error, refetch, isFetching };
 };

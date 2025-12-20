@@ -186,7 +186,7 @@ export const EatEditForm = (props: IEatEditFormProps) => {
               id="name"
               name="name"
               placeholder=""
-              value={eatData?.name}
+              value={eatData?.name || ""}
             />
             <label htmlFor="name">Name - <text className="text-xs">Populated by Google Maps</text></label>
           </div>
