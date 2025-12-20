@@ -1,8 +1,9 @@
+import { getAI, getGenerativeModel } from "firebase/ai";
 import { initializeApp } from "firebase/app";
 import { initializeAppCheck, ReCaptchaV3Provider } from "firebase/app-check";
 import { getAuth, GithubAuthProvider, GoogleAuthProvider } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
-import { getAI, getGenerativeModel } from "firebase/ai";
+import { getFunctions } from "firebase/functions";
 import { firebaseApiKey, googleReCaptchaSiteKey } from "./apikeys.ts";
 
 const firebaseConfig = {
@@ -26,3 +27,4 @@ export const googleProvider = new GoogleAuthProvider();
 export const githubProvider = new GithubAuthProvider();
 export const db = getFirestore(app);
 export const geminiModel = getGenerativeModel(ai, { model: "gemini-1.5-flash" });
+export const firebaseFunctions = getFunctions(app, "us-central1");

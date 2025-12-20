@@ -2,12 +2,12 @@
 
 // add firebase database hooks
 
+import { useAddMessageBars } from "@/utils/MessageBarsAtom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { addDoc, collection, deleteDoc, doc, getDocs, query, updateDoc, where, type QueryConstraint } from "firebase/firestore";
-import { db } from "../../firebase";
-import type { ILocationTag, INote, IRestaurant } from "./Eat.types";
-import type { IEatQuery } from "./Eat.types";
-import { useAddMessageBars } from "@/utils/MessageBarsAtom";
+import { httpsCallable } from "firebase/functions";
+import { db, firebaseFunctions } from "../../firebase";
+import type { IEatQuery, ILocationTag, INote, IRestaurant } from "./Eat.types";
 
 /**      
  * This hook handles get restaurants
@@ -310,17 +310,34 @@ export const useGetRestaurantLocationTags = () => {
   return { data, error, refetch, isFetching };
 };
 
-// export const useGetRestaurantRecommendationNL = (userPrompt?: string) => {
-//   const { data, error, refetch, isFetching } = useQuery({
-//     queryKey: ["restaurant-recommendation-nl", userPrompt],
-//     queryFn: async () => {
-//       const q = query(collection(db, "restaurant-recommendation-nl"));
-//       const querySnapshot = await getDocs(q);
-
-
-//       return {};
-//     },
-//     refetchOnWindowFocus: false,
-//   });
-//   return { data, error, refetch, isFetching };
-// };
+/**
+ * This hook handles get restaurant recommendation based on user prompt
+ * @param userPrompt: string, used by Gemini to generate restaurant recommendation
+ * @returns data: object of restaurant recommendation
+ * @returns isLoading: boolean
+ * @returns error: error object
+ */
+export const useGetRestaurantRecommendationNL = (userPrompt?: string) => {
+  const { data, error, refetch, isFetching } = useQuery({
+    queryKey: ["restaurant-recommendation-nl", userPrompt],
+    queryFn: async () => {
+      if (!userPrompt) return {};
+      const q = query(collection(db, "restaurants"));
+      const querySnapshot = await getDocs(q);
+      const restaurants = querySnapshot.docs.map(
+        (doc) =>
+        ({
+          id: doc.id,
+          ...doc.data(),
+        } as IRestaurant)
+      );
+      const restaurantJson = JSON.stringify(restaurants);
+      const generateSuggestionBasedOnUserPrompt = httpsCallable(firebaseFunctions, "generateSuggestionBasedOnUserPrompt");
+      const result = await generateSuggestionBasedOnUserPrompt({ userPrompt, restaurants: restaurantJson });
+      console.log(result.data);
+      return result.data;
+    },
+    refetchOnWindowFocus: false,
+  });
+  return { data, error, refetch, isFetching };
+};

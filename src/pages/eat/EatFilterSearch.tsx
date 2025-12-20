@@ -4,9 +4,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useRef, useState } from "react";
 import type { IEatQuery } from "./Eat.types";
 import { getFilterSearchQuery, setFilterSearchQuery, useSetFilterSearchQueryCityAndState } from "./EatAtoms";
-import { useGetRestaurantLocationTags } from "./hooks";
 import "./EatFilterSearch.scss";
-import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
+import { useGetRestaurantLocationTags, useGetRestaurantRecommendationNL } from "./hooks";
 
 export const EatFilterSearch = () => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -96,35 +95,24 @@ const EatFilterSearchForm = () => {
 }
 
 const UserPromptSection = () => {
+  const [userPromptInput, setUserPromptInput] = useState("");
   const [userPrompt, setUserPrompt] = useState("");
-  const { executeRecaptcha } = useGoogleReCaptcha();
+  const { data } = useGetRestaurantRecommendationNL(userPrompt);
 
   const handleUserPromptSubmit = async () => {
-    if (!executeRecaptcha) {
-      return;
-    }
-    const recaptchaToken = await executeRecaptcha("generateRecommendation");
-    const response = await fetch('https://us-central1-dogheadportal.cloudfunctions.net/verifyRecaptcha', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ token: recaptchaToken })
-    });
-
-    const result = await response.json();
-
-    if (result.success) {
-      // Now it's safe to trigger your Gemini API logic!
-      console.log("Verified! Proceeding to Gemini...", userPrompt);
-    } else {
-      alert("Sorry, we think you're a bot!");
-    }
-
+    setUserPrompt(userPromptInput);
   }
+
+  useEffect(() => {
+    if (data) {
+      console.log(data);
+    }
+  }, [data]);
 
   return (
     <div>
       <h2>Recommendation</h2>
-      <input type="text" placeholder="User Prompt" onChange={(e) => setUserPrompt(e.target.value)} />
+      <input type="text" placeholder="User Prompt" onChange={(e) => setUserPromptInput(e.target.value)} />
       <button onClick={handleUserPromptSubmit}>Generate</button>
     </div>
   );

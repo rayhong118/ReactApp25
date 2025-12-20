@@ -1,8 +1,8 @@
-import { onDocumentWritten } from "firebase-functions/v2/firestore";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 import * as admin from 'firebase-admin';
 import { FieldValue } from 'firebase-admin/firestore';
-import { onRequest } from "firebase-functions/https";
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import { onCall } from "firebase-functions/https";
+import { onDocumentWritten } from "firebase-functions/v2/firestore";
 
 // on restaurant document creation, add cityAndState to cityAndStateList
 // handle count of restaurants per cityAndState on document creation, deletion and update
@@ -43,14 +43,30 @@ export const handleRestaurantLocationTags = onDocumentWritten("restaurants/{city
 });
 
 
-export const generateSuggestionBasedOnUserPrompt = onRequest({
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
+
+export const generateSuggestionBasedOnUserPrompt = onCall({
   secrets: ["GEMINI_API_KEY"], // Function now has access to process.env.GEMINI_API_KEY
   cors: true,
-}, async (req, res) => {
-  const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
-  const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-  const content = req.body.content;
-  const prompt = model.generateContent(content);
-  const result = await prompt.response;
-  res.send(result.text());
+}, async (req) => {
+  // TODO: besides user prompt, also pass in user current location?
+  const { userPrompt, restaurants } = req.data;
+
+  const model = genAI.getGenerativeModel({
+    model: "gemini-1.5-flash",
+    // System instructions keep the logic separate from the user input
+    systemInstruction: "You have access to a list of restaurants collected by app users. Select the best restaurant from the context. Return ONLY JSON: { 'restaurantId': string, 'reason': string }",
+  });
+
+  const prompt = `
+    USER_REQUEST: "${userPrompt}"
+    RESTAURANT_LIST: ${JSON.stringify(restaurants)}
+  `;
+
+  const result = await model.generateContent({
+    contents: [{ role: "user", parts: [{ text: prompt }] }],
+    generationConfig: { responseMimeType: "application/json" } // Force JSON mode
+  });
+
+  return JSON.parse(result.response.text());
 })
