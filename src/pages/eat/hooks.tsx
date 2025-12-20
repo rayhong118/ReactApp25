@@ -331,13 +331,21 @@ export const useGetRestaurantRecommendationNL = (userPrompt?: string) => {
           ...doc.data(),
         } as IRestaurant)
       );
-      const restaurantJson = JSON.stringify(restaurants);
+      const restaurantContext = restaurants.map((restaurant) => ({
+        id: restaurant.id,
+        name: restaurant.name,
+        price: restaurant.price,
+        cityAndState: restaurant.cityAndState,
+      }));
+      const restaurantContextJson = JSON.stringify(restaurantContext);
+      console.log(restaurantContextJson);
       const generateSuggestionBasedOnUserPrompt = httpsCallable(firebaseFunctions, "generateSuggestionBasedOnUserPrompt");
-      const result = await generateSuggestionBasedOnUserPrompt({ userPrompt, restaurants: restaurantJson });
+      const result = await generateSuggestionBasedOnUserPrompt({ userPrompt, restaurants: restaurantContextJson });
       console.log(result.data);
       return result.data;
     },
     refetchOnWindowFocus: false,
+    enabled: !!userPrompt,
   });
   return { data, error, refetch, isFetching };
 };

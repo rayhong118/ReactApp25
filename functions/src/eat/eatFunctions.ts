@@ -1,7 +1,7 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import { GoogleGenAI } from "@google/genai";
 import * as admin from 'firebase-admin';
 import { FieldValue } from 'firebase-admin/firestore';
-import { onCall } from "firebase-functions/https";
+import { HttpsError, onCall } from "firebase-functions/https";
 import { onDocumentWritten } from "firebase-functions/v2/firestore";
 
 // on restaurant document creation, add cityAndState to cityAndStateList
@@ -42,31 +42,52 @@ export const handleRestaurantLocationTags = onDocumentWritten("restaurants/{city
   }
 });
 
-
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
+// Initialize outside the function to reuse the instance
+// In 2025, the new SDK expects an object { apiKey: ... }
+const genAI = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
 export const generateSuggestionBasedOnUserPrompt = onCall({
-  secrets: ["GEMINI_API_KEY"], // Function now has access to process.env.GEMINI_API_KEY
+  secrets: ["GEMINI_API_KEY"], 
   cors: true,
-}, async (req) => {
-  // TODO: besides user prompt, also pass in user current location?
-  const { userPrompt, restaurants } = req.data;
+  region: "us-central1" 
+}, async (request) => {
+  // 1. Data Validation
+  const { userPrompt, restaurants } = request.data;
+  
+  if (!userPrompt || !restaurants) {
+    throw new HttpsError("invalid-argument", "Missing prompt or restaurant list.");
+  }
 
-  const model = genAI.getGenerativeModel({
-    model: "gemini-1.5-flash",
-    // System instructions keep the logic separate from the user input
-    systemInstruction: "You have access to a list of restaurants collected by app users. Select the best restaurant from the context. Return ONLY JSON: { 'restaurantId': string, 'reason': string }",
-  });
+  try {
+    const prompt = `
+      USER_REQUEST: "${userPrompt}"
+      RESTAURANT_LIST: ${JSON.stringify(restaurants)}
+      
+      Task: Pick the best restaurant and explain why.
+      Return ONLY a JSON object: {"winnerId": "string", "reason": "string"}
+    `;
 
-  const prompt = `
-    USER_REQUEST: "${userPrompt}"
-    RESTAURANT_LIST: ${JSON.stringify(restaurants)}
-  `;
+    // 2. Call the Model
+    const result = await genAI.models.generateContent({
+      model: "gemini-3-flash-preview", 
+      contents: [{ role: "user", parts: [{ text: prompt }] }],
+      config: {
+        responseMimeType: "application/json" 
+      }
+    });
 
-  const result = await model.generateContent({
-    contents: [{ role: "user", parts: [{ text: prompt }] }],
-    generationConfig: { responseMimeType: "application/json" } // Force JSON mode
-  });
+    // 3. Proper Response Handling
+    // In the 2025 SDK, response.text is a property, not a function
+    const rawResponse = result.text; 
 
-  return JSON.parse(result.response.text());
-})
+    if (!rawResponse) {
+      throw new HttpsError("internal", "Gemini returned an empty response.");
+    }
+
+    return JSON.parse(rawResponse);
+
+  } catch (error) {
+    console.error("Gemini Logic Error:", error);
+    throw new HttpsError("internal", "Failed to generate recommendation.");
+  }
+});

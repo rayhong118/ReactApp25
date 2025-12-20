@@ -112,7 +112,10 @@ const UserPromptSection = () => {
   return (
     <div>
       <h2>Recommendation</h2>
-      <input type="text" placeholder="User Prompt" onChange={(e) => setUserPromptInput(e.target.value)} />
+      <div className="material-labeled-input">
+        <input type="text" placeholder="" onChange={(e) => setUserPromptInput(e.target.value)} />
+        <label htmlFor="userPrompt">User Prompt</label>
+      </div>
       <button onClick={handleUserPromptSubmit}>Generate</button>
     </div>
   );

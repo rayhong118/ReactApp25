@@ -26,5 +26,5 @@ export const auth = getAuth(app);
 export const googleProvider = new GoogleAuthProvider();
 export const githubProvider = new GithubAuthProvider();
 export const db = getFirestore(app);
-export const geminiModel = getGenerativeModel(ai, { model: "gemini-1.5-flash" });
+export const geminiModel = getGenerativeModel(ai, { model: "gemini-2.5-flash" });
 export const firebaseFunctions = getFunctions(app, "us-central1");

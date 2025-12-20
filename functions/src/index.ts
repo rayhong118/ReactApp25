@@ -38,6 +38,6 @@ setGlobalOptions({ maxInstances: 10 });
 
 admin.initializeApp();
 
-export { handleRestaurantLocationTags } from './eat/eatFunctions';
+export { handleRestaurantLocationTags, generateSuggestionBasedOnUserPrompt } from './eat/eatFunctions';
 export { verifyRecaptcha } from './reCaptcha/reCaptcha';
 
