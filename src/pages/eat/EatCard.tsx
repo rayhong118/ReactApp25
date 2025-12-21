@@ -1,3 +1,4 @@
+import { CustomizedButton } from "@/components/Buttons";
 import { Dialog, type IDialogAction } from "@/components/Dialog";
 import { useGetCurrentUser } from "@/utils/AuthenticationAtoms";
 import {
@@ -9,9 +10,13 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Timestamp } from "firebase/firestore";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { StarRating } from "../experiments/StarRating";
 import type { INote, IRestaurant } from "./Eat.types";
+import {
+  useGetCurrentUserRestaurantRatings,
+  useUpdateCurrentUserRestaurantRatings,
+} from "./EatAtoms";
 import { EatEditForm } from "./EatEditForm";
 import {
   useAddRestaurantNote,
@@ -19,11 +24,6 @@ import {
   useGetRestaurantNotes,
   useSubmitRestaurantRating,
 } from "./hooks";
-import { CustomizedButton } from "@/components/Buttons";
-import {
-  getCurrentUserRestaurantRatings,
-  updateCurrentUserRestaurantRatings,
-} from "./EatAtoms";
 
 export const EatCard = ({ restaurant }: { restaurant: IRestaurant }) => {
   const [isNotesExpanded, setIsNotesExpanded] = useState(false);
@@ -139,11 +139,12 @@ const Notes = ({ restaurantId }: INotesProps) => {
     refetch,
     isFetching,
   } = useGetRestaurantNotes(restaurantId);
-  const timeoutRef = useRef<NodeJS.Timeout>(null);
   const [newNote, setNewNote] = useState("");
   const User = useGetCurrentUser();
   const { mutate: submitRestaurantRating } = useSubmitRestaurantRating();
-  const currentRatings = getCurrentUserRestaurantRatings();
+  const currentRatings = useGetCurrentUserRestaurantRatings();
+  const updateCurrentUserRestaurantRatings =
+    useUpdateCurrentUserRestaurantRatings();
 
   const { mutate: addNote, isPending: isAddingNote } =
     useAddRestaurantNote(restaurantId);
@@ -156,7 +157,7 @@ const Notes = ({ restaurantId }: INotesProps) => {
 
   const [rating, setRating] = useState(currentRatings[restaurantId] || 0);
 
-  const onHandleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const onHandleNoteSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!newNote) return;
     addNote({
@@ -169,37 +170,25 @@ const Notes = ({ restaurantId }: INotesProps) => {
     refetch();
   };
 
-  useEffect(() => {
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-    }
-    timeoutRef.current = setTimeout(() => {
-      if (rating === 0) return;
-      submitRestaurantRating({
-        restaurantId,
-        rating,
-        userId: User?.uid || "",
-      });
-      updateCurrentUserRestaurantRatings({
-        [restaurantId]: rating,
-      });
-    }, 500);
-    return () => {
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
-    };
-  }, [rating]);
+  const handleRatingSubmit = (rating: number) => {
+    setRating(rating);
+    submitRestaurantRating({
+      restaurantId,
+      rating,
+      userId: User?.uid || "",
+    });
+    updateCurrentUserRestaurantRatings({ [restaurantId]: rating });
+  };
 
   return (
     <div className="flex flex-col w-full">
       {User && (
         <form
-          onSubmit={onHandleSubmit}
+          onSubmit={onHandleNoteSubmit}
           className="w-full py-5 flex flex-col gap-2"
         >
           <div className="flex items-center gap-2">
-            Rate: <StarRating rating={rating} setRating={setRating} />
+            Rate: <StarRating rating={rating} setRating={handleRatingSubmit} />
           </div>
           <textarea
             name="note"

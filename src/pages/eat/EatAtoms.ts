@@ -9,28 +9,35 @@ export const eatFilterSearchQueryAtom = atom<IEatQuery>({
   name: "",
   cityAndState: [],
 });
-export const getFilterSearchQuery = () =>
+export const useGetFilterSearchQuery = () =>
   useAtomValue(eatFilterSearchQueryAtom);
-export const setFilterSearchQuery = () => useSetAtom(eatFilterSearchQueryAtom);
+export const useSetFilterSearchQuery = () =>
+  useSetAtom(eatFilterSearchQueryAtom);
 
 /**
  * Not in use. Firebase does not support string partial matching
  */
-export const useSetFilterSearchQueryName = () => {
-  const setQuery = setFilterSearchQuery();
-  return useCallback((name: string) => {
-    setQuery((currentQuery) => ({ ...currentQuery, name }));
-  }, []);
+export const useUpdateFilterSearchQueryName = () => {
+  const setQuery = useSetFilterSearchQuery();
+  return useCallback(
+    (name: string) => {
+      setQuery((currentQuery) => ({ ...currentQuery, name }));
+    },
+    [setQuery]
+  );
 };
 
 /**
  * Filter based on location (city and state) tag values
  */
-export const useSetFilterSearchQueryCityAndState = () => {
-  const setQuery = setFilterSearchQuery();
-  return useCallback((cityAndState: string[]) => {
-    setQuery((currentQuery) => ({ ...currentQuery, cityAndState }));
-  }, []);
+export const useUpdateFilterSearchQueryCityAndState = () => {
+  const setQuery = useSetFilterSearchQuery();
+  return useCallback(
+    (cityAndState: string[]) => {
+      setQuery((currentQuery) => ({ ...currentQuery, cityAndState }));
+    },
+    [setQuery]
+  );
 };
 
 /**
@@ -38,13 +45,18 @@ export const useSetFilterSearchQueryCityAndState = () => {
  */
 export const currentUserRestaurantRatingsAtom = atom<TUserRatings>({});
 
-export const getCurrentUserRestaurantRatings = () =>
+export const useGetCurrentUserRestaurantRatings = () =>
   useAtomValue(currentUserRestaurantRatingsAtom);
 
-export const setCurrentUserRestaurantRatings = () =>
+export const useSetCurrentUserRestaurantRatings = () =>
   useSetAtom(currentUserRestaurantRatingsAtom);
 
-export const updateCurrentUserRestaurantRatings = (value: TUserRatings) => {
-  const setRatings = setCurrentUserRestaurantRatings();
-  setRatings((currentRatings) => ({ ...currentRatings, ...value }));
+export const useUpdateCurrentUserRestaurantRatings = () => {
+  const setRatings = useSetCurrentUserRestaurantRatings();
+  return useCallback(
+    (value: TUserRatings) => {
+      setRatings((currentRatings) => ({ ...currentRatings, ...value }));
+    },
+    [setRatings]
+  );
 };

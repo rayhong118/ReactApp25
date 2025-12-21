@@ -10,9 +10,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useRef, useState } from "react";
 import type { IEatQuery, IRestaurant } from "./Eat.types";
 import {
-  getFilterSearchQuery,
-  setFilterSearchQuery,
-  useSetFilterSearchQueryCityAndState,
+  useGetFilterSearchQuery,
+  useSetFilterSearchQuery,
+  useUpdateFilterSearchQueryCityAndState,
 } from "./EatAtoms";
 import { EatCard } from "./EatCard";
 import "./EatFilterSearch.scss";
@@ -42,7 +42,7 @@ export const EatFilterSearch = () => {
 const EatFilterSearchForm = () => {
   const timeoutRef = useRef<NodeJS.Timeout>(null);
   const [tempQuery, setTempQuery] = useState<IEatQuery>({});
-  const setFilterQuery = setFilterSearchQuery();
+  const setFilterQuery = useSetFilterSearchQuery();
 
   const handleQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (timeoutRef.current) {
@@ -182,9 +182,9 @@ const UserPromptSection = () => {
 
 const LocationTagsList = () => {
   const { data } = useGetRestaurantLocationTags();
-  const updateLocationTags = useSetFilterSearchQueryCityAndState();
+  const updateLocationTags = useUpdateFilterSearchQueryCityAndState();
   const [tagNameFilter, setTagNameFilter] = useState("");
-  const filterSearchQuery = getFilterSearchQuery();
+  const filterSearchQuery = useGetFilterSearchQuery();
   const [selectedLocationTags, setSelectedLocationTags] = useState<string[]>(
     filterSearchQuery.cityAndState || []
   );
