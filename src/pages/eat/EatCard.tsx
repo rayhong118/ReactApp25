@@ -76,13 +76,13 @@ export const EatCard = ({ restaurant }: { restaurant: IRestaurant }) => {
         )}
         <div className="text-sm">{restaurant.address}</div>
         <div className="text-sm">Price Per Person: {restaurant.price}</div>
-        <div className="flex flex-wrap gap-2">
-          <div className="flex items-center gap-2 text-sm">
-            Average: <StarRating rating={averageRating} /> {averageRatingString}
-          </div>
-          <div className="flex items-center gap-2 text-sm">
-            Your rating: <StarRating rating={currentUserRating} />
-          </div>
+
+        <div className="flex items-center gap-2 text-sm">
+          Average: <StarRating rating={averageRating} /> {averageRatingString}
+        </div>
+
+        <div className="flex items-center gap-2 text-sm">
+          Your rating: <StarRating rating={currentUserRating} />
         </div>
 
         <div className="flex justify-between align-center">
