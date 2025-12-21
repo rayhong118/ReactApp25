@@ -12,7 +12,6 @@ import { EatEditForm } from "./EatEditForm";
 import { useGetRestaurants } from "./hooks";
 
 export const EatList = () => {
-
   const eatQuery = getFilterSearchQuery();
   const { data: restaurants, error, isFetching } = useGetRestaurants(eatQuery);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -28,10 +27,7 @@ export const EatList = () => {
 
   return (
     <div className="flex flex-col gap-5 w-full">
-      <PrimaryButton
-        disabled={!User}
-        onClick={() => setIsDialogOpen(true)}
-      >
+      <PrimaryButton disabled={!User} onClick={() => setIsDialogOpen(true)}>
         <FontAwesomeIcon icon={faPlus} className="mr-2" />
         Add Restaurant
       </PrimaryButton>
@@ -42,7 +38,8 @@ export const EatList = () => {
       <Dialog
         open={isDialogOpen}
         onClose={handleDialogClose}
-        title="Add Restaurant">
+        title="Add Restaurant"
+      >
         <EatEditForm restaurant={undefined} closeDialog={handleDialogClose} />
       </Dialog>
     </div>

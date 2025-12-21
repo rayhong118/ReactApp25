@@ -4,12 +4,22 @@
 
 import { useAddMessageBars } from "@/utils/MessageBarsAtom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { addDoc, collection, deleteDoc, doc, getDocs, query, updateDoc, where, type QueryConstraint } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  deleteDoc,
+  doc,
+  getDocs,
+  query,
+  updateDoc,
+  where,
+  type QueryConstraint,
+} from "firebase/firestore";
 import { httpsCallable } from "firebase/functions";
 import { db, firebaseFunctions } from "../../firebase";
 import type { IEatQuery, ILocationTag, INote, IRestaurant } from "./Eat.types";
 
-/**      
+/**
  * This hook handles get restaurants
  * @returns data: array of restaurants
  * @returns isLoading: boolean
@@ -17,7 +27,12 @@ import type { IEatQuery, ILocationTag, INote, IRestaurant } from "./Eat.types";
  */
 export const useGetRestaurants = (eatQuery?: IEatQuery) => {
   const { data, error, refetch, isFetching } = useQuery({
-    queryKey: ["restaurants", eatQuery?.cityAndState, eatQuery?.priceRangeLower, eatQuery?.priceRangeUpper],
+    queryKey: [
+      "restaurants",
+      eatQuery?.cityAndState,
+      eatQuery?.priceRangeLower,
+      eatQuery?.priceRangeUpper,
+    ],
     queryFn: async () => {
       const constraints: QueryConstraint[] = [];
       if (eatQuery?.name) {
@@ -36,10 +51,10 @@ export const useGetRestaurants = (eatQuery?: IEatQuery) => {
       const querySnapshot = await getDocs(q);
       const restaurants = querySnapshot.docs.map(
         (doc) =>
-        ({
-          id: doc.id,
-          ...doc.data(),
-        } as IRestaurant)
+          ({
+            id: doc.id,
+            ...doc.data(),
+          } as IRestaurant)
       );
       return restaurants || [];
     },
@@ -87,7 +102,7 @@ export const useAddRestaurant = () => {
     },
   });
 
-  return { mutateAsync, isPending, isSuccess, error }; // note: mutate now expects Partial<IRestaurant>
+  return { mutateAsync, isPending, isSuccess, error };
 };
 
 /**
@@ -132,9 +147,8 @@ export const useEditRestaurant = () => {
     },
   });
 
-  return { mutateAsync, isPending, isSuccess, error }; // note: mutate now expects Partial<IRestaurant>
+  return { mutateAsync, isPending, isSuccess, error };
 };
-
 
 /**
  * This hook handles delete restaurant
@@ -189,14 +203,17 @@ export const useGetRestaurantNotes = (restaurantId: string) => {
   const { data, error, refetch, isFetching } = useQuery({
     queryKey: ["restaurant-notes", restaurantId],
     queryFn: async () => {
-      const q = query(collection(db, "restaurant-notes"), where("restaurantId", "==", restaurantId));
+      const q = query(
+        collection(db, "restaurant-notes"),
+        where("restaurantId", "==", restaurantId)
+      );
       const querySnapshot = await getDocs(q);
       const notes = querySnapshot.docs.map(
         (doc) =>
-        ({
-          id: doc.id,
-          ...doc.data(),
-        } as INote)
+          ({
+            id: doc.id,
+            ...doc.data(),
+          } as INote)
       );
       return notes || [];
     },
@@ -243,7 +260,6 @@ export const useAddRestaurantNote = (restaurantId: string) => {
 
   return { mutate, isPending, isSuccess, error }; // note: mutate now expects Partial<INotes>
 };
-
 
 /**
  * This hook handles delete note from restaurant
@@ -298,10 +314,10 @@ export const useGetRestaurantLocationTags = () => {
       const querySnapshot = await getDocs(q);
       const locationTags = querySnapshot.docs.map(
         (doc) =>
-        ({
-          value: doc.data().value,
-          count: doc.data().count,
-        } as ILocationTag)
+          ({
+            value: doc.data().value,
+            count: doc.data().count,
+          } as ILocationTag)
       );
       return locationTags || [];
     },
@@ -326,10 +342,10 @@ export const useGetRestaurantRecommendationNL = (userPrompt?: string) => {
       const querySnapshot = await getDocs(q);
       const restaurants = querySnapshot.docs.map(
         (doc) =>
-        ({
-          id: doc.id,
-          ...doc.data(),
-        } as IRestaurant)
+          ({
+            id: doc.id,
+            ...doc.data(),
+          } as IRestaurant)
       );
       const restaurantContext = restaurants.map((restaurant) => ({
         id: restaurant.id,
@@ -339,20 +355,28 @@ export const useGetRestaurantRecommendationNL = (userPrompt?: string) => {
       }));
       const restaurantContextJson = JSON.stringify(restaurantContext);
       console.log(restaurantContextJson);
-      const generateSuggestionBasedOnUserPrompt = httpsCallable<{ userPrompt: string, restaurants: string }, { restaurantId: string, reason: string }>(firebaseFunctions, "generateSuggestionBasedOnUserPrompt");
-      const result = await generateSuggestionBasedOnUserPrompt({ userPrompt, restaurants: restaurantContextJson });
+      const generateSuggestionBasedOnUserPrompt = httpsCallable<
+        { userPrompt: string; restaurants: string },
+        { restaurantId: string; reason: string }
+      >(firebaseFunctions, "generateSuggestionBasedOnUserPrompt");
+      const result = await generateSuggestionBasedOnUserPrompt({
+        userPrompt,
+        restaurants: restaurantContextJson,
+      });
 
       const { restaurantId: pickedRestaurantId, reason } = result.data;
 
-      const pickedRestaurant = restaurants.find((restaurant) => restaurant.id === pickedRestaurantId);
+      const pickedRestaurant = restaurants.find(
+        (restaurant) => restaurant.id === pickedRestaurantId
+      );
 
       const response = {
         restaurant: pickedRestaurant,
         reason,
-      }
+      };
 
       if (!pickedRestaurant) {
-        throw (new Error(reason));
+        throw new Error(reason);
       }
       return response;
     },
@@ -362,7 +386,6 @@ export const useGetRestaurantRecommendationNL = (userPrompt?: string) => {
     retry: false,
     staleTime: Infinity,
     enabled: !!userPrompt,
-
   });
   return { data, isError, error, refetch, isFetching };
 };

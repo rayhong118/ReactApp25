@@ -66,8 +66,9 @@ const ImageCarousel = () => {
   useEffect(() => {
     if (firstImageRef.current) {
       firstImageRef.current.style.position = "absolute";
-      firstImageRef.current.style.transform = `translateX(-${currentIndex * 100
-        }% )`;
+      firstImageRef.current.style.transform = `translateX(-${
+        currentIndex * 100
+      }% )`;
     }
   }, [currentIndex]);
 
@@ -109,4 +110,3 @@ const ImageCarousel = () => {
 };
 
 export default ImageCarousel;
-
