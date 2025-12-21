@@ -4,12 +4,9 @@ import { Loading } from "@/components/Loading";
 import { useGetCurrentUser } from "@/utils/AuthenticationAtoms";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import type { IRestaurant } from "./Eat.types";
-import {
-  useGetFilterSearchQuery,
-  useSetCurrentUserRestaurantRatings,
-} from "./EatAtoms";
+import { useGetFilterSearchQuery } from "./EatAtoms";
 import { EatCard } from "./EatCard";
 import { EatEditForm } from "./EatEditForm";
 import { useGetRestaurantRating, useGetRestaurants } from "./hooks";
@@ -22,20 +19,13 @@ export const EatList = () => {
     setIsDialogOpen(false);
   };
   const User = useGetCurrentUser();
-  const { data: userSubmittedRatingsSaved } = useGetRestaurantRating(
+  const { isFetching: isFetchingRatings } = useGetRestaurantRating(
     User?.uid || ""
   );
-  const setUserSubmittedRatings = useSetCurrentUserRestaurantRatings();
-
-  useEffect(() => {
-    if (User?.uid && userSubmittedRatingsSaved) {
-      setUserSubmittedRatings(userSubmittedRatingsSaved);
-    }
-  }, [User?.uid, userSubmittedRatingsSaved]);
 
   if (error) return <div>Error: {error.message}</div>;
 
-  if (isFetching) return <Loading />;
+  if (isFetching || isFetchingRatings) return <Loading />;
 
   return (
     <div className="flex flex-col gap-5 w-full">

@@ -10,19 +10,17 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Timestamp } from "firebase/firestore";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { StarRating } from "../experiments/StarRating";
 import type { INote, IRestaurant } from "./Eat.types";
-import {
-  useGetCurrentUserRestaurantRatings,
-  useUpdateCurrentUserRestaurantRatings,
-} from "./EatAtoms";
+import { useUpdateCurrentUserRestaurantRatings } from "./EatAtoms";
 import { EatEditForm } from "./EatEditForm";
 import {
   useAddRestaurantNote,
   useDeleteRestaurantNote,
   useGetRestaurantNotes,
   useSubmitRestaurantRating,
+  useUserRestaurantRating,
 } from "./hooks";
 
 export const EatCard = ({ restaurant }: { restaurant: IRestaurant }) => {
@@ -46,9 +44,8 @@ export const EatCard = ({ restaurant }: { restaurant: IRestaurant }) => {
   const averageRating: number = restaurant.stars ? calculateAverageRating() : 0;
   const averageRatingString =
     averageRating !== 0 ? averageRating.toFixed(1) : "No ratings yet";
+  const currentUserRating = useUserRestaurantRating(restaurant.id!);
 
-  // const currentUserRating =
-  //   getCurrentUserRestaurantRatings()[restaurant.id!] || 0;
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   return (
@@ -83,9 +80,9 @@ export const EatCard = ({ restaurant }: { restaurant: IRestaurant }) => {
           <div className="flex items-center gap-2 text-sm">
             Average: <StarRating rating={averageRating} /> {averageRatingString}
           </div>
-          {/* <div className="flex items-center gap-2 text-sm">
+          <div className="flex items-center gap-2 text-sm">
             Your rating: <StarRating rating={currentUserRating} />
-          </div> */}
+          </div>
         </div>
 
         <div className="flex justify-between align-center">
@@ -142,7 +139,7 @@ const Notes = ({ restaurantId }: INotesProps) => {
   const [newNote, setNewNote] = useState("");
   const User = useGetCurrentUser();
   const { mutate: submitRestaurantRating } = useSubmitRestaurantRating();
-  const currentRatings = useGetCurrentUserRestaurantRatings();
+  const currentRating = useUserRestaurantRating(restaurantId);
   const updateCurrentUserRestaurantRatings =
     useUpdateCurrentUserRestaurantRatings();
 
@@ -155,7 +152,13 @@ const Notes = ({ restaurantId }: INotesProps) => {
     setNewNote(e.target.value);
   };
 
-  const [rating, setRating] = useState(currentRatings[restaurantId] || 0);
+  const [rating, setRating] = useState(currentRating || 0);
+
+  useEffect(() => {
+    if (currentRating !== 0 && rating === 0) {
+      setRating(currentRating);
+    }
+  }, [currentRating]);
 
   const onHandleNoteSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
