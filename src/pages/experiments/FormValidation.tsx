@@ -81,12 +81,14 @@ const FormValidation = () => {
         </div>
         <input
           type="submit"
-          className="cursor-pointer hover:opacity-50 border border-gray-300 shadow-md rounded-md w-24 py-2 mix-blend-darken"
+          className="cursor-pointer hover:opacity-50 border border-gray-300 
+          shadow-md rounded-md w-24 py-2 mix-blend-darken"
           value="Submit"
         ></input>
         <input
           type="button"
-          className="cursor-pointer hover:opacity-50 border border-gray-300 shadow-md rounded-md w-24 py-2 mix-blend-darken"
+          className="cursor-pointer hover:opacity-50 border border-gray-300 
+          shadow-md rounded-md w-24 py-2 mix-blend-darken"
           value="Clear"
           onClick={clearForm}
         ></input>

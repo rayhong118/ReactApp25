@@ -20,7 +20,8 @@ export const verifyRecaptcha = onRequest({ cors: true }, async (req, res) => {
   }
 
   try {
-    // Access the secret from environment variables (set via Google Secret Manager or .env)
+    // Access the secret from environment variables
+    // (set via Google Secret Manager or .env)
     const secretKey = process.env.RECAPTCHA_SECRET;
 
     const verifyUrl = `https://www.google.com/recaptcha/api/siteverify`;
@@ -43,7 +44,10 @@ export const verifyRecaptcha = onRequest({ cors: true }, async (req, res) => {
         message: "Human verified!",
       });
     } else {
-      logger.warn("reCAPTCHA failed", { score: data.score, errors: data["error-codes"] });
+      logger.warn("reCAPTCHA failed", {
+        score: data.score,
+        errors: data["error-codes"],
+      });
       res.status(403).send({
         success: false,
         score: data.score,

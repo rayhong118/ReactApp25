@@ -5,7 +5,7 @@ import tseslint from 'typescript-eslint';
 export default tseslint.config(
   {
     // Ignore the compiled output and node_modules
-    ignores: ['lib/**/*', 'node_modules/**/*'],
+    ignores: ['lib/**/*', 'node_modules/**/*', 'dist/**/*'],
   },
   js.configs.recommended,
   ...tseslint.configs.recommended,
@@ -23,7 +23,8 @@ export default tseslint.config(
       '@typescript-eslint/no-explicit-any': 'warn',
       'no-unused-vars': 'warn',
       "@typescript-eslint/no-require-imports": "off",
-      "no-undef": "off"
+      "no-undef": "off",
+      "max-len": ["error", { "code": 100 }],
     },
   }
 );

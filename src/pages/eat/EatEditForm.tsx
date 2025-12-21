@@ -1,10 +1,14 @@
+import { CustomizedButton, PrimaryButton } from "@/components/Buttons";
+import { faSearch } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useRef, useState } from "react";
 import type { IRestaurant } from "./Eat.types";
 import "./EatEditDialog.scss";
-import { useAddRestaurant, useDeleteRestaurant, useEditRestaurant } from "./hooks";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSearch } from "@fortawesome/free-solid-svg-icons";
-import { CustomizedButton, PrimaryButton } from "@/components/Buttons";
+import {
+  useAddRestaurant,
+  useDeleteRestaurant,
+  useEditRestaurant,
+} from "./hooks";
 
 interface IEatEditFormProps {
   restaurant?: IRestaurant;
@@ -18,8 +22,14 @@ export const EatEditForm = (props: IEatEditFormProps) => {
   const [googleSearchInput, setGoogleSearchInput] = useState("");
   const timeoutRef = useRef<any>(null);
   const placeAutocompleteRef = useRef<HTMLInputElement | null>(null);
-  const { mutateAsync: addRestaurantMutate, isPending: addRestaurantIsPending } = useAddRestaurant();
-  const { mutateAsync: editRestaurantMutate, isPending: editRestaurantIsPending } = useEditRestaurant();
+  const {
+    mutateAsync: addRestaurantMutate,
+    isPending: addRestaurantIsPending,
+  } = useAddRestaurant();
+  const {
+    mutateAsync: editRestaurantMutate,
+    isPending: editRestaurantIsPending,
+  } = useEditRestaurant();
   const { mutateAsync: deleteRestaurantMutate } = useDeleteRestaurant();
 
   useEffect(() => {
@@ -58,37 +68,37 @@ export const EatEditForm = (props: IEatEditFormProps) => {
       }
     );
 
-
-
     if (!autocomplete) {
       return;
     }
-    const placeChangedListener = autocomplete.addListener("place_changed", () => {
+    const placeChangedListener = autocomplete.addListener(
+      "place_changed",
+      () => {
+        const place = autocomplete.getPlace();
+        if (place) {
+          const city = place.address_components?.find((component) =>
+            component.types.includes(locality)
+          )?.short_name;
+          const state = place.address_components?.find((component) =>
+            component.types.includes(administrativeAreaLevel1)
+          )?.short_name;
+          const cityAndState = `${city}, ${state}`;
 
-      const place = autocomplete.getPlace();
-      if (place) {
-        const city = place.address_components?.find((component) =>
-          component.types.includes(locality)
-        )?.short_name;
-        const state = place.address_components?.find((component) =>
-          component.types.includes(administrativeAreaLevel1)
-        )?.short_name;
-        const cityAndState = `${city}, ${state}`;
-
-        const newEatData = {
-          ...eatData,
-          name: place.name || "",
-          address: place.formatted_address || "",
-          price: place.price_level || 0,
-          displayName: "",
-          description: "",
-          url: place.url,
-          phoneNumber: place.formatted_phone_number,
-          cityAndState: cityAndState,
-        };
-        setEatData(newEatData);
+          const newEatData = {
+            ...eatData,
+            name: place.name || "",
+            address: place.formatted_address || "",
+            price: place.price_level || 0,
+            displayName: "",
+            description: "",
+            url: place.url,
+            phoneNumber: place.formatted_phone_number,
+            cityAndState: cityAndState,
+          };
+          setEatData(newEatData);
+        }
       }
-    });
+    );
 
     return () => {
       // clear search input to dismiss autocomplete
@@ -129,7 +139,13 @@ export const EatEditForm = (props: IEatEditFormProps) => {
   };
 
   useEffect(() => {
-    if (eatData && eatData.name && eatData.address && eatData.price && eatData.price !== 0) {
+    if (
+      eatData &&
+      eatData.name &&
+      eatData.address &&
+      eatData.price &&
+      eatData.price !== 0
+    ) {
       setIsFormValid(true);
     }
   }, [eatData]);
@@ -162,7 +178,6 @@ export const EatEditForm = (props: IEatEditFormProps) => {
     }
   };
 
-
   return (
     <div>
       <div className="eat-edit-dialog">
@@ -176,7 +191,8 @@ export const EatEditForm = (props: IEatEditFormProps) => {
               ref={placeAutocompleteRef}
             />
             <label htmlFor="googleSearch">
-              <FontAwesomeIcon icon={faSearch} className="mr-2" />Search for the restaurant
+              <FontAwesomeIcon icon={faSearch} className="mr-2" />
+              Search for the restaurant
             </label>
           </div>
 
@@ -189,7 +205,9 @@ export const EatEditForm = (props: IEatEditFormProps) => {
               placeholder=""
               value={eatData?.name || ""}
             />
-            <label htmlFor="name">Name - <text className="text-xs">Populated by Google Maps</text></label>
+            <label htmlFor="name">
+              Name - <text className="text-xs">Populated by Google Maps</text>
+            </label>
           </div>
           <div className="labeled-input">
             <input
@@ -221,7 +239,10 @@ export const EatEditForm = (props: IEatEditFormProps) => {
               placeholder=""
               value={eatData?.address || ""}
             />
-            <label htmlFor="address">Address - <text className="text-xs">Populated by Google Maps</text></label>
+            <label htmlFor="address">
+              Address -{" "}
+              <text className="text-xs">Populated by Google Maps</text>
+            </label>
           </div>
           <div className="labeled-input">
             <input
@@ -232,7 +253,9 @@ export const EatEditForm = (props: IEatEditFormProps) => {
               value={eatData?.price || ""}
               onChange={handleChange}
             />
-            <label htmlFor="price">Price per person <text className="text-red-500 font-bold">*</text></label>
+            <label htmlFor="price">
+              Price per person <text className="text-red-500 font-bold">*</text>
+            </label>
           </div>
           <div className="labeled-input">
             <input
@@ -242,7 +265,10 @@ export const EatEditForm = (props: IEatEditFormProps) => {
               placeholder=""
               value={eatData?.phoneNumber || ""}
             />
-            <label htmlFor="phoneNumber">Phone Number - <text className="text-xs">Populated by Google Maps</text></label>
+            <label htmlFor="phoneNumber">
+              Phone Number -{" "}
+              <text className="text-xs">Populated by Google Maps</text>
+            </label>
           </div>
           <div className="labeled-input">
             <input
@@ -252,21 +278,32 @@ export const EatEditForm = (props: IEatEditFormProps) => {
               placeholder=""
               value={eatData?.cityAndState || ""}
             />
-            <label htmlFor="cityAndState">City and State - <text className="text-xs">Populated by Google Maps</text></label>
+            <label htmlFor="cityAndState">
+              City and State -{" "}
+              <text className="text-xs">Populated by Google Maps</text>
+            </label>
           </div>
 
           <PrimaryButton
-            disabled={!isFormValid || addRestaurantIsPending || editRestaurantIsPending}
-            type="submit">
+            disabled={
+              !isFormValid || addRestaurantIsPending || editRestaurantIsPending
+            }
+            type="submit"
+          >
             Submit
           </PrimaryButton>
-          {restaurant && <CustomizedButton
-            type="button"
-            disabled={addRestaurantIsPending || editRestaurantIsPending}
-            onClick={handleDelete}
-            className="text-base bg-red-600 text-white font-semibold p-2 rounded cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed hover:bg-red-700">
-            Delete
-          </CustomizedButton>}
+          {restaurant && (
+            <CustomizedButton
+              type="button"
+              disabled={addRestaurantIsPending || editRestaurantIsPending}
+              onClick={handleDelete}
+              className="text-base bg-red-600 text-white font-semibold p-2 
+              rounded cursor-pointer disabled:opacity-50 
+              disabled:cursor-not-allowed hover:bg-red-700"
+            >
+              Delete
+            </CustomizedButton>
+          )}
         </form>
       </div>
     </div>

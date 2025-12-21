@@ -1,3 +1,4 @@
+import { PrimaryButton } from "@/components/Buttons";
 import { Dialog } from "@/components/Dialog";
 import { Loading } from "@/components/Loading";
 import { useGetCurrentUser } from "@/utils/AuthenticationAtoms";
@@ -9,7 +10,6 @@ import { getFilterSearchQuery } from "./EatAtoms";
 import { EatCard } from "./EatCard";
 import { EatEditForm } from "./EatEditForm";
 import { useGetRestaurants } from "./hooks";
-import { PrimaryButton } from "@/components/Buttons";
 
 export const EatList = () => {
 

@@ -94,7 +94,7 @@ const JiZiQi = () => {
   };
 
   return (
-    < >
+    <>
       <h1>棋子</h1>
       <div>
         Current player:{" "}
@@ -111,7 +111,9 @@ const JiZiQi = () => {
               {row.map((cell, colIndex) => {
                 return (
                   <span
-                    className="flex w-8 h-8 border border-gray-400 justify-center items-center cursor-pointer hover:bg-gray-200"
+                    className="flex w-8 h-8 border border-gray-400 
+                    justify-center items-center cursor-pointer 
+                    hover:bg-gray-200"
                     key={"cellIndex" + colIndex}
                     onClick={() => handleCellClick(rowIndex, colIndex)}
                   >
@@ -132,7 +134,10 @@ const JiZiQi = () => {
       <div className="py-8">
         <button
           onClick={resetGame}
-          className="bg-white border border-gray-300 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 text-gray-700 font-semibold py-2 px-4 rounded-lg transition active:bg-gray-100 cursor-pointer"
+          className="bg-white border border-gray-300 hover:bg-gray-50 
+          focus:outline-none focus:ring-2 focus:ring-blue-500 
+          focus:ring-offset-2 text-gray-700 font-semibold py-2 px-4 
+          rounded-lg transition active:bg-gray-100 cursor-pointer"
         >
           Reset Game
         </button>

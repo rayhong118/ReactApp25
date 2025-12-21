@@ -21,7 +21,8 @@ export interface IRestaurant {
    */
   stars?: IStarRating;
   /**
-   * Average rating of the restaurant. Should be read only, and only be modified by the firebase functions on user submit.
+   * Average rating of the restaurant. Should be read only, and only
+   * be modified by the firebase functions on user submit.
    */
   averageStarts?: number;
   /**

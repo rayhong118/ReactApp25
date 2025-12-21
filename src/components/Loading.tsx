@@ -7,4 +7,4 @@ export const Loading = () => {
       <p className="text-2xl font-bold">Loading...</p>
     </div>
   );
-}
+};

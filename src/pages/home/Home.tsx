@@ -3,19 +3,32 @@ import "./Home.scss";
 export const Home = () => {
   return (
     <div className="homepage-container w-full">
-      <div className="homepage-panel bg-black overflow-hidden min-h-screen w-full max-h-screen flex flex-col justify-center items-center">
+      <div
+        className="homepage-panel bg-black overflow-hidden min-h-screen
+       w-full max-h-screen flex flex-col justify-center items-center"
+      >
         <h1 id="homepage_title" className="font-bold p-20">
           HOMEPAGE
         </h1>
-        <h2 id='homepage_subtitle' className="text-2xl text-white">Doghead portal 2025</h2>
+        <h2 id="homepage_subtitle" className="text-2xl text-white">
+          Doghead portal 2025
+        </h2>
       </div>
       <div
-        className=" homepage-panel bg-white min-h-screen w-full max-h-screen flex flex-col justify-center items-center"
+        className=" homepage-panel bg-white min-h-screen w-full max-h-screen 
+        flex flex-col justify-center items-center"
         id="houdini"
       >
         <div className="card">
-          <div className="content flex items-center flex-col gap-10 p-10 md:p-20">
-            <img className="w-1/3 h-1/3 rounded-full md:w-1/2 md:h-1/2" src="2017dh.png" alt="Doghead" />
+          <div
+            className="content flex items-center flex-col gap-10 p-10 
+          md:p-20"
+          >
+            <img
+              className="w-1/3 h-1/3 rounded-full md:w-1/2 md:h-1/2"
+              src="2017dh.png"
+              alt="Doghead"
+            />
             <h1 className="font-bold text-2xl">Doghead</h1>
           </div>
         </div>

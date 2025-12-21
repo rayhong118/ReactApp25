@@ -40,8 +40,8 @@ export const Navigation = () => {
         setDropdownOpen(false);
       }}
       key={label}
-      className={`block px-3 py-2 rounded-md text-md font-medium text-gray-700 hover:bg-gray-100 text-start whitespace-nowrap ${nested ? "w-full" : ""
-        }`}
+      className={`block px-3 py-2 rounded-md text-md font-medium text-gray-700 hover:bg-gray-100
+         text-start whitespace-nowrap ${nested ? "w-full" : ""}`}
     >
       {label}
     </button>
@@ -64,10 +64,15 @@ export const Navigation = () => {
           <div className="flex items-center">
             <button
               onClick={() => navigate("/")}
-              className="flex items-center gap-2 text-md font-semibold text-gray-900 hover:text-gray-700 cursor-pointer px-3 py-2"
+              className="flex items-center gap-2 text-md font-semibold text-gray-900 
+              hover:text-gray-700 cursor-pointer px-3 py-2"
               aria-label="Go to home"
             >
-              <img className="w-8 h-8" src="2017dh.png" alt="DogheadPortal logo" />
+              <img
+                className="w-8 h-8"
+                src="2017dh.png"
+                alt="DogheadPortal logo"
+              />
               DogheadPortal
             </button>
           </div>
@@ -81,7 +86,8 @@ export const Navigation = () => {
                 onClick={() => setDropdownOpen((s) => !s)}
                 aria-haspopup="true"
                 aria-expanded={dropdownOpen}
-                className="inline-flex items-center px-3 py-2 rounded-md text-md font-medium text-gray-700 hover:bg-gray-100"
+                className="inline-flex items-center px-3 py-2 rounded-md text-md font-medium
+                 text-gray-700 hover:bg-gray-100"
               >
                 Experiments
                 <svg
@@ -101,7 +107,10 @@ export const Navigation = () => {
               </button>
 
               {dropdownOpen && (
-                <div className="absolute right-0 mt-2 w-60 bg-white ring-1 ring-black/5 rounded-md shadow-lg py-1">
+                <div
+                  className="absolute right-0 mt-2 w-60 bg-white ring-1 ring-black/5
+                 rounded-md shadow-lg py-1"
+                >
                   {experimentsNavItems.map((item) =>
                     navButton(item.label, item.to, true)
                   )}
@@ -117,7 +126,8 @@ export const Navigation = () => {
             <button
               onClick={() => setMobileOpen((s) => !s)}
               aria-label="Toggle menu"
-              className="inline-flex items-center justify-center p-2 rounded-md text-gray-700 hover:bg-gray-100"
+              className="inline-flex items-center justify-center p-2 rounded-md 
+              text-gray-700 hover:bg-gray-100"
             >
               <svg
                 className="h-6 w-6"
@@ -156,7 +166,8 @@ export const Navigation = () => {
             <div>
               <button
                 onClick={() => setDropdownOpen((s) => !s)}
-                className="w-full text-left px-3 py-2 rounded-md text-md font-medium text-gray-700 hover:bg-gray-100 flex items-center justify-between"
+                className="w-full text-left px-3 py-2 rounded-md text-md font-medium text-gray-700 
+                hover:bg-gray-100 flex items-center justify-between"
               >
                 Experiments
                 <svg

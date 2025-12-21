@@ -9,12 +9,9 @@ export function withGoogleMapsApi(WrappedComponent: React.ComponentType) {
     const { isLoaded } = useJsApiLoader({
       id: "google-map-script",
       googleMapsApiKey: googleMapsApiKey,
-      libraries: LIBRARIES
+      libraries: LIBRARIES,
     });
-    return (
-      isLoaded ?
-        <WrappedComponent {...props} />
-        : null
-    );
+
+    return isLoaded ? <WrappedComponent {...props} /> : null;
   };
 }

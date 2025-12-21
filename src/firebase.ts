@@ -18,13 +18,15 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 export const appCheck = initializeAppCheck(app, {
-  provider: new ReCaptchaV3Provider(googleReCaptchaSiteKey), // Use your Public Site Key
-  isTokenAutoRefreshEnabled: true // Automatically refreshes the token in the background
+  provider: new ReCaptchaV3Provider(googleReCaptchaSiteKey),
+  isTokenAutoRefreshEnabled: true,
 });
 export const ai = getAI(app);
 export const auth = getAuth(app);
 export const googleProvider = new GoogleAuthProvider();
 export const githubProvider = new GithubAuthProvider();
 export const db = getFirestore(app);
-export const geminiModel = getGenerativeModel(ai, { model: "gemini-2.5-flash" });
+export const geminiModel = getGenerativeModel(ai, {
+  model: "gemini-2.5-flash",
+});
 export const firebaseFunctions = getFunctions(app, "us-central1");

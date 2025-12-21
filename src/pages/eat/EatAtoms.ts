@@ -12,14 +12,12 @@ export const useSetFilterSearchQueryName = () => {
   const setQuery = setFilterSearchQuery();
   return (name: string) => {
     setQuery((currentQuery) => ({ ...currentQuery, name }));
-  }
-}
+  };
+};
 
 export const useSetFilterSearchQueryCityAndState = () => {
   const setQuery = setFilterSearchQuery();
   return (cityAndState: string[]) => {
     setQuery((currentQuery) => ({ ...currentQuery, cityAndState }));
-  }
-}
-
-
+  };
+};

@@ -2,7 +2,6 @@ import { useSetUserLocation } from "@/utils/UserLocationAtom";
 import { useEffect } from "react";
 
 export function withUserLocation(WrappedComponent: React.ComponentType) {
-
   const setUserLocation = useSetUserLocation();
 
   useEffect(() => {
@@ -26,16 +25,14 @@ export function withUserLocation(WrappedComponent: React.ComponentType) {
         console.error(`Error: ${err.message}`);
       },
       {
-        enableHighAccuracy: false,  // better precision
-        timeout: 5000,              // max wait time
-        maximumAge: 0               // no cached position
+        enableHighAccuracy: false, // better precision
+        timeout: 5000, // max wait time
+        maximumAge: 0, // no cached position
       }
     );
   };
 
   return function (props: any) {
-    return (
-      <WrappedComponent {...props} />
-    );
+    return <WrappedComponent {...props} />;
   };
 }

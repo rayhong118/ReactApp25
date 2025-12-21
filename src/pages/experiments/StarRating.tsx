@@ -15,40 +15,40 @@ export const StarRating = ({ rating = 0, setRating }: IStarRatingProps) => {
       <div className="flex" onMouseLeave={() => setHover(rating)}>
         {setRating
           ? starArray.map((star, index) => (
-            <span
-              key={index}
-              onClick={() => setRating(star)}
-              onMouseEnter={() => setHover(star)}
-              className="cursor-pointer"
-            >
-              {star <= hover ? (
-                <FontAwesomeIcon
-                  icon={solidStar}
-                  className={`text-yellow-300`}
-                />
-              ) : (
-                <FontAwesomeIcon
-                  icon={regularStar}
-                  className={`text-yellow-300`}
-                />
-              )}
-            </span>
-          ))
+              <span
+                key={index}
+                onClick={() => setRating(star)}
+                onMouseEnter={() => setHover(star)}
+                className="cursor-pointer"
+              >
+                {star <= hover ? (
+                  <FontAwesomeIcon
+                    icon={solidStar}
+                    className={`text-yellow-300`}
+                  />
+                ) : (
+                  <FontAwesomeIcon
+                    icon={regularStar}
+                    className={`text-yellow-300`}
+                  />
+                )}
+              </span>
+            ))
           : starArray.map((star, index) => (
-            <span key={index} className="cursor-pointer">
-              {star <= hover ? (
-                <FontAwesomeIcon
-                  icon={solidStar}
-                  className={`text-yellow-300`}
-                />
-              ) : (
-                <FontAwesomeIcon
-                  icon={regularStar}
-                  className={`text-yellow-300`}
-                />
-              )}
-            </span>
-          ))}
+              <span key={index} className="cursor-pointer">
+                {star <= hover ? (
+                  <FontAwesomeIcon
+                    icon={solidStar}
+                    className={`text-yellow-300`}
+                  />
+                ) : (
+                  <FontAwesomeIcon
+                    icon={regularStar}
+                    className={`text-yellow-300`}
+                  />
+                )}
+              </span>
+            ))}
       </div>
     </div>
   );

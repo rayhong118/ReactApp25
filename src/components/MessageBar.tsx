@@ -12,7 +12,13 @@ export interface IMessageBarProps {
   autoDismissTimeout?: number;
 }
 
-export const MessageBar = ({ id, type, message, autoDismiss, autoDismissTimeout }: IMessageBarProps) => {
+export const MessageBar = ({
+  id,
+  type,
+  message,
+  autoDismiss,
+  autoDismissTimeout,
+}: IMessageBarProps) => {
   const [isFadingOut, setIsFadingOut] = useState(false);
   const dismissMessageBar = useDismissMessageBar();
 
@@ -35,7 +41,8 @@ export const MessageBar = ({ id, type, message, autoDismiss, autoDismissTimeout 
     };
   }, [autoDismiss, autoDismissTimeout, id]);
 
-  const baseClass = "flex items-center justify-between gap-2 px-4 py-2 mx-5 rounded-md shadow-lg pointer-events-auto";
+  const baseClass = `flex items-center justify-between gap-2 px-4 py-2 mx-5 rounded-md 
+    shadow-lg pointer-events-auto`;
   const typeClass = () => {
     switch (type) {
       case "success":
@@ -47,16 +54,18 @@ export const MessageBar = ({ id, type, message, autoDismiss, autoDismissTimeout 
       case "info":
         return "bg-blue-100 text-blue-800";
     }
-  }
+  };
 
   return (
-    <div className={`
-    ${baseClass} 
-    ${typeClass()} 
-    ${isFadingOut ? "message-bar-fade-out" : ""}
-    `}>
+    <div
+      className={`${baseClass} ${typeClass()} ${
+        isFadingOut ? "message-bar-fade-out" : ""
+      }`}
+    >
       <p>{message}</p>
-      <button onClick={() => dismissMessageBar(id)}><FontAwesomeIcon icon={faXmark} /></button>
+      <button onClick={() => dismissMessageBar(id)}>
+        <FontAwesomeIcon icon={faXmark} />
+      </button>
     </div>
   );
 };

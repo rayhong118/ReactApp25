@@ -23,7 +23,9 @@ const Eat = lazy(() => import("./pages/eat/Eat"));
 const StopWatch = lazy(() => import("./pages/experiments/StopWatch"));
 const FileUpload = lazy(() => import("./pages/experiments/FileUpload"));
 const FormValidation = lazy(() => import("./pages/experiments/FormValidation"));
-const ImageCarousel = lazy(() => import("./pages/experiments/imageCarousel/ImageCarousel"));
+const ImageCarousel = lazy(
+  () => import("./pages/experiments/imageCarousel/ImageCarousel")
+);
 const MoveLists = lazy(() => import("./pages/experiments/MoveLists"));
 const AuthPage = lazy(() => import("./pages/auth/Auth"));
 const NotFound = lazy(() => import("./pages/notFound/NotFound"));
@@ -49,7 +51,10 @@ const App: React.FC = () => {
           <Route path="/auth" element={withSuspense(<AuthPage />)} />
           <Route path="/about" element={withDefaultPagePadding(<About />)} />
 
-          <Route path="/experiments/fileUpload" element={withSuspense(<FileUpload />)} />
+          <Route
+            path="/experiments/fileUpload"
+            element={withSuspense(<FileUpload />)}
+          />
           <Route
             path="/experiments/formValidation"
             element={withSuspense(<FormValidation />)}
@@ -58,17 +63,28 @@ const App: React.FC = () => {
             path="/experiments/moveLists"
             element={withSuspense(<WithAuthRequired component={MoveLists} />)}
           />
-          <Route path="/experiments/stopWatch" element={withSuspense(withDefaultPagePadding(<StopWatch />))} />
+          <Route
+            path="/experiments/stopWatch"
+            element={withSuspense(withDefaultPagePadding(<StopWatch />))}
+          />
           <Route
             path="/experiments/imageCarousels"
             element={withSuspense(withDefaultPagePadding(<ImageCarousel />))}
           />
-          <Route path="/experiments/ticTacToe" element={withSuspense(withDefaultPagePadding(<JiZiQi />))} />
-          <Route path="/eat" element={withSuspense(withDefaultPagePadding(<Eat />))} />
-          <Route path="*" element={withSuspense(withDefaultPagePadding(<NotFound />))} />
+          <Route
+            path="/experiments/ticTacToe"
+            element={withSuspense(withDefaultPagePadding(<JiZiQi />))}
+          />
+          <Route
+            path="/eat"
+            element={withSuspense(withDefaultPagePadding(<Eat />))}
+          />
+          <Route
+            path="*"
+            element={withSuspense(withDefaultPagePadding(<NotFound />))}
+          />
         </Routes>
-
-      </BrowserRouter >
+      </BrowserRouter>
     </>
   );
 };

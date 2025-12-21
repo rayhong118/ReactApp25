@@ -52,10 +52,11 @@ const AuthPage = () => {
             <p className="text-gray-600">
               <span className="font-semibold">Status:</span>
               <span
-                className={`ml-2 px-3 py-1 rounded-full text-sm font-medium ${currentUser.emailVerified
-                  ? "bg-green-100 text-green-800"
-                  : "bg-yellow-100 text-yellow-800"
-                  }`}
+                className={`ml-2 px-3 py-1 rounded-full text-sm font-medium ${
+                  currentUser.emailVerified
+                    ? "bg-green-100 text-green-800"
+                    : "bg-yellow-100 text-yellow-800"
+                }`}
               >
                 {currentUser.emailVerified
                   ? "Email Verified"
@@ -67,13 +68,16 @@ const AuthPage = () => {
           <div className="space-y-3">
             <button
               disabled
-              className="w-full bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
+              className={`w-full bg-blue-600 text-white font-semibold py-2 px-4
+              rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed`}
             >
               Reset Password
             </button>
             <button
               onClick={signOut}
-              className="w-full bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 text-white font-semibold py-2 px-4 rounded-lg transition active:bg-blue-800 cursor-pointer"
+              className={`w-full bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2
+              focus:ring-blue-500 focus:ring-offset-2 text-white font-semibold py-2 px-4
+              rounded-lg transition active:bg-blue-800 cursor-pointer`}
             >
               Sign Out
             </button>
@@ -107,7 +111,8 @@ const AuthPage = () => {
               <input
                 type="text"
                 placeholder="Enter your full name"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className={`w-full px-4 py-2 border border-gray-300 rounded-lg
+                focus:outline-none focus:ring-2 focus:ring-blue-500`}
               />
             </div>
 
@@ -118,7 +123,8 @@ const AuthPage = () => {
               <input
                 type="email"
                 placeholder="Enter your email"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className={`w-full px-4 py-2 border border-gray-300 rounded-lg
+                focus:outline-none focus:ring-2 focus:ring-blue-500`}
               />
             </div>
 
@@ -129,13 +135,16 @@ const AuthPage = () => {
               <input
                 type="password"
                 placeholder="Create a password"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className={`w-full px-4 py-2 border border-gray-300 rounded-lg
+                focus:outline-none focus:ring-2 focus:ring-blue-500`}
               />
             </div>
 
             <button
               type="submit"
-              className="w-full bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 text-white font-semibold py-2 px-4 rounded-lg transition active:bg-blue-800 cursor-pointer"
+              className={`w-full bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2
+              focus:ring-blue-500 focus:ring-offset-2 text-white font-semibold py-2 px-4
+              rounded-lg transition active:bg-blue-800 cursor-pointer`}
             >
               Sign Up
             </button>
@@ -155,14 +164,18 @@ const AuthPage = () => {
           <div className="space-y-3 mb-6">
             <button
               onClick={() => signInWithGoogle()}
-              className="w-full bg-white border border-gray-300 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 text-gray-700 font-semibold py-2 px-4 rounded-lg transition active:bg-gray-100 cursor-pointer"
+              className={`w-full bg-white border border-gray-300 hover:bg-gray-50 focus:outline-none
+              focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 text-gray-700 font-semibold
+              py-2 px-4 rounded-lg transition active:bg-gray-100 cursor-pointer`}
             >
               <FontAwesomeIcon icon={faGoogle} className="px-2" />
               Sign up with Google
             </button>
             <button
               onClick={() => signInWithGithub()}
-              className="w-full bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-600 focus:ring-offset-2 text-white font-semibold py-2 px-4 rounded-lg transition active:bg-black cursor-pointer"
+              className={`w-full bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-2
+              focus:ring-gray-600 focus:ring-offset-2 text-white font-semibold py-2 px-4
+              rounded-lg transition active:bg-black cursor-pointer`}
             >
               {" "}
               <FontAwesomeIcon icon={faGithub} className="px-2" />
@@ -172,7 +185,9 @@ const AuthPage = () => {
 
           <button
             onClick={() => setCurrentPage("signIn")}
-            className="w-full text-blue-600 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded font-semibold py-2 transition active:text-blue-800 cursor-pointer"
+            className={`w-full text-blue-600 hover:text-blue-700 focus:outline-none
+            focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded font-semibold
+            py-2 transition active:text-blue-800 cursor-pointer`}
           >
             Already have an account? Sign In
           </button>
@@ -196,7 +211,8 @@ const AuthPage = () => {
               <input
                 type="email"
                 placeholder="Enter your email"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className={`w-full px-4 py-2 border border-gray-300 rounded-lg
+                focus:outline-none focus:ring-2 focus:ring-blue-500`}
               />
             </div>
 
@@ -207,13 +223,16 @@ const AuthPage = () => {
               <input
                 type="password"
                 placeholder="Enter your password"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className={`w-full px-4 py-2 border border-gray-300 rounded-lg
+                focus:outline-none focus:ring-2 focus:ring-blue-500`}
               />
             </div>
 
             <button
               type="submit"
-              className="w-full bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 text-white font-semibold py-2 px-4 rounded-lg transition active:bg-blue-800 cursor-pointer"
+              className={`w-full bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2
+              focus:ring-blue-500 focus:ring-offset-2 text-white font-semibold py-2 px-4
+              rounded-lg transition active:bg-blue-800 cursor-pointer`}
             >
               Sign In
             </button>
@@ -233,14 +252,18 @@ const AuthPage = () => {
           <div className="space-y-3 mb-6">
             <button
               onClick={() => signInWithGoogle()}
-              className="w-full bg-white border border-gray-300 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 text-gray-700 font-semibold py-2 px-4 rounded-lg transition active:bg-gray-100 cursor-pointer"
+              className={`w-full bg-white border border-gray-300 hover:bg-gray-50 focus:outline-none
+              focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 text-gray-700 font-semibold
+              py-2 px-4 rounded-lg transition active:bg-gray-100 cursor-pointer`}
             >
               <FontAwesomeIcon icon={faGoogle} className="px-2" />
               Sign in with Google
             </button>
             <button
               onClick={() => signInWithGithub()}
-              className="w-full bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-600 focus:ring-offset-2 text-white font-semibold py-2 px-4 rounded-lg transition active:bg-black cursor-pointer"
+              className={`w-full bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-2
+              focus:ring-gray-600 focus:ring-offset-2 text-white font-semibold py-2 px-4
+              rounded-lg transition active:bg-black cursor-pointer`}
             >
               <FontAwesomeIcon icon={faGithub} className="px-2" />
               Sign in with GitHub
@@ -249,7 +272,9 @@ const AuthPage = () => {
 
           <button
             onClick={() => setCurrentPage("signUp")}
-            className="w-full text-blue-600 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded font-semibold py-2 transition active:text-blue-800 cursor-pointer"
+            className={`w-full text-blue-600 hover:text-blue-700 focus:outline-none
+            focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded font-semibold
+            py-2 transition active:text-blue-800 cursor-pointer`}
           >
             Don't have an account? Sign Up
           </button>
