@@ -9,7 +9,7 @@ import type { IRestaurant } from "./Eat.types";
 import { useGetFilterSearchQuery } from "./EatAtoms";
 import { EatCard } from "./EatCard";
 import { EatEditForm } from "./EatEditForm";
-import { useGetRestaurantRating, useGetRestaurants } from "./hooks";
+import { useGetRestaurants } from "./hooks";
 export const EatList = () => {
   const eatQuery = useGetFilterSearchQuery();
   const { data: restaurants, error, isFetching } = useGetRestaurants(eatQuery);
@@ -19,13 +19,10 @@ export const EatList = () => {
     setIsDialogOpen(false);
   };
   const User = useGetCurrentUser();
-  const { isFetching: isFetchingRatings } = useGetRestaurantRating(
-    User?.uid || ""
-  );
 
   if (error) return <div>Error: {error.message}</div>;
 
-  if (isFetching || isFetchingRatings) return <Loading />;
+  if (isFetching) return <Loading />;
 
   return (
     <div className="flex flex-col gap-5 w-full">

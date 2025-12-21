@@ -5,7 +5,10 @@
 import { useAddMessageBars } from "@/utils/MessageBarsAtom";
 import { useGetCurrentUser } from "@/utils/AuthenticationAtoms";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useGetCurrentUserRestaurantRatings } from "./EatAtoms";
+import {
+  useGetCurrentUserRestaurantRatings,
+  useSetCurrentUserRestaurantRatings,
+} from "./EatAtoms";
 import {
   addDoc,
   collection,
@@ -441,8 +444,8 @@ export const useGetRestaurantRating = (userId: string) => {
  */
 export const useSubmitRestaurantRating = () => {
   const addMessageBars = useAddMessageBars();
+  const setCurrentUserRestaurantRatings = useSetCurrentUserRestaurantRatings();
   const queryClient = useQueryClient();
-  const User = useGetCurrentUser();
   const { mutate, isPending, isSuccess, error } = useMutation({
     mutationKey: ["submitRestaurantRating"],
     mutationFn: async ({
@@ -461,10 +464,14 @@ export const useSubmitRestaurantRating = () => {
         },
         { merge: true }
       );
+      setCurrentUserRestaurantRatings((prev) => ({
+        ...prev,
+        [restaurantId]: rating,
+      }));
     },
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ["restaurant-rating", User?.uid],
+        queryKey: ["restaurant-rating"],
       });
       addMessageBars([
         {
