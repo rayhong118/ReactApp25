@@ -4,13 +4,15 @@ import { Loading } from "@/components/Loading";
 import { useGetCurrentUser } from "@/utils/AuthenticationAtoms";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { IRestaurant } from "./Eat.types";
-import { getFilterSearchQuery } from "./EatAtoms";
+import {
+  getFilterSearchQuery,
+  setCurrentUserRestaurantRatings,
+} from "./EatAtoms";
 import { EatCard } from "./EatCard";
 import { EatEditForm } from "./EatEditForm";
-import { useGetRestaurants } from "./hooks";
-
+import { useGetRestaurantRating, useGetRestaurants } from "./hooks";
 export const EatList = () => {
   const eatQuery = getFilterSearchQuery();
   const { data: restaurants, error, isFetching } = useGetRestaurants(eatQuery);
@@ -20,6 +22,16 @@ export const EatList = () => {
     setIsDialogOpen(false);
   };
   const User = useGetCurrentUser();
+  const { data: userSubmittedRatingsSaved } = useGetRestaurantRating(
+    User?.uid || ""
+  );
+  const setUserSubmittedRatings = setCurrentUserRestaurantRatings();
+
+  useEffect(() => {
+    if (User?.uid && userSubmittedRatingsSaved) {
+      setUserSubmittedRatings(userSubmittedRatingsSaved);
+    }
+  }, [User?.uid, userSubmittedRatingsSaved]);
 
   if (error) return <div>Error: {error.message}</div>;
 

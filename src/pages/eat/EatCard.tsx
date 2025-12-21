@@ -9,7 +9,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Timestamp } from "firebase/firestore";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { StarRating } from "../experiments/StarRating";
 import type { INote, IRestaurant } from "./Eat.types";
 import { EatEditForm } from "./EatEditForm";
@@ -17,22 +17,38 @@ import {
   useAddRestaurantNote,
   useDeleteRestaurantNote,
   useGetRestaurantNotes,
+  useSubmitRestaurantRating,
 } from "./hooks";
 import { CustomizedButton } from "@/components/Buttons";
+import {
+  getCurrentUserRestaurantRatings,
+  updateCurrentUserRestaurantRatings,
+} from "./EatAtoms";
 
 export const EatCard = ({ restaurant }: { restaurant: IRestaurant }) => {
   const [isNotesExpanded, setIsNotesExpanded] = useState(false);
   const User = useGetCurrentUser();
-  const averageRating: number | undefined = restaurant.stars
-    ? Math.round(
-        Object.values(restaurant.stars).reduce((curr, accu) => curr + accu, 0) /
-          Object.values(restaurant.stars).length
-      )
-    : undefined;
+  const calculateAverageRating = () => {
+    console.log("restaurant.stars", restaurant.stars);
+    if (!restaurant.stars) return 3;
 
-  const userRating: number | undefined =
-    restaurant.stars && User?.uid ? restaurant.stars[User?.uid] : undefined;
+    const ratingCount = Object.values(restaurant.stars).reduce(
+      (curr, accu) => curr + accu,
+      0
+    );
+    const totalScore = Object.values(restaurant.stars).reduce(
+      (accu, curr, index) => accu + curr * (index + 1),
+      0
+    );
+    const average = totalScore / ratingCount;
+    return Math.round(average);
+  };
+  const averageRating: number = restaurant.stars ? calculateAverageRating() : 0;
+  const averageRatingString =
+    averageRating !== 0 ? averageRating.toFixed(1) : "No ratings yet";
 
+  // const currentUserRating =
+  //   getCurrentUserRestaurantRatings()[restaurant.id!] || 0;
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   return (
@@ -64,23 +80,20 @@ export const EatCard = ({ restaurant }: { restaurant: IRestaurant }) => {
         <div className="text-sm">{restaurant.address}</div>
         <div className="text-sm">Price Per Person: {restaurant.price}</div>
         <div className="flex flex-wrap gap-2">
-          {userRating && (
-            <div className="flex items-center gap-2 pr-2 text-sm">
-              Your Rating: <StarRating rating={userRating} />
-            </div>
-          )}
-          {averageRating && (
-            <div className="flex items-center gap-2 text-sm">
-              Average: <StarRating rating={averageRating} />
-            </div>
-          )}
+          <div className="flex items-center gap-2 text-sm">
+            Average: <StarRating rating={averageRating} /> {averageRatingString}
+          </div>
+          {/* <div className="flex items-center gap-2 text-sm">
+            Your rating: <StarRating rating={currentUserRating} />
+          </div> */}
         </div>
+
         <div className="flex justify-between align-center">
           <div className="flex align-center">
             <CustomizedButton
               onClick={() => setIsNotesExpanded(!isNotesExpanded)}
             >
-              Notes
+              Notes and ratings
               {isNotesExpanded ? (
                 <FontAwesomeIcon icon={faAngleDown} className="ml-2" />
               ) : (
@@ -126,8 +139,11 @@ const Notes = ({ restaurantId }: INotesProps) => {
     refetch,
     isFetching,
   } = useGetRestaurantNotes(restaurantId);
+  const timeoutRef = useRef<NodeJS.Timeout>(null);
   const [newNote, setNewNote] = useState("");
   const User = useGetCurrentUser();
+  const { mutate: submitRestaurantRating } = useSubmitRestaurantRating();
+  const currentRatings = getCurrentUserRestaurantRatings();
 
   const { mutate: addNote, isPending: isAddingNote } =
     useAddRestaurantNote(restaurantId);
@@ -137,6 +153,8 @@ const Notes = ({ restaurantId }: INotesProps) => {
   const onHandleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setNewNote(e.target.value);
   };
+
+  const [rating, setRating] = useState(currentRatings[restaurantId] || 0);
 
   const onHandleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -151,10 +169,38 @@ const Notes = ({ restaurantId }: INotesProps) => {
     refetch();
   };
 
+  useEffect(() => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+    timeoutRef.current = setTimeout(() => {
+      if (rating === 0) return;
+      submitRestaurantRating({
+        restaurantId,
+        rating,
+        userId: User?.uid || "",
+      });
+      updateCurrentUserRestaurantRatings({
+        [restaurantId]: rating,
+      });
+    }, 500);
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, [rating]);
+
   return (
     <div className="flex flex-col w-full">
       {User && (
-        <form onSubmit={onHandleSubmit} className="w-full py-5">
+        <form
+          onSubmit={onHandleSubmit}
+          className="w-full py-5 flex flex-col gap-2"
+        >
+          <div className="flex items-center gap-2">
+            Rate: <StarRating rating={rating} setRating={setRating} />
+          </div>
           <textarea
             name="note"
             value={newNote}

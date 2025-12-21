@@ -9,15 +9,23 @@ import {
   collection,
   deleteDoc,
   doc,
+  getDoc,
   getDocs,
   query,
+  setDoc,
   updateDoc,
   where,
   type QueryConstraint,
 } from "firebase/firestore";
 import { httpsCallable } from "firebase/functions";
 import { db, firebaseFunctions } from "../../firebase";
-import type { IEatQuery, ILocationTag, INote, IRestaurant } from "./Eat.types";
+import type {
+  IEatQuery,
+  ILocationTag,
+  INote,
+  IRestaurant,
+  TUserRatings,
+} from "./Eat.types";
 
 /**
  * This hook handles get restaurants
@@ -388,4 +396,89 @@ export const useGetRestaurantRecommendationNL = (userPrompt?: string) => {
     enabled: !!userPrompt,
   });
   return { data, isError, error, refetch, isFetching };
+};
+
+/**
+ * This hook handles get all restaurant ratings submitted by current user.
+ * Not the total rating data.
+ * @param userId: string, id of current user
+ * @returns data: array of restaurant ratings
+ * @returns isLoading: boolean
+ * @returns error: error object
+ */
+export const useGetRestaurantRating = (userId: string) => {
+  const { data, error, refetch, isFetching } = useQuery({
+    queryKey: ["restaurant-rating", userId],
+    queryFn: async () => {
+      const docRef = doc(db, "user-restaurant-ratings", userId);
+      const docSnap = await getDoc(docRef);
+      if (docSnap.exists()) {
+        const restaurantRatings = docSnap.data() as TUserRatings;
+        console.log(restaurantRatings);
+        return restaurantRatings;
+      }
+      return {};
+    },
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+    retry: false,
+    staleTime: Infinity,
+    enabled: !!userId,
+  });
+  return { data, error, refetch, isFetching };
+};
+
+/**
+ * This hook handles submit restaurant rating. It only updates the
+ * user-restaurant-ratings collection. For average rating, it's not being handled here.
+ * @returns mutate: function to submit restaurant rating
+ * @returns isPending: boolean
+ * @returns isSuccess: boolean
+ * @returns error: error object
+ */
+export const useSubmitRestaurantRating = () => {
+  const addMessageBars = useAddMessageBars();
+  const { mutate, isPending, isSuccess, error } = useMutation({
+    mutationKey: ["submitRestaurantRating"],
+    mutationFn: async ({
+      restaurantId,
+      rating,
+      userId,
+    }: {
+      restaurantId: string;
+      rating: number;
+      userId: string;
+    }) => {
+      await setDoc(
+        doc(db, "user-restaurant-ratings", userId),
+        {
+          [restaurantId]: rating,
+        },
+        { merge: true }
+      );
+    },
+    onSuccess: () => {
+      addMessageBars([
+        {
+          id: new Date().toISOString(),
+          message: "Rating submitted successfully",
+          type: "success",
+          autoDismiss: true,
+        },
+      ]);
+    },
+    onError: (error) => {
+      addMessageBars([
+        {
+          id: new Date().toISOString(),
+          message: "Error submitting rating: " + error.message,
+          type: "error",
+          autoDismiss: true,
+        },
+      ]);
+    },
+  });
+
+  return { mutate, isPending, isSuccess, error };
 };

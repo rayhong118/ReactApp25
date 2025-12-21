@@ -40,10 +40,11 @@ export interface IRestaurant {
 }
 
 export interface IStarRating {
-  /**
-   * User id of the user who gave the rating
-   */
-  [userId: string]: number;
+  1: number;
+  2: number;
+  3: number;
+  4: number;
+  5: number;
 }
 
 // will be in db named 'restaurant-notes'
@@ -90,10 +91,7 @@ export interface IEatQuery {
   priceRangeLower?: number;
 }
 
-export interface IUserRatings {
-  storeId: string;
-  rating: number;
-}
+export type TUserRatings = { [restaurantId: string]: number };
 
 export interface ILocationTag {
   value: string;

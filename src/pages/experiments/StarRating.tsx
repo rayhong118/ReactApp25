@@ -19,7 +19,7 @@ export const StarRating = ({ rating = 0, setRating }: IStarRatingProps) => {
                 key={index}
                 onClick={() => setRating(star)}
                 onMouseEnter={() => setHover(star)}
-                className="cursor-pointer"
+                className="cursor-pointer px-2 text-lg"
               >
                 {star <= hover ? (
                   <FontAwesomeIcon
@@ -35,7 +35,7 @@ export const StarRating = ({ rating = 0, setRating }: IStarRatingProps) => {
               </span>
             ))
           : starArray.map((star, index) => (
-              <span key={index} className="cursor-pointer">
+              <span key={index}>
                 {star <= hover ? (
                   <FontAwesomeIcon
                     icon={solidStar}

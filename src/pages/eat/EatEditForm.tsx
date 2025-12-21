@@ -20,7 +20,7 @@ export const EatEditForm = (props: IEatEditFormProps) => {
   const [eatData, setEatData] = useState<Partial<IRestaurant>>();
   const [isFormValid, setIsFormValid] = useState(false);
   const [googleSearchInput, setGoogleSearchInput] = useState("");
-  const timeoutRef = useRef<any>(null);
+  const timeoutRef = useRef<NodeJS.Timeout>(null);
   const placeAutocompleteRef = useRef<HTMLInputElement | null>(null);
   const {
     mutateAsync: addRestaurantMutate,
