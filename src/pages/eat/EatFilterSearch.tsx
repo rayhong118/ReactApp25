@@ -1,4 +1,6 @@
 import { SecondaryButton } from "@/components/Buttons";
+import { Dialog } from "@/components/Dialog";
+import { useAddMessageBars } from "@/utils/MessageBarsAtom";
 import {
   faClose,
   faFilter,
@@ -8,18 +10,15 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useRef, useState } from "react";
 import type { IEatQuery, IRestaurant } from "./Eat.types";
 import {
-  getFilterSearchQuery,
   setFilterSearchQuery,
   useSetFilterSearchQueryCityAndState,
 } from "./EatAtoms";
+import { EatCard } from "./EatCard";
 import "./EatFilterSearch.scss";
 import {
   useGetRestaurantLocationTags,
   useGetRestaurantRecommendationNL,
 } from "./hooks";
-import { Dialog } from "@/components/Dialog";
-import { EatCard } from "./EatCard";
-import { useAddMessageBars } from "@/utils/MessageBarsAtom";
 
 export const EatFilterSearch = () => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -182,17 +181,27 @@ const UserPromptSection = () => {
 
 const LocationTagsList = () => {
   const { data } = useGetRestaurantLocationTags();
-  const { cityAndState } = getFilterSearchQuery();
   const updateLocationTags = useSetFilterSearchQueryCityAndState();
   const [tagNameFilter, setTagNameFilter] = useState("");
+  const [selectedLocationTags, setSelectedLocationTags] = useState<string[]>(
+    []
+  );
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const handleTagToggle = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const tagSelected = cityAndState?.includes(e.target.value);
+    const tagSelected = selectedLocationTags.includes(e.target.value);
     const newTagsList = tagSelected
-      ? cityAndState?.filter((tag) => tag !== e.target.value)
-      : [...(cityAndState || []), e.target.value];
-    updateLocationTags(newTagsList || []);
+      ? selectedLocationTags.filter((tag) => tag !== e.target.value)
+      : [...selectedLocationTags, e.target.value];
+    setSelectedLocationTags(newTagsList);
   };
+
+  useEffect(() => {
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    timeoutRef.current = setTimeout(() => {
+      updateLocationTags(selectedLocationTags);
+    }, 500);
+  }, [selectedLocationTags]);
 
   const displayedData = data?.filter(
     (tag) =>
@@ -228,7 +237,7 @@ const LocationTagsList = () => {
             type="checkbox"
             className="w-4 h-4"
             value={tag.value}
-            checked={cityAndState?.includes(tag.value)}
+            checked={selectedLocationTags.includes(tag.value)}
             onChange={handleTagToggle}
           />
           {tag.value} - {tag.count}
