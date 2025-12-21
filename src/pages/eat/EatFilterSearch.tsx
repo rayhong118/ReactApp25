@@ -10,6 +10,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useRef, useState } from "react";
 import type { IEatQuery, IRestaurant } from "./Eat.types";
 import {
+  getFilterSearchQuery,
   setFilterSearchQuery,
   useSetFilterSearchQueryCityAndState,
 } from "./EatAtoms";
@@ -183,8 +184,9 @@ const LocationTagsList = () => {
   const { data } = useGetRestaurantLocationTags();
   const updateLocationTags = useSetFilterSearchQueryCityAndState();
   const [tagNameFilter, setTagNameFilter] = useState("");
+  const filterSearchQuery = getFilterSearchQuery();
   const [selectedLocationTags, setSelectedLocationTags] = useState<string[]>(
-    []
+    filterSearchQuery.cityAndState || []
   );
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -201,6 +203,9 @@ const LocationTagsList = () => {
     timeoutRef.current = setTimeout(() => {
       updateLocationTags(selectedLocationTags);
     }, 500);
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
   }, [selectedLocationTags]);
 
   const displayedData = data?.filter(

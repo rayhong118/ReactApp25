@@ -1,5 +1,6 @@
 import { atom, useAtomValue, useSetAtom } from "jotai";
 import type { IEatQuery } from "./Eat.types";
+import { useCallback } from "react";
 
 export const eatFilterSearchQuery = atom<IEatQuery>({
   name: "",
@@ -10,14 +11,14 @@ export const setFilterSearchQuery = () => useSetAtom(eatFilterSearchQuery);
 
 export const useSetFilterSearchQueryName = () => {
   const setQuery = setFilterSearchQuery();
-  return (name: string) => {
+  return useCallback((name: string) => {
     setQuery((currentQuery) => ({ ...currentQuery, name }));
-  };
+  }, []);
 };
 
 export const useSetFilterSearchQueryCityAndState = () => {
   const setQuery = setFilterSearchQuery();
-  return (cityAndState: string[]) => {
+  return useCallback((cityAndState: string[]) => {
     setQuery((currentQuery) => ({ ...currentQuery, cityAndState }));
-  };
+  }, []);
 };
