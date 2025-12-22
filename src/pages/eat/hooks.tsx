@@ -417,7 +417,6 @@ export const useFetchCurrentUserRestaurantRatings = () => {
       const docSnap = await getDoc(docRef);
       if (docSnap.exists()) {
         const restaurantRatings = docSnap.data() as TUserRatings;
-        console.log(restaurantRatings);
         return restaurantRatings;
       }
       return {};

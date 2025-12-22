@@ -7,7 +7,6 @@ export const useGetMessageBars = () => useAtomValue(MessageBarsAtom);
 export const useAddMessageBars = () => {
   const addMessageBars = useSetAtom(MessageBarsAtom);
   return (newMessageBars: IMessageBarProps[]) => {
-    console.log("newMessageBars", newMessageBars);
     addMessageBars((prev) => [...prev, ...newMessageBars]);
   };
 };
