@@ -12,3 +12,7 @@ export const withComponentSuspense = (component: React.ReactNode) => {
     <Suspense fallback={<Loading fullHeight={false} />}>{component}</Suspense>
   );
 };
+
+export const withBlankSuspense = (component: React.ReactNode) => {
+  return <Suspense fallback={<></>}>{component}</Suspense>;
+};

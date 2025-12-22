@@ -1,7 +1,7 @@
 import { MessageBar } from "@/components/MessageBar";
 import { useGetMessageBars } from "@/utils/MessageBarsAtom";
 
-export function MessageBarsContainer() {
+const MessageBarsContainer = () => {
   const messageBars = useGetMessageBars();
 
   return (
@@ -16,4 +16,6 @@ export function MessageBarsContainer() {
         ))}
     </div>
   );
-}
+};
+
+export default MessageBarsContainer;

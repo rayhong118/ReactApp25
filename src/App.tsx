@@ -9,14 +9,13 @@ import { Home } from "./pages/home/Home";
 import { useSetCurrentUser } from "./utils/AuthenticationAtoms";
 
 import { WithAuthRequired } from "./components/WithAuthRequired";
-import { MessageBarsContainer } from "./hooks/MessageBarsContainer";
 import { withDefaultPagePadding } from "./hooks/withDefaultPagePadding";
 import { withFontAwesome } from "./hooks/withFontAwesome";
 import { withFooter } from "./hooks/withFooter";
 
+import { withGoogleReCaptchaProvider } from "./hooks/withGoogleReCaptchaProvider";
 import { withSuspense } from "./hooks/withSuspense";
 import ScrollToTop from "./utils/ScrollToTop";
-import { withGoogleReCaptchaProvider } from "./hooks/withGoogleReCaptchaProvider";
 
 const JiZiQi = lazy(() => import("./pages/experiments/JiZiQi"));
 const Eat = lazy(() => import("./pages/eat/Eat"));
@@ -29,6 +28,7 @@ const ImageCarousel = lazy(
 const MoveLists = lazy(() => import("./pages/experiments/MoveLists"));
 const AuthPage = lazy(() => import("./pages/auth/Auth"));
 const NotFound = lazy(() => import("./pages/notFound/NotFound"));
+const MessageBarsContainer = lazy(() => import("./hooks/MessageBarsContainer"));
 
 const App: React.FC = () => {
   const setCurrentUser = useSetCurrentUser();
@@ -44,7 +44,7 @@ const App: React.FC = () => {
       <BrowserRouter>
         <ScrollToTop />
         <Navigation />
-        <MessageBarsContainer />
+        {withSuspense(<MessageBarsContainer />)}
 
         <Routes>
           <Route path="/" element={<Home />} />
