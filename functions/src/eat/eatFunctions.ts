@@ -117,7 +117,7 @@ export const generateSuggestionBasedOnUserPrompt = onCall(
 // On user submit of a restaurant rating, calculate the average rating
 // and update the restaurant document
 export const handleRestaurantRatingSubmit = onDocumentWritten(
-  "user-restaurant-ratings/{userId}/{restaurantId}",
+  "user-restaurant-ratings/{userId}",
   async (event) => {
     // Get current rating and previous rating
     // Get restaurant ratings
@@ -126,24 +126,25 @@ export const handleRestaurantRatingSubmit = onDocumentWritten(
     const afterData = event.data?.after.data();
     const beforeData = event.data?.before.data();
 
-    const restaurantId = event.params.restaurantId;
-    const beforeRating = Object.values(beforeData || {})[0] || 0;
-    const afterRating = Object.values(afterData || {})[0] || 0;
+    const restaurantId = Object.keys(afterData || {})[0];
+    const beforeRating = beforeData?.[restaurantId] || 0;
+    const afterRating = afterData?.[restaurantId] || 0;
 
     const restaurantStarsRef = await admin
       .firestore()
-      .doc(`restaurants/${restaurantId}/stars`)
+      .doc(`restaurants/${restaurantId}`)
       .get();
 
     const updatePayload = {
-      stars: [...(restaurantStarsRef.data()?.stars || [])],
+      stars: {
+        ...restaurantStarsRef.data()?.stars,
+        [afterRating]: admin.firestore.FieldValue.increment(1),
+      },
     };
     if (beforeRating) {
-      updatePayload.stars[beforeRating - 1] =
+      updatePayload.stars[beforeRating] =
         admin.firestore.FieldValue.increment(-1);
     }
-    updatePayload.stars[afterRating - 1] =
-      admin.firestore.FieldValue.increment(1);
 
     if (!restaurantStarsRef.exists) {
       await restaurantStarsRef.ref.set(updatePayload);

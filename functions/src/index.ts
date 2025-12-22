@@ -37,5 +37,6 @@ admin.initializeApp();
 export {
   handleRestaurantLocationTags,
   generateSuggestionBasedOnUserPrompt,
+  handleRestaurantRatingSubmit,
 } from "./eat/eatFunctions";
 export { verifyRecaptcha } from "./reCaptcha/reCaptcha";

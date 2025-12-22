@@ -17,10 +17,9 @@ export interface IRestaurant {
   address: string;
   price?: number;
   /**
-   * Star ratings. Used to calculate average rating and show rating given by current user.
-   * Array of 5 numbers, each representing the count of ratings for that star value [i+1].
+   * Star ratings. Used to calculate average rating and show rating given by current user
    */
-  stars?: [number, number, number, number, number];
+  stars?: Partial<IStarRating>;
   /**
    * Average rating of the restaurant. Should be read only, and only
    * be modified by the firebase functions on user submit.
@@ -38,6 +37,14 @@ export interface IRestaurant {
    * City and state of the restaurant.
    */
   cityAndState?: string;
+}
+
+export interface IStarRating {
+  1: number;
+  2: number;
+  3: number;
+  4: number;
+  5: number;
 }
 
 // will be in db named 'restaurant-notes'

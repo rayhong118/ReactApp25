@@ -25,12 +25,12 @@ export const EatCard = React.memo(
     const averageRatingData = useMemo(() => {
       if (!restaurant.stars) return { rating: 0, string: "No ratings yet" };
 
-      const ratingCount = restaurant.stars.reduce(
+      const ratingCount = Object.values(restaurant.stars).reduce(
         (curr, accu) => curr + accu,
         0
       );
-      const totalScore = restaurant.stars.reduce(
-        (accu, curr, index) => accu + curr * (index + 1),
+      const totalScore = Object.entries(restaurant.stars).reduce(
+        (accu, [key, value]) => accu + value * Number(key),
         0
       );
 
