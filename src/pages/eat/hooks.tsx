@@ -27,7 +27,6 @@ import type {
   IRestaurant,
   TUserRatings,
 } from "./Eat.types";
-import { useSetCurrentUserRestaurantRatings } from "./EatAtoms";
 
 /**
  * This hook handles get restaurants
@@ -441,7 +440,7 @@ export const useFetchCurrentUserRestaurantRatings = () => {
  */
 export const useSubmitRestaurantRating = () => {
   const addMessageBars = useAddMessageBars();
-  const setCurrentUserRestaurantRatings = useSetCurrentUserRestaurantRatings();
+
   const queryClient = useQueryClient();
   const { mutate, isPending, isSuccess, error } = useMutation({
     mutationKey: ["submitRestaurantRating"],
@@ -461,10 +460,6 @@ export const useSubmitRestaurantRating = () => {
         },
         { merge: true }
       );
-      setCurrentUserRestaurantRatings((prev) => ({
-        ...prev,
-        [restaurantId]: rating,
-      }));
     },
     onSuccess: () => {
       queryClient.invalidateQueries({

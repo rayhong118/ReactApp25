@@ -8,7 +8,7 @@ import { onDocumentWritten } from "firebase-functions/v2/firestore";
 // handle count of restaurants per cityAndState on document creation,
 // deletion and update
 export const handleRestaurantLocationTags = onDocumentWritten(
-  "restaurants/{cityAndState}",
+  "restaurants/{restaurantId}",
   async (event) => {
     const change = event.data;
 
@@ -111,5 +111,44 @@ export const generateSuggestionBasedOnUserPrompt = onCall(
       console.error("Gemini Logic Error:", error);
       throw new HttpsError("internal", "Failed to generate recommendation.");
     }
+  }
+);
+
+// On user submit of a restaurant rating, calculate the average rating
+// and update the restaurant document
+export const handleRestaurantRatingSubmit = onDocumentWritten(
+  "user-restaurant-ratings/{userId}/{restaurantId}",
+  async (event) => {
+    // Get current rating and previous rating
+    // Get restaurant ratings
+    // Update restaurant ratings
+
+    const afterData = event.data?.after.data();
+    const beforeData = event.data?.before.data();
+
+    const restaurantId = event.params.restaurantId;
+    const beforeRating = Object.values(beforeData || {})[0] || 0;
+    const afterRating = Object.values(afterData || {})[0] || 0;
+
+    const restaurantStarsRef = await admin
+      .firestore()
+      .doc(`restaurants/${restaurantId}/stars`)
+      .get();
+
+    const updatePayload = {
+      stars: [...(restaurantStarsRef.data()?.stars || [])],
+    };
+    if (beforeRating) {
+      updatePayload.stars[beforeRating - 1] =
+        admin.firestore.FieldValue.increment(-1);
+    }
+    updatePayload.stars[afterRating - 1] =
+      admin.firestore.FieldValue.increment(1);
+
+    if (!restaurantStarsRef.exists) {
+      await restaurantStarsRef.ref.set(updatePayload);
+    }
+    await restaurantStarsRef.ref.update(updatePayload);
+    return { success: true };
   }
 );
