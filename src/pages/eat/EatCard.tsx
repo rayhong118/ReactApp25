@@ -33,11 +33,14 @@ export const EatCard = ({ restaurant }: { restaurant: IRestaurant }) => {
       0
     );
     const average = totalScore / ratingCount;
-    return Math.round(average);
+    return average;
   };
-  const averageRating: number = restaurant.stars ? calculateAverageRating() : 0;
+  const averageRating: number = restaurant.stars
+    ? Math.round(calculateAverageRating())
+    : 0;
   const averageRatingString =
     averageRating !== 0 ? averageRating.toFixed(1) : "No ratings yet";
+
   const currentUserRatings = useGetCurrentUserRestaurantRatings();
   const currentUserRating = currentUserRatings?.[restaurant.id!] || 0;
 

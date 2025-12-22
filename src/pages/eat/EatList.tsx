@@ -6,19 +6,36 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
 import type { IRestaurant } from "./Eat.types";
-import { useGetFilterSearchQuery } from "./EatAtoms";
+import {
+  useGetFilterSearchQuery,
+  useSetCurrentUserRestaurantRatings,
+} from "./EatAtoms";
 import { EatCard } from "./EatCard";
 import { EatEditForm } from "./EatEditForm";
-import { useGetRestaurants } from "./hooks";
+import {
+  useFetchCurrentUserRestaurantRatings,
+  useGetRestaurants,
+} from "./hooks";
+
+import { useEffect } from "react";
+
 export const EatList = () => {
   const eatQuery = useGetFilterSearchQuery();
   const { data: restaurants, error, isFetching } = useGetRestaurants(eatQuery);
+  const { data: currentUserRatings } = useFetchCurrentUserRestaurantRatings();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const setCurrentUserRatings = useSetCurrentUserRestaurantRatings();
 
   const handleDialogClose = () => {
     setIsDialogOpen(false);
   };
   const User = useGetCurrentUser();
+
+  useEffect(() => {
+    if (currentUserRatings) {
+      setCurrentUserRatings(currentUserRatings);
+    }
+  }, [currentUserRatings]);
 
   if (error) return <div>Error: {error.message}</div>;
 

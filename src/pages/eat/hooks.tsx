@@ -2,13 +2,9 @@
 
 // add firebase database hooks
 
-import { useAddMessageBars } from "@/utils/MessageBarsAtom";
 import { useGetCurrentUser } from "@/utils/AuthenticationAtoms";
+import { useAddMessageBars } from "@/utils/MessageBarsAtom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import {
-  useGetCurrentUserRestaurantRatings,
-  useSetCurrentUserRestaurantRatings,
-} from "./EatAtoms";
 import {
   addDoc,
   collection,
@@ -31,6 +27,7 @@ import type {
   IRestaurant,
   TUserRatings,
 } from "./Eat.types";
+import { useSetCurrentUserRestaurantRatings } from "./EatAtoms";
 
 /**
  * This hook handles get restaurants
@@ -406,16 +403,17 @@ export const useGetRestaurantRecommendationNL = (userPrompt?: string) => {
 /**
  * This hook handles get all restaurant ratings submitted by current user.
  * Not the total rating data.
- * @param userId: string, id of current user
  * @returns data: array of restaurant ratings
  * @returns isLoading: boolean
  * @returns error: error object
  */
-export const useGetRestaurantRating = (userId: string) => {
+export const useFetchCurrentUserRestaurantRatings = () => {
+  const User = useGetCurrentUser();
   const { data, error, refetch, isFetching } = useQuery({
-    queryKey: ["restaurant-rating", userId],
+    queryKey: ["restaurant-rating", User?.uid],
     queryFn: async () => {
-      const docRef = doc(db, "user-restaurant-ratings", userId);
+      if (!User?.uid) return {};
+      const docRef = doc(db, "user-restaurant-ratings", User?.uid);
       const docSnap = await getDoc(docRef);
       if (docSnap.exists()) {
         const restaurantRatings = docSnap.data() as TUserRatings;
@@ -429,7 +427,7 @@ export const useGetRestaurantRating = (userId: string) => {
     refetchOnReconnect: false,
     retry: false,
     staleTime: Infinity,
-    enabled: !!userId,
+    enabled: !!User?.uid,
   });
   return { data, error, refetch, isFetching };
 };
@@ -495,16 +493,4 @@ export const useSubmitRestaurantRating = () => {
   });
 
   return { mutate, isPending, isSuccess, error };
-};
-
-/**
- * Unified hook to get user rating for a specific restaurant.
- * Combines live atom state (for local updates) with remote query data.
- */
-export const useUserRestaurantRating = (restaurantId: string) => {
-  const User = useGetCurrentUser();
-  const { data: remoteRatings } = useGetRestaurantRating(User?.uid || "");
-  const localRatings = useGetCurrentUserRestaurantRatings();
-
-  return localRatings[restaurantId] ?? remoteRatings?.[restaurantId] ?? 0;
 };

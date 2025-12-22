@@ -67,6 +67,7 @@ const EatNotesPanel = ({ restaurantId }: INotesProps) => {
   };
 
   const handleRatingSubmit = (rating: number) => {
+    if (rating === currentRating) return;
     setRating(rating);
     submitRestaurantRating({
       restaurantId,
