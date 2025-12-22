@@ -1,6 +1,6 @@
 import { atom, useAtomValue, useSetAtom } from "jotai";
+import { useCallback, useMemo } from "react";
 import type { IEatQuery, TUserRatings } from "./Eat.types";
-import { useCallback } from "react";
 
 /**
  * Atoms for search query that will be used to fetch data from Firestore
@@ -47,6 +47,15 @@ export const currentUserRestaurantRatingsAtom = atom<TUserRatings>({});
 
 export const useGetCurrentUserRestaurantRatings = () =>
   useAtomValue(currentUserRestaurantRatingsAtom);
+
+export const useGetCurrentUserRestaurantRating = (restaurantId: string) => {
+  const ratingAtom = useMemo(
+    () =>
+      atom((get) => get(currentUserRestaurantRatingsAtom)[restaurantId] || 0),
+    [restaurantId]
+  );
+  return useAtomValue(ratingAtom);
+};
 
 export const useSetCurrentUserRestaurantRatings = () =>
   useSetAtom(currentUserRestaurantRatingsAtom);

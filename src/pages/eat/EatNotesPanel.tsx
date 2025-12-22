@@ -4,18 +4,15 @@ import { useGetCurrentUser } from "@/utils/AuthenticationAtoms";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Timestamp } from "firebase/firestore";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { StarRating } from "../experiments/StarRating";
 import type { INote } from "./Eat.types";
+import { useGetCurrentUserRestaurantRating } from "./EatAtoms";
 import {
-  useGetCurrentUserRestaurantRatings,
-  useUpdateCurrentUserRestaurantRatings,
-} from "./EatAtoms";
-import {
-  useGetRestaurantNotes,
-  useSubmitRestaurantRating,
   useAddRestaurantNote,
   useDeleteRestaurantNote,
+  useGetRestaurantNotes,
+  useSubmitRestaurantRating,
 } from "./hooks";
 
 interface INotesProps {
@@ -30,11 +27,10 @@ const EatNotesPanel = ({ restaurantId }: INotesProps) => {
   } = useGetRestaurantNotes(restaurantId);
   const [newNote, setNewNote] = useState("");
   const User = useGetCurrentUser();
+
   const { mutate: submitRestaurantRating } = useSubmitRestaurantRating();
-  const currentRating =
-    useGetCurrentUserRestaurantRatings()?.[restaurantId] || 0;
-  const updateCurrentUserRestaurantRatings =
-    useUpdateCurrentUserRestaurantRatings();
+
+  const currentRating = useGetCurrentUserRestaurantRating(restaurantId);
 
   const { mutate: addNote, isPending: isAddingNote } =
     useAddRestaurantNote(restaurantId);
@@ -74,7 +70,6 @@ const EatNotesPanel = ({ restaurantId }: INotesProps) => {
       rating,
       userId: User?.uid || "",
     });
-    updateCurrentUserRestaurantRatings({ [restaurantId]: rating });
   };
 
   return (
