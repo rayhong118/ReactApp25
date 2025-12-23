@@ -114,42 +114,37 @@ export const generateSuggestionBasedOnUserPrompt = onCall(
   }
 );
 
-// On user submit of a restaurant rating, calculate the average rating
-// and update the restaurant document
-export const handleRestaurantRatingSubmit = onDocumentWritten(
-  "user-restaurant-ratings/{userId}",
-  async (event) => {
-    // Get current rating and previous rating
-    // Get restaurant ratings
-    // Update restaurant ratings
+export const updateRestaurantStars = onCall(
+  {
+    region: "us-central1",
+    cors: true,
+  },
+  async (request) => {
+    const { restaurantId, oldRating, newRating } = request.data;
 
-    const afterData = event.data?.after.data();
-    const beforeData = event.data?.before.data();
+    const restaurantRef = admin.firestore().doc(`restaurants/${restaurantId}`);
 
-    const restaurantId = Object.keys(afterData || {})[0];
-    const beforeRating = beforeData?.[restaurantId] || 0;
-    const afterRating = afterData?.[restaurantId] || 0;
+    const restaurantData = await restaurantRef.get();
 
-    const restaurantStarsRef = await admin
-      .firestore()
-      .doc(`restaurants/${restaurantId}`)
-      .get();
+    const stars = restaurantData.data()?.stars;
 
-    const updatePayload = {
-      stars: {
-        ...restaurantStarsRef.data()?.stars,
-        [afterRating]: admin.firestore.FieldValue.increment(1),
-      },
-    };
-    if (beforeRating) {
-      updatePayload.stars[beforeRating] =
-        admin.firestore.FieldValue.increment(-1);
+    if (!stars) {
+      throw new HttpsError("internal", "Restaurant data not found.");
     }
 
-    if (!restaurantStarsRef.exists) {
-      await restaurantStarsRef.ref.set(updatePayload);
-    }
-    await restaurantStarsRef.ref.update(updatePayload);
+    const updatedStars = oldRating
+      ? {
+          ...stars,
+          [oldRating]: admin.firestore.FieldValue.increment(-1),
+          [newRating]: admin.firestore.FieldValue.increment(1),
+        }
+      : {
+          ...stars,
+          [newRating]: admin.firestore.FieldValue.increment(1),
+        };
+
+    await restaurantRef.update({ stars: updatedStars });
+
     return { success: true };
   }
 );

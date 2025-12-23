@@ -453,6 +453,19 @@ export const useSubmitRestaurantRating = () => {
       rating: number;
       userId: string;
     }) => {
+      // get old rating
+      const userRestaurantRatingsRef = doc(
+        db,
+        "user-restaurant-ratings",
+        userId
+      );
+      const userRestaurantRatingsSnap = await getDoc(userRestaurantRatingsRef);
+      const userRestaurantRatings =
+        userRestaurantRatingsSnap.data() as TUserRatings;
+      const oldRating = userRestaurantRatings[restaurantId] || 0;
+      console.log(oldRating);
+
+      // update user restaurant rating
       await setDoc(
         doc(db, "user-restaurant-ratings", userId),
         {
@@ -460,6 +473,20 @@ export const useSubmitRestaurantRating = () => {
         },
         { merge: true }
       );
+
+      console.log("oldRating", oldRating);
+      console.log("newRating", rating);
+
+      const updateRestaurantStars = httpsCallable<
+        { restaurantId: string; oldRating: number; newRating: number },
+        { success: boolean }
+      >(firebaseFunctions, "updateRestaurantStars");
+
+      await updateRestaurantStars({
+        restaurantId,
+        oldRating,
+        newRating: rating,
+      });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({
