@@ -73,7 +73,7 @@ const EatFilterSearchForm = () => {
   return (
     <div className="flex flex-col gap-2 md:max-w-sm">
       <UserPromptSection />
-
+      <hr className="w-full" />
       <label>Price Range</label>
       <div className="flex gap-2">
         <div className="material-labeled-input">
@@ -216,6 +216,7 @@ const LocationTagsList = () => {
 
   return (
     <div className="flex flex-wrap gap-2">
+      <hr className="w-full my-2" />
       <div className="material-labeled-input">
         <input
           type="text"
@@ -224,10 +225,10 @@ const LocationTagsList = () => {
           onChange={(e) => setTagNameFilter(e.target.value)}
           value={tagNameFilter}
         />
-        <label htmlFor="tagNameFilter">Location Tags</label>
+        <label htmlFor="tagNameFilter">Filter Location Tags</label>
       </div>
 
-      <SecondaryButton onClick={() => updateLocationTags([])}>
+      <SecondaryButton onClick={() => setSelectedLocationTags([])}>
         <FontAwesomeIcon icon={faClose} />
         Clear
       </SecondaryButton>

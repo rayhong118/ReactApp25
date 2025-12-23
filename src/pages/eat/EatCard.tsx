@@ -103,7 +103,7 @@ export const EatCard = React.memo(
           <div className="flex justify-between align-center">
             <div className="flex align-center">
               <CustomizedButton onClick={toggleNotes}>
-                Notes and ratings
+                Notes & ratings
                 {isNotesExpanded ? (
                   <FontAwesomeIcon icon={faAngleDown} className="ml-2" />
                 ) : (
@@ -112,7 +112,7 @@ export const EatCard = React.memo(
               </CustomizedButton>
             </div>
 
-            <div className="flex gap-2">
+            <div className="flex">
               <CustomizedButton disabled={!User} onClick={openDialog}>
                 <FontAwesomeIcon icon={faEdit} className="mr-2" />
                 Edit
