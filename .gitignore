@@ -25,3 +25,6 @@ dist-ssr
 
 #API keys
 apikeys.ts
+
+#firebase cache
+.firebase/*
