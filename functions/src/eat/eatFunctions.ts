@@ -124,26 +124,16 @@ export const updateRestaurantStars = onCall(
 
     const restaurantRef = admin.firestore().doc(`restaurants/${restaurantId}`);
 
-    const restaurantData = await restaurantRef.get();
-
-    const stars = restaurantData.data()?.stars;
-
-    if (!stars) {
-      throw new HttpsError("internal", "Restaurant data not found.");
-    }
-
     const updatedStars = oldRating
       ? {
-          ...stars,
           [oldRating]: admin.firestore.FieldValue.increment(-1),
           [newRating]: admin.firestore.FieldValue.increment(1),
         }
       : {
-          ...stars,
           [newRating]: admin.firestore.FieldValue.increment(1),
         };
 
-    await restaurantRef.update({ stars: updatedStars });
+    await restaurantRef.set({ stars: updatedStars }, { merge: true });
 
     return { success: true };
   }

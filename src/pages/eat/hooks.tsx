@@ -463,7 +463,6 @@ export const useSubmitRestaurantRating = () => {
       const userRestaurantRatings =
         userRestaurantRatingsSnap.data() as TUserRatings;
       const oldRating = userRestaurantRatings[restaurantId] || 0;
-      console.log(oldRating);
 
       // update user restaurant rating
       await setDoc(
@@ -473,9 +472,6 @@ export const useSubmitRestaurantRating = () => {
         },
         { merge: true }
       );
-
-      console.log("oldRating", oldRating);
-      console.log("newRating", rating);
 
       const updateRestaurantStars = httpsCallable<
         { restaurantId: string; oldRating: number; newRating: number },
