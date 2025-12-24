@@ -82,7 +82,7 @@ export const EatCard = React.memo(
           </div>
 
           {restaurant.stars && isHistogramExpanded && (
-            <div className="flex items-center gap-2 text-sm">
+            <div className="flex items-start gap-2 text-sm md:scale-80 bg-gray-100 p-2 rounded-md">
               <RatingHistogram ratings={restaurant.stars} />
             </div>
           )}
@@ -144,7 +144,7 @@ const RatingHistogram = ({ ratings }: { ratings: Partial<IStarRating> }) => {
   });
 
   const innerWidth = 320;
-  const innerHeight = 60;
+  const innerHeight = 100;
   const margin = { top: 0, right: 20, bottom: 0, left: 40 };
   const xScale = useMemo(
     () =>
@@ -191,7 +191,7 @@ const RatingHistogram = ({ ratings }: { ratings: Partial<IStarRating> }) => {
             <text
               x={xScale(d.count) + 5}
               y={(yScale(d.stars.toString()) || 0) + yScale.bandwidth() / 2}
-              fontSize="12"
+              fontSize="16"
               fill="#4b5563"
               dominantBaseline="central"
             >
@@ -207,7 +207,7 @@ const RatingHistogram = ({ ratings }: { ratings: Partial<IStarRating> }) => {
             x={-10}
             y={(yScale(d.stars.toString()) || 0) + yScale.bandwidth() / 2}
             textAnchor="end"
-            fontSize="12"
+            fontSize="16"
             dominantBaseline="central"
           >
             {d.stars} ★
