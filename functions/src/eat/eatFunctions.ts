@@ -70,27 +70,35 @@ interface IStarRating {
 // update restaurant average rating
 // called when restaurant document is updated
 export const updateRestaurantAverageRating = onDocumentWritten(
-  "restaurants/{restaurantId}/stars",
+  "restaurants/{restaurantId}",
   async (event) => {
     const restaurantId = event.params.restaurantId;
     const change = event.data;
+    if (!change) return;
+
+    if (
+      JSON.stringify(change.before.data()) ===
+      JSON.stringify(change.after.data())
+    )
+      return;
+
     const afterStars: Partial<IStarRating> = change?.after.data()?.stars;
 
-    const restaurantRef = admin.firestore().doc(`restaurants/${restaurantId}`);
-
-    const starRatingCount = Object.values(afterStars).reduce(
+    const starRatingCount: number = Object.values(afterStars || {}).reduce(
       (acc, count) => acc + count,
       0
     );
 
+    if (!starRatingCount) return;
+
     const newAverageRating: number =
-      Object.entries(afterStars).reduce(
+      Object.entries(afterStars || {}).reduce(
         (acc, [rating, count]) => acc + Number(rating) * count,
         0
       ) / starRatingCount || 0;
 
     const newAverageRatingString = newAverageRating.toFixed(1);
-
+    const restaurantRef = admin.firestore().doc(`restaurants/${restaurantId}`);
     await restaurantRef.set(
       { averageStars: newAverageRatingString, starRatingCount },
       { merge: true }
