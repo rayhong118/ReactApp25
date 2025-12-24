@@ -23,8 +23,9 @@ export interface IRestaurant {
   /**
    * Average rating of the restaurant. Should be read only, and only
    * be modified by the firebase functions on user submit.
+   * Should be a string to allow for decimal places.
    */
-  averageStarts?: number;
+  averageStars?: string;
   /**
    * URL of google maps. Used to navigate to the restaurant on mobile.
    */

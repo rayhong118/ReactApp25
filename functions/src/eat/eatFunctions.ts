@@ -59,6 +59,42 @@ export const handleRestaurantLocationTags = onDocumentWritten(
   }
 );
 
+interface IStarRating {
+  1: number;
+  2: number;
+  3: number;
+  4: number;
+  5: number;
+}
+
+// update restaurant average rating
+// called when restaurant document is updated
+export const updateRestaurantAverageRating = onDocumentWritten(
+  "restaurants/{restaurantId}",
+  async (event) => {
+    const restaurantId = event.params.restaurantId;
+    const change = event.data;
+    const afterStars: Partial<IStarRating> = change?.after.data()?.stars;
+
+    const restaurantRef = admin.firestore().doc(`restaurants/${restaurantId}`);
+
+    const newAverageRating: number =
+      Object.entries(afterStars).reduce(
+        (acc, [rating, count]) => acc + Number(rating) * count,
+        0
+      ) / Object.values(afterStars).reduce((acc, count) => acc + count, 0) || 0;
+
+    const newAverageRatingString = newAverageRating.toFixed(1);
+
+    await restaurantRef.set(
+      { averageStars: newAverageRatingString },
+      { merge: true }
+    );
+
+    return { success: true };
+  }
+);
+
 // Initialize outside the function to reuse the instance
 // In 2025, the new SDK expects an object { apiKey: ... }
 const genAI = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
@@ -114,6 +150,8 @@ export const generateSuggestionBasedOnUserPrompt = onCall(
   }
 );
 
+// update restaurant stars
+// called when user rates a restaurant
 export const updateRestaurantStars = onCall(
   {
     region: "us-central1",

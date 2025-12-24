@@ -38,5 +38,6 @@ export {
   handleRestaurantLocationTags,
   generateSuggestionBasedOnUserPrompt,
   updateRestaurantStars,
+  updateRestaurantAverageRating,
 } from "./eat/eatFunctions";
 export { verifyRecaptcha } from "./reCaptcha/reCaptcha";

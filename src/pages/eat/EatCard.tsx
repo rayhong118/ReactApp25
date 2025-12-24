@@ -9,7 +9,7 @@ import {
   faEdit,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { lazy, useCallback, useMemo, useState } from "react";
+import React, { lazy, useCallback, useState } from "react";
 import { StarRating } from "../experiments/StarRating";
 import type { IRestaurant } from "./Eat.types";
 import { useGetCurrentUserRestaurantRating } from "./EatAtoms";
@@ -21,30 +21,6 @@ export const EatCard = React.memo(
   ({ restaurant }: { restaurant: IRestaurant }) => {
     const [isNotesExpanded, setIsNotesExpanded] = useState(false);
     const User = useGetCurrentUser();
-
-    const averageRatingData = useMemo(() => {
-      if (!restaurant.stars) return { rating: 0, string: "No ratings yet" };
-
-      const ratingCount = Object.values(restaurant.stars).reduce(
-        (curr, accu) => curr + accu,
-        0
-      );
-      const totalScore = Object.entries(restaurant.stars).reduce(
-        (accu, [key, value]) => accu + value * Number(key),
-        0
-      );
-
-      if (ratingCount === 0) return { rating: 0, string: "No ratings yet" };
-
-      const average = totalScore / ratingCount;
-      return {
-        rating: Math.round(average),
-        string: average.toFixed(1),
-      };
-    }, [restaurant.stars]);
-
-    const averageRating = averageRatingData.rating;
-    const averageRatingString = averageRatingData.string;
 
     const currentUserRating = useGetCurrentUserRestaurantRating(
       restaurant.id || ""
@@ -91,7 +67,8 @@ export const EatCard = React.memo(
           <div className="text-sm">Price Per Person: {restaurant.price}</div>
 
           <div className="flex items-center gap-2 text-sm">
-            Average: <StarRating rating={averageRating} /> {averageRatingString}
+            Average: <StarRating rating={Number(restaurant.averageStars)} />{" "}
+            {restaurant.averageStars}
           </div>
 
           {User && (

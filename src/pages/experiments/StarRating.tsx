@@ -13,7 +13,8 @@ const starArray = [1, 2, 3, 4, 5];
 export const StarRating = React.memo(
   ({ rating = 0, setRating }: IStarRatingProps) => {
     const [hoverRating, setHoverRating] = useState<number | null>(null);
-    const displayRating = hoverRating !== null ? hoverRating : rating;
+    const displayRating =
+      hoverRating !== null ? hoverRating : Math.round(rating);
 
     return (
       <div>
