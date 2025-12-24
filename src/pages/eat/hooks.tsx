@@ -531,35 +531,49 @@ export const useGetUserLocation = () => {
       }
 
       return new Promise<string>((resolve, reject) => {
-        navigator.geolocation.getCurrentPosition(async (position) => {
-          try {
-            const { latitude, longitude } = position.coords;
-            const latlng = { lat: latitude, lng: longitude };
-            const response = await geoCoder.geocode({ location: latlng });
+        navigator.geolocation.getCurrentPosition(
+          async (position) => {
+            try {
+              const { latitude, longitude } = position.coords;
+              const latlng = { lat: latitude, lng: longitude };
+              const response = await geoCoder.geocode({ location: latlng });
 
-            if (response.results[0]) {
-              let city = "";
-              let state = "";
+              if (response.results[0]) {
+                let city = "";
+                let state = "";
 
-              response.results[0].address_components.forEach((component) => {
-                if (component.types.includes("locality")) {
-                  city = component.long_name;
-                }
-                if (component.types.includes("administrative_area_level_1")) {
-                  state = component.short_name;
-                }
-              });
+                response.results[0].address_components.forEach((component) => {
+                  if (component.types.includes("locality")) {
+                    city = component.long_name;
+                  }
+                  if (component.types.includes("administrative_area_level_1")) {
+                    state = component.short_name;
+                  }
+                });
 
-              const cityAndState = `${city}, ${state}`;
+                const cityAndState = `${city}, ${state}`;
 
-              resolve(cityAndState);
+                resolve(cityAndState);
+              }
+            } catch (error) {
+              reject(
+                new Error(
+                  "Geolocation is not supported by this browser." + error
+                )
+              );
             }
-          } catch (error) {
-            reject(
-              new Error("Geolocation is not supported by this browser." + error)
-            );
-          }
-        });
+          },
+          (geoError) => {
+            // Mapping specific Geolocation errors for better UX
+            const messages: Record<number, string> = {
+              1: "Permission denied. Please enable location in browser settings.",
+              2: "Position unavailable. GPS signal might be weak.",
+              3: "Location request timed out.",
+            };
+            reject(new Error(messages[geoError.code] || geoError.message));
+          },
+          { timeout: 5000, enableHighAccuracy: false, maximumAge: 60000 * 60 }
+        );
       });
     },
     refetchOnWindowFocus: false,
