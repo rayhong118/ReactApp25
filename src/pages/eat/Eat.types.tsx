@@ -27,6 +27,11 @@ export interface IRestaurant {
    */
   averageStars?: string;
   /**
+   * Number of ratings of the restaurant. Should be read only, and only
+   * be modified by the firebase functions on user submit.
+   */
+  starRatingCount?: number;
+  /**
    * URL of google maps. Used to navigate to the restaurant on mobile.
    */
   url?: string;

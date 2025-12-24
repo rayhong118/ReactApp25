@@ -68,6 +68,7 @@ export const useGetRestaurants = (eatQuery?: IEatQuery) => {
       return restaurants || [];
     },
     refetchOnWindowFocus: false,
+    staleTime: Infinity,
   });
   return { data, error, refetch, isFetching };
 };
