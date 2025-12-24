@@ -362,6 +362,7 @@ export const useGetRestaurantRecommendationNL = (userPrompt?: string) => {
         name: restaurant.name,
         price: restaurant.price,
         cityAndState: restaurant.cityAndState,
+        averageStars: restaurant.averageStars,
       }));
       const restaurantContextJson = JSON.stringify(restaurantContext);
       console.log(restaurantContextJson);
