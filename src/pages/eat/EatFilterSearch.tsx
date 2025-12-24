@@ -19,6 +19,7 @@ import "./EatFilterSearch.scss";
 import {
   useGetRestaurantLocationTags,
   useGetRestaurantRecommendationNL,
+  useGetUserLocation,
 } from "./hooks";
 
 export const EatFilterSearch = () => {
@@ -106,17 +107,27 @@ const EatFilterSearchForm = () => {
 };
 
 const UserPromptSection = () => {
-  const [userPromptInput, setUserPromptInput] = useState("");
-  const [userPrompt, setUserPrompt] = useState("");
+  const [userPromptInput, setUserPromptInput] = useState<string>("");
+  const [userPrompt, setUserPrompt] = useState<string>("");
+  const [useLocation, setUseLocation] = useState<boolean>(false);
   const [selectedRestaurant, setSelectedRestaurant] =
     useState<IRestaurant | null>(null);
   const { data, isError, error, isFetching } =
     useGetRestaurantRecommendationNL(userPrompt);
   const addMessageBars = useAddMessageBars();
+  const {
+    data: userCityAndStateData,
+    refetch: refetchUserLocation,
+    isFetching: isFetchingUserLocation,
+  } = useGetUserLocation();
 
   const handleUserPromptSubmit = async () => {
     if (!userPromptInput) return;
-    setUserPrompt(userPromptInput);
+    const userPromptWithLocation =
+      useLocation && userCityAndStateData
+        ? `${userPromptInput}. Current location: ${userCityAndStateData}`
+        : userPromptInput;
+    setUserPrompt(userPromptWithLocation);
   };
 
   useEffect(() => {
@@ -137,6 +148,12 @@ const UserPromptSection = () => {
       ]);
     }
   }, [isError, error]);
+
+  useEffect(() => {
+    if (useLocation) {
+      refetchUserLocation();
+    }
+  }, [useLocation]);
 
   return (
     <>
@@ -164,16 +181,30 @@ const UserPromptSection = () => {
           />
           <label htmlFor="userPrompt">Your Prompt</label>
         </div>
-        <div>
+        <div className="flex gap-2">
           <SecondaryButton
             onClick={handleUserPromptSubmit}
-            disabled={isFetching || !userPromptInput}
+            disabled={isFetching || !userPromptInput || isFetchingUserLocation}
           >
             {isFetching && (
               <FontAwesomeIcon icon={faSpinner} spin={true} className="mr-2" />
             )}
             Pick
           </SecondaryButton>
+          <label
+            className="flex gap-2 px-2 py-1 items-center rounded-md bg-gray-200 cursor-pointer
+            text-sm"
+          >
+            <input
+              type="checkbox"
+              className="w-4 h-4"
+              onChange={(e) => setUseLocation(e.target.checked)}
+            />
+            Use my location{" "}
+            {isFetchingUserLocation && (
+              <FontAwesomeIcon icon={faSpinner} spin={true} className="mr-2" />
+            )}
+          </label>
         </div>
       </div>
     </>

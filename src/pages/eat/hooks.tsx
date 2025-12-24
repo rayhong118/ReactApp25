@@ -365,7 +365,7 @@ export const useGetRestaurantRecommendationNL = (userPrompt?: string) => {
         averageStars: restaurant.averageStars,
       }));
       const restaurantContextJson = JSON.stringify(restaurantContext);
-      console.log(restaurantContextJson);
+
       const generateSuggestionBasedOnUserPrompt = httpsCallable<
         { userPrompt: string; restaurants: string },
         { restaurantId: string; reason: string }
@@ -512,4 +512,63 @@ export const useSubmitRestaurantRating = () => {
   });
 
   return { mutate, isPending, isSuccess, error };
+};
+
+/**
+ * This hook handles get user location.
+ * @returns data: user location city and state string
+ * @returns error: error object
+ * @returns refetch: function to refetch user location
+ * @returns isFetching: boolean
+ */
+export const useGetUserLocation = () => {
+  const { data, error, refetch, isFetching } = useQuery({
+    queryKey: ["user-location"],
+    queryFn: async () => {
+      const geoCoder = new google.maps.Geocoder();
+      if (!navigator.geolocation) {
+        throw new Error("Geolocation is not supported by this browser.");
+      }
+
+      return new Promise<string>((resolve, reject) => {
+        navigator.geolocation.getCurrentPosition(async (position) => {
+          try {
+            const { latitude, longitude } = position.coords;
+            const latlng = { lat: latitude, lng: longitude };
+            const response = await geoCoder.geocode({ location: latlng });
+
+            if (response.results[0]) {
+              let city = "";
+              let state = "";
+
+              response.results[0].address_components.forEach((component) => {
+                if (component.types.includes("locality")) {
+                  city = component.long_name;
+                }
+                if (component.types.includes("administrative_area_level_1")) {
+                  state = component.short_name;
+                }
+              });
+
+              const cityAndState = `${city}, ${state}`;
+
+              resolve(cityAndState);
+            }
+          } catch (error) {
+            reject(
+              new Error("Geolocation is not supported by this browser." + error)
+            );
+          }
+        });
+      });
+    },
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+    retry: false,
+    staleTime: Infinity,
+    enabled: false,
+  });
+
+  return { data, error, refetch, isFetching };
 };

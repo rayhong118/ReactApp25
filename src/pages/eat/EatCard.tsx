@@ -143,8 +143,6 @@ const RatingHistogram = ({ ratings }: { ratings: Partial<IStarRating> }) => {
     };
   });
 
-  console.log(completeRatings);
-
   const innerWidth = 320;
   const innerHeight = 60;
   const margin = { top: 0, right: 20, bottom: 0, left: 40 };
