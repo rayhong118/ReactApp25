@@ -71,12 +71,14 @@ export const EatCard = React.memo(
           <div className="flex items-center gap-2 text-sm">
             Average: <StarRating rating={Number(restaurant.averageStars)} />{" "}
             {restaurant.averageStars}
-            <SecondaryButton
-              onClick={() => setIsHistogramExpanded((prev) => !prev)}
-            >
-              Histogram
-              <FontAwesomeIcon icon={faAngleDown} className="ml-2" />
-            </SecondaryButton>
+            {restaurant.stars && (
+              <SecondaryButton
+                onClick={() => setIsHistogramExpanded((prev) => !prev)}
+              >
+                Histogram
+                <FontAwesomeIcon icon={faAngleDown} className="ml-2" />
+              </SecondaryButton>
+            )}
           </div>
 
           {restaurant.stars && isHistogramExpanded && (
@@ -143,8 +145,8 @@ const RatingHistogram = ({ ratings }: { ratings: Partial<IStarRating> }) => {
 
   console.log(completeRatings);
 
-  const innerWidth = 400;
-  const innerHeight = 100;
+  const innerWidth = 320;
+  const innerHeight = 60;
   const margin = { top: 0, right: 20, bottom: 0, left: 40 };
   const xScale = useMemo(
     () =>
@@ -173,7 +175,7 @@ const RatingHistogram = ({ ratings }: { ratings: Partial<IStarRating> }) => {
       viewBox={`0 0 ${innerWidth + margin.left + margin.right} ${
         innerHeight + margin.top + margin.bottom
       }`}
-      style={{ width: "100%", height: "100%" }}
+      style={{ width: "100%", height: "auto" }}
     >
       <g transform={`translate(${margin.left},${margin.top})`}>
         {completeRatings.map((d) => (
@@ -185,7 +187,7 @@ const RatingHistogram = ({ ratings }: { ratings: Partial<IStarRating> }) => {
               width={xScale(d.count)}
               height={yScale.bandwidth()}
               fill="#fbbf24"
-              rx={3}
+              rx={1}
             />
             {/* The Count Label (at the end of the bar) */}
             <text
