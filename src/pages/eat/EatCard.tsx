@@ -9,12 +9,12 @@ import {
   faEdit,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { lazy, useCallback, useMemo, useState } from "react";
+import React, { lazy, useCallback, useState } from "react";
 import { StarRating } from "../experiments/StarRating";
-import type { IRestaurant, IStarRating } from "./Eat.types";
+import type { IRestaurant } from "./Eat.types";
 import { useGetCurrentUserRestaurantRating } from "./EatAtoms";
 import { EatEditForm } from "./EatEditForm";
-import * as d3 from "d3";
+import { EatRatingHistogram } from "./EatRatingHistogram";
 
 const EatNotesPanel = lazy(() => import("./EatNotesPanel"));
 
@@ -83,7 +83,7 @@ export const EatCard = React.memo(
 
           {restaurant.stars && isHistogramExpanded && (
             <div className="flex items-start gap-2 text-sm md:scale-80 bg-gray-100 p-2 rounded-md">
-              <RatingHistogram ratings={restaurant.stars} />
+              <EatRatingHistogram ratings={restaurant.stars} />
             </div>
           )}
 
@@ -131,89 +131,3 @@ export const EatCard = React.memo(
     );
   }
 );
-
-const RatingHistogram = ({ ratings }: { ratings: Partial<IStarRating> }) => {
-  // convert ratings to complete ratings
-  const completeRatings: { stars: number; count: number }[] = [
-    5, 4, 3, 2, 1,
-  ].map((star) => {
-    return {
-      stars: star,
-      count: ratings[star as keyof IStarRating] || 0,
-    };
-  });
-
-  const innerWidth = 320;
-  const innerHeight = 100;
-  const margin = { top: 0, right: 20, bottom: 0, left: 40 };
-  const xScale = useMemo(
-    () =>
-      d3
-        .scaleLinear()
-        .domain([0, d3.max(completeRatings, (d) => d.count) || 10])
-        .range([0, innerWidth]),
-    [completeRatings, innerWidth]
-  );
-
-  // 3. Y Scale: Band for the star categories
-  const yScale = useMemo(
-    () =>
-      d3
-        .scaleBand()
-        .domain(completeRatings.map((d) => d.stars.toString()))
-        .range([0, innerHeight])
-        .padding(0.3),
-    [completeRatings, innerHeight]
-  );
-
-  return (
-    <svg
-      width={innerWidth + margin.left + margin.right}
-      height={innerHeight + margin.top + margin.bottom}
-      viewBox={`0 0 ${innerWidth + margin.left + margin.right} ${
-        innerHeight + margin.top + margin.bottom
-      }`}
-      style={{ width: "100%", height: "auto" }}
-    >
-      <g transform={`translate(${margin.left},${margin.top})`}>
-        {completeRatings.map((d) => (
-          <g key={d.stars}>
-            {/* The Bar */}
-            <rect
-              x={0}
-              y={yScale(d.stars.toString())}
-              width={xScale(d.count)}
-              height={yScale.bandwidth()}
-              fill="#fbbf24"
-              rx={1}
-            />
-            {/* The Count Label (at the end of the bar) */}
-            <text
-              x={xScale(d.count) + 5}
-              y={(yScale(d.stars.toString()) || 0) + yScale.bandwidth() / 2}
-              fontSize="16"
-              fill="#4b5563"
-              dominantBaseline="central"
-            >
-              {d.count}
-            </text>
-          </g>
-        ))}
-
-        {/* Y-Axis Labels (Stars) */}
-        {completeRatings.map((d) => (
-          <text
-            key={`label-${d.stars}`}
-            x={-10}
-            y={(yScale(d.stars.toString()) || 0) + yScale.bandwidth() / 2}
-            textAnchor="end"
-            fontSize="16"
-            dominantBaseline="central"
-          >
-            {d.stars} ★
-          </text>
-        ))}
-      </g>
-    </svg>
-  );
-};

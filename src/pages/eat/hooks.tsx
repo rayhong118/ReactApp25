@@ -1,7 +1,4 @@
 // React hooks for eat page
-
-// add firebase database hooks
-
 import { useGetCurrentUser } from "@/utils/AuthenticationAtoms";
 import { useAddMessageBars } from "@/utils/MessageBarsAtom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";

@@ -77,7 +77,7 @@ const EatNotesPanel = ({ restaurantId }: INotesProps) => {
       {User && (
         <form
           onSubmit={onHandleNoteSubmit}
-          className="w-full py-5 flex flex-col gap-2"
+          className="w-full py-2 flex flex-col gap-2"
         >
           <div className="flex items-center gap-2">
             Rate: <StarRating rating={rating} setRating={handleRatingSubmit} />
@@ -111,7 +111,7 @@ const EatNotesPanel = ({ restaurantId }: INotesProps) => {
       {notes?.length === 0 ? (
         <div>No notes found</div>
       ) : (
-        <div className="flex flex-col w-full gap-5">
+        <div className="flex flex-col w-full gap-2">
           {notes?.map((note) => (
             <Note key={note.id} note={note} refetch={refetch} />
           ))}
