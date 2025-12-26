@@ -8,7 +8,9 @@ import type { IEatQuery, TUserRatings } from "./Eat.types";
 export const eatFilterSearchQueryAtom = atom<IEatQuery>({
   name: "",
   cityAndState: [],
+  id: "",
 });
+
 export const useGetFilterSearchQuery = () =>
   useAtomValue(eatFilterSearchQueryAtom);
 export const useSetFilterSearchQuery = () =>

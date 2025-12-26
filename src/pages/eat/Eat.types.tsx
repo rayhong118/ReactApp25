@@ -95,6 +95,10 @@ export interface IEatQuery {
    * Price range lower bound
    */
   priceRangeLower?: number;
+  /**
+   * ID of the restaurant
+   */
+  id?: string;
 }
 
 export type TUserRatings = { [restaurantId: string]: number };

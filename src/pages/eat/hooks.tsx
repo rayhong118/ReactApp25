@@ -39,6 +39,7 @@ export const useGetRestaurants = (eatQuery?: IEatQuery) => {
       eatQuery?.cityAndState,
       eatQuery?.priceRangeLower,
       eatQuery?.priceRangeUpper,
+      eatQuery?.id,
     ],
     queryFn: async () => {
       const constraints: QueryConstraint[] = [];
@@ -53,6 +54,9 @@ export const useGetRestaurants = (eatQuery?: IEatQuery) => {
       }
       if (eatQuery?.priceRangeUpper) {
         constraints.push(where("price", "<=", eatQuery.priceRangeUpper));
+      }
+      if (eatQuery?.id) {
+        constraints.push(where("id", "==", eatQuery.id));
       }
       const q = query(collection(db, "restaurants"), ...constraints);
       const querySnapshot = await getDocs(q);

@@ -2,7 +2,10 @@ import { SecondaryButton } from "@/components/Buttons";
 import { Dialog } from "@/components/Dialog";
 import { withComponentSuspense } from "@/hooks/withSuspense";
 import { useGetCurrentUser } from "@/utils/AuthenticationAtoms";
-import { faChartBar } from "@fortawesome/free-regular-svg-icons";
+import {
+  faChartBar,
+  faShareFromSquare,
+} from "@fortawesome/free-regular-svg-icons";
 import {
   faAngleDown,
   faAngleUp,
@@ -16,6 +19,7 @@ import type { IRestaurant } from "./Eat.types";
 import { useGetCurrentUserRestaurantRating } from "./EatAtoms";
 import { EatEditForm } from "./EatEditForm";
 import { EatRatingHistogram } from "./EatRatingHistogram";
+import { useAddMessageBars } from "@/utils/MessageBarsAtom";
 
 const EatNotesPanel = lazy(() => import("./EatNotesPanel"));
 
@@ -23,13 +27,13 @@ export const EatCard = React.memo(
   ({ restaurant }: { restaurant: IRestaurant }) => {
     const [isNotesExpanded, setIsNotesExpanded] = useState(false);
     const [isHistogramExpanded, setIsHistogramExpanded] = useState(false);
-    const User = useGetCurrentUser();
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
 
+    const User = useGetCurrentUser();
     const currentUserRating = useGetCurrentUserRestaurantRating(
       restaurant.id || ""
     );
-
-    const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const addMessageBars = useAddMessageBars();
 
     const toggleNotes = useCallback(() => {
       setIsNotesExpanded((prev) => !prev);
@@ -41,6 +45,31 @@ export const EatCard = React.memo(
 
     const closeDialog = useCallback(() => {
       setIsDialogOpen(false);
+    }, []);
+
+    const handleShare = useCallback(() => {
+      const basURL = window.location.origin;
+      navigator.clipboard.writeText(`${basURL}/eat?id=${restaurant.id}`);
+      console.log(`${basURL}/eat?id=${restaurant.id}`);
+
+      // if Share API is available (mobile)
+      if (navigator.share) {
+        navigator.share({
+          title: restaurant.name,
+          text: "Share this restaurant",
+          url: `${basURL}/eat?id=${restaurant.id}`,
+        });
+      } else {
+        // fallback to copy to clipboard
+        navigator.clipboard.writeText(`${basURL}/eat?id=${restaurant.id}`);
+        addMessageBars([
+          {
+            id: "share-success",
+            message: "Link copied to clipboard",
+            type: "success",
+          },
+        ]);
+      }
     }, []);
 
     return (
@@ -56,16 +85,23 @@ export const EatCard = React.memo(
           <h1 className="text-xl font-bold">
             {restaurant.displayName || restaurant.name}
           </h1>
+
           {restaurant.displayName && (
             <h2 className="text-lg font-bold">{restaurant.name}</h2>
           )}
           <div>{restaurant.description}</div>
 
-          {restaurant.cityAndState && (
-            <span className="px-2 py-0.5 bg-blue-200 rounded-md">
-              {restaurant.cityAndState}
-            </span>
-          )}
+          <div className="flex justify-between items-center w-full">
+            {restaurant.cityAndState && (
+              <span className="px-2 py-0.5 bg-blue-200 rounded-md">
+                {restaurant.cityAndState}
+              </span>
+            )}
+            <SecondaryButton onClick={handleShare}>
+              <FontAwesomeIcon icon={faShareFromSquare} className="mr-2" />
+              Share
+            </SecondaryButton>
+          </div>
           <div>{restaurant.address}</div>
           <div>Price Per Person: {restaurant.price}</div>
 

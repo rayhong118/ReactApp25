@@ -11,6 +11,10 @@
     background-color: transparent;
   }
 
+  textarea {
+    min-height: 4rem;
+  }
+
   input:disabled,
   input:disabled~label,
   textarea:disabled,

@@ -10,7 +10,7 @@ import {
   useGetFilterSearchQuery,
   useSetCurrentUserRestaurantRatings,
 } from "./EatAtoms";
-import { EatCard } from "./EatCard";
+import { EatCard } from "./EatCard.tsx";
 import { EatEditForm } from "./EatEditForm";
 import {
   useFetchCurrentUserRestaurantRatings,
