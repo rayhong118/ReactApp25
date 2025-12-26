@@ -1,5 +1,5 @@
 import { CustomizedButton, PrimaryButton } from "@/components/Buttons";
-import { faSearch } from "@fortawesome/free-solid-svg-icons";
+import { faCheck, faSearch, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useRef, useState } from "react";
 import type { IRestaurant } from "./Eat.types";
@@ -284,26 +284,33 @@ export const EatEditForm = (props: IEatEditFormProps) => {
             </label>
           </div>
 
-          <PrimaryButton
-            disabled={
-              !isFormValid || addRestaurantIsPending || editRestaurantIsPending
-            }
-            type="submit"
-          >
-            Submit
-          </PrimaryButton>
-          {restaurant && (
-            <CustomizedButton
-              type="button"
-              disabled={addRestaurantIsPending || editRestaurantIsPending}
-              onClick={handleDelete}
-              className="text-base bg-red-600 text-white font-semibold p-2 
-              rounded cursor-pointer disabled:opacity-50 
-              disabled:cursor-not-allowed hover:bg-red-700"
+          <div className="flex justify-end gap-2">
+            <PrimaryButton
+              disabled={
+                !isFormValid ||
+                addRestaurantIsPending ||
+                editRestaurantIsPending
+              }
+              type="submit"
+              paddingMultiplier={2}
             >
-              Delete
-            </CustomizedButton>
-          )}
+              <FontAwesomeIcon icon={faCheck} className="mr-2" />
+              Submit
+            </PrimaryButton>
+            {restaurant && (
+              <CustomizedButton
+                type="button"
+                disabled={addRestaurantIsPending || editRestaurantIsPending}
+                onClick={handleDelete}
+                paddingMultiplier={2}
+                className="text-base bg-red-600 text-white font-semibold 
+                cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed hover:bg-red-700"
+              >
+                <FontAwesomeIcon icon={faTrash} className="mr-2" />
+                Delete
+              </CustomizedButton>
+            )}
+          </div>
         </form>
       </div>
     </div>

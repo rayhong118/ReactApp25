@@ -194,8 +194,8 @@ const UserPromptSection = () => {
             Pick
           </SecondaryButton>
           <label
-            className="flex gap-2 px-2 py-1 items-center rounded-md bg-gray-200 cursor-pointer
-            text-sm"
+            className="flex gap-2 px-2 py-1 items-center rounded-md cursor-pointer text-sm
+            border border-gray-300"
           >
             <input
               type="checkbox"
@@ -292,8 +292,8 @@ const LocationTagsList = () => {
       ) : (
         displayedData?.map((tag) => (
           <label
-            className="flex gap-2 px-2 py-1 items-center rounded-md bg-gray-200 cursor-pointer
-              text-sm"
+            className="flex gap-2 px-2 py-1 items-center rounded-md cursor-pointer 
+            text-sm border border-gray-300"
             key={tag.value}
           >
             <input

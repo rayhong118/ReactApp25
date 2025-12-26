@@ -1,7 +1,8 @@
-import { CustomizedButton, SecondaryButton } from "@/components/Buttons";
+import { SecondaryButton } from "@/components/Buttons";
 import { Dialog } from "@/components/Dialog";
 import { withComponentSuspense } from "@/hooks/withSuspense";
 import { useGetCurrentUser } from "@/utils/AuthenticationAtoms";
+import { faChartBar } from "@fortawesome/free-regular-svg-icons";
 import {
   faAngleDown,
   faAngleUp,
@@ -15,7 +16,6 @@ import type { IRestaurant } from "./Eat.types";
 import { useGetCurrentUserRestaurantRating } from "./EatAtoms";
 import { EatEditForm } from "./EatEditForm";
 import { EatRatingHistogram } from "./EatRatingHistogram";
-import { faChartBar } from "@fortawesome/free-regular-svg-icons";
 
 const EatNotesPanel = lazy(() => import("./EatNotesPanel"));
 
@@ -52,7 +52,7 @@ export const EatCard = React.memo(
         >
           <EatEditForm restaurant={restaurant} closeDialog={closeDialog} />
         </Dialog>
-        <div className="border border-black p-4 rounded-md">
+        <div className="border border-gray-300 p-4 rounded-md">
           <h1 className="text-xl font-bold">
             {restaurant.displayName || restaurant.name}
           </h1>
@@ -100,27 +100,27 @@ export const EatCard = React.memo(
 
           <div className="flex justify-between align-center">
             <div className="flex align-center">
-              <CustomizedButton onClick={toggleNotes}>
+              <SecondaryButton onClick={toggleNotes}>
                 Notes & ratings
                 {isNotesExpanded ? (
                   <FontAwesomeIcon icon={faAngleDown} className="ml-2" />
                 ) : (
                   <FontAwesomeIcon icon={faAngleUp} className="ml-2" />
                 )}
-              </CustomizedButton>
+              </SecondaryButton>
             </div>
 
             <div className="flex">
-              <CustomizedButton disabled={!User} onClick={openDialog}>
+              <SecondaryButton disabled={!User} onClick={openDialog}>
                 <FontAwesomeIcon icon={faEdit} className="mr-2" />
                 Edit
-              </CustomizedButton>
-              <CustomizedButton
+              </SecondaryButton>
+              <SecondaryButton
                 onClick={() => window.open(restaurant.url, "_blank")}
               >
                 <FontAwesomeIcon icon={faDirections} className="mr-2" />
                 Go
-              </CustomizedButton>
+              </SecondaryButton>
             </div>
           </div>
 

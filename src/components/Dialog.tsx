@@ -37,12 +37,11 @@ export const Dialog: React.FC<IDialogProps> = (props: IDialogProps) => {
 
   return ReactDOM.createPortal(
     <>
-      <div className="fixed inset-0 bg-black/50 backdrop-grayscale z-40" />
+      <div className="fixed inset-0 bg-black/25 backdrop-grayscale z-40" />
       <FocusTrap
         focusTrapOptions={{
           // This function allows clicks on the Google results to go through
           allowOutsideClick: (event: any) => {
-            console.log("event", event);
             if (
               event.target?.classList.contains("pac-item") ||
               event.target?.classList.contains("pac-container") ||
@@ -59,9 +58,9 @@ export const Dialog: React.FC<IDialogProps> = (props: IDialogProps) => {
           open={open}
           aria-modal="true"
           role="dialog"
-          className="border rounded-md flex flex-col space-around justify-between gap-0 
+          className="rounded-md flex flex-col space-around justify-between gap-0 
           fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 m-0 
-          bg-white shadow-xl z-50 w-full max-w-lg max-h-[calc(100vh-4rem)]"
+          bg-white shadow-xl shadow-gray z-50 w-full max-w-lg max-h-[calc(100vh-4rem)]"
         >
           <div className="flex flex-row justify-between items-center px-5 pt-5">
             <h1 className="text-xl font-bold">{title}</h1>

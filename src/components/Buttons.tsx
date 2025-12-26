@@ -4,16 +4,25 @@ interface IButtonProps {
   disabled?: boolean;
   type?: "button" | "submit" | "reset";
   className?: string;
+  paddingMultiplier?: number;
 }
 
 export const PrimaryButton = (props: IButtonProps) => {
+  const paddingMultiplier = props.paddingMultiplier
+    ? props.paddingMultiplier
+    : 1;
   return (
     <button
       onClick={props.onClick}
       disabled={props.disabled}
       type={props.type}
-      className="bg-blue-600 text-white font-semibold py-1 px-2 rounded hover:bg-blue-700
-        disabled:bg-gray-400"
+      className={
+        "bg-blue-500 text-white font-semibold py-" +
+        paddingMultiplier +
+        " px-" +
+        paddingMultiplier * 2 +
+        " rounded hover:bg-blue-600 disabled:bg-gray-400"
+      }
     >
       {props.children}
     </button>
@@ -21,13 +30,21 @@ export const PrimaryButton = (props: IButtonProps) => {
 };
 
 export const SecondaryButton = (props: IButtonProps) => {
+  const paddingMultiplier = props.paddingMultiplier
+    ? props.paddingMultiplier
+    : 1;
   return (
     <button
       onClick={props.onClick}
       disabled={props.disabled}
       type={props.type}
-      className="text-gray-600 font-semibold py-1 px-2 rounded hover:bg-gray-100
-        disabled:bg-gray-400"
+      className={
+        "text-gray-600 font-semibold py-" +
+        paddingMultiplier +
+        " px-" +
+        paddingMultiplier * 2 +
+        " rounded text-gray-800 hover:bg-gray-100 disabled:bg-gray-300"
+      }
     >
       {props.children}
     </button>
@@ -35,13 +52,20 @@ export const SecondaryButton = (props: IButtonProps) => {
 };
 
 export const CustomizedButton = (props: IButtonProps) => {
+  const paddingMultiplier = props.paddingMultiplier
+    ? props.paddingMultiplier
+    : 1;
   return (
     <button
       onClick={props.onClick}
       disabled={props.disabled}
       type={props.type}
       className={
-        "py-1 px-2 rounded hover:bg-gray-100 disabled:bg-gray-400 " +
+        "py-" +
+        paddingMultiplier +
+        " px-" +
+        paddingMultiplier * 2 +
+        " rounded text-gray-600 hover:bg-gray-100 disabled:bg-gray-300 " +
         props.className
       }
     >

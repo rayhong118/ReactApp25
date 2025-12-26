@@ -6,6 +6,7 @@ import {
   useFirebaseSignInWithGoogle,
   useSignOut,
 } from "../../utils/AuthServiceHooks";
+import { CustomizedButton, PrimaryButton } from "@/components/Buttons";
 
 const AuthPage = () => {
   const currentUser = useGetCurrentUser();
@@ -55,15 +56,10 @@ const AuthPage = () => {
             </p>
           </div>
 
-          <div className="space-y-3">
-            <button
-              onClick={signOut}
-              className={`w-full bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2
-              focus:ring-blue-500 focus:ring-offset-2 text-white font-semibold py-2 px-4
-              rounded-lg transition active:bg-blue-800 cursor-pointer`}
-            >
+          <div className="space-y-3 w-full flex justify-center">
+            <PrimaryButton onClick={signOut} paddingMultiplier={2}>
               Sign Out
-            </button>
+            </PrimaryButton>
           </div>
         </div>
       </div>
@@ -80,7 +76,7 @@ const AuthPage = () => {
         </h2>
 
         <div className="space-y-3 mb-6">
-          <button
+          <CustomizedButton
             onClick={() => signInWithGoogle()}
             className={`w-full bg-white border border-gray-300 hover:bg-gray-50 focus:outline-none
               focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 text-gray-700 font-semibold
@@ -88,8 +84,8 @@ const AuthPage = () => {
           >
             <FontAwesomeIcon icon={faGoogle} className="px-2" />
             Sign up / Sign in with Google
-          </button>
-          <button
+          </CustomizedButton>
+          <CustomizedButton
             onClick={() => signInWithGithub()}
             className={`w-full bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-2
               focus:ring-gray-600 focus:ring-offset-2 text-white font-semibold py-2 px-4
@@ -97,7 +93,7 @@ const AuthPage = () => {
           >
             <FontAwesomeIcon icon={faGithub} className="px-2" />
             Sign up / Sign in with GitHub
-          </button>
+          </CustomizedButton>
         </div>
       </div>
     </div>

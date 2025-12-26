@@ -157,8 +157,10 @@ export const generateSuggestionBasedOnUserPrompt = onCall(
 
       return JSON.parse(rawResponse);
     } catch (error) {
-      console.error("Gemini Logic Error:", error);
-      throw new HttpsError("internal", "Failed to generate recommendation.");
+      throw new HttpsError(
+        "internal",
+        "Failed to generate recommendation." + error
+      );
     }
   }
 );
@@ -233,8 +235,10 @@ export const selectLocationTagsBasedOnCurrentLocation = onCall(
 
       return JSON.parse(rawResponse);
     } catch (error) {
-      console.error("Gemini Logic Error:", error);
-      throw new HttpsError("internal", "Failed to generate recommendation.");
+      throw new HttpsError(
+        "internal",
+        "Failed to generate recommendation." + error
+      );
     }
   }
 );
