@@ -14,6 +14,7 @@ import {
   useGetRestaurantNotes,
   useSubmitRestaurantRating,
 } from "./hooks";
+import "./EatNotesPanel.scss";
 
 interface INotesProps {
   restaurantId: string;
@@ -26,6 +27,7 @@ const EatNotesPanel = ({ restaurantId }: INotesProps) => {
     isFetching,
   } = useGetRestaurantNotes(restaurantId);
   const [newNote, setNewNote] = useState("");
+  const [isNotesExpanded, setIsNotesExpanded] = useState(false);
   const User = useGetCurrentUser();
 
   const { mutate: submitRestaurantRating, isPending: isSubmittingRating } =
@@ -49,6 +51,10 @@ const EatNotesPanel = ({ restaurantId }: INotesProps) => {
       setRating(currentRating);
     }
   }, [currentRating]);
+
+  useEffect(() => {
+    setIsNotesExpanded(true);
+  }, []);
 
   const onHandleNoteSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -74,55 +80,61 @@ const EatNotesPanel = ({ restaurantId }: INotesProps) => {
   };
 
   return (
-    <div className="flex flex-col w-full">
-      {User && (
-        <form
-          onSubmit={onHandleNoteSubmit}
-          className="w-full py-2 flex flex-col gap-2"
-        >
-          <div className="flex items-center gap-2">
-            Rate:{" "}
-            {isSubmittingRating ? (
-              <span>Submitting...</span>
-            ) : (
-              <StarRating rating={rating} setRating={handleRatingSubmit} />
-            )}
+    <div
+      className={
+        "w-full min-h-0 eat-note-container " + (isNotesExpanded ? "open" : "")
+      }
+    >
+      <div className="flex flex-col min-h-0">
+        {User && (
+          <form
+            onSubmit={onHandleNoteSubmit}
+            className="w-full py-2 flex flex-col gap-2"
+          >
+            <div className="flex items-center gap-2">
+              Rate:{" "}
+              {isSubmittingRating ? (
+                <span>Submitting...</span>
+              ) : (
+                <StarRating rating={rating} setRating={handleRatingSubmit} />
+              )}
+            </div>
+            <textarea
+              name="note"
+              value={newNote}
+              onChange={onHandleChange}
+              placeholder="Add a note"
+              className="w-full border border-black p-2 rounded-md"
+            />
+            <div className="flex justify-between items-start">
+              <CustomizedButton
+                type="submit"
+                disabled={
+                  isAddingNote || !newNote.trim() || newNote.trim().length > 250
+                }
+              >
+                Add Note
+              </CustomizedButton>
+              <span
+                className={`text-sm font-bold ${
+                  newNote.trim().length > 250 ? "text-red-500" : "text-gray-400"
+                }`}
+              >
+                {newNote.trim().length}/250
+              </span>
+            </div>
+          </form>
+        )}
+        {notes?.length === 0 ? (
+          <div>No notes found</div>
+        ) : (
+          <div className="flex flex-col w-full gap-2">
+            {notes?.map((note) => (
+              <Note key={note.id} note={note} refetch={refetch} />
+            ))}
           </div>
-          <textarea
-            name="note"
-            value={newNote}
-            onChange={onHandleChange}
-            placeholder="Add a note"
-            className="w-full border border-black p-2 rounded-md"
-          />
-          <div className="flex justify-between items-start">
-            <CustomizedButton
-              type="submit"
-              disabled={
-                isAddingNote || !newNote.trim() || newNote.trim().length > 250
-              }
-            >
-              Add Note
-            </CustomizedButton>
-            <span
-              className={`text-sm font-bold ${
-                newNote.trim().length > 250 ? "text-red-500" : "text-gray-400"
-              }`}
-            >
-              {newNote.trim().length}/250
-            </span>
-          </div>
-        </form>
-      )}
-      {notes?.length === 0 ? (
-        <div>No notes found</div>
-      ) : (
-        <div className="flex flex-col w-full gap-2">
-          {notes?.map((note) => (
-            <Note key={note.id} note={note} refetch={refetch} />
-          ))}
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 };

@@ -3,7 +3,6 @@ import { Dialog } from "@/components/Dialog";
 import { useAddMessageBars } from "@/utils/MessageBarsAtom";
 import {
   faClose,
-  faFilter,
   faLocation,
   faSpinner,
 } from "@fortawesome/free-solid-svg-icons";
@@ -15,7 +14,7 @@ import {
   useSetFilterSearchQuery,
   useUpdateFilterSearchQueryCityAndState,
 } from "./EatAtoms";
-import { EatCard } from "./EatCard";
+import { EatCard } from "./EatCard.tsx";
 import "./EatFilterSearch.scss";
 import {
   useGetRestaurantLocationTags,
@@ -24,19 +23,20 @@ import {
   useLocationTagAutoSelector,
 } from "./hooks";
 
-export const EatFilterSearch = () => {
-  const [isExpanded, setIsExpanded] = useState(false);
+export const EatFilterSearch = ({
+  showFilterSearch,
+}: {
+  showFilterSearch: boolean;
+}) => {
   return (
     <div>
-      <div className="md:block hidden">
+      <div
+        className={
+          "filter-panel-container md:block flex flex-col justify-between gap-2 " +
+          (showFilterSearch ? "open" : "")
+        }
+      >
         <EatFilterSearchForm />
-      </div>
-      <div className="md:hidden flex flex-col justify-between gap-2">
-        <SecondaryButton onClick={() => setIsExpanded(!isExpanded)}>
-          <FontAwesomeIcon icon={faFilter} className="mr-2" />
-          Filter
-        </SecondaryButton>
-        {isExpanded && <EatFilterSearchForm />}
       </div>
     </div>
   );
@@ -74,7 +74,7 @@ const EatFilterSearchForm = () => {
   }, [tempQuery]);
 
   return (
-    <div className="flex flex-col gap-2 md:max-w-sm">
+    <div className="flex flex-col gap-2 md:max-w-sm min-h-0">
       <UserPromptSection />
       <hr className="w-full" />
       <label>Price Range</label>

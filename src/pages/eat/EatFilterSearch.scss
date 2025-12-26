@@ -42,3 +42,23 @@
     transform: translateY(-1rem) scale(0.8);
   }
 }
+
+@media (max-width: 767px) {
+  .filter-panel-container {
+    display: grid;
+    grid-template-rows: 0fr; /* Collapsed by default on mobile */
+    transition: grid-template-rows 0.5s ease-out;
+    overflow: hidden;
+  }
+  .filter-panel-container.open {
+    grid-template-rows: 1fr; /* Expanded when .open is added */
+  }
+}
+/* Base style for md and above (no grid trick needed) */
+@media (min-width: 768px) {
+  .filter-panel-container {
+    display: block;
+    height: auto;
+    overflow: visible;
+  }
+}
