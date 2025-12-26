@@ -8,7 +8,7 @@ import {
   faSpinner,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type { IEatQuery, IRestaurant } from "./Eat.types";
 import {
   useGetFilterSearchQuery,
@@ -250,6 +250,7 @@ const LocationTagsList = () => {
 
   useEffect(() => {
     if (
+      !isApplyingLocationTags ||
       isFetchingUserLocation ||
       isFetchingCitiesCloseToCurrentUserLocation ||
       !locationTags ||
@@ -260,9 +261,11 @@ const LocationTagsList = () => {
       .filter((tag) => citiesCloseToCurrentUserLocation.includes(tag.value))
       .map((tag) => tag.value);
     setSelectedLocationTags(tagsSelected);
-    updateLocationTags(tagsSelected);
+    console.log(tagsSelected);
+
     setIsApplyingLocationTags(false);
   }, [
+    isApplyingLocationTags,
     isFetchingUserLocation,
     isFetchingCitiesCloseToCurrentUserLocation,
     locationTags,
@@ -279,10 +282,14 @@ const LocationTagsList = () => {
     };
   }, [selectedLocationTags]);
 
-  const displayedData = locationTags?.filter(
-    (tag) =>
-      tag.count > 0 &&
-      tag.value.toLowerCase().includes(tagNameFilter.toLowerCase())
+  const displayedData = useMemo(
+    () =>
+      locationTags?.filter(
+        (tag) =>
+          tag.count > 0 &&
+          tag.value.toLowerCase().includes(tagNameFilter.toLowerCase())
+      ),
+    [locationTags, tagNameFilter]
   );
 
   return (
@@ -312,9 +319,7 @@ const LocationTagsList = () => {
         Select Nearby Cities
       </SecondaryButton>
 
-      {isFetchingUserLocation ||
-      isFetchingCitiesCloseToCurrentUserLocation ||
-      isApplyingLocationTags ? (
+      {isFetchingUserLocation || isFetchingCitiesCloseToCurrentUserLocation ? (
         <p>Loading...</p>
       ) : (
         displayedData?.map((tag) => (
