@@ -18,10 +18,10 @@ import {
 import { EatCard } from "./EatCard";
 import "./EatFilterSearch.scss";
 import {
-  useGetCitiesCloseToCurrentUserLocation,
   useGetRestaurantLocationTags,
   useGetRestaurantRecommendationNL,
   useGetUserLocation,
+  useLocationTagAutoSelector,
 } from "./hooks";
 
 export const EatFilterSearch = () => {
@@ -216,23 +216,16 @@ const UserPromptSection = () => {
 const LocationTagsList = () => {
   const { data: locationTags } = useGetRestaurantLocationTags();
   const updateLocationTags = useUpdateFilterSearchQueryCityAndState();
-  const [tagNameFilter, setTagNameFilter] = useState("");
   const filterSearchQuery = useGetFilterSearchQuery();
+  const [tagNameFilter, setTagNameFilter] = useState("");
   const [selectedLocationTags, setSelectedLocationTags] = useState<string[]>(
     filterSearchQuery.cityAndState || []
   );
-  const [isApplyingLocationTags, setIsApplyingLocationTags] = useState(false);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
-
-  const {
-    data: userCityAndStateData,
-    refetch: refetchUserLocation,
-    isFetching: isFetchingUserLocation,
-  } = useGetUserLocation();
-  const {
-    data: citiesCloseToCurrentUserLocation,
-    isFetching: isFetchingCitiesCloseToCurrentUserLocation,
-  } = useGetCitiesCloseToCurrentUserLocation(userCityAndStateData || "");
+  const { selectNearby, inProgress } = useLocationTagAutoSelector(
+    locationTags,
+    setSelectedLocationTags
+  );
 
   const handleTagToggle = (e: React.ChangeEvent<HTMLInputElement>) => {
     const tagSelected = selectedLocationTags.includes(e.target.value);
@@ -242,36 +235,11 @@ const LocationTagsList = () => {
     setSelectedLocationTags(newTagsList);
   };
 
-  // fetches location tags based on current location
-  const handleUseCurrentLocation = () => {
-    setIsApplyingLocationTags(true);
-    refetchUserLocation();
+  const handleSelectNearby = () => {
+    selectNearby();
   };
 
-  useEffect(() => {
-    if (
-      !isApplyingLocationTags ||
-      isFetchingUserLocation ||
-      isFetchingCitiesCloseToCurrentUserLocation ||
-      !locationTags ||
-      !citiesCloseToCurrentUserLocation
-    )
-      return;
-    const tagsSelected = locationTags
-      .filter((tag) => citiesCloseToCurrentUserLocation.includes(tag.value))
-      .map((tag) => tag.value);
-    setSelectedLocationTags(tagsSelected);
-    console.log(tagsSelected);
-
-    setIsApplyingLocationTags(false);
-  }, [
-    isApplyingLocationTags,
-    isFetchingUserLocation,
-    isFetchingCitiesCloseToCurrentUserLocation,
-    locationTags,
-    citiesCloseToCurrentUserLocation,
-  ]);
-
+  // debounced update of location tags
   useEffect(() => {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
     timeoutRef.current = setTimeout(() => {
@@ -312,14 +280,14 @@ const LocationTagsList = () => {
       </SecondaryButton>
 
       <SecondaryButton
-        onClick={() => handleUseCurrentLocation()}
-        disabled={isFetchingUserLocation}
+        onClick={() => handleSelectNearby()}
+        disabled={inProgress}
       >
         <FontAwesomeIcon icon={faLocation} />
         Select Nearby Cities
       </SecondaryButton>
 
-      {isFetchingUserLocation || isFetchingCitiesCloseToCurrentUserLocation ? (
+      {inProgress ? (
         <p>Loading...</p>
       ) : (
         displayedData?.map((tag) => (

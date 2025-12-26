@@ -24,6 +24,7 @@ import type {
   IRestaurant,
   TUserRatings,
 } from "./Eat.types";
+import { useEffect, useState } from "react";
 
 /**
  * This hook handles get restaurants
@@ -584,6 +585,14 @@ export const useGetUserLocation = () => {
   return { data, error, refetch, isFetching };
 };
 
+/**
+ * This hook handles get cities close to current user location using Gemini.
+ * @param cityAndState: current user location city and state string
+ * @returns data: cities close to current user location
+ * @returns error: error object
+ * @returns refetch: function to refetch cities close to current user location
+ * @returns isFetching: boolean
+ */
 export const useGetCitiesCloseToCurrentUserLocation = (
   cityAndState: string
 ) => {
@@ -611,4 +620,54 @@ export const useGetCitiesCloseToCurrentUserLocation = (
     staleTime: Infinity,
   });
   return { data, error, refetch, isFetching };
+};
+
+/**
+ * This hook handles auto selection of location tags based on current user location.
+ * @param locationTags: available location tags (city and state)
+ * @param setSelectedLocationTags: function to set selected location tags
+ * @returns selectNearby: function to select nearby location tags
+ * @returns inProgress: boolean
+ */
+export const useLocationTagAutoSelector = (
+  locationTags: ILocationTag[] | undefined,
+  setSelectedLocationTags: (tags: string[]) => void
+) => {
+  const [isApplying, setIsApplying] = useState(false);
+  const {
+    data: userLocation,
+    refetch: refetchLocation,
+    isFetching: isFetchingLocation,
+  } = useGetUserLocation();
+  const { data: nearbyCities, isFetching: isFetchingNearby } =
+    useGetCitiesCloseToCurrentUserLocation(userLocation || "");
+  useEffect(() => {
+    if (
+      isApplying &&
+      !isFetchingLocation &&
+      !isFetchingNearby &&
+      locationTags &&
+      nearbyCities
+    ) {
+      const selected = locationTags
+        .filter((tag) => nearbyCities.includes(tag.value))
+        .map((tag) => tag.value);
+      setSelectedLocationTags(selected);
+      setIsApplying(false);
+    }
+  }, [
+    isApplying,
+    isFetchingLocation,
+    isFetchingNearby,
+    locationTags,
+    nearbyCities,
+    setSelectedLocationTags,
+  ]);
+  return {
+    selectNearby: () => {
+      setIsApplying(true);
+      refetchLocation();
+    },
+    inProgress: isApplying || isFetchingLocation || isFetchingNearby,
+  };
 };
