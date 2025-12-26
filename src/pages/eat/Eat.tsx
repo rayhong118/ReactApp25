@@ -13,7 +13,7 @@ import {
 const EatListWithMaps = withGoogleMapsApi(EatList);
 
 const Eat = () => {
-  const [showFilterSearch, setShowFilterSearch] = useState(true);
+  const [showFilterSearch, setShowFilterSearch] = useState(false);
   return (
     <>
       <div className="flex justify-between items-center">
