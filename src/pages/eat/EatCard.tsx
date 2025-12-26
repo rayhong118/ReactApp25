@@ -15,6 +15,7 @@ import type { IRestaurant } from "./Eat.types";
 import { useGetCurrentUserRestaurantRating } from "./EatAtoms";
 import { EatEditForm } from "./EatEditForm";
 import { EatRatingHistogram } from "./EatRatingHistogram";
+import { faChartBar } from "@fortawesome/free-regular-svg-icons";
 
 const EatNotesPanel = lazy(() => import("./EatNotesPanel"));
 
@@ -52,43 +53,47 @@ export const EatCard = React.memo(
           <EatEditForm restaurant={restaurant} closeDialog={closeDialog} />
         </Dialog>
         <div className="border border-black p-4 rounded-md">
-          <h1 className="text-lg font-bold">
+          <h1 className="text-xl font-bold">
             {restaurant.displayName || restaurant.name}
           </h1>
           {restaurant.displayName && (
-            <h2 className="text-sm font-bold">{restaurant.name}</h2>
+            <h2 className="text-lg font-bold">{restaurant.name}</h2>
           )}
           <div>{restaurant.description}</div>
 
           {restaurant.cityAndState && (
-            <span className="text-sm px-2 py-0.5 bg-blue-200 rounded-md">
+            <span className="px-2 py-0.5 bg-blue-200 rounded-md">
               {restaurant.cityAndState}
             </span>
           )}
-          <div className="text-sm">{restaurant.address}</div>
-          <div className="text-sm">Price Per Person: {restaurant.price}</div>
+          <div>{restaurant.address}</div>
+          <div>Price Per Person: {restaurant.price}</div>
 
-          <div className="flex items-center gap-2 text-sm">
+          <div className="flex items-center gap-2">
             Average: <StarRating rating={Number(restaurant.averageStars)} />{" "}
             {restaurant.averageStars}
             {restaurant.stars && (
               <SecondaryButton
                 onClick={() => setIsHistogramExpanded((prev) => !prev)}
               >
-                Histogram
-                <FontAwesomeIcon icon={faAngleDown} className="ml-2" />
+                <FontAwesomeIcon icon={faChartBar} />
+                {isHistogramExpanded ? (
+                  <FontAwesomeIcon icon={faAngleDown} />
+                ) : (
+                  <FontAwesomeIcon icon={faAngleUp} />
+                )}
               </SecondaryButton>
             )}
           </div>
 
           {restaurant.stars && isHistogramExpanded && (
-            <div className="flex items-start gap-2 text-sm md:scale-80 bg-gray-100 p-2 rounded-md">
+            <div className="flex items-start gap-2 md:scale-90 bg-gray-100 p-2 rounded-md">
               <EatRatingHistogram ratings={restaurant.stars} />
             </div>
           )}
 
           {User && (
-            <div className="flex items-center gap-2 text-sm">
+            <div className="flex items-center gap-2">
               Your rating: <StarRating rating={currentUserRating} />
             </div>
           )}
