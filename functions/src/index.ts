@@ -39,5 +39,6 @@ export {
   generateSuggestionBasedOnUserPrompt,
   updateRestaurantStars,
   updateRestaurantAverageRating,
+  selectLocationTagsBasedOnCurrentLocation,
 } from "./eat/eatFunctions";
 export { verifyRecaptcha } from "./reCaptcha/reCaptcha";

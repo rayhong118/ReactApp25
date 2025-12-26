@@ -28,7 +28,8 @@ const EatNotesPanel = ({ restaurantId }: INotesProps) => {
   const [newNote, setNewNote] = useState("");
   const User = useGetCurrentUser();
 
-  const { mutate: submitRestaurantRating } = useSubmitRestaurantRating();
+  const { mutate: submitRestaurantRating, isPending: isSubmittingRating } =
+    useSubmitRestaurantRating();
 
   const currentRating = useGetCurrentUserRestaurantRating(restaurantId);
 
@@ -80,7 +81,12 @@ const EatNotesPanel = ({ restaurantId }: INotesProps) => {
           className="w-full py-2 flex flex-col gap-2"
         >
           <div className="flex items-center gap-2">
-            Rate: <StarRating rating={rating} setRating={handleRatingSubmit} />
+            Rate:{" "}
+            {isSubmittingRating ? (
+              <span>Submitting...</span>
+            ) : (
+              <StarRating rating={rating} setRating={handleRatingSubmit} />
+            )}
           </div>
           <textarea
             name="note"

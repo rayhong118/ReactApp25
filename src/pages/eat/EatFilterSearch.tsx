@@ -4,6 +4,7 @@ import { useAddMessageBars } from "@/utils/MessageBarsAtom";
 import {
   faClose,
   faFilter,
+  faLocation,
   faSpinner,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -17,6 +18,7 @@ import {
 import { EatCard } from "./EatCard";
 import "./EatFilterSearch.scss";
 import {
+  useGetCitiesCloseToCurrentUserLocation,
   useGetRestaurantLocationTags,
   useGetRestaurantRecommendationNL,
   useGetUserLocation,
@@ -212,14 +214,25 @@ const UserPromptSection = () => {
 };
 
 const LocationTagsList = () => {
-  const { data } = useGetRestaurantLocationTags();
+  const { data: locationTags } = useGetRestaurantLocationTags();
   const updateLocationTags = useUpdateFilterSearchQueryCityAndState();
   const [tagNameFilter, setTagNameFilter] = useState("");
   const filterSearchQuery = useGetFilterSearchQuery();
   const [selectedLocationTags, setSelectedLocationTags] = useState<string[]>(
     filterSearchQuery.cityAndState || []
   );
+  const [isApplyingLocationTags, setIsApplyingLocationTags] = useState(false);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  const {
+    data: userCityAndStateData,
+    refetch: refetchUserLocation,
+    isFetching: isFetchingUserLocation,
+  } = useGetUserLocation();
+  const {
+    data: citiesCloseToCurrentUserLocation,
+    isFetching: isFetchingCitiesCloseToCurrentUserLocation,
+  } = useGetCitiesCloseToCurrentUserLocation(userCityAndStateData || "");
 
   const handleTagToggle = (e: React.ChangeEvent<HTMLInputElement>) => {
     const tagSelected = selectedLocationTags.includes(e.target.value);
@@ -228,6 +241,33 @@ const LocationTagsList = () => {
       : [...selectedLocationTags, e.target.value];
     setSelectedLocationTags(newTagsList);
   };
+
+  // fetches location tags based on current location
+  const handleUseCurrentLocation = () => {
+    setIsApplyingLocationTags(true);
+    refetchUserLocation();
+  };
+
+  useEffect(() => {
+    if (
+      isFetchingUserLocation ||
+      isFetchingCitiesCloseToCurrentUserLocation ||
+      !locationTags ||
+      !citiesCloseToCurrentUserLocation
+    )
+      return;
+    const tagsSelected = locationTags
+      .filter((tag) => citiesCloseToCurrentUserLocation.includes(tag.value))
+      .map((tag) => tag.value);
+    setSelectedLocationTags(tagsSelected);
+    updateLocationTags(tagsSelected);
+    setIsApplyingLocationTags(false);
+  }, [
+    isFetchingUserLocation,
+    isFetchingCitiesCloseToCurrentUserLocation,
+    locationTags,
+    citiesCloseToCurrentUserLocation,
+  ]);
 
   useEffect(() => {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
@@ -239,7 +279,7 @@ const LocationTagsList = () => {
     };
   }, [selectedLocationTags]);
 
-  const displayedData = data?.filter(
+  const displayedData = locationTags?.filter(
     (tag) =>
       tag.count > 0 &&
       tag.value.toLowerCase().includes(tagNameFilter.toLowerCase())
@@ -264,22 +304,36 @@ const LocationTagsList = () => {
         Clear
       </SecondaryButton>
 
-      {displayedData?.map((tag) => (
-        <label
-          className="flex gap-2 px-2 py-1 items-center rounded-md bg-gray-200 cursor-pointer
-            text-sm"
-          key={tag.value}
-        >
-          <input
-            type="checkbox"
-            className="w-4 h-4"
-            value={tag.value}
-            checked={selectedLocationTags.includes(tag.value)}
-            onChange={handleTagToggle}
-          />
-          {tag.value} - {tag.count}
-        </label>
-      ))}
+      <SecondaryButton
+        onClick={() => handleUseCurrentLocation()}
+        disabled={isFetchingUserLocation}
+      >
+        <FontAwesomeIcon icon={faLocation} />
+        Select Nearby Cities
+      </SecondaryButton>
+
+      {isFetchingUserLocation ||
+      isFetchingCitiesCloseToCurrentUserLocation ||
+      isApplyingLocationTags ? (
+        <p>Loading...</p>
+      ) : (
+        displayedData?.map((tag) => (
+          <label
+            className="flex gap-2 px-2 py-1 items-center rounded-md bg-gray-200 cursor-pointer
+              text-sm"
+            key={tag.value}
+          >
+            <input
+              type="checkbox"
+              className="w-4 h-4"
+              value={tag.value}
+              checked={selectedLocationTags.includes(tag.value)}
+              onChange={handleTagToggle}
+            />
+            {tag.value} - {tag.count}
+          </label>
+        ))
+      )}
     </div>
   );
 };

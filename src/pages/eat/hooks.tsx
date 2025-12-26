@@ -583,3 +583,28 @@ export const useGetUserLocation = () => {
 
   return { data, error, refetch, isFetching };
 };
+
+export const useGetCitiesCloseToCurrentUserLocation = (
+  cityAndState: string
+) => {
+  const { data, error, refetch, isFetching } = useQuery({
+    queryKey: ["citiesCloseToCurrentUserLocation", cityAndState],
+    queryFn: async () => {
+      if (!cityAndState) {
+        return [];
+      }
+      const selectLocationTagsBasedOnCurrentLocation = httpsCallable<
+        { cityAndState: string },
+        { cities: string[] }
+      >(firebaseFunctions, "selectLocationTagsBasedOnCurrentLocation");
+      const result = await selectLocationTagsBasedOnCurrentLocation({
+        cityAndState,
+      });
+      return result.data?.cities || [];
+    },
+    enabled: !!cityAndState,
+    refetchOnWindowFocus: false,
+    staleTime: Infinity,
+  });
+  return { data, error, refetch, isFetching };
+};
