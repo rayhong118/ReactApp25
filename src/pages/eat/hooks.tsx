@@ -89,7 +89,10 @@ export const useAddRestaurant = () => {
   const { mutateAsync, isPending, isSuccess, error } = useMutation({
     mutationKey: ["addRestaurant"],
     mutationFn: async (restaurant: Partial<IRestaurant>) => {
-      await addDoc(collection(db, "restaurants"), restaurant);
+      const newRestaurantRef = doc(collection(db, "restaurants"));
+      const newRestaurantId = newRestaurantRef.id;
+      restaurant.id = newRestaurantId;
+      await setDoc(newRestaurantRef, restaurant);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["restaurants"] });
