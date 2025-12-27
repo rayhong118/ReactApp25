@@ -1,11 +1,14 @@
 .eat-note-container {
   display: grid;
   grid-template-rows: 0fr; /* Collapsed by default on mobile */
-  transition: grid-template-rows 0.5s ease-out;
+  transition: grid-template-rows 0.5s ease-out, visibility 0s 0.5s;
   overflow: hidden;
+  visibility: hidden;
 }
 
 .eat-note-container.open {
   grid-template-rows: 1fr; /* Expanded when .open is added */
+  transition: grid-template-rows 0.5s ease-out, visibility 0s 0s;
+  visibility: visible;
 }
 

@@ -20,6 +20,7 @@ import { useGetCurrentUserRestaurantRating } from "./EatAtoms";
 import { EatEditForm } from "./EatEditForm";
 import { EatRatingHistogram } from "./EatRatingHistogram";
 import { useAddMessageBars } from "@/utils/MessageBarsAtom";
+import "./EatNotesPanel.scss";
 
 const EatNotesPanel = lazy(() => import("./EatNotesPanel"));
 
@@ -160,13 +161,13 @@ export const EatCard = React.memo(
             </div>
           </div>
 
-          {isNotesExpanded && (
-            <div>
-              {withComponentSuspense(
-                <EatNotesPanel restaurantId={restaurant.id!} />
-              )}
-            </div>
-          )}
+          <div
+            className={"eat-note-container " + (isNotesExpanded ? "open" : "")}
+          >
+            {withComponentSuspense(
+              <EatNotesPanel restaurantId={restaurant.id!} />
+            )}
+          </div>
         </div>
       </div>
     );

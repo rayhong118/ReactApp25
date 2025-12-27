@@ -14,7 +14,6 @@ import {
   useGetRestaurantNotes,
   useSubmitRestaurantRating,
 } from "./hooks";
-import "./EatNotesPanel.scss";
 
 interface INotesProps {
   restaurantId: string;
@@ -27,7 +26,6 @@ const EatNotesPanel = ({ restaurantId }: INotesProps) => {
     isFetching,
   } = useGetRestaurantNotes(restaurantId);
   const [newNote, setNewNote] = useState("");
-  const [isNotesExpanded, setIsNotesExpanded] = useState(false);
   const User = useGetCurrentUser();
 
   const { mutate: submitRestaurantRating, isPending: isSubmittingRating } =
@@ -51,10 +49,6 @@ const EatNotesPanel = ({ restaurantId }: INotesProps) => {
       setRating(currentRating);
     }
   }, [currentRating]);
-
-  useEffect(() => {
-    setIsNotesExpanded(true);
-  }, []);
 
   const onHandleNoteSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -80,11 +74,7 @@ const EatNotesPanel = ({ restaurantId }: INotesProps) => {
   };
 
   return (
-    <div
-      className={
-        "w-full min-h-0 eat-note-container " + (isNotesExpanded ? "open" : "")
-      }
-    >
+    <div className={"w-full min-h-0"}>
       <div className="flex flex-col min-h-0">
         {User && (
           <form
