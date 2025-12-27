@@ -51,11 +51,15 @@
   .filter-panel-container {
     display: grid;
     grid-template-rows: 0fr; /* Collapsed by default on mobile */
-    transition: grid-template-rows 0.5s ease-out;
+    transition: grid-template-rows 0.5s ease-out, visibility 0s 0.5s ;
     overflow: hidden;
+    visibility: hidden;
+
   }
   .filter-panel-container.open {
     grid-template-rows: 1fr; /* Expanded when .open is added */
+    visibility: visible;
+    transition: grid-template-rows 0.5s ease-out, visibility 0s 0s ;    
   }
 }
 /* Base style for md and above (no grid trick needed) */
@@ -64,5 +68,6 @@
     display: block;
     height: auto;
     overflow: visible;
+    visibility: visible;
   }
 }

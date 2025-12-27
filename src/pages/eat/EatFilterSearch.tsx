@@ -29,15 +29,13 @@ export const EatFilterSearch = ({
   showFilterSearch: boolean;
 }) => {
   return (
-    <div>
-      <div
-        className={
-          "filter-panel-container md:block flex flex-col justify-between gap-2 " +
-          (showFilterSearch ? "open" : "")
-        }
-      >
-        <EatFilterSearchForm />
-      </div>
+    <div
+      className={
+        "filter-panel-container md:block flex flex-col justify-between gap-2 " +
+        (showFilterSearch ? "open" : "")
+      }
+    >
+      <EatFilterSearchForm />
     </div>
   );
 };

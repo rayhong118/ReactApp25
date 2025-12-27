@@ -1,17 +1,18 @@
+import { CustomizedButton, SecondaryButton } from "@/components/Buttons";
 import { withGoogleMapsApi } from "@/hooks/withGoogleMapsApi";
-import { EatFilterSearch } from "./EatFilterSearch";
-import { EatList } from "./EatList";
-import { useState, useEffect } from "react";
-import { SecondaryButton } from "@/components/Buttons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faAngleDown,
   faAngleUp,
   faFilter,
   faList,
 } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
+import "./Eat.scss";
 import { useSetFilterSearchQuery } from "./EatAtoms";
+import { EatFilterSearch } from "./EatFilterSearch";
+import { EatList } from "./EatList";
 
 const EatListWithMaps = withGoogleMapsApi(EatList);
 
@@ -47,10 +48,13 @@ const Eat = () => {
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold py-2">Eat</h1>
         {specificRestaurantId && (
-          <SecondaryButton onClick={clearFilterQueryId}>
+          <CustomizedButton
+            onClick={clearFilterQueryId}
+            className="show-full-list"
+          >
             <FontAwesomeIcon icon={faList} className="mr-2" />
             Show full list
-          </SecondaryButton>
+          </CustomizedButton>
         )}
 
         {!specificRestaurantId && (
@@ -71,7 +75,9 @@ const Eat = () => {
       </div>
 
       <div className="flex md:flex-row flex-col gap-5 w-full">
-        <EatFilterSearch showFilterSearch={showFilterSearch} />
+        {!specificRestaurantId && (
+          <EatFilterSearch showFilterSearch={showFilterSearch} />
+        )}
         <EatListWithMaps />
       </div>
     </>

@@ -1,0 +1,9 @@
+.show-full-list {
+    border:2px solid orange;
+    animation: pulse-animation 5s ease-in-out infinite;
+}
+
+@keyframes pulse-animation {
+from { filter: hue-rotate(0deg); }
+to { filter: hue-rotate(360deg); }
+}

@@ -1,4 +1,5 @@
 import { CustomizedButton, PrimaryButton } from "@/components/Buttons";
+import { Dialog } from "@/components/Dialog";
 import { faCheck, faSearch, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useRef, useState } from "react";
@@ -20,6 +21,7 @@ export const EatEditForm = (props: IEatEditFormProps) => {
   const [eatData, setEatData] = useState<Partial<IRestaurant>>();
   const [isFormValid, setIsFormValid] = useState(false);
   const [googleSearchInput, setGoogleSearchInput] = useState("");
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const timeoutRef = useRef<NodeJS.Timeout>(null);
   const placeAutocompleteRef = useRef<HTMLInputElement | null>(null);
   const {
@@ -180,6 +182,23 @@ export const EatEditForm = (props: IEatEditFormProps) => {
 
   return (
     <div>
+      <Dialog
+        open={showDeleteConfirmation}
+        title="Delete Restaurant"
+        onClose={() => setShowDeleteConfirmation(false)}
+        actions={[
+          {
+            label: "Delete",
+            onClick: handleDelete,
+          },
+          {
+            label: "Cancel",
+            onClick: () => setShowDeleteConfirmation(false),
+          },
+        ]}
+      >
+        Are you sure you want to delete this restaurant?
+      </Dialog>
       <div className="eat-edit-dialog">
         <form onSubmit={handleSubmit}>
           <div className="labeled-input">
@@ -285,6 +304,19 @@ export const EatEditForm = (props: IEatEditFormProps) => {
           </div>
 
           <div className="flex justify-end gap-2">
+            {restaurant && (
+              <CustomizedButton
+                type="button"
+                disabled={addRestaurantIsPending || editRestaurantIsPending}
+                onClick={() => setShowDeleteConfirmation(true)}
+                paddingMultiplier={2}
+                className="text-base bg-red-600 text-white font-semibold 
+                cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed hover:bg-red-700"
+              >
+                <FontAwesomeIcon icon={faTrash} className="mr-2" />
+                Delete
+              </CustomizedButton>
+            )}
             <PrimaryButton
               disabled={
                 !isFormValid ||
@@ -297,19 +329,6 @@ export const EatEditForm = (props: IEatEditFormProps) => {
               <FontAwesomeIcon icon={faCheck} className="mr-2" />
               Submit
             </PrimaryButton>
-            {restaurant && (
-              <CustomizedButton
-                type="button"
-                disabled={addRestaurantIsPending || editRestaurantIsPending}
-                onClick={handleDelete}
-                paddingMultiplier={2}
-                className="text-base bg-red-600 text-white font-semibold 
-                cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed hover:bg-red-700"
-              >
-                <FontAwesomeIcon icon={faTrash} className="mr-2" />
-                Delete
-              </CustomizedButton>
-            )}
           </div>
         </form>
       </div>
