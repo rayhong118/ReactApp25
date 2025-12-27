@@ -12,6 +12,9 @@ export interface IMessageBarProps {
   autoDismissTimeout?: number;
 }
 
+const AUTO_DISMISS_TIMEOUT = 5000;
+const FADE_OUT_DURATION = 1000;
+
 export const MessageBar = ({
   id,
   type,
@@ -25,7 +28,8 @@ export const MessageBar = ({
   useEffect(() => {
     let timeout: NodeJS.Timeout;
     let fadeOutTimeout: NodeJS.Timeout;
-    const fadeOutTimeoutDuration = (autoDismissTimeout || 5000) - 1000;
+    const fadeOutTimeoutDuration =
+      (autoDismissTimeout || AUTO_DISMISS_TIMEOUT) - FADE_OUT_DURATION;
 
     if (autoDismiss) {
       fadeOutTimeout = setTimeout(() => {
@@ -33,7 +37,7 @@ export const MessageBar = ({
       }, fadeOutTimeoutDuration);
       timeout = setTimeout(() => {
         dismissMessageBar(id);
-      }, autoDismissTimeout || 5000);
+      }, autoDismissTimeout || AUTO_DISMISS_TIMEOUT);
     }
     return () => {
       clearTimeout(timeout);

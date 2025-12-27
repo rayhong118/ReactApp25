@@ -224,6 +224,7 @@ export const useDeleteRestaurant = () => {
  * @returns isLoading: boolean
  * @returns error: error object
  */
+const NOTE_STALE_TIME = 5 * 60 * 1000;
 export const useGetRestaurantNotes = (restaurantId: string) => {
   const { data, error, refetch, isFetching } = useQuery({
     queryKey: ["restaurant-notes", restaurantId],
@@ -243,6 +244,10 @@ export const useGetRestaurantNotes = (restaurantId: string) => {
       return notes || [];
     },
     refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchInterval: false,
+    refetchIntervalInBackground: false,
+    staleTime: NOTE_STALE_TIME,
   });
   return { data, error, refetch, isFetching };
 };

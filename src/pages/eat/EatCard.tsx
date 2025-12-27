@@ -1,7 +1,7 @@
 import { SecondaryButton } from "@/components/Buttons";
 import { Dialog } from "@/components/Dialog";
-import { withComponentSuspense } from "@/hooks/withSuspense";
 import { useGetCurrentUser } from "@/utils/AuthenticationAtoms";
+import { useAddMessageBars } from "@/utils/MessageBarsAtom";
 import {
   faChartBar,
   faShareFromSquare,
@@ -18,9 +18,9 @@ import { StarRating } from "../experiments/StarRating";
 import type { IRestaurant } from "./Eat.types";
 import { useGetCurrentUserRestaurantRating } from "./EatAtoms";
 import { EatEditForm } from "./EatEditForm";
-import { EatRatingHistogram } from "./EatRatingHistogram";
-import { useAddMessageBars } from "@/utils/MessageBarsAtom";
 import "./EatNotesPanel.scss";
+import { EatRatingHistogram } from "./EatRatingHistogram";
+import { withComponentSuspense } from "@/hooks/withSuspense";
 
 const EatNotesPanel = lazy(() => import("./EatNotesPanel"));
 
@@ -29,6 +29,7 @@ export const EatCard = React.memo(
     const [isNotesExpanded, setIsNotesExpanded] = useState(false);
     const [isHistogramExpanded, setIsHistogramExpanded] = useState(false);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [wasNotesInitialized, setWasNotesInitialized] = useState(false);
 
     const User = useGetCurrentUser();
     const currentUserRating = useGetCurrentUserRestaurantRating(
@@ -38,6 +39,9 @@ export const EatCard = React.memo(
 
     const toggleNotes = useCallback(() => {
       setIsNotesExpanded((prev) => !prev);
+      if (!wasNotesInitialized) {
+        setWasNotesInitialized(true);
+      }
     }, []);
 
     const openDialog = useCallback(() => {
@@ -164,9 +168,10 @@ export const EatCard = React.memo(
           <div
             className={"eat-note-container " + (isNotesExpanded ? "open" : "")}
           >
-            {withComponentSuspense(
-              <EatNotesPanel restaurantId={restaurant.id!} />
-            )}
+            {wasNotesInitialized &&
+              withComponentSuspense(
+                <EatNotesPanel restaurantId={restaurant.id!} />
+              )}
           </div>
         </div>
       </div>

@@ -77,7 +77,7 @@ export const Navigation = () => {
             </button>
           </div>
 
-          <div className="hidden md:flex md:items-center md:space-x-4">
+          <div className="hidden md:flex md:items-center md:space-x-2">
             {navButton("About", "/about")}
             {navButton("Restaurants 吃什么", "/eat")}
 
