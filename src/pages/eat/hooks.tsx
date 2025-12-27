@@ -90,6 +90,17 @@ export const useAddRestaurant = () => {
     mutationKey: ["addRestaurant"],
     mutationFn: async (restaurant: Partial<IRestaurant>) => {
       const newRestaurantRef = doc(collection(db, "restaurants"));
+
+      // check duplication
+      const q = query(
+        collection(db, "restaurants"),
+        where("address", "==", restaurant.address)
+      );
+      const querySnapshot = await getDocs(q);
+      if (querySnapshot.docs.length > 0) {
+        console.log("Restaurant already exists");
+        throw new Error("Restaurant already exists");
+      }
       const newRestaurantId = newRestaurantRef.id;
       restaurant.id = newRestaurantId;
       await setDoc(newRestaurantRef, restaurant);
