@@ -17,19 +17,6 @@ export const useSetFilterSearchQuery = () =>
   useSetAtom(eatFilterSearchQueryAtom);
 
 /**
- * Not in use. Firebase does not support string partial matching
- */
-export const useUpdateFilterSearchQueryName = () => {
-  const setQuery = useSetFilterSearchQuery();
-  return useCallback(
-    (name: string) => {
-      setQuery((currentQuery) => ({ ...currentQuery, name }));
-    },
-    [setQuery]
-  );
-};
-
-/**
  * Filter based on location (city and state) tag values
  */
 export const useUpdateFilterSearchQueryCityAndState = () => {

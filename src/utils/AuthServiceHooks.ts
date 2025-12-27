@@ -2,20 +2,35 @@ import { signInWithPopup } from "firebase/auth";
 import { useCallback } from "react";
 import { auth, githubProvider, googleProvider } from "../firebase";
 import { useSetCurrentUser } from "./AuthenticationAtoms";
+import { useAddMessageBars } from "./MessageBarsAtom";
 
 export const useFirebaseSignInWithGoogle = () => {
   const setCurrentUser = useSetCurrentUser();
+  const addMessageBars = useAddMessageBars();
   // Implementation for sign in with Google can be added here
   return useCallback(async () => {
     try {
       const userCredential = await signInWithPopup(auth, googleProvider);
-      alert("User Signed In with Google Successfully");
+
       setCurrentUser(userCredential.user);
+      addMessageBars([
+        {
+          id: new Date().toISOString(),
+          message: "User Signed In with Google Successfully",
+          type: "success",
+          autoDismiss: true,
+        },
+      ]);
       return userCredential;
     } catch (error) {
-      alert(
-        error instanceof Error ? error.message : "An unknown error occurred"
-      );
+      addMessageBars([
+        {
+          id: new Date().toISOString(),
+          message: "Error signing in with Google: " + error,
+          type: "error",
+          autoDismiss: true,
+        },
+      ]);
       return null;
     }
   }, [setCurrentUser]);
@@ -23,18 +38,30 @@ export const useFirebaseSignInWithGoogle = () => {
 
 export const useFirebaseSignInWithGitHub = () => {
   const setCurrentUser = useSetCurrentUser();
+  const addMessageBars = useAddMessageBars();
   // Implementation for sign in with Google can be added here
   return useCallback(async () => {
     try {
       const userCredential = await signInWithPopup(auth, githubProvider);
-      alert("User Signed In with GitHub Successfully");
       setCurrentUser(userCredential.user);
-
+      addMessageBars([
+        {
+          id: new Date().toISOString(),
+          message: "User Signed In with GitHub Successfully",
+          type: "success",
+          autoDismiss: true,
+        },
+      ]);
       return userCredential;
     } catch (error) {
-      alert(
-        error instanceof Error ? error.message : "An unknown error occurred"
-      );
+      addMessageBars([
+        {
+          id: new Date().toISOString(),
+          message: "Error signing in with GitHub: " + error,
+          type: "error",
+          autoDismiss: true,
+        },
+      ]);
       return null;
     }
   }, [setCurrentUser]);
@@ -42,15 +69,28 @@ export const useFirebaseSignInWithGitHub = () => {
 
 export const useSignOut = () => {
   const setCurrentUser = useSetCurrentUser();
+  const addMessageBars = useAddMessageBars();
   return useCallback(async () => {
     try {
       await auth.signOut();
       setCurrentUser(null);
-      alert("User Signed Out Successfully");
+      addMessageBars([
+        {
+          id: new Date().toISOString(),
+          message: "User Signed Out Successfully",
+          type: "success",
+          autoDismiss: true,
+        },
+      ]);
     } catch (error) {
-      alert(
-        error instanceof Error ? error.message : "An unknown error occurred"
-      );
+      addMessageBars([
+        {
+          id: new Date().toISOString(),
+          message: "Error signing out: " + error,
+          type: "error",
+          autoDismiss: true,
+        },
+      ]);
     }
   }, [setCurrentUser]);
 };

@@ -49,26 +49,40 @@ const EatFilterSearchForm = () => {
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
     }
-    timeoutRef.current = setTimeout(() => {
-      const { name, value, valueAsNumber, valueAsDate, type } = event.target;
-      let actualValue;
-      switch (type) {
-        case "number":
-          actualValue = valueAsNumber < 0 ? 0 : valueAsNumber;
-          break;
-        case "date":
-          actualValue = valueAsDate;
-          break;
-        default:
-          actualValue = value;
-      }
 
-      setTempQuery((prev) => ({ ...prev, [name]: actualValue }));
-    }, 500);
+    const { name, value, valueAsNumber, valueAsDate, type } = event.target;
+    let actualValue;
+    switch (type) {
+      case "number":
+        actualValue = isNaN(valueAsNumber)
+          ? 0
+          : valueAsNumber < 0
+          ? 0
+          : valueAsNumber;
+        break;
+      case "date":
+        actualValue = valueAsDate;
+        break;
+      default:
+        actualValue = value;
+    }
+
+    setTempQuery((prev) => ({ ...prev, [name]: actualValue }));
+  };
+
+  const clearPriceRange = () => {
+    setTempQuery((prev) => ({
+      ...prev,
+      priceRangeLower: undefined,
+      priceRangeUpper: undefined,
+    }));
   };
 
   useEffect(() => {
-    setFilterQuery(tempQuery);
+    const timeout = setTimeout(() => {
+      setFilterQuery(tempQuery);
+    }, 500);
+    return () => clearTimeout(timeout);
   }, [tempQuery]);
 
   return (
@@ -83,6 +97,7 @@ const EatFilterSearchForm = () => {
             id="priceRangeLower"
             placeholder=""
             onChange={handleQueryChange}
+            value={tempQuery.priceRangeLower ?? ""}
             name="priceRangeLower"
             min={0}
           />
@@ -94,11 +109,18 @@ const EatFilterSearchForm = () => {
             id="priceRangeUpper"
             placeholder=""
             onChange={handleQueryChange}
+            value={tempQuery.priceRangeUpper ?? ""}
             name="priceRangeUpper"
             min={0}
           />
           <label htmlFor="priceRangeUpper">Price max</label>
         </div>
+      </div>
+      <div className="flex">
+        <SecondaryButton onClick={clearPriceRange}>
+          <FontAwesomeIcon icon={faClose} />
+          Clear
+        </SecondaryButton>
       </div>
 
       <LocationTagsList />

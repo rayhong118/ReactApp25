@@ -9,6 +9,7 @@ import {
   doc,
   getDoc,
   getDocs,
+  orderBy,
   query,
   setDoc,
   updateDoc,
@@ -32,7 +33,10 @@ import { useEffect, useState } from "react";
  * @returns isLoading: boolean
  * @returns error: error object
  */
-export const useGetRestaurants = (eatQuery?: IEatQuery) => {
+export const useGetRestaurants = (
+  eatQuery?: IEatQuery,
+  orderByField?: { field: string; direction: "asc" | "desc" }
+) => {
   const { data, error, refetch, isFetching } = useQuery({
     queryKey: [
       "restaurants",
@@ -57,6 +61,9 @@ export const useGetRestaurants = (eatQuery?: IEatQuery) => {
       }
       if (eatQuery?.id) {
         constraints.push(where("id", "==", eatQuery.id));
+      }
+      if (orderByField?.field && orderByField?.direction) {
+        constraints.push(orderBy(orderByField.field, orderByField.direction));
       }
       const q = query(collection(db, "restaurants"), ...constraints);
       const querySnapshot = await getDocs(q);
