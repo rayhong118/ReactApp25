@@ -98,7 +98,6 @@ export const useAddRestaurant = () => {
       );
       const querySnapshot = await getDocs(q);
       if (querySnapshot.docs.length > 0) {
-        console.log("Restaurant already exists");
         throw new Error("Restaurant already exists");
       }
       const newRestaurantId = newRestaurantRef.id;
@@ -617,7 +616,6 @@ export const useGetCitiesCloseToCurrentUserLocation = (
   const { data, error, refetch, isFetching } = useQuery({
     queryKey: ["citiesCloseToCurrentUserLocation", cityAndState],
     queryFn: async () => {
-      console.log(cityAndState);
       if (!cityAndState) {
         return [];
       }
