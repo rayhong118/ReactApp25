@@ -63,9 +63,6 @@ export const useGetRestaurants = (
     }) => {
       const constraints: QueryConstraint[] = [];
 
-      if (eatQuery?.name) {
-        constraints.push(where("name", "==", eatQuery.name));
-      }
       if (eatQuery?.cityAndState && eatQuery?.cityAndState.length > 0) {
         constraints.push(where("cityAndState", "in", eatQuery.cityAndState));
       }
@@ -80,7 +77,7 @@ export const useGetRestaurants = (
       }
 
       // IMPORTANT: Add orderBy BEFORE pagination cursors
-      const sortField = orderByField?.field || "name";
+      const sortField = orderByField?.field || "__name__";
       const sortDirection = orderByField?.direction || "asc";
       constraints.push(orderBy(sortField, sortDirection));
 

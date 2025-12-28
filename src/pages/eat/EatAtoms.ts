@@ -6,7 +6,6 @@ import type { IEatQuery, TUserRatings } from "./Eat.types";
  * Atoms for search query that will be used to fetch data from Firestore
  */
 export const eatFilterSearchQueryAtom = atom<IEatQuery>({
-  name: "",
   cityAndState: [],
   id: "",
 });
