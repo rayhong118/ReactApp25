@@ -77,7 +77,12 @@ export const EatList = () => {
         <div>Order by</div>
         <select
           onChange={(e) => {
-            const [field, direction] = e.target.value.split(",");
+            const value = e.target.value;
+            if (!value) {
+              setOrderBy(undefined);
+              return;
+            }
+            const [field, direction] = value.split(",");
             setOrderBy({
               field,
               direction: direction as "asc" | "desc",
@@ -86,16 +91,16 @@ export const EatList = () => {
           value={orderBy?.field + "," + orderBy?.direction}
           className="border border-gray-300 rounded p-2"
         >
-          <option className="p-2" value="">
+          <option className="p-2" value={""}>
             None
           </option>
-          <option className="p-2" value={["averageStars", "desc"]}>
+          <option className="p-2" value={"averageStars,desc"}>
             Average Rating (high to low)
           </option>
-          <option className="p-2" value={["price", "asc"]}>
+          <option className="p-2" value={"price,asc"}>
             Price (low to high)
           </option>
-          <option className="p-2" value={["price", "desc"]}>
+          <option className="p-2" value={"price,desc"}>
             Price (high to low)
           </option>
         </select>
