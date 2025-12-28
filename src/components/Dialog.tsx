@@ -19,17 +19,25 @@ interface IDialogProps {
   children?: React.ReactNode;
 }
 
+let scrollLockCount = 0;
+
 export const Dialog: React.FC<IDialogProps> = (props: IDialogProps) => {
   const { title, actions, open, onClose, children } = props;
 
   useEffect(() => {
-    if (open) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "unset";
+    if (!open) {
+      return;
     }
+    scrollLockCount++;
+    document.body.style.overflow = "hidden";
+    console.log("scrollLockCount", scrollLockCount);
+    console.log("open", open);
     return () => {
-      document.body.style.overflow = "unset";
+      scrollLockCount--;
+      if (scrollLockCount <= 0) {
+        document.body.style.overflow = "unset";
+        scrollLockCount = 0;
+      }
     };
   }, [open]);
 
