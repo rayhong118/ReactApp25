@@ -23,11 +23,10 @@ interface IEatEditFormProps {
 
 export const EatEditForm = (props: IEatEditFormProps) => {
   const { restaurant, closeDialog } = props;
-  const [eatData, setEatData] = useState<Partial<IRestaurant>>();
-  const [isFormValid, setIsFormValid] = useState(false);
-  const [googleSearchInput, setGoogleSearchInput] = useState("");
+  const [eatData, setEatData] = useState<Partial<IRestaurant> | undefined>(
+    restaurant
+  );
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
-  const timeoutRef = useRef<NodeJS.Timeout>(null);
   const placeAutocompleteRef = useRef<HTMLInputElement | null>(null);
   const {
     mutateAsync: addRestaurantMutate,
@@ -41,12 +40,6 @@ export const EatEditForm = (props: IEatEditFormProps) => {
     mutateAsync: deleteRestaurantMutate,
     isPending: deleteRestaurantIsPending,
   } = useDeleteRestaurant();
-
-  useEffect(() => {
-    if (restaurant) {
-      setEatData(restaurant);
-    }
-  }, [restaurant]);
 
   const administrativeAreaLevel1 = "administrative_area_level_1";
   const locality = "locality";
@@ -94,71 +87,35 @@ export const EatEditForm = (props: IEatEditFormProps) => {
           )?.short_name;
           const cityAndState = `${city}, ${state}`;
 
-          const newEatData = {
-            ...eatData,
+          setEatData((prev) => ({
+            ...prev,
             name: place.name || "",
             address: place.formatted_address || "",
-            price: place.price_level || 0,
-            displayName: "",
-            description: "",
             url: place.url,
             phoneNumber: place.formatted_phone_number || "",
             cityAndState: cityAndState,
-          };
-          setEatData(newEatData);
+          }));
         }
       }
     );
 
     return () => {
-      // clear search input to dismiss autocomplete
-      setGoogleSearchInput("");
       placeChangedListener.remove();
     };
   }, [placeAutocompleteRef]);
 
-  const handleGoogleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = event.target;
-
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-    }
-    timeoutRef.current = setTimeout(() => {
-      setGoogleSearchInput(value);
-    }, 500);
-  };
-
-  useEffect(() => {
-    if (googleSearchInput) {
-      console.log("googleSearchInput", googleSearchInput);
-    }
-  }, [googleSearchInput]);
-
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, valueAsNumber, type } = event.target;
-    let actualValue;
-    switch (type) {
-      case "number":
-        actualValue = valueAsNumber;
-        break;
-      default:
-        actualValue = value;
-    }
-
-    setEatData({ ...eatData, [name]: actualValue });
+    const actualValue = type === "number" ? valueAsNumber : value;
+    setEatData((prev) => ({ ...prev, [name]: actualValue }));
   };
 
-  useEffect(() => {
-    if (
-      eatData &&
-      eatData.name &&
-      eatData.address &&
-      eatData.price &&
-      eatData.price !== 0
-    ) {
-      setIsFormValid(true);
-    }
-  }, [eatData]);
+  const isFormValid = !!(
+    eatData?.name &&
+    eatData?.address &&
+    eatData?.price &&
+    eatData?.price !== 0
+  );
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -214,7 +171,6 @@ export const EatEditForm = (props: IEatEditFormProps) => {
               type="text"
               id="googleSearch"
               placeholder=""
-              onChange={handleGoogleSearch}
               ref={placeAutocompleteRef}
             />
             <label htmlFor="googleSearch">
