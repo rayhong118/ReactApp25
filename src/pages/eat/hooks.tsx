@@ -1,7 +1,12 @@
 // React hooks for eat page
 import { useGetCurrentUser } from "@/utils/AuthenticationAtoms";
 import { useAddMessageBars } from "@/utils/MessageBarsAtom";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import {
   addDoc,
   collection,
@@ -9,14 +14,19 @@ import {
   doc,
   getDoc,
   getDocs,
+  limit,
   orderBy,
   query,
   setDoc,
+  startAfter,
   updateDoc,
   where,
   type QueryConstraint,
+  QueryDocumentSnapshot,
+  type DocumentData,
 } from "firebase/firestore";
 import { httpsCallable } from "firebase/functions";
+import { useEffect, useState } from "react";
 import { db, firebaseFunctions } from "../../firebase";
 import type {
   IEatQuery,
@@ -25,8 +35,8 @@ import type {
   IRestaurant,
   TUserRatings,
 } from "./Eat.types";
-import { useEffect, useState } from "react";
 
+const PAGE_SIZE = 4;
 /**
  * This hook handles get restaurants
  * @returns data: array of restaurants
@@ -37,49 +47,69 @@ export const useGetRestaurants = (
   eatQuery?: IEatQuery,
   orderByField?: { field: string; direction: "asc" | "desc" }
 ) => {
-  const { data, error, refetch, isFetching } = useQuery({
-    queryKey: [
-      "restaurants",
-      eatQuery?.cityAndState,
-      eatQuery?.priceRangeLower,
-      eatQuery?.priceRangeUpper,
-      eatQuery?.id,
-    ],
-    queryFn: async () => {
-      const constraints: QueryConstraint[] = [];
-      if (eatQuery?.name) {
-        constraints.push(where("name", "==", eatQuery.name));
-      }
-      if (eatQuery?.cityAndState && eatQuery?.cityAndState.length > 0) {
-        constraints.push(where("cityAndState", "in", eatQuery.cityAndState));
-      }
-      if (eatQuery?.priceRangeLower) {
-        constraints.push(where("price", ">=", eatQuery.priceRangeLower));
-      }
-      if (eatQuery?.priceRangeUpper) {
-        constraints.push(where("price", "<=", eatQuery.priceRangeUpper));
-      }
-      if (eatQuery?.id) {
-        constraints.push(where("id", "==", eatQuery.id));
-      }
-      if (orderByField?.field && orderByField?.direction) {
-        constraints.push(orderBy(orderByField.field, orderByField.direction));
-      }
-      const q = query(collection(db, "restaurants"), ...constraints);
-      const querySnapshot = await getDocs(q);
-      const restaurants = querySnapshot.docs.map(
-        (doc) =>
-          ({
-            id: doc.id,
-            ...doc.data(),
-          } as IRestaurant)
-      );
-      return restaurants || [];
-    },
-    refetchOnWindowFocus: false,
-    staleTime: Infinity,
-  });
-  return { data, error, refetch, isFetching };
+  const { data, error, refetch, isFetching, hasNextPage, fetchNextPage } =
+    useInfiniteQuery({
+      queryKey: ["restaurants", eatQuery, orderByField],
+      queryFn: async ({
+        pageParam,
+      }: {
+        pageParam: QueryDocumentSnapshot<DocumentData, DocumentData> | null;
+      }) => {
+        const constraints: QueryConstraint[] = [];
+
+        if (eatQuery?.name) {
+          constraints.push(where("name", "==", eatQuery.name));
+        }
+        if (eatQuery?.cityAndState && eatQuery?.cityAndState.length > 0) {
+          constraints.push(where("cityAndState", "in", eatQuery.cityAndState));
+        }
+        if (eatQuery?.priceRangeLower) {
+          constraints.push(where("price", ">=", eatQuery.priceRangeLower));
+        }
+        if (eatQuery?.priceRangeUpper) {
+          constraints.push(where("price", "<=", eatQuery.priceRangeUpper));
+        }
+        if (eatQuery?.id) {
+          constraints.push(where("id", "==", eatQuery.id));
+        }
+
+        // IMPORTANT: Add orderBy BEFORE pagination cursors
+        const sortField = orderByField?.field || "name";
+        const sortDirection = orderByField?.direction || "asc";
+        constraints.push(orderBy(sortField, sortDirection));
+
+        if (pageParam) {
+          constraints.push(startAfter(pageParam));
+        }
+        const q = query(
+          collection(db, "restaurants"),
+          ...constraints,
+          limit(PAGE_SIZE)
+        );
+        const querySnapshot = await getDocs(q);
+
+        const lastVisible = querySnapshot.docs[querySnapshot.docs.length - 1];
+        const restaurants = querySnapshot.docs.map(
+          (doc) =>
+            ({
+              id: doc.id,
+              ...doc.data(),
+            } as IRestaurant)
+        );
+        return { restaurants, nextCursor: lastVisible };
+      },
+
+      initialPageParam: null,
+      getNextPageParam: (lastPage) => {
+        if (lastPage.restaurants.length < PAGE_SIZE) {
+          return undefined;
+        }
+        return lastPage.nextCursor;
+      },
+      refetchOnWindowFocus: false,
+      staleTime: Infinity,
+    });
+  return { data, error, refetch, isFetching, hasNextPage, fetchNextPage };
 };
 
 /**

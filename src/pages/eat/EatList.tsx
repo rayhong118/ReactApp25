@@ -1,6 +1,5 @@
-import { PrimaryButton } from "@/components/Buttons";
+import { PrimaryButton, SecondaryButton } from "@/components/Buttons";
 import { Dialog } from "@/components/Dialog";
-import { Loading } from "@/components/Loading";
 import { useGetCurrentUser } from "@/utils/AuthenticationAtoms";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -18,6 +17,7 @@ import {
 } from "./hooks";
 
 import { useEffect } from "react";
+import { Loading } from "@/components/Loading.tsx";
 
 export const EatList = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -34,8 +34,10 @@ export const EatList = () => {
   const {
     data: restaurants,
     error,
-    isFetching,
+    hasNextPage,
+    fetchNextPage,
     refetch,
+    isFetching,
   } = useGetRestaurants(eatQuery, orderBy);
   const { data: currentUserRatings } = useFetchCurrentUserRestaurantRatings();
   const setCurrentUserRatings = useSetCurrentUserRestaurantRatings();
@@ -44,6 +46,8 @@ export const EatList = () => {
     setIsDialogOpen(false);
   };
   const User = useGetCurrentUser();
+
+  const allRestaurants = restaurants?.pages.flatMap((page) => page.restaurants);
 
   useEffect(() => {
     // populate currentUserRatings for each restaurant
@@ -102,13 +106,20 @@ export const EatList = () => {
           </option>
         </select>
       </div>
-      {isFetching ? (
-        <Loading />
+
+      {allRestaurants?.map((restaurant: IRestaurant) => (
+        <EatCard key={restaurant.id} restaurant={restaurant} />
+      ))}
+
+      {hasNextPage ? (
+        <SecondaryButton paddingMultiplier={2} onClick={() => fetchNextPage()}>
+          Load More
+        </SecondaryButton>
       ) : (
-        restaurants?.map((restaurant: IRestaurant) => (
-          <EatCard key={restaurant.id} restaurant={restaurant} />
-        ))
+        <div>No more restaurants</div>
       )}
+
+      {isFetching && <Loading />}
 
       <Dialog
         open={isDialogOpen}
