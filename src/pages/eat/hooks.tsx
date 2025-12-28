@@ -77,8 +77,10 @@ export const useGetRestaurants = (
       }
 
       // IMPORTANT: Add orderBy BEFORE pagination cursors
-      const sortField = orderByField?.field || "__name__";
-      const sortDirection = orderByField?.direction || "asc";
+      const { field: sortField, direction: sortDirection } = orderByField || {
+        field: "__name__",
+        direction: "asc",
+      };
       constraints.push(orderBy(sortField, sortDirection));
 
       if (pageParam) {

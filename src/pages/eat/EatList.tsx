@@ -92,9 +92,6 @@ export const EatList = () => {
           <option className="p-2" value={["averageStars", "desc"]}>
             Average Rating (high to low)
           </option>
-          <option className="p-2" value={["averageStars", "asc"]}>
-            Average Rating (low to high)
-          </option>
           <option className="p-2" value={["price", "asc"]}>
             Price (low to high)
           </option>
