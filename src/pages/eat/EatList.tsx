@@ -21,13 +21,13 @@ import { useEffect } from "react";
 
 export const EatList = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [orderBy, setOrderBy] = useState<{
-    field: string;
-    direction: "asc" | "desc";
-  }>({
-    field: "",
-    direction: "asc",
-  });
+  const [orderBy, setOrderBy] = useState<
+    | {
+        field: string;
+        direction: "asc" | "desc";
+      }
+    | undefined
+  >();
   const timeoutRef = useRef<NodeJS.Timeout>(null);
 
   const eatQuery = useGetFilterSearchQuery();
@@ -83,7 +83,7 @@ export const EatList = () => {
               direction: direction as "asc" | "desc",
             });
           }}
-          value={orderBy.field + "," + orderBy.direction}
+          value={orderBy?.field + "," + orderBy?.direction}
           className="border border-gray-300 rounded p-2"
         >
           <option className="p-2" value="">

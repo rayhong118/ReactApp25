@@ -12,18 +12,19 @@ import {
   collection,
   deleteDoc,
   doc,
+  documentId,
   getDoc,
   getDocs,
   limit,
   orderBy,
   query,
+  QueryDocumentSnapshot,
   setDoc,
   startAfter,
   updateDoc,
   where,
-  type QueryConstraint,
-  QueryDocumentSnapshot,
   type DocumentData,
+  type QueryConstraint,
 } from "firebase/firestore";
 import { httpsCallable } from "firebase/functions";
 import { useEffect, useState } from "react";
@@ -63,7 +64,7 @@ export const useGetRestaurants = (
     }) => {
       const constraints: QueryConstraint[] = [];
 
-      if (eatQuery?.cityAndState && eatQuery?.cityAndState.length > 0) {
+      if (eatQuery?.cityAndState && eatQuery.cityAndState.length > 0) {
         constraints.push(where("cityAndState", "in", eatQuery.cityAndState));
       }
       if (eatQuery?.priceRangeLower) {
@@ -76,12 +77,25 @@ export const useGetRestaurants = (
         constraints.push(where("id", "==", eatQuery.id));
       }
 
-      // IMPORTANT: Add orderBy BEFORE pagination cursors
-      const { field: sortField, direction: sortDirection } = orderByField || {
-        field: "__name__",
-        direction: "asc",
-      };
-      constraints.push(orderBy(sortField, sortDirection));
+      const hasPriceFilter =
+        eatQuery?.priceRangeLower || eatQuery?.priceRangeUpper;
+
+      if (hasPriceFilter) {
+        // If we have a price filter, price MUST be the first orderBy
+        constraints.push(orderBy("price", orderByField?.direction || "asc"));
+
+        // If the user wanted to sort by something else (like 'name'),
+        // it must come AFTER 'price' as a secondary sort.
+        if (orderByField && orderByField.field !== "price") {
+          constraints.push(orderBy(orderByField.field, orderByField.direction));
+        }
+      } else if (orderByField) {
+        // No price filter? Use the requested sort.
+        constraints.push(orderBy(orderByField.field, orderByField.direction));
+      } else {
+        // Default fallback
+        constraints.push(orderBy(documentId()));
+      }
 
       if (pageParam) {
         constraints.push(startAfter(pageParam));
