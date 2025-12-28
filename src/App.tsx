@@ -4,8 +4,6 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
 import { Navigation } from "./components/Navigation";
 import { auth } from "./firebase";
-import { About } from "./pages/about/About";
-import { Home } from "./pages/home/Home";
 import { useSetCurrentUser } from "./utils/AuthenticationAtoms";
 
 import { WithAuthRequired } from "./components/WithAuthRequired";
@@ -13,9 +11,11 @@ import { withDefaultPagePadding } from "./hooks/withDefaultPagePadding";
 import { withFontAwesome } from "./hooks/withFontAwesome";
 import { withFooter } from "./hooks/withFooter";
 
-import { withGoogleReCaptchaProvider } from "./hooks/withGoogleReCaptchaProvider";
 import { withSuspense } from "./hooks/withSuspense";
 import ScrollToTop from "./utils/ScrollToTop";
+
+const Home = lazy(() => import("./pages/home/Home"));
+const About = lazy(() => import("./pages/about/About"));
 
 const JiZiQi = lazy(() => import("./pages/experiments/JiZiQi"));
 const Eat = lazy(() => import("./pages/eat/Eat"));
@@ -89,4 +89,4 @@ const App: React.FC = () => {
   );
 };
 
-export default withFontAwesome(withFooter(withGoogleReCaptchaProvider(App)));
+export default withFontAwesome(withFooter(App));

@@ -13,6 +13,7 @@ import "./Eat.scss";
 import { useSetFilterSearchQuery } from "./EatAtoms";
 import { EatFilterSearch } from "./EatFilterSearch";
 import { EatList } from "./EatList";
+import { withGoogleReCaptchaProvider } from "@/hooks/withGoogleReCaptchaProvider";
 
 const EatListWithMaps = withGoogleMapsApi(EatList);
 
@@ -84,4 +85,4 @@ const Eat = () => {
   );
 };
 
-export default Eat;
+export default withGoogleReCaptchaProvider(Eat);

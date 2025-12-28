@@ -1,6 +1,6 @@
 import "./Home.scss";
 
-export const Home = () => {
+const Home = () => {
   return (
     <div className="homepage-container w-full">
       <div
@@ -36,3 +36,5 @@ export const Home = () => {
     </div>
   );
 };
+
+export default Home;
