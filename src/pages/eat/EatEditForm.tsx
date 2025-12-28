@@ -1,6 +1,11 @@
 import { CustomizedButton, PrimaryButton } from "@/components/Buttons";
 import { Dialog } from "@/components/Dialog";
-import { faCheck, faSearch, faTrash } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCheck,
+  faSearch,
+  faSpinner,
+  faTrash,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useRef, useState } from "react";
 import type { IRestaurant } from "./Eat.types";
@@ -32,7 +37,10 @@ export const EatEditForm = (props: IEatEditFormProps) => {
     mutateAsync: editRestaurantMutate,
     isPending: editRestaurantIsPending,
   } = useEditRestaurant();
-  const { mutateAsync: deleteRestaurantMutate } = useDeleteRestaurant();
+  const {
+    mutateAsync: deleteRestaurantMutate,
+    isPending: deleteRestaurantIsPending,
+  } = useDeleteRestaurant();
 
   useEffect(() => {
     if (restaurant) {
@@ -94,7 +102,7 @@ export const EatEditForm = (props: IEatEditFormProps) => {
             displayName: "",
             description: "",
             url: place.url,
-            phoneNumber: place.formatted_phone_number,
+            phoneNumber: place.formatted_phone_number || "",
             cityAndState: cityAndState,
           };
           setEatData(newEatData);
@@ -307,13 +315,21 @@ export const EatEditForm = (props: IEatEditFormProps) => {
             {restaurant && (
               <CustomizedButton
                 type="button"
-                disabled={addRestaurantIsPending || editRestaurantIsPending}
+                disabled={
+                  addRestaurantIsPending ||
+                  editRestaurantIsPending ||
+                  deleteRestaurantIsPending
+                }
                 onClick={() => setShowDeleteConfirmation(true)}
                 paddingMultiplier={2}
                 className="text-base bg-red-600 text-white font-semibold 
                 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed hover:bg-red-700"
               >
-                <FontAwesomeIcon icon={faTrash} className="mr-2" />
+                {deleteRestaurantIsPending ? (
+                  <FontAwesomeIcon icon={faSpinner} spin={true} />
+                ) : (
+                  <FontAwesomeIcon icon={faTrash} className="mr-2" />
+                )}
                 Delete
               </CustomizedButton>
             )}
@@ -321,12 +337,17 @@ export const EatEditForm = (props: IEatEditFormProps) => {
               disabled={
                 !isFormValid ||
                 addRestaurantIsPending ||
-                editRestaurantIsPending
+                editRestaurantIsPending ||
+                deleteRestaurantIsPending
               }
               type="submit"
               paddingMultiplier={2}
             >
-              <FontAwesomeIcon icon={faCheck} className="mr-2" />
+              {addRestaurantIsPending || editRestaurantIsPending ? (
+                <FontAwesomeIcon icon={faSpinner} spin={true} />
+              ) : (
+                <FontAwesomeIcon icon={faCheck} className="mr-2" />
+              )}
               Submit
             </PrimaryButton>
           </div>

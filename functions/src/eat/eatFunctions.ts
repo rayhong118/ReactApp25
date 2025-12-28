@@ -135,7 +135,8 @@ export const generateSuggestionBasedOnUserPrompt = onCall(
       RESTAURANT_LIST: ${JSON.stringify(restaurants)}
       
       Task: Pick the best restaurant and explain why. If you don't have a clear 
-      and resonable pick, return reason only.
+      and resonable pick, return reason only. The language of the response should 
+      be in the same language as the user request.
       Return ONLY a JSON object: {"restaurantId": "string", "reason": "string"}
     `;
 

@@ -134,7 +134,7 @@ const UserPromptSection = () => {
   const [useLocation, setUseLocation] = useState<boolean>(false);
   const [selectedRestaurant, setSelectedRestaurant] =
     useState<IRestaurant | null>(null);
-  const { data, isError, error, isFetching } =
+  const { data, isError, error, isFetching, refetch } =
     useGetRestaurantRecommendationNL(userPrompt);
   const addMessageBars = useAddMessageBars();
   const {
@@ -145,18 +145,21 @@ const UserPromptSection = () => {
 
   const handleUserPromptSubmit = async () => {
     if (!userPromptInput) return;
+
     const userPromptWithLocation =
       useLocation && userCityAndStateData
         ? `${userPromptInput}. Current location: ${userCityAndStateData}`
         : userPromptInput;
     setUserPrompt(userPromptWithLocation);
+    if (userPrompt === userPromptWithLocation) refetch();
   };
 
   useEffect(() => {
-    if (data && data.restaurant) {
+    if (data && data.restaurant && !isFetching) {
+      console.log("data", data);
       setSelectedRestaurant(data.restaurant);
     }
-  }, [data]);
+  }, [data, isFetching]);
 
   useEffect(() => {
     if (isError) {
@@ -195,6 +198,7 @@ const UserPromptSection = () => {
           there are multiple options, AI will pick the "best" one (not
           randomly).
         </p>
+
         <div className="material-labeled-input">
           <textarea
             placeholder=""
@@ -205,6 +209,7 @@ const UserPromptSection = () => {
         </div>
         <div className="flex gap-2">
           <SecondaryButton
+            type="button"
             onClick={handleUserPromptSubmit}
             disabled={isFetching || !userPromptInput || isFetchingUserLocation}
           >
@@ -303,7 +308,11 @@ const LocationTagsList = () => {
         onClick={() => handleSelectNearby()}
         disabled={inProgress}
       >
-        <FontAwesomeIcon icon={faLocation} />
+        {inProgress ? (
+          <FontAwesomeIcon icon={faSpinner} spin={true} />
+        ) : (
+          <FontAwesomeIcon icon={faLocation} />
+        )}
         Select Nearby Cities
       </SecondaryButton>
 

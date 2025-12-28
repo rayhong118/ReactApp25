@@ -465,7 +465,6 @@ export const useGetRestaurantRecommendationNL = (userPrompt?: string) => {
     refetchOnMount: false,
     refetchOnReconnect: false,
     retry: false,
-    staleTime: Infinity,
     enabled: !!userPrompt,
   });
   return { data, isError, error, refetch, isFetching };
