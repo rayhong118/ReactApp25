@@ -30,8 +30,6 @@ export const Dialog: React.FC<IDialogProps> = (props: IDialogProps) => {
     }
     scrollLockCount++;
     document.body.style.overflow = "hidden";
-    console.log("scrollLockCount", scrollLockCount);
-    console.log("open", open);
     return () => {
       scrollLockCount--;
       if (scrollLockCount <= 0) {
