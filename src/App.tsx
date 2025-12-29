@@ -53,15 +53,17 @@ const App: React.FC = () => {
 
           <Route
             path="/experiments/fileUpload"
-            element={withSuspense(<FileUpload />)}
+            element={withSuspense(withDefaultPagePadding(<FileUpload />))}
           />
           <Route
             path="/experiments/formValidation"
-            element={withSuspense(<FormValidation />)}
+            element={withSuspense(withDefaultPagePadding(<FormValidation />))}
           />
           <Route
             path="/experiments/moveLists"
-            element={withSuspense(<WithAuthRequired component={MoveLists} />)}
+            element={withSuspense(
+              withDefaultPagePadding(<WithAuthRequired component={MoveLists} />)
+            )}
           />
           <Route
             path="/experiments/stopWatch"

@@ -58,7 +58,7 @@ const MoveLists = () => {
     }
   };
   return (
-    <div className={"p-20 flex flex-row gap-10"}>
+    <div className={"flex flex-row gap-10"}>
       <div className="flex flex-col gap-4">
         {items
           .filter((item) => item.side === "left")

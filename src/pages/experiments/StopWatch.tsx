@@ -28,7 +28,7 @@ const StopWatch = () => {
   const addMessageBars = useAddMessageBars();
 
   return (
-    <div className="p-20">
+    <div>
       StopWatch Experiment Page
       <div>{formatTime(time)}</div>
       <button

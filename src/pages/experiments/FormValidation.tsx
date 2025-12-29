@@ -24,7 +24,7 @@ const FormValidation = () => {
     console.log("Form submitted:", formData);
   };
   return (
-    <div className={"p-20"}>
+    <div>
       <form action={() => submitForm()}>
         <h1 className={"text-2xl font-bold mb-4"}>
           Form Validation Experiment

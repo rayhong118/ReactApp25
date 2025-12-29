@@ -12,7 +12,7 @@ const FileUpload = () => {
     fileInputRef.current?.click();
   };
   return (
-    <div className="p-20">
+    <div>
       <h1>File Upload Experiment</h1>
       <input ref={fileInputRef} type="file" className="hidden"></input>
       {FileUploadStatus === "idle" && (
