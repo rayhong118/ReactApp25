@@ -37,7 +37,7 @@ import type {
   TUserRatings,
 } from "./Eat.types";
 
-const PAGE_SIZE = 4;
+export const PAGE_SIZE = 4;
 /**
  * This hook handles get restaurants
  * @returns data: array of restaurants

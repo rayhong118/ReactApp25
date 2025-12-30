@@ -1,15 +1,17 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { renderHook } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { useGetRestaurants } from "./hooks";
+import { renderHook } from "@testing-library/react";
 import {
+  type DocumentData,
   getDocs,
   orderBy,
+  query,
   type QuerySnapshot,
-  type DocumentData,
+  where,
 } from "firebase/firestore";
-import type { IEatQuery, IRestaurant } from "./Eat.types";
 import type { ReactNode } from "react";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import type { IEatQuery, IRestaurant } from "./Eat.types";
+import { PAGE_SIZE, useGetRestaurants } from "./hooks";
 
 // Mock Firebase
 vi.mock("../../firebase", () => ({
@@ -20,10 +22,10 @@ vi.mock("../../firebase", () => ({
 vi.mock("firebase/firestore", () => ({
   getDocs: vi.fn(),
   query: vi.fn(),
-  collection: vi.fn(),
-  where: vi.fn(),
-  orderBy: vi.fn(),
-  limit: vi.fn(),
+  collection: vi.fn(() => ({ type: "collection" })),
+  where: vi.fn((field, op, value) => ({ type: "where", field, op, value })),
+  orderBy: vi.fn((field, direction) => ({ type: "orderBy", field, direction })),
+  limit: vi.fn((value) => ({ type: "limit", value })),
   startAfter: vi.fn(),
   documentId: vi.fn(),
   doc: vi.fn(),
@@ -295,45 +297,27 @@ describe("useGetRestaurants", () => {
       priceRangeUpper: 2,
     };
 
-    const filteredRestaurants = mockRestaurants.filter(
-      (r) =>
-        r.cityAndState === "San Francisco, CA" &&
-        r.price &&
-        r.price >= 1 &&
-        r.price <= 2
-    );
+    // Mocks are now handled globally, but we can override if needed.
+    // However, the global mocks already return the objects we need.
 
-    const mockDocs = filteredRestaurants.map((restaurant) => ({
-      id: restaurant.id,
-      data: () => restaurant,
-    }));
-
-    const mockQuerySnapshot = {
-      docs: mockDocs,
-    };
-
-    vi.mocked(getDocs).mockResolvedValue(
-      mockQuerySnapshot as unknown as QuerySnapshot<DocumentData>
-    );
-
-    const { result } = renderHook(() => useGetRestaurants(eatQuery), {
+    renderHook(() => useGetRestaurants(eatQuery), {
       wrapper: createWrapper(),
     });
 
-    await vi.waitFor(() => {
-      expect(result.current.data).toBeDefined();
-    });
+    expect(where).toHaveBeenCalledWith("cityAndState", "in", [
+      "San Francisco, CA",
+    ]);
+    expect(where).toHaveBeenCalledWith("price", ">=", 1);
+    expect(where).toHaveBeenCalledWith("price", "<=", 2);
 
-    expect(result.current.data?.pages[0].restaurants).toHaveLength(2);
-    expect(
-      result.current.data?.pages[0].restaurants.every(
-        (r) =>
-          r.cityAndState === "San Francisco, CA" &&
-          r.price &&
-          r.price >= 1 &&
-          r.price <= 2
-      )
-    ).toBe(true);
+    expect(query).toHaveBeenCalledWith(
+      expect.objectContaining({ type: "collection" }),
+      expect.objectContaining({ field: "cityAndState" }),
+      expect.objectContaining({ field: "price", op: ">=" }),
+      expect.objectContaining({ field: "price", op: "<=" }),
+      expect.objectContaining({ type: "orderBy", field: "price" }),
+      expect.objectContaining({ type: "limit", value: PAGE_SIZE })
+    );
   });
 
   it("should return empty array when no restaurants match filters", async () => {
