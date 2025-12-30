@@ -543,9 +543,10 @@ export const useSubmitRestaurantRating = () => {
         "user-restaurant-ratings",
         userId
       );
+
       const userRestaurantRatingsSnap = await getDoc(userRestaurantRatingsRef);
       const userRestaurantRatings =
-        userRestaurantRatingsSnap.data() as TUserRatings;
+        (userRestaurantRatingsSnap.data() as TUserRatings) || {};
       const oldRating = userRestaurantRatings[restaurantId] || 0;
 
       // update user restaurant rating
