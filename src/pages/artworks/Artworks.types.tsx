@@ -16,3 +16,7 @@ export interface IUploadPayload {
   category: string;
   date: Date;
 }
+
+export interface IArtworksQuery {
+  category?: string;
+}

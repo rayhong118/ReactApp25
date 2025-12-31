@@ -79,7 +79,8 @@ export const Navigation = () => {
 
           <div className="hidden md:flex md:items-center md:space-x-2">
             {navButton("About", "/about")}
-            {navButton("Restaurants 吃什么", "/eat")}
+            {navButton("Food 吃什么", "/eat")}
+            {navButton("Drawings 图", "/artworks")}
 
             <div className="relative">
               <button
@@ -89,7 +90,7 @@ export const Navigation = () => {
                 className="inline-flex items-center px-3 py-2 rounded-md text-md font-medium
                  text-gray-700 hover:bg-gray-100"
               >
-                Experiments
+                Labs
                 <svg
                   className="ml-2 h-4 w-4 text-gray-500"
                   xmlns="http://www.w3.org/2000/svg"
@@ -162,14 +163,15 @@ export const Navigation = () => {
         <div className="md:hidden bg-white">
           <div className="px-2 pt-2 pb-3 space-y-1">
             {navButton("About", "/about", true)}
-            {navButton("Restaurants 吃什么", "/eat", true)}
+            {navButton("Food 吃什么", "/eat", true)}
+            {navButton("Drawings 图片", "/drawings", true)}
             <div>
               <button
                 onClick={() => setDropdownOpen((s) => !s)}
                 className="w-full text-left px-3 py-2 rounded-md text-md font-medium text-gray-700 
                 hover:bg-gray-100 flex items-center justify-between"
               >
-                Experiments
+                Labs
                 <svg
                   className="h-4 w-4 text-gray-500"
                   xmlns="http://www.w3.org/2000/svg"

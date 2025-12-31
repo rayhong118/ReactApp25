@@ -6,12 +6,29 @@ import {
   getDocs,
   doc,
   setDoc,
+  QueryDocumentSnapshot,
+  type DocumentData,
+  where,
+  query,
+  limit,
+  QueryConstraint,
+  startAfter,
 } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import type { IUploadPayload } from "./Artworks.types";
+import { useInfiniteQuery, useMutation, useQuery } from "@tanstack/react-query";
+import type {
+  IArtwork,
+  IArtworksQuery,
+  IUploadPayload,
+} from "./Artworks.types";
 import { useAddMessageBars } from "@/utils/MessageBarsAtom";
 
+/**
+ * This hook handles upload file
+ * @returns uploadFile: function to upload file
+ * @returns isPending: boolean
+ * @returns isSuccess: boolean
+ */
 export const useUploadFile = () => {
   const addMessageBar = useAddMessageBars();
   const {
@@ -88,6 +105,10 @@ export const useUploadFile = () => {
   return { uploadFile, isPending, isSuccess };
 };
 
+/**
+ * This hook handles get categories
+ * @returns categories: array of categories string
+ */
 export const useGetCategories = () => {
   const { data: categories } = useQuery({
     queryKey: ["categories"],
@@ -100,4 +121,53 @@ export const useGetCategories = () => {
   });
 
   return { categories };
+};
+
+const PAGE_SIZE = 4;
+/**
+ * This hook handles get artworks
+ * @returns artworks: array of artworks
+ */
+export const useGetArtworks = (artworksQuery?: IArtworksQuery) => {
+  const { data } = useInfiniteQuery({
+    queryKey: ["artworks", artworksQuery],
+    queryFn: async ({
+      pageParam,
+    }: {
+      pageParam: QueryDocumentSnapshot<DocumentData, DocumentData> | null;
+    }) => {
+      const db = getFirestore();
+      const artworksRef = collection(db, "artworks");
+      const constraints: QueryConstraint[] = [];
+      console.log(artworksQuery);
+      if (artworksQuery?.category) {
+        constraints.push(where("category", "==", artworksQuery.category));
+      }
+      if (pageParam) {
+        constraints.push(startAfter(pageParam));
+      }
+      const q = query(artworksRef, ...constraints, limit(PAGE_SIZE));
+      const snapshot = await getDocs(q);
+      const lastVisible = snapshot.docs[snapshot.docs.length - 1];
+      const artworks = snapshot.docs.map(
+        (doc) =>
+          ({
+            ...doc.data(),
+            date: doc.data().date.toDate(),
+          } as IArtwork)
+      );
+      return { artworks, nextCursor: lastVisible };
+    },
+    initialPageParam: null,
+    getNextPageParam: (lastPage) => {
+      if (lastPage.artworks.length < PAGE_SIZE) {
+        return undefined;
+      }
+      return lastPage.nextCursor;
+    },
+    refetchOnWindowFocus: false,
+    staleTime: Infinity,
+  });
+
+  return { data };
 };

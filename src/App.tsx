@@ -10,11 +10,9 @@ import { WithAuthRequired } from "./components/WithAuthRequired";
 import { withDefaultPagePadding } from "./hooks/withDefaultPagePadding";
 import { withFontAwesome } from "./hooks/withFontAwesome";
 import { withFooter } from "./hooks/withFooter";
-
 import { withSuspense } from "./hooks/withSuspense";
+
 import ScrollToTop from "./utils/ScrollToTop";
-import Drawings from "./pages/artworks/Drawings";
-import Upload from "./pages/artworks/Upload";
 
 const Home = lazy(() => import("./pages/home/Home"));
 const About = lazy(() => import("./pages/about/About"));
@@ -31,6 +29,8 @@ const MoveLists = lazy(() => import("./pages/experiments/MoveLists"));
 const AuthPage = lazy(() => import("./pages/auth/Auth"));
 const NotFound = lazy(() => import("./pages/notFound/NotFound"));
 const MessageBarsContainer = lazy(() => import("./hooks/MessageBarsContainer"));
+const Drawings = lazy(() => import("./pages/artworks/Drawings"));
+const Upload = lazy(() => import("./pages/artworks/Upload"));
 
 const App: React.FC = () => {
   const setCurrentUser = useSetCurrentUser();
@@ -85,6 +85,10 @@ const App: React.FC = () => {
           />
           <Route
             path="/artworks/drawings"
+            element={withSuspense(withDefaultPagePadding(<Drawings />))}
+          />
+          <Route
+            path="/artworks"
             element={withSuspense(withDefaultPagePadding(<Drawings />))}
           />
           <Route
