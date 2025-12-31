@@ -123,51 +123,52 @@ export const useGetCategories = () => {
   return { categories };
 };
 
-const PAGE_SIZE = 4;
+const PAGE_SIZE = 6;
 /**
  * This hook handles get artworks
  * @returns artworks: array of artworks
  */
 export const useGetArtworks = (artworksQuery?: IArtworksQuery) => {
-  const { data } = useInfiniteQuery({
-    queryKey: ["artworks", artworksQuery],
-    queryFn: async ({
-      pageParam,
-    }: {
-      pageParam: QueryDocumentSnapshot<DocumentData, DocumentData> | null;
-    }) => {
-      const db = getFirestore();
-      const artworksRef = collection(db, "artworks");
-      const constraints: QueryConstraint[] = [];
-      console.log(artworksQuery);
-      if (artworksQuery?.category) {
-        constraints.push(where("category", "==", artworksQuery.category));
-      }
-      if (pageParam) {
-        constraints.push(startAfter(pageParam));
-      }
-      const q = query(artworksRef, ...constraints, limit(PAGE_SIZE));
-      const snapshot = await getDocs(q);
-      const lastVisible = snapshot.docs[snapshot.docs.length - 1];
-      const artworks = snapshot.docs.map(
-        (doc) =>
-          ({
-            ...doc.data(),
-            date: doc.data().date.toDate(),
-          } as IArtwork)
-      );
-      return { artworks, nextCursor: lastVisible };
-    },
-    initialPageParam: null,
-    getNextPageParam: (lastPage) => {
-      if (lastPage.artworks.length < PAGE_SIZE) {
-        return undefined;
-      }
-      return lastPage.nextCursor;
-    },
-    refetchOnWindowFocus: false,
-    staleTime: Infinity,
-  });
+  const { data, isFetchingNextPage, fetchNextPage, hasNextPage, isFetching } =
+    useInfiniteQuery({
+      queryKey: ["artworks", artworksQuery],
+      queryFn: async ({
+        pageParam,
+      }: {
+        pageParam: QueryDocumentSnapshot<DocumentData, DocumentData> | null;
+      }) => {
+        const db = getFirestore();
+        const artworksRef = collection(db, "artworks");
+        const constraints: QueryConstraint[] = [];
+        console.log(artworksQuery);
+        if (artworksQuery?.category) {
+          constraints.push(where("category", "==", artworksQuery.category));
+        }
+        if (pageParam) {
+          constraints.push(startAfter(pageParam));
+        }
+        const q = query(artworksRef, ...constraints, limit(PAGE_SIZE));
+        const snapshot = await getDocs(q);
+        const lastVisible = snapshot.docs[snapshot.docs.length - 1];
+        const artworks = snapshot.docs.map(
+          (doc) =>
+            ({
+              ...doc.data(),
+              date: doc.data().date.toDate(),
+            } as IArtwork)
+        );
+        return { artworks, nextCursor: lastVisible };
+      },
+      initialPageParam: null,
+      getNextPageParam: (lastPage) => {
+        if (lastPage.artworks.length < PAGE_SIZE) {
+          return undefined;
+        }
+        return lastPage.nextCursor;
+      },
+      refetchOnWindowFocus: false,
+      staleTime: Infinity,
+    });
 
-  return { data };
+  return { data, isFetchingNextPage, fetchNextPage, hasNextPage, isFetching };
 };

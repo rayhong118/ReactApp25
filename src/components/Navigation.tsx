@@ -79,7 +79,7 @@ export const Navigation = () => {
 
           <div className="hidden md:flex md:items-center md:space-x-2">
             {navButton("About", "/about")}
-            {navButton("Food 吃什么", "/eat")}
+            {navButton("Food 吃", "/eat")}
             {navButton("Drawings 图", "/artworks")}
 
             <div className="relative">
@@ -163,8 +163,8 @@ export const Navigation = () => {
         <div className="md:hidden bg-white">
           <div className="px-2 pt-2 pb-3 space-y-1">
             {navButton("About", "/about", true)}
-            {navButton("Food 吃什么", "/eat", true)}
-            {navButton("Drawings 图片", "/drawings", true)}
+            {navButton("Food 吃", "/eat", true)}
+            {navButton("Drawings 图", "/drawings", true)}
             <div>
               <button
                 onClick={() => setDropdownOpen((s) => !s)}

@@ -125,6 +125,7 @@ const Upload = () => {
               placeholder=""
               name="title"
               onChange={handleInputChange}
+              value={uploadPayload?.title || ""}
             />
             <label htmlFor="title">Title</label>
           </div>
@@ -135,6 +136,7 @@ const Upload = () => {
               name="category"
               onChange={handleInputChange}
               list="categories"
+              value={uploadPayload?.category || ""}
             />
             <label htmlFor="category">Category</label>
           </div>
@@ -150,6 +152,7 @@ const Upload = () => {
               placeholder=""
               name="description"
               onChange={handleInputChange}
+              value={uploadPayload?.description || ""}
             />
             <label htmlFor="description">Description</label>
           </div>
