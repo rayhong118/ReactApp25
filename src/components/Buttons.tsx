@@ -21,7 +21,8 @@ export const PrimaryButton = (props: IButtonProps) => {
         paddingMultiplier +
         " px-" +
         paddingMultiplier * 2 +
-        " rounded hover:bg-blue-600 disabled:bg-gray-400"
+        " rounded hover:bg-blue-600 disabled:bg-gray-400 " +
+        (props.className || "")
       }
     >
       {props.children}
@@ -43,7 +44,8 @@ export const SecondaryButton = (props: IButtonProps) => {
         paddingMultiplier +
         " px-" +
         paddingMultiplier * 2 +
-        " rounded text-gray-800 hover:bg-gray-100 disabled:bg-gray-300"
+        " rounded text-gray-800 hover:bg-gray-100 disabled:bg-gray-300 " +
+        (props.className || "")
       }
     >
       {props.children}

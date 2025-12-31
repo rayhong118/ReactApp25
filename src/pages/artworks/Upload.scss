@@ -1,0 +1,43 @@
+.upload-form {
+
+
+  .labeled-input {
+    position: relative;
+    width: 100%;
+
+    input {
+      padding: 0.5rem;
+      width: 100%;
+      border: 1px solid black;
+      border-radius: 6px;
+      background-color: transparent;
+    }
+
+    input:disabled,
+    input:disabled~label {
+      color: #999;
+      border-color: #999;
+      cursor: not-allowed;
+    }
+
+    label {
+      position: absolute;
+      top: 0rem;
+      left: 0.5rem;
+      cursor: text;
+      user-select: none;
+      transition: transform 0.2s ease-in;
+      background-color: white;
+      margin: 0.5rem 0;
+      padding-left: 0.25rem;
+      padding-right: 0.25rem;
+      transform-origin: top left;
+      pointer-events: none;
+    }
+
+    input:focus~label,
+    input:not(:placeholder-shown)~label {
+      transform: translateY(-1rem) scale(0.8);
+    }
+  }
+}
