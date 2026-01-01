@@ -34,7 +34,7 @@ const Drawings = () => {
           </SecondaryButton>
         ))}
       </div>
-      {selectedCategory && !isFetchingNextPage && (
+      {selectedCategory && (
         <div className="flex flex-col gap-4">
           <h2 className="text-xl font-bold">{selectedCategory}</h2>
           <div className="artworks">

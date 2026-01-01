@@ -46,7 +46,7 @@ export const useUploadFile = () => {
         "artworks/" +
           uploadPayload.category +
           "_" +
-          uploadPayload.title +
+          uploadPayload.file.name +
           "_" +
           uploadPayload.date.getTime()
       );
