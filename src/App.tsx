@@ -84,15 +84,11 @@ const App: React.FC = () => {
             element={withSuspense(withDefaultPagePadding(<Eat />))}
           />
           <Route
-            path="/artworks/drawings"
+            path="/drawings"
             element={withSuspense(withDefaultPagePadding(<Drawings />))}
           />
           <Route
-            path="/artworks"
-            element={withSuspense(withDefaultPagePadding(<Drawings />))}
-          />
-          <Route
-            path="/artworks/upload"
+            path="/drawings/upload"
             element={withSuspense(
               withDefaultPagePadding(<WithAuthRequired component={Upload} />)
             )}
