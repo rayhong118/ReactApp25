@@ -155,6 +155,7 @@ export const useGetArtworks = (artworksQuery?: IArtworksQuery) => {
             ({
               ...doc.data(),
               date: doc.data().date.toDate(),
+              id: doc.id,
             } as IArtwork)
         );
         return { artworks, nextCursor: lastVisible };

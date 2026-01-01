@@ -30,14 +30,23 @@ export const Dialog: React.FC<IDialogProps> = (props: IDialogProps) => {
     }
     scrollLockCount++;
     document.body.style.overflow = "hidden";
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        onClose?.();
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+
     return () => {
       scrollLockCount--;
       if (scrollLockCount <= 0) {
         document.body.style.overflow = "unset";
         scrollLockCount = 0;
       }
+      window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [open]);
+  }, [open, onClose]);
 
   if (!open) return null;
 
@@ -57,6 +66,7 @@ export const Dialog: React.FC<IDialogProps> = (props: IDialogProps) => {
             }
             return false;
           },
+          escapeDeactivates: false,
         }}
       >
         <dialog
