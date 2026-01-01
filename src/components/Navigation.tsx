@@ -80,7 +80,7 @@ export const Navigation = () => {
           <div className="hidden md:flex md:items-center md:space-x-2">
             {navButton("About", "/about")}
             {navButton("Food 吃", "/eat")}
-            {navButton("Drawings 图", "/artworks")}
+            {navButton("Drawings 图", "/drawings")}
 
             <div className="relative">
               <button
