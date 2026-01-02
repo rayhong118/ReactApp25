@@ -6,6 +6,7 @@ import "./Upload.scss";
 import { PrimaryButton, SecondaryButton } from "@/components/Buttons";
 import { Dialog } from "@/components/Dialog";
 import { Loading } from "@/components/Loading";
+import ErrorBoundary from "@/components/ErrorBoundary";
 
 const Upload = () => {
   const [imageFile, setImageFile] = useState<File | null>(null);
@@ -158,15 +159,27 @@ const Upload = () => {
             <label htmlFor="description">Description</label>
           </div>
           <div className="labeled-input col-span-1">
-            <input
-              type="date"
-              required
-              placeholder=""
-              name="date"
-              onChange={handleInputChange}
-              value={uploadPayload?.date?.toISOString().split("T")[0] || ""}
-            />
-            <label htmlFor="date">Date</label>
+            <ErrorBoundary
+              fallback={
+                <div className="text-red-500 text-xs mt-2">
+                  Invalid date detected.
+                </div>
+              }
+            >
+              <input
+                type="date"
+                required
+                placeholder=""
+                name="date"
+                onChange={handleInputChange}
+                value={
+                  uploadPayload?.date && !isNaN(uploadPayload.date.getTime())
+                    ? uploadPayload.date.toISOString().split("T")[0]
+                    : ""
+                }
+              />
+              <label htmlFor="date">Date</label>
+            </ErrorBoundary>
           </div>
           <PrimaryButton
             type="submit"
