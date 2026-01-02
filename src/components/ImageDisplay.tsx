@@ -48,31 +48,32 @@ export const ImageDisplay = ({
         escapeDeactivates: false,
       }}
     >
-      <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 overflow-y-auto">
-        <div className="flex flex-col items-center min-h-full w-full relative">
-          <div
-            className="sticky top-0 left-0 p-4 w-full flex flex-row justify-between 
+      <div
+        className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 
+      overflow-y-scroll flex flex-col items-center min-h-full w-full"
+      >
+        <div
+          className="sticky top-0 left-0 p-4 w-full flex flex-row justify-between 
             items-center pointer-events-none px-4 md:px-10 bg-black/50 z-50"
-          >
-            {title && (
-              <h1 className="text-2xl font-bold text-white pointer-events-auto">
-                {title}
-              </h1>
-            )}
-            <CustomizedButton
-              onClick={onClose}
-              className="pointer-events-auto bg-black/20 hover:bg-black/40 
+        >
+          {title && (
+            <h1 className="text-2xl font-bold text-white pointer-events-auto">
+              {title}
+            </h1>
+          )}
+          <CustomizedButton
+            onClick={onClose}
+            className="pointer-events-auto bg-black/20 hover:bg-black/40 
               text-white p-2"
-            >
-              <FontAwesomeIcon icon={faClose} className="text-xl" />
-            </CustomizedButton>
-          </div>
-          <img
-            className="m-auto object-contain max-w-full p-5 md:p-10"
-            src={src}
-            alt={alt}
-          />
+          >
+            <FontAwesomeIcon icon={faClose} className="text-xl" />
+          </CustomizedButton>
         </div>
+        <img
+          className="m-auto object-contain max-w-full p-5 md:p-10"
+          src={src}
+          alt={alt}
+        />
       </div>
     </FocusTrap>,
     document.body
