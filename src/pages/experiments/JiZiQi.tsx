@@ -19,7 +19,6 @@ const JiZiQi = () => {
 
   const handleCellClick = (rowIndex: number, colIndex: number) => {
     const currentCell = gridData[rowIndex][colIndex];
-    console.log(currentPlayer, rowIndex, colIndex);
     // If cell is already occupied, do nothing
     if (currentCell !== 0) return;
     else {

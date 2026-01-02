@@ -25,7 +25,6 @@ const Upload = () => {
     if (file) {
       setImageFile(file);
     }
-    console.log(file?.name);
     setUploadPayload({
       ...uploadPayload,
       date: new Date(file?.lastModified || Date.now()),
@@ -70,7 +69,6 @@ const Upload = () => {
     };
 
     uploadFile(finalPayload);
-    // console.log(finalPayload);
   };
 
   const clearForm = () => {

@@ -156,7 +156,6 @@ const UserPromptSection = () => {
 
   useEffect(() => {
     if (data && data.restaurant && !isFetching) {
-      console.log("data", data);
       setSelectedRestaurant(data.restaurant);
     }
   }, [data, isFetching]);

@@ -162,7 +162,6 @@ export const useGetArtworks = (artworksQuery?: IArtworksQuery) => {
                 id: doc.id,
               } as IArtwork)
           );
-          console.log("artworks", artworks);
           return { artworks, nextCursor: lastVisible };
         } catch (error) {
           addMessageBar([

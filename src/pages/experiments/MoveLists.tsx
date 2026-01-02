@@ -44,7 +44,6 @@ const MoveLists = () => {
   const handleCheckboxChange = (
     e: React.ChangeEvent<HTMLInputElement>
   ): void => {
-    console.log(e.target.checked);
     const { value, checked } = e.target;
     // handle checkbox change
     const item = items.find((item) => item.name === value);
