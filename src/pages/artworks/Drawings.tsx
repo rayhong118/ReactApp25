@@ -7,6 +7,7 @@ import { useState } from "react";
 import type { IArtwork } from "./Artworks.types";
 import "./Drawings.scss";
 import { useGetArtworks, useGetCategories } from "./hooks";
+import withScrollToTopButton from "@/hooks/withScrollToTopButton";
 
 const Drawings = () => {
   const { categories } = useGetCategories();
@@ -20,7 +21,7 @@ const Drawings = () => {
     fetchNextPage,
     hasNextPage,
   } = useGetArtworks({ category: selectedCategory });
-  return (
+  return withScrollToTopButton(
     <div className="flex flex-col gap-4">
       <ImageDisplay
         open={!!selectedImage}

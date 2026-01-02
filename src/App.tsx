@@ -2,19 +2,15 @@ import { onAuthStateChanged } from "firebase/auth";
 import { lazy, useEffect } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
-import { Navigation } from "./components/Navigation";
 import { auth } from "./firebase";
 import { useSetCurrentUser } from "./utils/AuthenticationAtoms";
 
-import { WithAuthRequired } from "./components/WithAuthRequired";
 import { withDefaultPagePadding } from "./hooks/withDefaultPagePadding";
-import { withFontAwesome } from "./hooks/withFontAwesome";
-import { withFooter } from "./hooks/withFooter";
 import { withSuspense } from "./hooks/withSuspense";
 
 import ScrollToTop from "./utils/ScrollToTop";
-import withScrollToTopButton from "./hooks/withScrollToTopButton";
 
+const Navigation = lazy(() => import("./components/Navigation"));
 const Home = lazy(() => import("./pages/home/Home"));
 const About = lazy(() => import("./pages/about/About"));
 
@@ -32,6 +28,9 @@ const NotFound = lazy(() => import("./pages/notFound/NotFound"));
 const MessageBarsContainer = lazy(() => import("./hooks/MessageBarsContainer"));
 const Drawings = lazy(() => import("./pages/artworks/Drawings"));
 const Upload = lazy(() => import("./pages/artworks/Upload"));
+const Footer = lazy(() => import("./components/Footer"));
+
+const WithAuthRequired = lazy(() => import("./components/WithAuthRequired"));
 
 const App: React.FC = () => {
   const setCurrentUser = useSetCurrentUser();
@@ -82,15 +81,11 @@ const App: React.FC = () => {
           />
           <Route
             path="/eat"
-            element={withSuspense(
-              withScrollToTopButton(withDefaultPagePadding(<Eat />))
-            )}
+            element={withSuspense(withDefaultPagePadding(<Eat />))}
           />
           <Route
             path="/drawings"
-            element={withSuspense(
-              withScrollToTopButton(withDefaultPagePadding(<Drawings />))
-            )}
+            element={withSuspense(withDefaultPagePadding(<Drawings />))}
           />
           <Route
             path="/drawings/upload"
@@ -104,8 +99,9 @@ const App: React.FC = () => {
           />
         </Routes>
       </BrowserRouter>
+      {withSuspense(<Footer />)}
     </>
   );
 };
 
-export default withFontAwesome(withFooter(App));
+export default App;

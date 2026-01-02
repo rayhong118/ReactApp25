@@ -14,6 +14,7 @@ import { useSetFilterSearchQuery } from "./EatAtoms";
 import { EatFilterSearch } from "./EatFilterSearch";
 import { EatList } from "./EatList";
 import { withGoogleReCaptchaProvider } from "@/hooks/withGoogleReCaptchaProvider";
+import withScrollToTopButton from "@/hooks/withScrollToTopButton";
 
 const EatListWithMaps = withGoogleMapsApi(EatList);
 
@@ -44,7 +45,7 @@ const Eat = () => {
     setSpecificRestaurantId(null);
   };
 
-  return (
+  return withScrollToTopButton(
     <>
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold py-2">Eat</h1>

@@ -11,7 +11,7 @@ const experimentsNavItems = [
   { label: "Tic Tac Toe 五子棋", to: "/experiments/ticTacToe" },
 ];
 
-export const Navigation = () => {
+const Navigation = () => {
   const navigate = useNavigate();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -204,3 +204,4 @@ export const Navigation = () => {
     </div>
   );
 };
+export default Navigation;
