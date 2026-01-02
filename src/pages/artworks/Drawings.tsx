@@ -1,17 +1,20 @@
 import { CustomizedButton, PrimaryButton } from "@/components/Buttons";
 import { ImageDisplay } from "@/components/ImageDisplay";
 import { Loading } from "@/components/Loading";
-import { faEye } from "@fortawesome/free-regular-svg-icons";
+import { faEdit } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
 import type { IArtwork } from "./Artworks.types";
 import "./Drawings.scss";
 import { useGetArtworks, useGetCategories } from "./hooks";
 import withScrollToTopButton from "@/hooks/withScrollToTopButton";
+import { useNavigate } from "react-router-dom";
 
 const Drawings = () => {
+  const navigate = useNavigate();
+
   const { categories } = useGetCategories();
-  const [selectedCategory, setSelectedCategory] = useState<string | undefined>(
+  const [selectedCategory, setSelectedCategory] = useState<string>(
     categories?.[0]
   );
   const [selectedImage, setSelectedImage] = useState<IArtwork>();
@@ -68,9 +71,15 @@ const Drawings = () => {
                   <img src={artwork.imageURL} alt={artwork.title} />
                   <div className="artwork-overlay">
                     <div className="artwork-actions">
-                      <button onClick={() => setSelectedImage(artwork)}>
-                        <FontAwesomeIcon icon={faEye} /> View
-                      </button>
+                      <CustomizedButton
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          navigate(`/drawings/upload?id=${artwork.id}`);
+                        }}
+                      >
+                        <FontAwesomeIcon icon={faEdit} /> Edit
+                      </CustomizedButton>
                     </div>
                     <div className="artwork-info">
                       <h3 className="text-lg font-bold">{artwork.title}</h3>

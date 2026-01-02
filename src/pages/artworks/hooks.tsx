@@ -1,28 +1,40 @@
-import { getStorage } from "firebase/storage";
+import { useAddMessageBars } from "@/utils/MessageBarsAtom";
 import {
-  getFirestore,
+  useInfiniteQuery,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
+import {
   addDoc,
   collection,
-  getDocs,
   doc,
-  setDoc,
-  QueryDocumentSnapshot,
-  type DocumentData,
-  where,
-  query,
+  getDoc,
+  getDocs,
+  getFirestore,
   limit,
-  QueryConstraint,
-  startAfter,
   orderBy,
+  query,
+  QueryConstraint,
+  QueryDocumentSnapshot,
+  setDoc,
+  startAfter,
+  where,
+  type DocumentData,
 } from "firebase/firestore";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { useInfiniteQuery, useMutation, useQuery } from "@tanstack/react-query";
+import {
+  deleteObject,
+  getDownloadURL,
+  getStorage,
+  ref,
+  uploadBytes,
+} from "firebase/storage";
 import type {
   IArtwork,
   IArtworksQuery,
+  IUpdatePayload,
   IUploadPayload,
 } from "./Artworks.types";
-import { useAddMessageBars } from "@/utils/MessageBarsAtom";
 
 /**
  * This hook handles upload file
@@ -104,6 +116,136 @@ export const useUploadFile = () => {
   });
 
   return { uploadFile, isPending, isSuccess };
+};
+
+/**
+ * This hook handles update artwork. If file is provided,
+ * it will update the artwork with the new file.
+ * @returns updateArtwork: function to update artwork
+ * @returns isPending: boolean
+ * @returns isSuccess: boolean
+ */
+export const useUpdateArtwork = () => {
+  const addMessageBar = useAddMessageBars();
+  const queryClient = useQueryClient();
+
+  const {
+    mutateAsync: updateArtwork,
+    isPending,
+    isSuccess,
+  } = useMutation({
+    mutationKey: ["update-artwork"],
+    mutationFn: async (payload: IUpdatePayload) => {
+      const db = getFirestore();
+      const artworkRef = doc(db, "artworks", payload.id);
+      const updatePayload = {} as Record<string, any>;
+
+      if (payload.title !== undefined) {
+        updatePayload.title = payload.title;
+      }
+      if (payload.description !== undefined) {
+        updatePayload.description = payload.description;
+      }
+      if (payload.category !== undefined) {
+        updatePayload.category = payload.category;
+      }
+      if (payload.date !== undefined) {
+        updatePayload.date = payload.date;
+      }
+
+      if (payload.file) {
+        const storage = getStorage();
+        const storageRef = ref(
+          storage,
+          "artworks/" +
+            payload.category +
+            "_" +
+            payload.file.name +
+            "_" +
+            payload.date.getTime()
+        );
+        try {
+          const snapshot = await uploadBytes(storageRef, payload.file);
+          const downloadURL = await getDownloadURL(snapshot.ref);
+          updatePayload.imageURL = downloadURL;
+          const oldFileUrl = payload.imageURL;
+          if (oldFileUrl) {
+            const oldFileRef = ref(storage, oldFileUrl);
+            await deleteObject(oldFileRef);
+          }
+        } catch (error) {
+          console.error(error);
+          throw error;
+        }
+      }
+
+      if (payload.category) {
+        const categoryDocRef = doc(db, "artwork-categories", payload.category);
+        await setDoc(
+          categoryDocRef,
+          { name: payload.category },
+          { merge: true }
+        );
+      }
+
+      await setDoc(artworkRef, updatePayload, { merge: true });
+      return { id: payload.id, ...updatePayload };
+    },
+    onSuccess: (updatedData) => {
+      queryClient.invalidateQueries({ queryKey: ["artworks"] });
+      queryClient.invalidateQueries({ queryKey: ["artwork", updatedData.id] });
+      queryClient.invalidateQueries({ queryKey: ["categories"] });
+      addMessageBar([
+        {
+          id: "update-success",
+          message: "Update successful!",
+          type: "success",
+          autoDismiss: true,
+        },
+      ]);
+    },
+    onError: () => {
+      addMessageBar([
+        {
+          id: "update-error",
+          message: "Update failed!",
+          type: "error",
+          autoDismiss: true,
+        },
+      ]);
+    },
+  });
+
+  return { updateArtwork, isPending, isSuccess };
+};
+
+/**
+ * This hook handles get specific artwork
+ * @returns specificArtwork: specific artwork
+ */
+export const useFetchArtworkById = (id: string) => {
+  const { data } = useQuery({
+    queryKey: ["artwork", id],
+    queryFn: async () => {
+      const db = getFirestore();
+      const artworkRef = doc(db, "artworks", id);
+      const snapshot = await getDoc(artworkRef);
+      if (!snapshot.exists()) {
+        throw new Error("Artwork not found");
+      }
+      return {
+        ...snapshot.data(),
+        date: snapshot.data().date.toDate(),
+        id: snapshot.id,
+      } as IArtwork;
+    },
+    staleTime: Infinity,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+  });
+
+  return { data };
 };
 
 /**

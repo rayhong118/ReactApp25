@@ -1,18 +1,30 @@
 // Handles image upload to Firebase Storage, and creates a new artwork document in Firestore
-import { useEffect, useRef, useState } from "react";
-import type { IUploadPayload } from "./Artworks.types";
-import { useUploadFile, useGetCategories } from "./hooks";
-import "./Upload.scss";
 import { PrimaryButton, SecondaryButton } from "@/components/Buttons";
 import { Dialog } from "@/components/Dialog";
-import { Loading } from "@/components/Loading";
 import ErrorBoundary from "@/components/ErrorBoundary";
+import { Loading } from "@/components/Loading";
+import { useEffect, useRef, useState } from "react";
+import { useSearchParams } from "react-router-dom";
+import type { IUpdatePayload, IUploadPayload } from "./Artworks.types";
+import {
+  useFetchArtworkById,
+  useGetCategories,
+  useUpdateArtwork,
+  useUploadFile,
+} from "./hooks";
+import "./Upload.scss";
 
 const Upload = () => {
   const [imageFile, setImageFile] = useState<File | null>(null);
-  const [uploadPayload, setUploadPayload] = useState<Partial<IUploadPayload>>();
+  const [payload, setPayload] = useState<Partial<IUploadPayload>>();
+
+  const [searchParams, setSearchParams] = useSearchParams();
+  const { data: specificArtwork } = useFetchArtworkById(
+    searchParams.get("id") || ""
+  );
 
   const { uploadFile, isPending, isSuccess } = useUploadFile();
+  const { updateArtwork } = useUpdateArtwork();
   const { categories } = useGetCategories();
 
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -25,8 +37,8 @@ const Upload = () => {
     if (file) {
       setImageFile(file);
     }
-    setUploadPayload({
-      ...uploadPayload,
+    setPayload({
+      ...payload,
       date: new Date(file?.lastModified || Date.now()),
       file,
     });
@@ -36,13 +48,13 @@ const Upload = () => {
     const { name, value } = e.target;
 
     if (name === "date") {
-      setUploadPayload({
-        ...uploadPayload,
+      setPayload({
+        ...payload,
         date: new Date(value),
       });
     } else {
-      setUploadPayload({
-        ...uploadPayload,
+      setPayload({
+        ...payload,
         [name]: value,
       });
     }
@@ -50,30 +62,43 @@ const Upload = () => {
 
   const handleUpload = (e: React.FormEvent) => {
     e.preventDefault();
-    if (
-      !imageFile ||
-      !uploadPayload ||
-      !uploadPayload.title ||
-      !uploadPayload.date
-    ) {
+    if (!imageFile || !payload || !payload.title || !payload.date) {
       alert("Please fill in all required fields.");
       return;
     }
 
     const finalPayload: IUploadPayload = {
       file: imageFile,
-      title: uploadPayload.title,
-      description: uploadPayload.description || "",
-      category: uploadPayload.category || "",
-      date: uploadPayload.date,
+      title: payload.title,
+      description: payload.description || "",
+      category: payload.category || "",
+      date: payload.date,
     };
 
     uploadFile(finalPayload);
   };
 
+  const handleUpdate = (e: React.FormEvent) => {
+    if (!specificArtwork) {
+      return;
+    }
+    e.preventDefault();
+    if (!payload || !payload.title || !payload.date) {
+      alert("Please fill in all required fields.");
+      return;
+    }
+
+    const finalPayload: IUpdatePayload = {
+      ...(payload as IUpdatePayload),
+      id: specificArtwork.id,
+    };
+
+    updateArtwork(finalPayload);
+  };
+
   const clearForm = () => {
     setImageFile(null);
-    setUploadPayload({});
+    setPayload({});
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
@@ -84,6 +109,19 @@ const Upload = () => {
       clearForm();
     }
   }, [isSuccess]);
+
+  useEffect(() => {
+    if (specificArtwork) {
+      console.log(specificArtwork);
+      setPayload({
+        title: specificArtwork.title,
+        description: specificArtwork.description,
+        category: specificArtwork.category,
+        date: specificArtwork.date,
+        imageURL: specificArtwork.imageURL,
+      });
+    }
+  }, [specificArtwork]);
 
   return (
     <div className="flex flex-col gap-4">
@@ -101,19 +139,35 @@ const Upload = () => {
         ref={fileInputRef}
         className="hidden"
       />
-      {imageFile && (
+      {specificArtwork && !imageFile && (
         <img
-          src={URL.createObjectURL(imageFile)}
-          alt="Preview"
+          src={specificArtwork.imageURL}
+          alt={specificArtwork.title}
           className="w-full"
         />
       )}
+      {imageFile && (
+        <>
+          <img
+            src={URL.createObjectURL(imageFile)}
+            alt="Preview"
+            className="w-full"
+          />
+          <SecondaryButton
+            onClick={() => setImageFile(null)}
+            paddingMultiplier={2}
+          >
+            Remove Replacement Image
+          </SecondaryButton>
+        </>
+      )}
+
       <SecondaryButton onClick={onUploadClick} paddingMultiplier={2}>
-        {imageFile ? "Change" : "Add"} Image
+        {imageFile || specificArtwork ? "Change" : "Add"} Image
       </SecondaryButton>
       {
         <form
-          onSubmit={handleUpload}
+          onSubmit={specificArtwork ? handleUpdate : handleUpload}
           className="upload-form grid grid-cols-2 gap-4"
           autoComplete="off"
         >
@@ -124,7 +178,7 @@ const Upload = () => {
               placeholder=""
               name="title"
               onChange={handleInputChange}
-              value={uploadPayload?.title || ""}
+              value={payload?.title || ""}
             />
             <label htmlFor="title">Title</label>
           </div>
@@ -136,7 +190,7 @@ const Upload = () => {
               required
               onChange={handleInputChange}
               list="categories"
-              value={uploadPayload?.category || ""}
+              value={payload?.category || ""}
             />
             <label htmlFor="category">Category</label>
           </div>
@@ -152,7 +206,7 @@ const Upload = () => {
               placeholder=""
               name="description"
               onChange={handleInputChange}
-              value={uploadPayload?.description || ""}
+              value={payload?.description || ""}
             />
             <label htmlFor="description">Description</label>
           </div>
@@ -171,8 +225,8 @@ const Upload = () => {
                 name="date"
                 onChange={handleInputChange}
                 value={
-                  uploadPayload?.date && !isNaN(uploadPayload.date.getTime())
-                    ? uploadPayload.date.toISOString().split("T")[0]
+                  payload?.date && !isNaN(payload.date.getTime())
+                    ? payload.date.toISOString().split("T")[0]
                     : ""
                 }
               />
@@ -182,10 +236,10 @@ const Upload = () => {
           <PrimaryButton
             type="submit"
             className="col-span-2"
-            disabled={isPending || !uploadPayload}
+            disabled={isPending || !payload}
             paddingMultiplier={2}
           >
-            {isPending ? "Uploading..." : "Upload"}
+            {isPending ? "Submitting..." : "Submit"}
           </PrimaryButton>
         </form>
       }

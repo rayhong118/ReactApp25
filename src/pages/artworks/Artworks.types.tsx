@@ -10,6 +10,7 @@ export interface IArtwork {
 }
 
 export interface IUploadPayload {
+  imageURL?: string;
   file: File;
   title: string;
   description?: string;
@@ -17,6 +18,16 @@ export interface IUploadPayload {
   date: Date;
 }
 
+export interface IUpdatePayload {
+  id: string;
+  title: string;
+  description?: string;
+  category: string;
+  date: Date;
+  file?: File;
+  imageURL: string;
+}
+
 export interface IArtworksQuery {
-  category?: string;
+  category: string;
 }
