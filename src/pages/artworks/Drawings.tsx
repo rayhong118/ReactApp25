@@ -1,20 +1,19 @@
 import { CustomizedButton, PrimaryButton } from "@/components/Buttons";
+import { ImageDisplay } from "@/components/ImageDisplay";
 import { Loading } from "@/components/Loading";
+import { faEye } from "@fortawesome/free-regular-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import type { IArtwork } from "./Artworks.types";
 import "./Drawings.scss";
 import { useGetArtworks, useGetCategories } from "./hooks";
-import { Dialog } from "@/components/Dialog";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEye } from "@fortawesome/free-regular-svg-icons";
 
 const Drawings = () => {
   const { categories } = useGetCategories();
   const [selectedCategory, setSelectedCategory] = useState<string | undefined>(
     categories?.[0]
   );
-  const [selectedImageId, setSelectedImageId] = useState<string>();
-  const navigate = useNavigate();
+  const [selectedImage, setSelectedImage] = useState<IArtwork>();
   const {
     data: artworks,
     isFetchingNextPage,
@@ -23,23 +22,13 @@ const Drawings = () => {
   } = useGetArtworks({ category: selectedCategory });
   return (
     <div className="flex flex-col gap-4">
-      <Dialog
-        open={!!selectedImageId}
-        onClose={() => setSelectedImageId(undefined)}
-      >
-        <img
-          src={
-            artworks?.pages
-              .flatMap((page) => page.artworks)
-              .find((artwork) => artwork.id === selectedImageId)?.imageURL
-          }
-          alt={
-            artworks?.pages
-              .flatMap((page) => page.artworks)
-              .find((artwork) => artwork.id === selectedImageId)?.title
-          }
-        />
-      </Dialog>
+      <ImageDisplay
+        open={!!selectedImage}
+        onClose={() => setSelectedImage(undefined)}
+        src={selectedImage?.imageURL || ""}
+        alt={selectedImage?.title || ""}
+        title={selectedImage?.title || ""}
+      />
       <h1 className="text-2xl font-bold">Drawings</h1>
       <div className="flex gap-2 flex-wrap">
         {categories?.map((category) => (
@@ -68,17 +57,17 @@ const Drawings = () => {
                   role="region"
                   aria-label="Artwork"
                   aria-description="Click to view artwork"
-                  onClick={() => setSelectedImageId(artwork.id)}
+                  onClick={() => setSelectedImage(artwork)}
                   onKeyDown={(e) => {
                     if (e.key === "Enter" || e.key === " ") {
-                      setSelectedImageId(artwork.id);
+                      setSelectedImage(artwork);
                     }
                   }}
                 >
                   <img src={artwork.imageURL} alt={artwork.title} />
                   <div className="artwork-overlay">
                     <div className="artwork-actions">
-                      <button onClick={() => setSelectedImageId(artwork.id)}>
+                      <button onClick={() => setSelectedImage(artwork)}>
                         <FontAwesomeIcon icon={faEye} /> View
                       </button>
                     </div>
