@@ -24,7 +24,7 @@ const Upload = () => {
     if (file) {
       setImageFile(file);
     }
-    console.log(file);
+    console.log(file?.name);
     setUploadPayload({
       ...uploadPayload,
       date: new Date(file?.lastModified || Date.now()),
@@ -134,6 +134,7 @@ const Upload = () => {
               type="text"
               placeholder=""
               name="category"
+              required
               onChange={handleInputChange}
               list="categories"
               value={uploadPayload?.category || ""}
@@ -170,7 +171,7 @@ const Upload = () => {
           <PrimaryButton
             type="submit"
             className="col-span-2"
-            disabled={isPending}
+            disabled={isPending || !uploadPayload}
             paddingMultiplier={2}
           >
             {isPending ? "Uploading..." : "Upload"}

@@ -13,6 +13,7 @@ import {
   limit,
   QueryConstraint,
   startAfter,
+  orderBy,
 } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { useInfiniteQuery, useMutation, useQuery } from "@tanstack/react-query";
@@ -129,6 +130,7 @@ const PAGE_SIZE = 6;
  * @returns artworks: array of artworks
  */
 export const useGetArtworks = (artworksQuery?: IArtworksQuery) => {
+  const addMessageBar = useAddMessageBars();
   const { data, isFetchingNextPage, fetchNextPage, hasNextPage, isFetching } =
     useInfiniteQuery({
       queryKey: ["artworks", artworksQuery],
@@ -140,25 +142,39 @@ export const useGetArtworks = (artworksQuery?: IArtworksQuery) => {
         const db = getFirestore();
         const artworksRef = collection(db, "artworks");
         const constraints: QueryConstraint[] = [];
-        console.log(artworksQuery);
         if (artworksQuery?.category) {
           constraints.push(where("category", "==", artworksQuery.category));
         }
+        constraints.push(orderBy("date", "desc"));
         if (pageParam) {
           constraints.push(startAfter(pageParam));
         }
+
         const q = query(artworksRef, ...constraints, limit(PAGE_SIZE));
-        const snapshot = await getDocs(q);
-        const lastVisible = snapshot.docs[snapshot.docs.length - 1];
-        const artworks = snapshot.docs.map(
-          (doc) =>
-            ({
-              ...doc.data(),
-              date: doc.data().date.toDate(),
-              id: doc.id,
-            } as IArtwork)
-        );
-        return { artworks, nextCursor: lastVisible };
+        try {
+          const snapshot = await getDocs(q);
+          const lastVisible = snapshot.docs[snapshot.docs.length - 1];
+          const artworks = snapshot.docs.map(
+            (doc) =>
+              ({
+                ...doc.data(),
+                date: doc.data().date.toDate(),
+                id: doc.id,
+              } as IArtwork)
+          );
+          console.log("artworks", artworks);
+          return { artworks, nextCursor: lastVisible };
+        } catch (error) {
+          addMessageBar([
+            {
+              id: "get-artworks-error",
+              message: "Failed to fetch artworks!" + error,
+              type: "error",
+              autoDismiss: true,
+            },
+          ]);
+          return { artworks: [], nextCursor: null };
+        }
       },
       initialPageParam: null,
       getNextPageParam: (lastPage) => {

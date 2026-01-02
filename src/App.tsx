@@ -13,6 +13,7 @@ import { withFooter } from "./hooks/withFooter";
 import { withSuspense } from "./hooks/withSuspense";
 
 import ScrollToTop from "./utils/ScrollToTop";
+import withScrollToTopButton from "./hooks/withScrollToTopButton";
 
 const Home = lazy(() => import("./pages/home/Home"));
 const About = lazy(() => import("./pages/about/About"));
@@ -81,11 +82,15 @@ const App: React.FC = () => {
           />
           <Route
             path="/eat"
-            element={withSuspense(withDefaultPagePadding(<Eat />))}
+            element={withSuspense(
+              withScrollToTopButton(withDefaultPagePadding(<Eat />))
+            )}
           />
           <Route
             path="/drawings"
-            element={withSuspense(withDefaultPagePadding(<Drawings />))}
+            element={withSuspense(
+              withScrollToTopButton(withDefaultPagePadding(<Drawings />))
+            )}
           />
           <Route
             path="/drawings/upload"
