@@ -1,14 +1,15 @@
 import { CustomizedButton, PrimaryButton } from "@/components/Buttons";
 import { ImageDisplay } from "@/components/ImageDisplay";
 import { Loading } from "@/components/Loading";
-import { faEdit } from "@fortawesome/free-regular-svg-icons";
+import withScrollToTopButton from "@/hooks/withScrollToTopButton";
+import { useAddMessageBars } from "@/utils/MessageBarsAtom";
+import { faEdit, faShareSquare } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import type { IArtwork } from "./Artworks.types";
 import "./Drawings.scss";
 import { useGetArtworks, useGetCategories } from "./hooks";
-import withScrollToTopButton from "@/hooks/withScrollToTopButton";
-import { useNavigate } from "react-router-dom";
 
 const Drawings = () => {
   const navigate = useNavigate();
@@ -24,6 +25,7 @@ const Drawings = () => {
     fetchNextPage,
     hasNextPage,
   } = useGetArtworks({ category: selectedCategory });
+  const addMessageBars = useAddMessageBars();
   return withScrollToTopButton(
     <div className="flex flex-col gap-4">
       <ImageDisplay
@@ -71,7 +73,8 @@ const Drawings = () => {
                   <img src={artwork.imageURL} alt={artwork.title} />
                   <div className="artwork-overlay">
                     <div className="artwork-actions">
-                      <CustomizedButton
+                      <button
+                        className="p-1 text-white bg-black/30 hover:bg-black/50"
                         onClick={(e) => {
                           e.preventDefault();
                           e.stopPropagation();
@@ -79,7 +82,35 @@ const Drawings = () => {
                         }}
                       >
                         <FontAwesomeIcon icon={faEdit} /> Edit
-                      </CustomizedButton>
+                      </button>
+                      <button
+                        className="p-1 text-white bg-black/30 hover:bg-black/50"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          const baseURL = window.location.origin;
+                          if (navigator.share) {
+                            navigator.share({
+                              title: artwork.title,
+                              text: "Share this artwork",
+                              url: `${baseURL}/drawings?id=${artwork.id}`,
+                            });
+                          } else {
+                            navigator.clipboard.writeText(
+                              `${baseURL}/drawings?id=${artwork.id}`
+                            );
+                            addMessageBars([
+                              {
+                                id: "share-success",
+                                message: "Link copied to clipboard",
+                                type: "success",
+                              },
+                            ]);
+                          }
+                        }}
+                      >
+                        <FontAwesomeIcon icon={faShareSquare} /> Share
+                      </button>
                     </div>
                     <div className="artwork-info">
                       <h3 className="text-lg font-bold">{artwork.title}</h3>

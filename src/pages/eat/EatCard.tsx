@@ -53,19 +53,19 @@ export const EatCard = React.memo(
     }, []);
 
     const handleShare = useCallback(() => {
-      const basURL = window.location.origin;
-      navigator.clipboard.writeText(`${basURL}/eat?id=${restaurant.id}`);
+      const baseURL = window.location.origin;
+      navigator.clipboard.writeText(`${baseURL}/eat?id=${restaurant.id}`);
 
       // if Share API is available (mobile)
       if (navigator.share) {
         navigator.share({
           title: restaurant.name,
           text: "Share this restaurant",
-          url: `${basURL}/eat?id=${restaurant.id}`,
+          url: `${baseURL}/eat?id=${restaurant.id}`,
         });
       } else {
         // fallback to copy to clipboard
-        navigator.clipboard.writeText(`${basURL}/eat?id=${restaurant.id}`);
+        navigator.clipboard.writeText(`${baseURL}/eat?id=${restaurant.id}`);
         addMessageBars([
           {
             id: "share-success",

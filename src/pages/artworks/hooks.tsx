@@ -224,7 +224,7 @@ export const useUpdateArtwork = () => {
  * @returns specificArtwork: specific artwork
  */
 export const useFetchArtworkById = (id: string) => {
-  const { data } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ["artwork", id],
     queryFn: async () => {
       const db = getFirestore();
@@ -245,7 +245,7 @@ export const useFetchArtworkById = (id: string) => {
     refetchOnReconnect: false,
   });
 
-  return { data };
+  return { data, isLoading };
 };
 
 /**

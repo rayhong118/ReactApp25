@@ -18,7 +18,7 @@ const Upload = () => {
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [payload, setPayload] = useState<Partial<IUploadPayload>>();
 
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
   const { data: specificArtwork } = useFetchArtworkById(
     searchParams.get("id") || ""
   );

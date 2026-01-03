@@ -8,7 +8,7 @@ const withScrollToTopButton = (children: ReactNode) => {
       {children}
       <button
         onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-        className="fixed bottom-20 right-0 z-50 p-5
+        className="fixed bottom-20 right-0 z-10 p-5
         rounded-md flex items-center justify-center 
         pointer-events-auto bg-black/20 hover:bg-black/40 
         text-white p-2"

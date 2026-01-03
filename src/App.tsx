@@ -27,6 +27,7 @@ const AuthPage = lazy(() => import("./pages/auth/Auth"));
 const NotFound = lazy(() => import("./pages/notFound/NotFound"));
 const MessageBarsContainer = lazy(() => import("./hooks/MessageBarsContainer"));
 const Drawings = lazy(() => import("./pages/artworks/Drawings"));
+const SingleDrawing = lazy(() => import("./pages/artworks/SingleDrawing"));
 const Upload = lazy(() => import("./pages/artworks/Upload"));
 const Footer = lazy(() => import("./components/Footer"));
 
@@ -91,6 +92,14 @@ const App: React.FC = () => {
             path="/drawings/upload"
             element={withSuspense(
               withDefaultPagePadding(<WithAuthRequired component={Upload} />)
+            )}
+          />
+          <Route
+            path="/drawings/:id"
+            element={withSuspense(
+              withDefaultPagePadding(
+                <WithAuthRequired component={SingleDrawing} />
+              )
             )}
           />
           <Route
