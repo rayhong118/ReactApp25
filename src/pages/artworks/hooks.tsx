@@ -253,7 +253,7 @@ export const useFetchArtworkById = (id: string) => {
  * @returns categories: array of categories string
  */
 export const useGetCategories = () => {
-  const { data: categories } = useQuery({
+  const { data: categories, isLoading } = useQuery({
     queryKey: ["categories"],
     queryFn: async () => {
       const db = getFirestore();
@@ -263,7 +263,7 @@ export const useGetCategories = () => {
     },
   });
 
-  return { categories };
+  return { categories, isLoading };
 };
 
 const PAGE_SIZE = 6;

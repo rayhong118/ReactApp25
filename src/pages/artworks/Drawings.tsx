@@ -14,7 +14,7 @@ import { useGetArtworks, useGetCategories } from "./hooks";
 const Drawings = () => {
   const navigate = useNavigate();
 
-  const { categories } = useGetCategories();
+  const { categories, isLoading } = useGetCategories();
   const [selectedCategory, setSelectedCategory] = useState<string>(
     categories?.[0]
   );
@@ -28,6 +28,7 @@ const Drawings = () => {
   const addMessageBars = useAddMessageBars();
   return withScrollToTopButton(
     <div className="flex flex-col gap-4">
+      {isLoading && <Loading />}
       <ImageDisplay
         open={!!selectedImage}
         onClose={() => setSelectedImage(undefined)}
