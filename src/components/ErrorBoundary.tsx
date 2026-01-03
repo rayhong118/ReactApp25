@@ -30,6 +30,9 @@ class ErrorBoundary extends Component<Props, State> {
         this.props.fallback || (
           <div className="p-4 border border-red-200 bg-red-50 text-red-800 rounded-md text-sm">
             Something went wrong with this component.
+            <button className="ml-2" onClick={window.location.reload}>
+              Try again?
+            </button>
           </div>
         )
       );

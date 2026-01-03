@@ -1,0 +1,19 @@
+{
+  "navbar": {
+    "home": "首页",
+    "about": "关于",
+    "drawings": "画",
+    "eat": "吃",
+    "lab": {
+      "title": "实验",
+      "formValidation": "表单验证",
+      "moveLists": "移动列表",
+      "stopWatch": "秒表",
+      "imageCarousels": "图片轮播",
+      "fileUpload": "文件上传",
+      "ticTacToe": "井字棋"
+    },
+    "auth": "注册/登录",
+    "settings": "设置"
+  }
+}

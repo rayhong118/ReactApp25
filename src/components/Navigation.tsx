@@ -1,14 +1,15 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useGetCurrentUser } from "../utils/AuthenticationAtoms";
+import { useTranslation } from "react-i18next";
 
 const experimentsNavItems = [
-  { label: "Form Validation", to: "/experiments/formValidation" },
-  { label: "Move Lists", to: "/experiments/moveLists" },
-  { label: "Stop Watch 秒表", to: "/experiments/stopWatch" },
-  { label: "Image Carousel 图片轮播", to: "/experiments/imageCarousels" },
-  { label: "File Upload", to: "/experiments/fileUpload" },
-  { label: "Tic Tac Toe 五子棋", to: "/experiments/ticTacToe" },
+  { label: "navbar.lab.formValidation", to: "/experiments/formValidation" },
+  { label: "navbar.lab.moveLists", to: "/experiments/moveLists" },
+  { label: "navbar.lab.stopWatch", to: "/experiments/stopWatch" },
+  { label: "navbar.lab.imageCarousels", to: "/experiments/imageCarousels" },
+  { label: "navbar.lab.fileUpload", to: "/experiments/fileUpload" },
+  { label: "navbar.lab.ticTacToe", to: "/experiments/ticTacToe" },
 ];
 
 const Navigation = () => {
@@ -17,6 +18,7 @@ const Navigation = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const wrapperRef = useRef<HTMLDivElement | null>(null);
   const getCurrentUser = useGetCurrentUser();
+  const { t } = useTranslation();
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -43,15 +45,15 @@ const Navigation = () => {
       className={`block px-3 py-2 rounded-md text-md font-medium text-gray-700 hover:bg-gray-100
          text-start whitespace-nowrap ${nested ? "w-full" : ""}`}
     >
-      {label}
+      {t(label)}
     </button>
   );
 
   const authButtons = () => {
     // You can add authentication related buttons here
     if (!getCurrentUser) {
-      return navButton("Log in / Sign Up", "/auth", true);
-    } else return navButton("User Settings", "/auth", true);
+      return navButton("navbar.auth.login", "/auth", true);
+    } else return navButton("navbar.auth.settings", "/auth", true);
   };
 
   return (
@@ -78,9 +80,9 @@ const Navigation = () => {
           </div>
 
           <div className="hidden md:flex md:items-center md:space-x-2">
-            {navButton("About", "/about")}
-            {navButton("Food 吃", "/eat")}
-            {navButton("Drawings 图", "/drawings")}
+            {navButton("navbar.about", "/about")}
+            {navButton("navbar.eat", "/eat")}
+            {navButton("navbar.drawings", "/drawings")}
 
             <div className="relative">
               <button
@@ -90,7 +92,7 @@ const Navigation = () => {
                 className="inline-flex items-center px-3 py-2 rounded-md text-md font-medium
                  text-gray-700 hover:bg-gray-100"
               >
-                Labs
+                {t("navbar.lab.title")}
                 <svg
                   className="ml-2 h-4 w-4 text-gray-500"
                   xmlns="http://www.w3.org/2000/svg"
@@ -162,16 +164,16 @@ const Navigation = () => {
       {mobileOpen && (
         <div className="md:hidden bg-white">
           <div className="px-2 pt-2 pb-3 space-y-1">
-            {navButton("About", "/about", true)}
-            {navButton("Food 吃", "/eat", true)}
-            {navButton("Drawings 图", "/drawings", true)}
+            {navButton("navbar.about", "/about", true)}
+            {navButton("navbar.eat", "/eat", true)}
+            {navButton("navbar.drawings", "/drawings", true)}
             <div>
               <button
                 onClick={() => setDropdownOpen((s) => !s)}
                 className="w-full text-left px-3 py-2 rounded-md text-md font-medium text-gray-700 
                 hover:bg-gray-100 flex items-center justify-between"
               >
-                Labs
+                {t("navbar.lab.title")}
                 <svg
                   className="h-4 w-4 text-gray-500"
                   xmlns="http://www.w3.org/2000/svg"

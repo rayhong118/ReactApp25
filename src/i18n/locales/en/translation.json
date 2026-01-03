@@ -1,0 +1,19 @@
+{
+  "navbar": {
+    "home": "Home",
+    "about": "About",
+    "drawings": "Drawings",
+    "eat": "Eat",
+    "lab": {
+      "title": "Lab",
+      "formValidation": "Form Validation",
+      "moveLists": "Move Lists",
+      "stopWatch": "Stop Watch",
+      "imageCarousels": "Image Carousels",
+      "fileUpload": "File Upload",
+      "ticTacToe": "Tic Tac Toe"
+    },
+    "auth": "Auth",
+    "settings": "Settings"
+  }
+}
