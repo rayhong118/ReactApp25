@@ -124,7 +124,7 @@ const Drawings = () => {
                 </div>
               ))}
           </div>
-          {hasNextPage ? (
+          {hasNextPage && !isFetchingNextPage ? (
             <PrimaryButton
               onClick={() => fetchNextPage()}
               disabled={isFetchingNextPage}
