@@ -10,9 +10,11 @@ import { useNavigate } from "react-router-dom";
 import type { IArtwork } from "./Artworks.types";
 import "./Drawings.scss";
 import { useGetArtworks, useGetCategories } from "./hooks";
+import { useGetCurrentUser } from "@/utils/AuthenticationAtoms";
 
 const Drawings = () => {
   const navigate = useNavigate();
+  const currentUser = useGetCurrentUser();
 
   const { categories, isLoading } = useGetCategories();
   const [selectedCategory, setSelectedCategory] = useState<string>(
@@ -74,16 +76,18 @@ const Drawings = () => {
                   <img src={artwork.imageURL} alt={artwork.title} />
                   <div className="artwork-overlay">
                     <div className="artwork-actions">
-                      <button
-                        className="p-1 text-white bg-black/30 hover:bg-black/50"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          e.stopPropagation();
-                          navigate(`/drawings/upload?id=${artwork.id}`);
-                        }}
-                      >
-                        <FontAwesomeIcon icon={faEdit} /> Edit
-                      </button>
+                      {currentUser && (
+                        <button
+                          className="p-1 text-white bg-black/30 hover:bg-black/50"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            navigate(`/drawings/upload?id=${artwork.id}`);
+                          }}
+                        >
+                          <FontAwesomeIcon icon={faEdit} /> Edit
+                        </button>
+                      )}
                       <button
                         className="p-1 text-white bg-black/30 hover:bg-black/50"
                         onClick={(e) => {

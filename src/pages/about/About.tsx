@@ -37,6 +37,8 @@ const About = () => {
           Pages I used to practice my frontend skills. For example, Stopwatch,
           Tic Tac Toe, Image carousel, etc.
         </p>
+        <h2 className="text-lg font-bold">Drawings</h2>
+        <p className="text-lg">A collection of my drawings and comics.</p>
       </div>
     </div>
   );
