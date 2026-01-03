@@ -22,6 +22,7 @@ import {
   useGetUserLocation,
   useLocationTagAutoSelector,
 } from "./hooks";
+import { useTranslation } from "react-i18next";
 
 export const EatFilterSearch = ({
   showFilterSearch,
@@ -44,6 +45,7 @@ const EatFilterSearchForm = () => {
   const timeoutRef = useRef<NodeJS.Timeout>(null);
   const [tempQuery, setTempQuery] = useState<IEatQuery>({});
   const setFilterQuery = useSetFilterSearchQuery();
+  const { t } = useTranslation();
 
   const handleQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (timeoutRef.current) {
@@ -89,7 +91,7 @@ const EatFilterSearchForm = () => {
     <div className="flex flex-col gap-2 md:max-w-sm min-h-0">
       <UserPromptSection />
       <hr className="w-full" />
-      <label>Price Range</label>
+      <label>{t("eat.filter.priceRange")}</label>
       <div className="flex gap-2">
         <div className="material-labeled-input">
           <input
@@ -101,7 +103,9 @@ const EatFilterSearchForm = () => {
             name="priceRangeLower"
             min={0}
           />
-          <label htmlFor="priceRangeLower">Price min</label>
+          <label htmlFor="priceRangeLower">
+            {t("eat.filter.priceRangeLower")}
+          </label>
         </div>
         <div className="material-labeled-input">
           <input
@@ -113,13 +117,15 @@ const EatFilterSearchForm = () => {
             name="priceRangeUpper"
             min={0}
           />
-          <label htmlFor="priceRangeUpper">Price max</label>
+          <label htmlFor="priceRangeUpper">
+            {t("eat.filter.priceRangeUpper")}
+          </label>
         </div>
       </div>
       <div className="flex">
         <SecondaryButton onClick={clearPriceRange}>
           <FontAwesomeIcon icon={faClose} />
-          Clear
+          {t("eat.filter.clear")}
         </SecondaryButton>
       </div>
 
@@ -142,6 +148,7 @@ const UserPromptSection = () => {
     refetch: refetchUserLocation,
     isFetching: isFetchingUserLocation,
   } = useGetUserLocation();
+  const { t } = useTranslation();
 
   const handleUserPromptSubmit = async () => {
     if (!userPromptInput) return;
@@ -192,11 +199,7 @@ const UserPromptSection = () => {
         </div>
       </Dialog>
       <div className="flex flex-col gap-2">
-        <p>
-          Ask AI for a restaurant recommendation based on your preferences. If
-          there are multiple options, AI will pick the "best" one (not
-          randomly).
-        </p>
+        <p>{t("eat.filter.userPromptDescription")}</p>
 
         <div className="material-labeled-input">
           <textarea
@@ -204,7 +207,7 @@ const UserPromptSection = () => {
             onChange={(e) => setUserPromptInput(e.target.value)}
             disabled={isFetching}
           />
-          <label htmlFor="userPrompt">Your Prompt</label>
+          <label htmlFor="userPrompt">{t("eat.filter.userPrompt")}</label>
         </div>
         <div className="flex gap-2">
           <SecondaryButton
@@ -215,7 +218,7 @@ const UserPromptSection = () => {
             {isFetching && (
               <FontAwesomeIcon icon={faSpinner} spin={true} className="mr-2" />
             )}
-            Pick
+            {t("eat.filter.pick")}
           </SecondaryButton>
           <label
             className="flex gap-2 px-2 py-1 items-center rounded-md cursor-pointer text-sm
@@ -226,7 +229,7 @@ const UserPromptSection = () => {
               className="w-4 h-4"
               onChange={(e) => setUseLocation(e.target.checked)}
             />
-            Use my location{" "}
+            {t("eat.filter.useLocation")}
             {isFetchingUserLocation && (
               <FontAwesomeIcon icon={faSpinner} spin={true} className="mr-2" />
             )}
@@ -250,6 +253,7 @@ const LocationTagsList = () => {
     locationTags,
     setSelectedLocationTags
   );
+  const { t } = useTranslation();
 
   const handleTagToggle = (e: React.ChangeEvent<HTMLInputElement>) => {
     const tagSelected = selectedLocationTags.includes(e.target.value);
@@ -295,12 +299,12 @@ const LocationTagsList = () => {
           onChange={(e) => setTagNameFilter(e.target.value)}
           value={tagNameFilter}
         />
-        <label htmlFor="tagNameFilter">Filter Location Tags</label>
+        <label htmlFor="tagNameFilter">{t("eat.filter.locationTags")}</label>
       </div>
 
       <SecondaryButton onClick={() => setSelectedLocationTags([])}>
         <FontAwesomeIcon icon={faClose} />
-        Clear
+        {t("eat.filter.clear")}
       </SecondaryButton>
 
       <SecondaryButton
@@ -312,7 +316,7 @@ const LocationTagsList = () => {
         ) : (
           <FontAwesomeIcon icon={faLocation} />
         )}
-        Select Nearby Cities
+        {t("eat.filter.selectNearby")}
       </SecondaryButton>
 
       {inProgress ? (

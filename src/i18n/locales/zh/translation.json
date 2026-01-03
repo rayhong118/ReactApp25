@@ -17,5 +17,31 @@
       "login": "注册/登录",
       "settings": "设置"
     }
+  },
+  "eat": {
+    "title": "吃饭",
+    "showFullList": "显示完整列表",
+    "filter": {
+      "title": "过滤",
+      "priceRange": "价格范围",
+      "priceRangeLower": "价格最小值",
+      "priceRangeUpper": "价格最大值",
+      "clear": "清除",
+      "userPrompt": "您的提示",
+      "userPromptDescription": "根据您的偏好，向AI询问餐厅推荐。如果有多个选项，AI将选择最佳选项（而不是随机选择）。",
+      "pick": "选择",
+      "useLocation": "使用我的位置",
+      "locationTags": "位置标签",
+      "selectNearby": "选择附近城市"
+    },
+    "card": {
+      "share": "分享",
+      "pricePerPerson": "人均价格",
+      "averageRating": "平均评分",
+      "yourRating": "您的评分",
+      "edit": "编辑",
+      "go": "前往",
+      "notesAndRatings": "笔记和评分"
+    }
   }
 }

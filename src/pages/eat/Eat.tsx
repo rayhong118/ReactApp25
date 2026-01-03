@@ -15,6 +15,7 @@ import { EatFilterSearch } from "./EatFilterSearch";
 import { EatList } from "./EatList";
 import { withGoogleReCaptchaProvider } from "@/hooks/withGoogleReCaptchaProvider";
 import withScrollToTopButton from "@/hooks/withScrollToTopButton";
+import { useTranslation } from "react-i18next";
 
 const EatListWithMaps = withGoogleMapsApi(EatList);
 
@@ -23,6 +24,7 @@ const Eat = () => {
   const [specificRestaurantId, setSpecificRestaurantId] = useState<
     string | null
   >(null);
+  const { t } = useTranslation();
 
   const [searchParam, setSearchParams] = useSearchParams();
 
@@ -48,14 +50,14 @@ const Eat = () => {
   return withScrollToTopButton(
     <>
       <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold py-2">Eat</h1>
+        <h1 className="text-2xl font-bold py-2">{t("eat.title")}</h1>
         {specificRestaurantId && (
           <CustomizedButton
             onClick={clearFilterQueryId}
             className="show-full-list"
           >
             <FontAwesomeIcon icon={faList} className="mr-2" />
-            Show full list
+            {t("eat.showFullList")}
           </CustomizedButton>
         )}
 
@@ -65,7 +67,7 @@ const Eat = () => {
               onClick={() => setShowFilterSearch(!showFilterSearch)}
             >
               <FontAwesomeIcon icon={faFilter} className="mr-2" />
-              Filter
+              {t("eat.filter.title")}
               {showFilterSearch ? (
                 <FontAwesomeIcon icon={faAngleDown} className="ml-2" />
               ) : (

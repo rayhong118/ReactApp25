@@ -17,5 +17,32 @@
       "login": "Log in / Sign Up",
       "settings": "Settings"
     }
+  },
+  "eat": {
+    "title": "Eat",
+    "showFullList": "Show full list",
+    "_showFullList.comment": "This button is displayed when the user is on a specific restaurant page. Allows the user to see all restaurants.",
+    "filter": {
+      "title": "Filter",
+      "priceRange": "Price range",
+      "priceRangeLower": "Price min",
+      "priceRangeUpper": "Price max",
+      "clear": "Clear",
+      "userPrompt": "Your Prompt",
+      "userPromptDescription": "Ask AI for a restaurant recommendation based on your preferences. If there are multiple options, AI will pick the best one (not randomly).",
+      "pick": "Pick",
+      "useLocation": "Use my location",
+      "locationTags": "Location Tags",
+      "selectNearby": "Select Nearby Cities"
+    },
+    "card": {
+      "share": "Share",
+      "pricePerPerson": "Price per person",
+      "averageRating": "Average Rating",
+      "yourRating": "Your Rating",
+      "edit": "Edit",
+      "go": "Go",
+      "notesAndRatings": "Notes & Ratings"
+    }
   }
 }

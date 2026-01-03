@@ -21,6 +21,7 @@ import { EatEditForm } from "./EatEditForm";
 import "./EatNotesPanel.scss";
 import { EatRatingHistogram } from "./EatRatingHistogram";
 import { withComponentSuspense } from "@/hooks/withSuspense";
+import { useTranslation } from "react-i18next";
 
 const EatNotesPanel = lazy(() => import("./EatNotesPanel"));
 
@@ -31,6 +32,7 @@ export const EatCard = React.memo(
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [wasNotesInitialized, setWasNotesInitialized] = useState(false);
 
+    const { t } = useTranslation();
     const User = useGetCurrentUser();
     const currentUserRating = useGetCurrentUserRestaurantRating(
       restaurant.id || ""
@@ -103,14 +105,17 @@ export const EatCard = React.memo(
             )}
             <SecondaryButton onClick={handleShare}>
               <FontAwesomeIcon icon={faShareFromSquare} className="mr-2" />
-              Share
+              {t("eat.card.share")}
             </SecondaryButton>
           </div>
           <div>{restaurant.address}</div>
-          <div>Price Per Person: {restaurant.price}</div>
+          <div>
+            {t("eat.card.pricePerPerson")}: {restaurant.price}
+          </div>
 
           <div className="flex items-center gap-2">
-            Average: <StarRating rating={Number(restaurant.averageStars)} />{" "}
+            {t("eat.card.averageRating")}:{" "}
+            <StarRating rating={Number(restaurant.averageStars)} />{" "}
             {restaurant.averageStars}
             {restaurant.stars && (
               <SecondaryButton
@@ -134,14 +139,15 @@ export const EatCard = React.memo(
 
           {User && (
             <div className="flex items-center gap-2">
-              Your rating: <StarRating rating={currentUserRating} />
+              {t("eat.card.yourRating")}:{" "}
+              <StarRating rating={currentUserRating} />
             </div>
           )}
 
           <div className="flex justify-between align-center">
             <div className="flex align-center">
               <SecondaryButton onClick={toggleNotes}>
-                Notes & ratings
+                {t("eat.card.notesAndRatings")}
                 {isNotesExpanded ? (
                   <FontAwesomeIcon icon={faAngleDown} className="ml-2" />
                 ) : (
@@ -153,13 +159,13 @@ export const EatCard = React.memo(
             <div className="flex">
               <SecondaryButton disabled={!User} onClick={openDialog}>
                 <FontAwesomeIcon icon={faEdit} className="mr-2" />
-                Edit
+                {t("eat.card.edit")}
               </SecondaryButton>
               <SecondaryButton
                 onClick={() => window.open(restaurant.url, "_blank")}
               >
                 <FontAwesomeIcon icon={faDirections} className="mr-2" />
-                Go
+                {t("eat.card.go")}
               </SecondaryButton>
             </div>
           </div>
