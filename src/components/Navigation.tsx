@@ -1,7 +1,17 @@
+import type { IconProp } from "@fortawesome/fontawesome-svg-core";
+import {
+  faFlask,
+  faGear,
+  faImage,
+  faInfoCircle,
+  faSignInAlt,
+  faUtensils,
+} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { useGetCurrentUser } from "../utils/AuthenticationAtoms";
-import { useTranslation } from "react-i18next";
 
 const experimentsNavItems = [
   { label: "navbar.lab.formValidation", to: "/experiments/formValidation" },
@@ -34,7 +44,14 @@ const Navigation = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const navButton = (label: string, to: string, nested: boolean = false) => (
+  interface INavButtonProps {
+    label: string;
+    to: string;
+    nested?: boolean;
+    icon?: IconProp;
+  }
+
+  const navButton = ({ label, to, nested, icon }: INavButtonProps) => (
     <button
       onClick={() => {
         navigate(to);
@@ -42,9 +59,12 @@ const Navigation = () => {
         setDropdownOpen(false);
       }}
       key={label}
-      className={`block px-3 py-2 rounded-md text-md font-medium text-gray-700 hover:bg-gray-100
-         text-start whitespace-nowrap ${nested ? "w-full" : ""}`}
+      className={`flex items-center px-3 py-2 rounded-md text-md font-medium 
+         text-gray-700 hover:bg-gray-100 text-start whitespace-nowrap ${
+           nested ? "w-full" : ""
+         }`}
     >
+      {icon && <FontAwesomeIcon icon={icon} className="mr-2 pt-0.5" />}
       {t(label)}
     </button>
   );
@@ -52,8 +72,19 @@ const Navigation = () => {
   const authButtons = () => {
     // You can add authentication related buttons here
     if (!getCurrentUser) {
-      return navButton("navbar.auth.login", "/auth", true);
-    } else return navButton("navbar.auth.settings", "/auth", true);
+      return navButton({
+        label: "navbar.auth.login",
+        to: "/auth",
+        nested: true,
+        icon: faSignInAlt,
+      });
+    } else
+      return navButton({
+        label: "navbar.auth.settings",
+        to: "/settings",
+        nested: true,
+        icon: faGear,
+      });
   };
 
   return (
@@ -80,9 +111,17 @@ const Navigation = () => {
           </div>
 
           <div className="hidden md:flex md:items-center md:space-x-2">
-            {navButton("navbar.about", "/about")}
-            {navButton("navbar.eat", "/eat")}
-            {navButton("navbar.drawings", "/drawings")}
+            {navButton({
+              label: "navbar.about",
+              to: "/about",
+              icon: faInfoCircle,
+            })}
+            {navButton({ label: "navbar.eat", to: "/eat", icon: faUtensils })}
+            {navButton({
+              label: "navbar.drawings",
+              to: "/drawings",
+              icon: faImage,
+            })}
 
             <div className="relative">
               <button
@@ -90,7 +129,7 @@ const Navigation = () => {
                 aria-haspopup="true"
                 aria-expanded={dropdownOpen}
                 className="inline-flex items-center px-3 py-2 rounded-md text-md font-medium
-                 text-gray-700 hover:bg-gray-100"
+                 text-gray-700 hover:bg-gray-100 whitespace-nowrap"
               >
                 {t("navbar.lab.title")}
                 <svg
@@ -115,7 +154,7 @@ const Navigation = () => {
                  rounded-md shadow-lg py-1"
                 >
                   {experimentsNavItems.map((item) =>
-                    navButton(item.label, item.to, true)
+                    navButton({ label: item.label, to: item.to, nested: true })
                   )}
                 </div>
               )}
@@ -164,16 +203,35 @@ const Navigation = () => {
       {mobileOpen && (
         <div className="md:hidden bg-white">
           <div className="px-2 pt-2 pb-3 space-y-1">
-            {navButton("navbar.about", "/about", true)}
-            {navButton("navbar.eat", "/eat", true)}
-            {navButton("navbar.drawings", "/drawings", true)}
+            {navButton({
+              label: "navbar.about",
+              to: "/about",
+              nested: true,
+              icon: faInfoCircle,
+            })}
+            {navButton({
+              label: "navbar.eat",
+              to: "/eat",
+              nested: true,
+              icon: faUtensils,
+            })}
+            {navButton({
+              label: "navbar.drawings",
+              to: "/drawings",
+              nested: true,
+              icon: faImage,
+            })}
             <div>
               <button
                 onClick={() => setDropdownOpen((s) => !s)}
                 className="w-full text-left px-3 py-2 rounded-md text-md font-medium text-gray-700 
                 hover:bg-gray-100 flex items-center justify-between"
               >
-                {t("navbar.lab.title")}
+                <span>
+                  <FontAwesomeIcon icon={faFlask} className="mr-2 pt-0.5" />
+                  {t("navbar.lab.title")}
+                </span>
+
                 <svg
                   className="h-4 w-4 text-gray-500"
                   xmlns="http://www.w3.org/2000/svg"
@@ -193,7 +251,11 @@ const Navigation = () => {
               {dropdownOpen && (
                 <div className="mt-1 space-y-1 pl-2">
                   {experimentsNavItems.map((item) =>
-                    navButton(item.label, item.to, true)
+                    navButton({
+                      label: item.label,
+                      to: item.to,
+                      nested: true,
+                    })
                   )}
                 </div>
               )}

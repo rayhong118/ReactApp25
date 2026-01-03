@@ -13,7 +13,9 @@
       "fileUpload": "文件上传",
       "ticTacToe": "井字棋"
     },
-    "auth": "注册/登录",
-    "settings": "设置"
+    "auth": {
+      "login": "注册/登录",
+      "settings": "设置"
+    }
   }
 }

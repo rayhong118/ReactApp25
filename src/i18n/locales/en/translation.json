@@ -13,7 +13,9 @@
       "fileUpload": "File Upload",
       "ticTacToe": "Tic Tac Toe"
     },
-    "auth": "Auth",
-    "settings": "Settings"
+    "auth": {
+      "login": "Log in / Sign Up",
+      "settings": "Settings"
+    }
   }
 }

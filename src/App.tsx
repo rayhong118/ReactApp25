@@ -24,6 +24,7 @@ const ImageCarousel = lazy(
 );
 const MoveLists = lazy(() => import("./pages/experiments/MoveLists"));
 const AuthPage = lazy(() => import("./pages/auth/Auth"));
+const Settings = lazy(() => import("./pages/auth/Settings"));
 const NotFound = lazy(() => import("./pages/notFound/NotFound"));
 const MessageBarsContainer = lazy(() => import("./hooks/MessageBarsContainer"));
 const Drawings = lazy(() => import("./pages/artworks/Drawings"));
@@ -52,6 +53,10 @@ const App: React.FC = () => {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/auth" element={withSuspense(<AuthPage />)} />
+          <Route
+            path="/settings"
+            element={withSuspense(withDefaultPagePadding(<Settings />))}
+          />
           <Route path="/about" element={withDefaultPagePadding(<About />)} />
 
           <Route
