@@ -131,6 +131,7 @@ const Navigation = () => {
                 className="inline-flex items-center px-3 py-2 rounded-md text-md font-medium
                  text-gray-700 hover:bg-gray-100 whitespace-nowrap"
               >
+                <FontAwesomeIcon icon={faFlask} className="mr-2 pt-0.5" />
                 {t("navbar.lab.title")}
                 <svg
                   className="ml-2 h-4 w-4 text-gray-500"

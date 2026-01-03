@@ -1,12 +1,18 @@
-import { CustomizedButton } from "@/components/Buttons";
+import { PrimaryButton } from "@/components/Buttons";
+import { useTranslation } from "react-i18next";
 import { useGetCurrentUser } from "../../utils/AuthenticationAtoms";
 import { useSignOut } from "../../utils/AuthServiceHooks";
-import { useTranslation } from "react-i18next";
+const languages = [
+  { code: "en", name: "English" },
+  { code: "zh", name: "中文" },
+];
 
 const UserSettings = () => {
   const currentUser = useGetCurrentUser();
   const signOut = useSignOut();
+
   const { i18n } = useTranslation();
+
   if (!currentUser) {
     return (
       <div>
@@ -17,9 +23,9 @@ const UserSettings = () => {
   }
 
   return (
-    <div>
-      <h1>User Settings</h1>
-      <h2>Account Info</h2>
+    <div className="flex flex-col gap-4">
+      <h1 className="text-2xl font-bold">User Settings</h1>
+      <h2 className="text-xl font-semibold">Account Info</h2>
       {currentUser.photoURL && (
         <img
           src={currentUser.photoURL}
@@ -33,16 +39,20 @@ const UserSettings = () => {
       <span className="font-semibold">Email:</span> {currentUser.email}
       <span className="font-semibold">Status:</span>
       {currentUser.emailVerified ? "Verified" : "Not Verified"}
-      <CustomizedButton onClick={signOut} paddingMultiplier={2}>
+      <PrimaryButton onClick={signOut} paddingMultiplier={2}>
         Sign Out
-      </CustomizedButton>
-      <h2>Language</h2>
+      </PrimaryButton>
+      <h2 className="text-xl font-semibold">Language Settings</h2>
       <select
+        className="w-full p-2 border border-gray-300 rounded"
         value={i18n.language}
         onChange={(e) => i18n.changeLanguage(e.target.value)}
       >
-        <option value="en">English</option>
-        <option value="zh">中文</option>
+        {languages.map((language) => (
+          <option key={language.code} value={language.code}>
+            {language.code} - {language.name}
+          </option>
+        ))}
       </select>
     </div>
   );

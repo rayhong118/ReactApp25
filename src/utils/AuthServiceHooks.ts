@@ -3,10 +3,12 @@ import { useCallback } from "react";
 import { auth, githubProvider, googleProvider } from "../firebase";
 import { useSetCurrentUser } from "./AuthenticationAtoms";
 import { useAddMessageBars } from "./MessageBarsAtom";
+import { useNavigate } from "react-router-dom";
 
 export const useFirebaseSignInWithGoogle = () => {
   const setCurrentUser = useSetCurrentUser();
   const addMessageBars = useAddMessageBars();
+  const navigate = useNavigate();
   // Implementation for sign in with Google can be added here
   return useCallback(async () => {
     try {
@@ -21,6 +23,7 @@ export const useFirebaseSignInWithGoogle = () => {
           autoDismiss: true,
         },
       ]);
+      navigate("/settings");
       return userCredential;
     } catch (error) {
       addMessageBars([
@@ -39,6 +42,7 @@ export const useFirebaseSignInWithGoogle = () => {
 export const useFirebaseSignInWithGitHub = () => {
   const setCurrentUser = useSetCurrentUser();
   const addMessageBars = useAddMessageBars();
+  const navigate = useNavigate();
   // Implementation for sign in with Google can be added here
   return useCallback(async () => {
     try {
@@ -52,6 +56,7 @@ export const useFirebaseSignInWithGitHub = () => {
           autoDismiss: true,
         },
       ]);
+      navigate("/settings");
       return userCredential;
     } catch (error) {
       addMessageBars([
@@ -70,6 +75,7 @@ export const useFirebaseSignInWithGitHub = () => {
 export const useSignOut = () => {
   const setCurrentUser = useSetCurrentUser();
   const addMessageBars = useAddMessageBars();
+  const navigate = useNavigate();
   return useCallback(async () => {
     try {
       await auth.signOut();
@@ -82,6 +88,7 @@ export const useSignOut = () => {
           autoDismiss: true,
         },
       ]);
+      navigate("/auth");
     } catch (error) {
       addMessageBars([
         {
