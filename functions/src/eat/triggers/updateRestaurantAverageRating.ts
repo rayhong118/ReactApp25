@@ -1,7 +1,7 @@
 import * as admin from "firebase-admin";
 import { onDocumentWritten } from "firebase-functions/firestore";
 
-interface IStarRating {
+export interface IStarRating {
   1: number;
   2: number;
   3: number;

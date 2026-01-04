@@ -34,18 +34,6 @@ jest.mock("firebase-functions/https", () => ({
   HttpsError: jest.fn(),
 }));
 
-jest.mock("@google/genai", () => {
-  return {
-    GoogleGenAI: jest.fn().mockImplementation(() => ({
-      models: {
-        getGenerativeModel: jest.fn().mockReturnValue({
-          generateContent: jest.fn(),
-        }),
-      },
-    })),
-  };
-});
-
 describe("handleRestaurantLocationTags", () => {
   let mockUpdate: jest.Mock;
   let mockSet: jest.Mock;
