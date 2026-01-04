@@ -74,7 +74,7 @@ describe("handleRestaurantLocationTags", () => {
       collection: jest.fn().mockReturnValue(mockCollectionRef),
     };
 
-    (admin.firestore as any).mockReturnValue(mockFirestore);
+    (admin.firestore as unknown as jest.Mock).mockReturnValue(mockFirestore);
   });
 
   it("should handle restaurant location tags", async () => {

@@ -84,7 +84,7 @@ describe("updateRestaurantAverageRating", () => {
       doc: jest.fn().mockReturnValue(mockDocRef),
     };
 
-    (admin.firestore as any).mockReturnValue(mockFirestore);
+    (admin.firestore as unknown as jest.Mock).mockReturnValue(mockFirestore);
   });
   it("should update average rating", async () => {
     const afterStars: Partial<IStarRating> = {
