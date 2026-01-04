@@ -21,7 +21,7 @@ import {
   useGetRestaurantRecommendationNL,
   useGetUserLocation,
   useLocationTagAutoSelector,
-} from "./hooks";
+} from "./hooks/hooks.tsx";
 import { useTranslation } from "react-i18next";
 
 export const EatFilterSearch = ({

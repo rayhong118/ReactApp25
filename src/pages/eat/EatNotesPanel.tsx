@@ -13,7 +13,7 @@ import {
   useDeleteRestaurantNote,
   useGetRestaurantNotes,
   useSubmitRestaurantRating,
-} from "./hooks";
+} from "./hooks/hooks";
 
 interface INotesProps {
   restaurantId: string;

@@ -14,7 +14,7 @@ import {
   useAddRestaurant,
   useDeleteRestaurant,
   useEditRestaurant,
-} from "./hooks";
+} from "./hooks/hooks";
 
 interface IEatEditFormProps {
   restaurant?: IRestaurant;

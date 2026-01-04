@@ -1,71 +1,33 @@
 import { PrimaryButton } from "@/components/Buttons";
 import { Dialog } from "@/components/Dialog";
+import { Loading } from "@/components/Loading.tsx";
 import { useGetCurrentUser } from "@/utils/AuthenticationAtoms";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import type { IRestaurant } from "./Eat.types";
-import {
-  useGetFilterSearchQuery,
-  useSetCurrentUserRestaurantRatings,
-} from "./EatAtoms";
 import { EatCard } from "./EatCard.tsx";
 import { EatEditForm } from "./EatEditForm";
-import {
-  useFetchCurrentUserRestaurantRatings,
-  useGetRestaurants,
-} from "./hooks";
-
-import { Loading } from "@/components/Loading.tsx";
-import { useEffect } from "react";
-import { useTranslation } from "react-i18next";
+import { useEatListSort, useRestaurantList } from "./hooks/eatListHooks.tsx";
 
 export const EatList = () => {
   const { t } = useTranslation();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [orderBy, setOrderBy] = useState<
-    | {
-        field: string;
-        direction: "asc" | "desc";
-      }
-    | undefined
-  >();
-  const timeoutRef = useRef<NodeJS.Timeout>(null);
-
-  const eatQuery = useGetFilterSearchQuery();
+  const { orderBy, handleSortChange } = useEatListSort();
   const {
-    data: restaurants,
+    restaurants: allRestaurants,
     error,
     hasNextPage,
     fetchNextPage,
-    refetch,
     isFetchingNextPage,
-  } = useGetRestaurants(eatQuery, orderBy);
-  const { data: currentUserRatings } = useFetchCurrentUserRestaurantRatings();
-  const setCurrentUserRatings = useSetCurrentUserRestaurantRatings();
+    eatQuery,
+  } = useRestaurantList(orderBy);
 
   const handleDialogClose = () => {
     setIsDialogOpen(false);
   };
   const User = useGetCurrentUser();
-
-  const allRestaurants = restaurants?.pages.flatMap((page) => page.restaurants);
-
-  useEffect(() => {
-    // populate currentUserRatings for each restaurant
-    if (currentUserRatings) {
-      setCurrentUserRatings(currentUserRatings);
-    }
-  }, [currentUserRatings]);
-
-  useEffect(() => {
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-    }
-    timeoutRef.current = setTimeout(() => {
-      refetch();
-    }, 500);
-  }, [orderBy]);
 
   if (error) return <div>Error: {error.message}</div>;
 
@@ -82,11 +44,11 @@ export const EatList = () => {
             onChange={(e) => {
               const value = e.target.value;
               if (!value) {
-                setOrderBy(undefined);
+                handleSortChange(undefined);
                 return;
               }
               const [field, direction] = value.split(",");
-              setOrderBy({
+              handleSortChange({
                 field,
                 direction: direction as "asc" | "desc",
               });

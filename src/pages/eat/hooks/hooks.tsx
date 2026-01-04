@@ -28,14 +28,14 @@ import {
 } from "firebase/firestore";
 import { httpsCallable } from "firebase/functions";
 import { useEffect, useState } from "react";
-import { db, firebaseFunctions } from "../../firebase";
+import { db, firebaseFunctions } from "../../../firebase";
 import type {
   IEatQuery,
   ILocationTag,
   INote,
   IRestaurant,
   TUserRatings,
-} from "./Eat.types";
+} from "../Eat.types";
 
 export const PAGE_SIZE = 4;
 /**

@@ -10,7 +10,7 @@ import {
 } from "firebase/firestore";
 import type { ReactNode } from "react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import type { IEatQuery, IRestaurant } from "./Eat.types";
+import type { IEatQuery, IRestaurant } from "../Eat.types";
 import { PAGE_SIZE, useGetRestaurants } from "./hooks";
 
 // Mock Firebase
