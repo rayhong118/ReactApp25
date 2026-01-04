@@ -35,6 +35,16 @@
       "locationTags": "Location Tags",
       "selectNearby": "Select Nearby Cities"
     },
+    "list": {
+      "addRestaurant": "Add Restaurant",
+      "orderBy": "Order by",
+      "orderByAverageRating": "Average Rating (high to low)",
+      "orderByPrice": "Price",
+      "orderByPriceLowToHigh": "Price (low to high)",
+      "orderByPriceHighToLow": "Price (high to low)",
+      "orderByNone": "None",
+      "endOfList": "End of list"
+    },
     "card": {
       "share": "Share",
       "pricePerPerson": "Price per person",

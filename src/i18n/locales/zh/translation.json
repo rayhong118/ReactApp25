@@ -34,6 +34,16 @@
       "locationTags": "位置标签",
       "selectNearby": "选择附近城市"
     },
+    "list": {
+      "addRestaurant": "添加餐厅",
+      "orderBy": "排序",
+      "orderByAverageRating": "平均评分(高到低)",
+      "orderByPrice": "价格",
+      "orderByPriceLowToHigh": "价格(低到高)",
+      "orderByPriceHighToLow": "价格(高到低)",
+      "orderByNone": "无",
+      "endOfList": "列表结束"
+    },
     "card": {
       "share": "分享",
       "pricePerPerson": "人均价格",

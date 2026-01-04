@@ -18,8 +18,10 @@ import {
 
 import { Loading } from "@/components/Loading.tsx";
 import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 
 export const EatList = () => {
+  const { t } = useTranslation();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [orderBy, setOrderBy] = useState<
     | {
@@ -71,10 +73,10 @@ export const EatList = () => {
     <div className="flex flex-col gap-5 w-full">
       <PrimaryButton disabled={!User} onClick={() => setIsDialogOpen(true)}>
         <FontAwesomeIcon icon={faPlus} className="mr-2" />
-        Add Restaurant
+        {t("eat.list.addRestaurant")}
       </PrimaryButton>
       <div className="flex gap-2 items-center">
-        <div>Order by</div>
+        <div>{t("eat.list.orderBy")}</div>
         <select
           onChange={(e) => {
             const value = e.target.value;
@@ -92,16 +94,16 @@ export const EatList = () => {
           className="border border-gray-300 rounded p-2"
         >
           <option className="p-2" value={""}>
-            None
+            {t("eat.list.orderByNone")}
           </option>
           <option className="p-2" value={"averageStars,desc"}>
-            Average Rating (high to low)
+            {t("eat.list.orderByAverageRating")}
           </option>
           <option className="p-2" value={"price,asc"}>
-            Price (low to high)
+            {t("eat.list.orderByPriceLowToHigh")}
           </option>
           <option className="p-2" value={"price,desc"}>
-            Price (high to low)
+            {t("eat.list.orderByPriceHighToLow")}
           </option>
         </select>
       </div>
@@ -116,12 +118,12 @@ export const EatList = () => {
         isLoading={isFetchingNextPage}
       />
 
-      {!hasNextPage && <div>End of list</div>}
+      {!hasNextPage && <div>{t("eat.list.endOfList")}</div>}
 
       <Dialog
         open={isDialogOpen}
         onClose={handleDialogClose}
-        title="Add Restaurant"
+        title={t("eat.list.addRestaurant")}
       >
         <EatEditForm restaurant={undefined} closeDialog={handleDialogClose} />
       </Dialog>
