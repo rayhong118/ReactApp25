@@ -1,18 +1,18 @@
-import js from '@eslint/js';
-import globals from 'globals';
-import tseslint from 'typescript-eslint';
+import js from "@eslint/js";
+import globals from "globals";
+import tseslint from "typescript-eslint";
 
 export default tseslint.config(
   {
     // Ignore the compiled output and node_modules
-    ignores: ['lib/**', 'dist/**', 'functions/lib/**'],
+    ignores: ["lib/**", "dist/**", "functions/lib/**"],
   },
   js.configs.recommended,
   ...tseslint.configs.recommended,
   {
     languageOptions: {
       ecmaVersion: 2022,
-      sourceType: 'module',
+      sourceType: "module",
       globals: {
         ...globals.node, // Correct environment for Functions
         ...globals.jest,
@@ -20,11 +20,11 @@ export default tseslint.config(
     },
     rules: {
       // Custom rules for your functions
-      '@typescript-eslint/no-explicit-any': 'warn',
-      'no-unused-vars': 'warn',
+      "@typescript-eslint/no-explicit-any": "warn",
+      "no-unused-vars": "warn",
       "@typescript-eslint/no-require-imports": "off",
       "no-undef": "off",
-      "max-len": ["error", { "code": 100 }],
+      "max-len": ["error", { code: 120 }],
     },
   }
 );

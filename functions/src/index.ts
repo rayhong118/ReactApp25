@@ -34,11 +34,9 @@ setGlobalOptions({ maxInstances: 10 });
 
 admin.initializeApp();
 
-export {
-  handleRestaurantLocationTags,
-  generateSuggestionBasedOnUserPrompt,
-  updateRestaurantStars,
-  updateRestaurantAverageRating,
-  selectLocationTagsBasedOnCurrentLocation,
-} from "./eat/eatFunctions";
+export { handleRestaurantLocationTags } from "./eat/triggers/handleRestaurantLocationTags";
+export { generateSuggestionBasedOnUserPrompt } from "./eat/callables/generateSuggestionBasedOnUserPrompt";
+export { updateRestaurantStars } from "./eat/callables/updateRestaurantStars";
+export { updateRestaurantAverageRating } from "./eat/triggers/updateRestaurantAverageRating";
+export { selectLocationTagsBasedOnCurrentLocation } from "./eat/callables/selectLocationTagsBasedOnCurrentLocation";
 export { verifyRecaptcha } from "./reCaptcha/reCaptcha";

@@ -1,4 +1,4 @@
-import { handleRestaurantLocationTags } from "./eatFunctions";
+import { handleRestaurantLocationTags } from "./handleRestaurantLocationTags";
 import * as admin from "firebase-admin";
 
 jest.mock("firebase-admin", () => {
