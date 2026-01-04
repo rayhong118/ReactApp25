@@ -5,10 +5,12 @@ import {
   useFirebaseSignInWithGitHub,
   useFirebaseSignInWithGoogle,
 } from "../../utils/AuthServiceHooks";
+import { useTranslation } from "react-i18next";
 
 const AuthPage = () => {
   const signInWithGoogle = useFirebaseSignInWithGoogle();
   const signInWithGithub = useFirebaseSignInWithGitHub();
+  const { t } = useTranslation();
 
   // Sign Up Page
 
@@ -16,7 +18,7 @@ const AuthPage = () => {
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="bg-white rounded-lg shadow-lg p-8 mt-20 m-2 w-full max-w-md">
         <h2 className="text-2xl font-bold mb-6 text-gray-800">
-          Sign Up / Sign In
+          {t("auth.title")}
         </h2>
 
         <div className="space-y-3 mb-6">
@@ -27,7 +29,7 @@ const AuthPage = () => {
               py-2 px-4 rounded-lg transition active:bg-gray-100 cursor-pointer`}
           >
             <FontAwesomeIcon icon={faGoogle} className="px-2" />
-            Sign up / Sign in with Google
+            {t("auth.google")}
           </CustomizedButton>
           <CustomizedButton
             onClick={() => signInWithGithub()}
@@ -36,7 +38,7 @@ const AuthPage = () => {
               rounded-lg transition active:bg-black cursor-pointer`}
           >
             <FontAwesomeIcon icon={faGithub} className="px-2" />
-            Sign up / Sign in with GitHub
+            {t("auth.github")}
           </CustomizedButton>
         </div>
       </div>

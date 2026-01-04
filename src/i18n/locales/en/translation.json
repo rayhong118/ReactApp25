@@ -18,6 +18,11 @@
       "settings": "Settings"
     }
   },
+  "auth": {
+    "title": "Sign In / Sign Up",
+    "google": "Sign in with Google",
+    "github": "Sign in with GitHub"
+  },
   "eat": {
     "title": "Eat",
     "showFullList": "Show full list",

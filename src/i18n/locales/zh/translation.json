@@ -18,6 +18,11 @@
       "settings": "设置"
     }
   },
+  "auth": {
+    "title": "注册/登录",
+    "google": "使用 Google 登录",
+    "github": "使用 GitHub 登录"
+  },
   "eat": {
     "title": "吃饭",
     "showFullList": "显示完整列表",
