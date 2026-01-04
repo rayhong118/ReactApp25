@@ -13,8 +13,17 @@ export interface IRestaurant {
    * Display name will be used as primary name if provided
    */
   displayName?: string;
+  /**
+   * Description of the restaurant
+   */
   description?: string;
+  /**
+   * Address of the restaurant, provided by google maps
+   */
   address: string;
+  /**
+   * Price per person
+   */
   price?: number;
   /**
    * Star ratings. Used to calculate average rating and show rating given by current user
@@ -99,6 +108,12 @@ export interface IEatQuery {
 export type TUserRatings = { [restaurantId: string]: number };
 
 export interface ILocationTag {
+  /**
+   * Value of the location tag, e.g. "New York, NY"
+   */
   value: string;
+  /**
+   * Count of restaurants with this location tag. This is handled by the firebase functions.
+   */
   count: number;
 }

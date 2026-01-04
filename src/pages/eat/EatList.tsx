@@ -1,20 +1,21 @@
 import { PrimaryButton } from "@/components/Buttons";
 import { Dialog } from "@/components/Dialog";
-import { Loading } from "@/components/Loading.tsx";
 import { useGetCurrentUser } from "@/utils/AuthenticationAtoms";
+import InfiniteScrollTrigger from "@/utils/InfiniteScrollTrigger.tsx";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import type { IRestaurant } from "./Eat.types";
 import { EatCard } from "./EatCard.tsx";
 import { EatEditForm } from "./EatEditForm";
 import { useEatListSort, useRestaurantList } from "./hooks/eatListHooks.tsx";
+import { EatSort } from "./EatSort";
 
 export const EatList = () => {
   const { t } = useTranslation();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const { orderBy, handleSortChange } = useEatListSort();
+  const { orderBy } = useEatListSort();
   const {
     restaurants: allRestaurants,
     error,
@@ -37,40 +38,8 @@ export const EatList = () => {
         <FontAwesomeIcon icon={faPlus} className="mr-2" />
         {t("eat.list.addRestaurant")}
       </PrimaryButton>
-      {!eatQuery.id && (
-        <div className="flex gap-2 items-center">
-          <div>{t("eat.list.orderBy")}</div>
-          <select
-            onChange={(e) => {
-              const value = e.target.value;
-              if (!value) {
-                handleSortChange(undefined);
-                return;
-              }
-              const [field, direction] = value.split(",");
-              handleSortChange({
-                field,
-                direction: direction as "asc" | "desc",
-              });
-            }}
-            value={orderBy?.field + "," + orderBy?.direction}
-            className="border border-gray-300 rounded p-2"
-          >
-            <option className="p-2" value={""}>
-              {t("eat.list.orderByNone")}
-            </option>
-            <option className="p-2" value={"averageStars,desc"}>
-              {t("eat.list.orderByAverageRating")}
-            </option>
-            <option className="p-2" value={"price,asc"}>
-              {t("eat.list.orderByPriceLowToHigh")}
-            </option>
-            <option className="p-2" value={"price,desc"}>
-              {t("eat.list.orderByPriceHighToLow")}
-            </option>
-          </select>
-        </div>
-      )}
+
+      {!eatQuery.id && <EatSort />}
 
       {allRestaurants?.map((restaurant: IRestaurant) => (
         <EatCard key={restaurant.id} restaurant={restaurant} />
@@ -91,41 +60,6 @@ export const EatList = () => {
       >
         <EatEditForm restaurant={undefined} closeDialog={handleDialogClose} />
       </Dialog>
-    </div>
-  );
-};
-
-const InfiniteScrollTrigger = ({
-  onIntersect,
-  hasMore,
-  isLoading,
-}: {
-  onIntersect: () => void;
-  hasMore: boolean;
-  isLoading: boolean;
-}) => {
-  const observerTarget = useRef(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting && hasMore && !isLoading) {
-          onIntersect();
-        }
-      },
-      { threshold: 1.0 }
-    );
-
-    if (observerTarget.current) {
-      observer.observe(observerTarget.current);
-    }
-
-    return () => observer.disconnect();
-  }, [onIntersect, hasMore, isLoading]);
-
-  return (
-    <div ref={observerTarget} style={{ height: "20px", margin: "10px 0" }}>
-      {isLoading && <Loading />}
     </div>
   );
 };

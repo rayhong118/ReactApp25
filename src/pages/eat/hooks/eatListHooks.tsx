@@ -8,6 +8,11 @@ import {
   useGetRestaurants,
 } from "./hooks";
 
+/**
+ * This hook handles sort for eat list
+ * @returns orderBy: object containing field and direction
+ * @returns handleSortChange: function to handle sort change
+ */
 export const useEatListSort = () => {
   const [orderBy, setOrderBy] = useState<
     | {
@@ -35,6 +40,15 @@ export const useEatListSort = () => {
   return { orderBy, handleSortChange };
 };
 
+/**
+ * This hook handles fetching restaurants for eat list
+ * @returns restaurants: array of restaurants
+ * @returns error: error if any
+ * @returns hasNextPage: boolean to check if there are more pages
+ * @returns fetchNextPage: function to fetch next page
+ * @returns isFetchingNextPage: boolean to check if next page is being fetched
+ * @returns eatQuery: query for filtering and searching restaurants
+ */
 export const useRestaurantList = (
   orderBy: { field: string; direction: "asc" | "desc" } | undefined
 ) => {
