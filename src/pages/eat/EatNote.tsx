@@ -49,9 +49,9 @@ const EatNote = ({ note, refetch }: { note: INote; refetch: () => void }) => {
           <CustomizedButton
             onClick={() => setIsDialogOpen(true)}
             disabled={isDeletingNote}
-            className="bg-red-600 text-white hover:bg-red-700"
+            className="bg-red-600 text-white hover:bg-red-700 text-sm font-bold"
           >
-            <FontAwesomeIcon icon={faTrash} className="mr-2 " />
+            <FontAwesomeIcon icon={faTrash} className="mr-2" />
             Delete
           </CustomizedButton>
         )}
