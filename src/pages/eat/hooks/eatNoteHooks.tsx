@@ -169,6 +169,8 @@ export const useGenerateNotesSummary = () => {
           },
         ]);
         throw error;
+      } finally {
+        setIsStreaming(false);
       }
     },
     [firebaseFunctions]
