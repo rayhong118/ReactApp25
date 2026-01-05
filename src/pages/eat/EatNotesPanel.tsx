@@ -1,23 +1,22 @@
 import { useGetCurrentUser } from "@/utils/AuthenticationAtoms";
 import EatNote from "./EatNote";
 import { EatNoteInput } from "./EatNoteInput";
+import EatNotesSummary from "./EatNotesSummary";
 import { useGetRestaurantNotes } from "./hooks/eatNoteHooks";
-
-interface INotesProps {
-  restaurantId: string;
-}
+import type { IRestaurant } from "./Eat.types";
 
 /**
  * This component displays a panel for notes of a restaurant
- * @param restaurantId - id of the restaurant
+ * @param restaurant - restaurant object
  */
-const EatNotesPanel = ({ restaurantId }: INotesProps) => {
+const EatNotesPanel = ({ restaurant }: { restaurant: IRestaurant }) => {
   const User = useGetCurrentUser();
   const {
     data: notes,
     refetch,
     isFetching,
-  } = useGetRestaurantNotes(restaurantId);
+  } = useGetRestaurantNotes(restaurant.id!);
+
   if (!notes && !isFetching) return <div>No notes found</div>;
 
   return (
@@ -25,7 +24,7 @@ const EatNotesPanel = ({ restaurantId }: INotesProps) => {
       <div className="flex flex-col min-h-0">
         {User ? (
           <EatNoteInput
-            restaurantId={restaurantId}
+            restaurantId={restaurant.id!}
             onNoteAdded={refetch}
             userId={User.uid}
           />
@@ -36,6 +35,7 @@ const EatNotesPanel = ({ restaurantId }: INotesProps) => {
           <div>No notes found</div>
         ) : (
           <div className="flex flex-col w-full gap-2">
+            <EatNotesSummary notes={notes || []} restaurant={restaurant} />
             {notes?.map((note) => (
               <EatNote key={note.id} note={note} refetch={refetch} />
             ))}

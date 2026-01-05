@@ -39,4 +39,5 @@ export { generateSuggestionBasedOnUserPrompt } from "./eat/callables/generateSug
 export { updateRestaurantStars } from "./eat/callables/updateRestaurantStars";
 export { updateRestaurantAverageRating } from "./eat/triggers/updateRestaurantAverageRating";
 export { selectLocationTagsBasedOnCurrentLocation } from "./eat/callables/selectLocationTagsBasedOnCurrentLocation";
+export { generateNotesSummary } from "./eat/callables/generateNotesSummary";
 export { verifyRecaptcha } from "./reCaptcha/reCaptcha";

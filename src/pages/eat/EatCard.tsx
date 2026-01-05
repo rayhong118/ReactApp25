@@ -174,9 +174,7 @@ export const EatCard = React.memo(
             className={"eat-note-container " + (isNotesExpanded ? "open" : "")}
           >
             {wasNotesInitialized &&
-              withComponentSuspense(
-                <EatNotesPanel restaurantId={restaurant.id!} />
-              )}
+              withComponentSuspense(<EatNotesPanel restaurant={restaurant} />)}
           </div>
         </div>
       </div>

@@ -1,4 +1,4 @@
-import { db } from "@/firebase";
+import { db, firebaseFunctions } from "@/firebase";
 import { useAddMessageBars } from "@/utils/MessageBarsAtom";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import {
@@ -10,7 +10,9 @@ import {
   query,
   where,
 } from "firebase/firestore";
-import type { INote } from "../Eat.types";
+import { httpsCallable } from "firebase/functions";
+import type { INote, IRestaurant } from "../Eat.types";
+import { useCallback, useRef, useState } from "react";
 
 /**
  * This hook handles get restaurant notes
@@ -123,4 +125,71 @@ export const useDeleteRestaurantNote = () => {
   });
 
   return { mutate, isPending, isSuccess, error }; // note: mutate now expects id
+};
+
+export const useGenerateNotesSummary = () => {
+  const addMessageBars = useAddMessageBars();
+  const [summary, setSummary] = useState("");
+  const [isStreaming, setIsStreaming] = useState(false);
+  const abortControllerRef = useRef<AbortController | null>(null);
+
+  const generateNotesSummary = useCallback(
+    async (notes: INote[], restaurant: IRestaurant) => {
+      const callable = httpsCallable<
+        {
+          notes: string[];
+          restaurant: IRestaurant;
+        },
+        ReadableStream<Uint8Array>
+      >(firebaseFunctions, "generateNotesSummary");
+
+      const response = await callable({
+        notes: notes.map((note) => note.content),
+        restaurant,
+      });
+
+      if (!response.data) {
+        throw new Error("No response data");
+      }
+
+      const reader = response.data.getReader();
+      const decoder = new TextDecoder();
+
+      try {
+        let done = false;
+
+        while (!done) {
+          const { done: isDone, value } = await reader.read();
+          if (isDone) {
+            break;
+          }
+          done = isDone;
+
+          const chunk = decoder.decode(value, { stream: true });
+          setSummary((prev) => prev + chunk);
+        }
+      } catch (err) {
+        console.error("Stream reading error", err);
+        addMessageBars([
+          {
+            id: new Date().toISOString(),
+            message: "Error generating summary: ",
+            type: "error",
+            autoDismiss: true,
+          },
+        ]);
+        throw err;
+      }
+
+      return "Summary generation complete";
+    },
+    [firebaseFunctions]
+  );
+
+  const stop = () => {
+    abortControllerRef.current?.abort();
+    setIsStreaming(false);
+  };
+
+  return { generateNotesSummary, summary, isStreaming, stop };
 };
