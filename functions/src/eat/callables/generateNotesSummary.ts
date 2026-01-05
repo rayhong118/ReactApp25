@@ -10,12 +10,15 @@ export const generateNotesSummary = onCall(
   async (req, res) => {
     const notes = req.data?.notes;
     const restaurant = req.data?.restaurant;
+    const language = req.data?.language || "en";
 
     if (!notes || notes.length === 0) {
       throw new HttpsError("invalid-argument", "No notes provided");
     }
     const prompt = `
-    Task: Summarize notes for the restaurant "${restaurant.name}".
+    Task: Summarize notes for the restaurant "${
+      restaurant.name
+    }" in ${language}.
   
     Formatting Rules:
     - Use a Level 2 Heading (##) for the restaurant name.

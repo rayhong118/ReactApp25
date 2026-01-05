@@ -134,13 +134,15 @@ export const useGenerateNotesSummary = () => {
   const abortControllerRef = useRef<AbortController | null>(null);
 
   const generateNotesSummary = useCallback(
-    async (notes: INote[], restaurant: IRestaurant) => {
+    async (notes: INote[], restaurant: IRestaurant, language: string) => {
       setSummary("");
+      setIsStreaming(true);
 
       const callable = httpsCallable<
         {
           notes: string[];
           restaurant: IRestaurant;
+          language: string;
         },
         ReadableStream<Uint8Array>
       >(firebaseFunctions, "generateNotesSummary");
@@ -149,6 +151,7 @@ export const useGenerateNotesSummary = () => {
         const { stream, data } = await callable.stream({
           notes: notes.map((note) => note.content),
           restaurant,
+          language,
         });
 
         for await (const chunk of stream) {
