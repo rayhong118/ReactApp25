@@ -1,6 +1,7 @@
 import { SecondaryButton } from "@/components/Buttons";
-import { useGenerateNotesSummary } from "./hooks/eatNoteHooks";
+import Markdown from "react-markdown";
 import type { INote, IRestaurant } from "./Eat.types";
+import { useGenerateNotesSummary } from "./hooks/eatNoteHooks";
 
 export default function EatNotesSummary({
   notes,
@@ -20,7 +21,7 @@ export default function EatNotesSummary({
       >
         Generate Summary
       </SecondaryButton>
-      {summary && <div>{summary}</div>}
+      {summary && <Markdown>{summary}</Markdown>}
       {isStreaming && <div>Generating summary...</div>}
     </>
   );

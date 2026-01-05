@@ -11,8 +11,8 @@ import {
   where,
 } from "firebase/firestore";
 import { httpsCallable } from "firebase/functions";
-import type { INote, IRestaurant } from "../Eat.types";
 import { useCallback, useRef, useState } from "react";
+import type { INote, IRestaurant } from "../Eat.types";
 
 /**
  * This hook handles get restaurant notes
@@ -135,6 +135,8 @@ export const useGenerateNotesSummary = () => {
 
   const generateNotesSummary = useCallback(
     async (notes: INote[], restaurant: IRestaurant) => {
+      setSummary("");
+
       const callable = httpsCallable<
         {
           notes: string[];
@@ -143,45 +145,28 @@ export const useGenerateNotesSummary = () => {
         ReadableStream<Uint8Array>
       >(firebaseFunctions, "generateNotesSummary");
 
-      const response = await callable({
-        notes: notes.map((note) => note.content),
-        restaurant,
-      });
-
-      if (!response.data) {
-        throw new Error("No response data");
-      }
-
-      const reader = response.data.getReader();
-      const decoder = new TextDecoder();
-
       try {
-        let done = false;
+        const { stream, data } = await callable.stream({
+          notes: notes.map((note) => note.content),
+          restaurant,
+        });
 
-        while (!done) {
-          const { done: isDone, value } = await reader.read();
-          if (isDone) {
-            break;
-          }
-          done = isDone;
-
-          const chunk = decoder.decode(value, { stream: true });
+        for await (const chunk of stream) {
           setSummary((prev) => prev + chunk);
         }
-      } catch (err) {
-        console.error("Stream reading error", err);
+        const finalData = await data;
+        console.log(finalData);
+      } catch (error) {
         addMessageBars([
           {
             id: new Date().toISOString(),
-            message: "Error generating summary: ",
+            message: "Error generating summary: " + error,
             type: "error",
             autoDismiss: true,
           },
         ]);
-        throw err;
+        throw error;
       }
-
-      return "Summary generation complete";
     },
     [firebaseFunctions]
   );
