@@ -10,28 +10,34 @@ const languages = [
 const UserSettings = () => {
   const currentUser = useGetCurrentUser();
   const signOut = useSignOut();
+  const { t } = useTranslation();
 
   return (
     <div className="flex flex-col gap-4">
       {currentUser && (
         <>
-          <h1 className="text-2xl font-bold">User Settings</h1>
-          <h2 className="text-xl font-semibold">Account Info</h2>
+          <h1 className="text-2xl font-bold">{t("settings.title")}</h1>
+          <h2 className="text-xl font-semibold">{t("settings.accountInfo")}</h2>
           {currentUser.photoURL && (
             <img
               src={currentUser.photoURL}
-              alt="Profile"
+              alt={t("settings.profilePicture")}
               className="w-20 h-20 rounded-full mb-4 object-cover"
             />
           )}
           <h3 className="text-lg font-semibold text-gray-800">
             {currentUser.displayName || "User"}
           </h3>
-          <span className="font-semibold">Email:</span> {currentUser.email}
-          <span className="font-semibold">Status:</span>
-          {currentUser.emailVerified ? "Verified" : "Not Verified"}
+          <span className="font-semibold">{t("settings.email")}:</span>{" "}
+          {currentUser.email}
+          <span className="font-semibold">
+            {t("settings.emailVerificationStatus")}:
+          </span>
+          {currentUser.emailVerified
+            ? t("settings.emailVerified")
+            : t("settings.emailNotVerified")}
           <PrimaryButton onClick={signOut} paddingMultiplier={2}>
-            Sign Out
+            {t("settings.signOut")}
           </PrimaryButton>
         </>
       )}
@@ -41,11 +47,11 @@ const UserSettings = () => {
 };
 
 const LanguageSettings = () => {
-  const { i18n } = useTranslation();
+  const { i18n, t } = useTranslation();
 
   return (
     <div className="flex flex-col gap-4">
-      <h2 className="text-xl font-semibold">Language Settings</h2>
+      <h2 className="text-xl font-semibold">{t("settings.language")}</h2>
       <select
         className="w-full p-2 border border-gray-300 rounded"
         value={i18n.language}

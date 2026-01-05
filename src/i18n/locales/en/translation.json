@@ -23,6 +23,17 @@
     "google": "Sign in with Google",
     "github": "Sign in with GitHub"
   },
+  "settings": {
+    "title": "Settings",
+    "accountInfo": "Account Info",
+    "profilePicture": "Profile Picture",
+    "email": "Email",
+    "emailVerificationStatus": "Email Verification Status",
+    "emailVerified": "Verified",
+    "emailNotVerified": "Not Verified",
+    "signOut": "Sign Out",
+    "language": "Language"
+  },
   "eat": {
     "title": "Eat",
     "showFullList": "Show full list",

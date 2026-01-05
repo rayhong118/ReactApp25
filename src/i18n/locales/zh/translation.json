@@ -2,10 +2,10 @@
   "navbar": {
     "home": "首页",
     "about": "关于",
-    "drawings": "画",
-    "eat": "吃",
+    "drawings": "图",
+    "eat": "吃饭",
     "lab": {
-      "title": "实验",
+      "title": "实验室",
       "formValidation": "表单验证",
       "moveLists": "移动列表",
       "stopWatch": "秒表",
@@ -22,6 +22,17 @@
     "title": "注册/登录",
     "google": "使用 Google 登录",
     "github": "使用 GitHub 登录"
+  },
+  "settings": {
+    "title": "设置",
+    "accountInfo": "账户信息",
+    "profilePicture": "头像",
+    "email": "邮箱",
+    "emailVerificationStatus": "邮箱验证状态",
+    "emailVerified": "已验证",
+    "emailNotVerified": "未验证",
+    "signOut": "退出登录",
+    "language": "语言"
   },
   "eat": {
     "title": "吃饭",
