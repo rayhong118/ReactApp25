@@ -5,6 +5,7 @@ import { StarRating } from "../experiments/StarRating";
 import { useGetCurrentUserRestaurantRating } from "./EatAtoms";
 import { useAddRestaurantNote } from "./hooks/eatNoteHooks";
 import { useSubmitRestaurantRating } from "./hooks/hooks";
+import { useTranslation } from "react-i18next";
 
 interface IEatNoteInputProps {
   restaurantId: string;
@@ -20,6 +21,7 @@ export const EatNoteInput = ({
   const [newNote, setNewNote] = useState("");
   const currentRating = useGetCurrentUserRestaurantRating(restaurantId);
   const [rating, setRating] = useState(currentRating || 0);
+  const { t } = useTranslation();
 
   const { mutate: submitRestaurantRating, isPending: isSubmittingRating } =
     useSubmitRestaurantRating();
@@ -72,9 +74,9 @@ export const EatNoteInput = ({
       className="w-full py-2 flex flex-col gap-2"
     >
       <div className="flex items-center gap-2">
-        Rate:{" "}
+        {t("eat.notes.rate")}:{" "}
         {isSubmittingRating ? (
-          <span>Submitting...</span>
+          <span>{t("eat.notes.submitting")}</span>
         ) : (
           <StarRating rating={rating} setRating={handleRatingSubmit} />
         )}
@@ -83,7 +85,7 @@ export const EatNoteInput = ({
         name="note"
         value={newNote}
         onChange={onHandleChange}
-        placeholder="Add a note"
+        placeholder={t("eat.notes.addNote")}
         className="w-full border border-black p-2 rounded-md"
       />
       <div className="flex justify-between items-start">
@@ -93,7 +95,7 @@ export const EatNoteInput = ({
             isAddingNote || !newNote.trim() || newNote.trim().length > 250
           }
         >
-          Add Note
+          {t("eat.notes.addNote")}
         </CustomizedButton>
         <span
           className={`text-sm font-bold ${

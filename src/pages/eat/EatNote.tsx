@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
 import type { INote } from "./Eat.types";
 import { useDeleteRestaurantNote } from "./hooks/eatNoteHooks";
+import { useTranslation } from "react-i18next";
 
 /**
  * This component displays a note for a restaurant
@@ -14,6 +15,7 @@ import { useDeleteRestaurantNote } from "./hooks/eatNoteHooks";
  */
 const EatNote = ({ note, refetch }: { note: INote; refetch: () => void }) => {
   const User = useGetCurrentUser();
+  const { t } = useTranslation();
   const { mutate: deleteNote, isPending: isDeletingNote } =
     useDeleteRestaurantNote();
 
@@ -52,7 +54,7 @@ const EatNote = ({ note, refetch }: { note: INote; refetch: () => void }) => {
             className="bg-red-600 text-white hover:bg-red-700 text-sm font-bold"
           >
             <FontAwesomeIcon icon={faTrash} className="mr-2" />
-            Delete
+            {t("eat.notes.delete")}
           </CustomizedButton>
         )}
       </div>
@@ -60,9 +62,9 @@ const EatNote = ({ note, refetch }: { note: INote; refetch: () => void }) => {
         open={isDialogOpen}
         onClose={() => setIsDialogOpen(false)}
         actions={dialogActions}
-        title="Delete Note"
+        title={t("eat.notes.deleteTitle")}
       >
-        Do you want to delete this note?
+        {t("eat.notes.deleteConfirmation")}
       </Dialog>
     </div>
   );

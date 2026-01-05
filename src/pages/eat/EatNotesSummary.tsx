@@ -13,6 +13,7 @@ export default function EatNotesSummary({
   notes: INote[];
   restaurant: IRestaurant;
 }) {
+  const { t } = useTranslation();
   const language = useTranslation().i18n.language;
   const { summary, isStreaming, generateNotesSummary } =
     useGenerateNotesSummary();
@@ -27,7 +28,7 @@ export default function EatNotesSummary({
         {isStreaming && (
           <FontAwesomeIcon icon={faSpinner} spin className="mr-2" />
         )}
-        Generate Summary
+        {t("eat.notes.generateSummary")}
       </CustomizedButton>
       {summary && <Markdown>{summary}</Markdown>}
     </>

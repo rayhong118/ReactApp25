@@ -57,6 +57,15 @@
       "edit": "编辑",
       "go": "前往",
       "notesAndRatings": "笔记和评分"
+    },
+    "notes": {
+      "generateSummary": "生成总结",
+      "addNote": "添加笔记",
+      "submitting": "提交中...",
+      "delete": "删除",
+      "deleteTitle": "删除笔记",
+      "deleteConfirmation": "确定要删除这个笔记吗？",
+      "rate": "评分"
     }
   }
 }

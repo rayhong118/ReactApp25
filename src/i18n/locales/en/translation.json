@@ -58,6 +58,17 @@
       "edit": "Edit",
       "go": "Go",
       "notesAndRatings": "Notes & Ratings"
+    },
+    "notes": {
+      "generateSummary": "Generate Summary",
+      "_generateSummary.comment": "Generate a summary of the notes for this restaurant.",
+      "addNote": "Add Note",
+      "_addNote.comment": "Add a note to the restaurant.",
+      "submitting": "Submitting...",
+      "delete": "Delete",
+      "deleteTitle": "Delete Note",
+      "deleteConfirmation": "Are you sure you want to delete this note?",
+      "rate": "Rate"
     }
   }
 }
