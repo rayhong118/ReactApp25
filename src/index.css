@@ -1,0 +1,13 @@
+@import "tailwindcss";
+
+@theme {
+  /* Your custom Orange "Brand" colors */
+  --color-brand-light: #FFF7ED;
+  --color-brand-soft: #FFEDD5;
+  --color-brand-primary: #FB923C;
+  --color-brand-vibrant: #F97316;
+
+  /* Your Surface colors */
+  --color-surface: #FAF9F6;
+  --color-surface-card: #FFFFFF;
+}

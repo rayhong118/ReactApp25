@@ -34,7 +34,11 @@ export const EatList = () => {
 
   return (
     <div className="flex flex-col gap-5 w-full">
-      <PrimaryButton disabled={!User} onClick={() => setIsDialogOpen(true)}>
+      <PrimaryButton
+        disabled={!User}
+        onClick={() => setIsDialogOpen(true)}
+        paddingMultiplier={2}
+      >
         <FontAwesomeIcon icon={faPlus} className="mr-2" />
         {t("eat.list.addRestaurant")}
       </PrimaryButton>

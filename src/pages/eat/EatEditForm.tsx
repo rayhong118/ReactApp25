@@ -278,8 +278,8 @@ export const EatEditForm = (props: IEatEditFormProps) => {
                 }
                 onClick={() => setShowDeleteConfirmation(true)}
                 paddingMultiplier={2}
-                className="text-base bg-red-600 text-white font-semibold 
-                cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed hover:bg-red-700"
+                className="text-base border-red-500 border-2 text-red-500 font-semibold 
+                cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed hover:bg-red-50 "
               >
                 {deleteRestaurantIsPending ? (
                   <FontAwesomeIcon icon={faSpinner} spin={true} />

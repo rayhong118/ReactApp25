@@ -17,11 +17,11 @@ export const PrimaryButton = (props: IButtonProps) => {
       disabled={props.disabled}
       type={props.type}
       className={
-        "bg-blue-500 text-white font-semibold py-" +
+        "bg-brand-primary text-white font-semibold py-" +
         paddingMultiplier +
         " px-" +
         paddingMultiplier * 2 +
-        " rounded hover:bg-blue-600 disabled:bg-gray-400 " +
+        " rounded hover:bg-brand-vibrant disabled:bg-gray-400 cursor-pointer disabled:cursor-not-allowed " +
         (props.className || "")
       }
     >
@@ -40,11 +40,11 @@ export const SecondaryButton = (props: IButtonProps) => {
       disabled={props.disabled}
       type={props.type}
       className={
-        "text-gray-600 font-semibold py-" +
+        "font-semibold py-" +
         paddingMultiplier +
         " px-" +
         paddingMultiplier * 2 +
-        " rounded text-gray-800 hover:bg-gray-100 disabled:bg-gray-300 " +
+        " rounded text-gray-800 hover:bg-brand-soft disabled:bg-gray-300 cursor-pointer disabled:cursor-not-allowed " +
         (props.className || "")
       }
     >
@@ -67,7 +67,7 @@ export const CustomizedButton = (props: IButtonProps) => {
         paddingMultiplier +
         " px-" +
         paddingMultiplier * 2 +
-        " rounded text-gray-600 hover:bg-gray-100 disabled:bg-gray-300 " +
+        " rounded text-gray-800 hover:bg-brand-soft disabled:bg-gray-300 cursor-pointer disabled:cursor-not-allowed " +
         props.className
       }
     >

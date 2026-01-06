@@ -7,7 +7,7 @@ const Home = () => {
         className="homepage-panel bg-black overflow-hidden min-h-screen
        w-full max-h-screen flex flex-col justify-center items-center"
       >
-        <h1 id="homepage_title" className="font-bold p-20">
+        <h1 id="homepage_title" className="font-bold">
           HOMEPAGE
         </h1>
         <h2 id="homepage_subtitle" className="text-2xl text-white">

@@ -60,7 +60,7 @@ const Navigation = () => {
       }}
       key={label}
       className={`flex items-center px-3 py-2 rounded-md text-md font-medium 
-         text-gray-700 hover:bg-gray-100 text-start whitespace-nowrap ${
+         text-gray-700 hover:bg-gray-100 text-start whitespace-nowrap cursor-pointer ${
            nested ? "w-full" : ""
          }`}
     >
@@ -90,7 +90,7 @@ const Navigation = () => {
   return (
     <div
       ref={wrapperRef}
-      className="fixed top-0 w-full bg-white/95 backdrop-blur-sm shadow-sm z-40"
+      className="fixed top-0 w-full bg-white shadow-sm z-40"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
@@ -129,7 +129,7 @@ const Navigation = () => {
                 aria-haspopup="true"
                 aria-expanded={dropdownOpen}
                 className="inline-flex items-center px-3 py-2 rounded-md text-md font-medium
-                 text-gray-700 hover:bg-gray-100 whitespace-nowrap"
+                 text-gray-700 hover:bg-gray-100 whitespace-nowrap cursor-pointer"
               >
                 <FontAwesomeIcon icon={faFlask} className="mr-2 pt-0.5" />
                 {t("navbar.lab.title")}
@@ -226,7 +226,7 @@ const Navigation = () => {
               <button
                 onClick={() => setDropdownOpen((s) => !s)}
                 className="w-full text-left px-3 py-2 rounded-md text-md font-medium text-gray-700 
-                hover:bg-gray-100 flex items-center justify-between"
+                hover:bg-gray-100 flex items-center justify-between cursor-pointer"
               >
                 <span>
                   <FontAwesomeIcon icon={faFlask} className="mr-2 pt-0.5" />

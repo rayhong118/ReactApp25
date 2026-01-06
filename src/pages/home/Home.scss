@@ -5,6 +5,7 @@
   align-items: center;
   font-size: 12vw;
   max-width: 100vw;
+  max-height: 100vh;
   overflow: hidden;
   background: url("/shanghai.webp") no-repeat center/cover fixed;
   background-clip: text;
@@ -41,7 +42,6 @@
     opacity: 1;
   }
 }
-
 
 .homepage-container {
   overflow-x: hidden;
@@ -88,10 +88,12 @@
   flex-wrap: wrap;
 
   .card {
-    background-image: linear-gradient(var(--background-direction),
-        #5ddcff,
-        #3c67e3 43%,
-        #4e00c2);
+    background-image: linear-gradient(
+      var(--background-direction),
+      #5ddcff,
+      #3c67e3 43%,
+      #4e00c2
+    );
     animation: rotate 2s linear infinite;
     padding: 0.5em;
     border-radius: 1em;

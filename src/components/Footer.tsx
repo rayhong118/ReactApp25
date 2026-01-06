@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const Footer = () => {
   return (
-    <div className="mt-5 bg-gray-800 text-white px-5 py-20 md:p-20">
+    <div className="bg-gray-800 text-white px-5 py-20 md:p-20">
       <h2 className="text-lg font-bold">Contact</h2>
       <p className="text-lg">You can find me on LinkedIn and GitHub.</p>
       <div className="">

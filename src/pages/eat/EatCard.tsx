@@ -99,7 +99,7 @@ export const EatCard = React.memo(
 
           <div className="flex justify-between items-center w-full">
             {restaurant.cityAndState && (
-              <span className="px-2 py-0.5 bg-blue-200 rounded-md">
+              <span className="px-2 py-0.5 bg-brand-vibrant text-white rounded-md">
                 {restaurant.cityAndState}
               </span>
             )}
