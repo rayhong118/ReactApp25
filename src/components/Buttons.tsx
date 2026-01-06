@@ -4,26 +4,22 @@ interface IButtonProps {
   disabled?: boolean;
   type?: "button" | "submit" | "reset";
   className?: string;
-  paddingMultiplier?: number;
 }
 
 export const PrimaryButton = (props: IButtonProps) => {
-  const paddingMultiplier = props.paddingMultiplier
-    ? props.paddingMultiplier
-    : 1;
   return (
     <button
       onClick={props.onClick}
       disabled={props.disabled}
       type={props.type}
-      className={
-        "bg-brand-primary text-white font-semibold py-" +
-        paddingMultiplier +
-        " px-" +
-        paddingMultiplier * 2 +
-        " rounded hover:bg-brand-vibrant disabled:bg-gray-400 cursor-pointer disabled:cursor-not-allowed " +
-        (props.className || "")
-      }
+      className={`
+    bg-brand-primary text-white font-semibold py-1 px-2 rounded
+    hover-bg-brand-vibrant 
+    disabled:bg-gray-400 cursor-pointer disabled:cursor-not-allowed 
+    ${props.className || ""}
+  `
+        .replace(/\s+/g, " ")
+        .trim()}
     >
       {props.children}
     </button>
@@ -31,22 +27,20 @@ export const PrimaryButton = (props: IButtonProps) => {
 };
 
 export const SecondaryButton = (props: IButtonProps) => {
-  const paddingMultiplier = props.paddingMultiplier
-    ? props.paddingMultiplier
-    : 1;
   return (
     <button
       onClick={props.onClick}
       disabled={props.disabled}
       type={props.type}
-      className={
-        "font-semibold py-" +
-        paddingMultiplier +
-        " px-" +
-        paddingMultiplier * 2 +
-        " rounded text-gray-800 hover:bg-brand-soft disabled:bg-gray-300 cursor-pointer disabled:cursor-not-allowed " +
-        (props.className || "")
-      }
+      className={`
+    bg-transparent text-gray-800 font-semibold py-1 px-2 rounded 
+    border-2 border-transparent
+    hover-bg-brand-soft hover-border-brand-soft 
+    disabled:bg-gray-400 disabled:cursor-not-allowed cursor-pointer
+    ${props.className || ""}
+  `
+        .replace(/\s+/g, " ")
+        .trim()}
     >
       {props.children}
     </button>
@@ -54,22 +48,18 @@ export const SecondaryButton = (props: IButtonProps) => {
 };
 
 export const CustomizedButton = (props: IButtonProps) => {
-  const paddingMultiplier = props.paddingMultiplier
-    ? props.paddingMultiplier
-    : 1;
   return (
     <button
       onClick={props.onClick}
       disabled={props.disabled}
       type={props.type}
-      className={
-        "py-" +
-        paddingMultiplier +
-        " px-" +
-        paddingMultiplier * 2 +
-        " rounded text-gray-800 hover:bg-brand-soft disabled:bg-gray-300 cursor-pointer disabled:cursor-not-allowed " +
-        props.className
-      }
+      className={`
+    rounded text-gray-800 transition-colors duration-200 cursor-pointer py-1 px-2 
+    disabled:cursor-not-allowed 
+    ${props.className || ""}
+  `
+        .replace(/\s+/g, " ")
+        .trim()}
     >
       {props.children}
     </button>

@@ -36,7 +36,7 @@ const UserSettings = () => {
           {currentUser.emailVerified
             ? t("settings.emailVerified")
             : t("settings.emailNotVerified")}
-          <PrimaryButton onClick={signOut} paddingMultiplier={2}>
+          <PrimaryButton onClick={signOut}>
             {t("settings.signOut")}
           </PrimaryButton>
         </>

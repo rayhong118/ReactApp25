@@ -1,4 +1,4 @@
-import { SecondaryButton } from "@/components/Buttons";
+import { PrimaryButton, SecondaryButton } from "@/components/Buttons";
 import { Dialog } from "@/components/Dialog";
 import { useAddMessageBars } from "@/utils/MessageBarsAtom";
 import {
@@ -210,7 +210,7 @@ const UserPromptSection = () => {
           <label htmlFor="userPrompt">{t("eat.filter.userPrompt")}</label>
         </div>
         <div className="flex gap-2">
-          <SecondaryButton
+          <PrimaryButton
             type="button"
             onClick={handleUserPromptSubmit}
             disabled={isFetching || !userPromptInput || isFetchingUserLocation}
@@ -219,10 +219,10 @@ const UserPromptSection = () => {
               <FontAwesomeIcon icon={faSpinner} spin={true} className="mr-2" />
             )}
             {t("eat.filter.pick")}
-          </SecondaryButton>
+          </PrimaryButton>
           <label
             className="flex gap-2 px-2 py-1 items-center rounded-md cursor-pointer text-sm
-            border border-gray-300"
+            border-2 border-brand-soft bg-brand-light"
           >
             <input
               type="checkbox"
@@ -325,7 +325,7 @@ const LocationTagsList = () => {
         displayedData?.map((tag) => (
           <label
             className="flex gap-2 px-2 py-1 items-center rounded-md cursor-pointer 
-            text-sm border border-gray-300"
+            text-sm border-2 border-brand-soft bg-brand-light"
             key={tag.value}
           >
             <input

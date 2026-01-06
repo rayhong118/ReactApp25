@@ -153,16 +153,13 @@ const Upload = () => {
             alt="Preview"
             className="w-full"
           />
-          <SecondaryButton
-            onClick={() => setImageFile(null)}
-            paddingMultiplier={2}
-          >
+          <SecondaryButton onClick={() => setImageFile(null)}>
             Remove Replacement Image
           </SecondaryButton>
         </>
       )}
 
-      <SecondaryButton onClick={onUploadClick} paddingMultiplier={2}>
+      <SecondaryButton onClick={onUploadClick}>
         {imageFile || specificArtwork ? "Change" : "Add"} Image
       </SecondaryButton>
       {
@@ -237,7 +234,6 @@ const Upload = () => {
             type="submit"
             className="col-span-2"
             disabled={isPending || !payload}
-            paddingMultiplier={2}
           >
             {isPending ? "Submitting..." : "Submit"}
           </PrimaryButton>

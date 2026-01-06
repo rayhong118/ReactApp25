@@ -132,7 +132,6 @@ const Drawings = () => {
             <PrimaryButton
               onClick={() => fetchNextPage()}
               disabled={isFetchingNextPage}
-              paddingMultiplier={2}
             >
               Load More
             </PrimaryButton>

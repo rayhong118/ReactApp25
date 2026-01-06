@@ -59,7 +59,8 @@ export const EatRatingHistogram = ({
               width={xScale(d.count)}
               height={yScale.bandwidth()}
               fill="#fbbf24"
-              rx={1}
+              rx={8}
+              ry={8}
             />
             {/* The Count Label (at the end of the bar) */}
             <text

@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+/* Fix hover beavior on touchscreen laptops */
+@custom-variant hover (&:hover);
+
 @theme {
   /* Your custom Orange "Brand" colors */
   --color-brand-light: #FFF7ED;
@@ -10,4 +13,17 @@
   /* Your Surface colors */
   --color-surface: #FAF9F6;
   --color-surface-card: #FFFFFF;
+}
+
+/* Custom hover utilities that bypass media query wrapper */
+.hover-bg-brand-soft:hover {
+  background-color: var(--color-brand-soft);
+}
+
+.hover-bg-brand-vibrant:hover {
+  background-color: var(--color-brand-vibrant);
+}
+
+.hover-border-brand-soft:hover {
+  border-color: var(--color-brand-soft);
 }
