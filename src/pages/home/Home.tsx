@@ -33,6 +33,18 @@ const Home = () => {
           </div>
         </div>
       </div>
+      <div
+        className="homepage-panel bg-white min-h-screen w-full max-h-screen 
+        flex flex-col justify-center items-center"
+      >
+        <div id="animatedGrid">
+          {[...Array(9)].map((_, index) => (
+            <div key={index} className="card">
+              <h1 className="font-bold text-2xl">{index}</h1>
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   );
 };
