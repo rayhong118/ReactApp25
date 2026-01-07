@@ -9,6 +9,7 @@ import {
 import {
   faAngleDown,
   faAngleUp,
+  faBookOpen,
   faDirections,
   faEdit,
 } from "@fortawesome/free-solid-svg-icons";
@@ -22,6 +23,7 @@ import "./EatNotesPanel.scss";
 import { EatRatingHistogram } from "./EatRatingHistogram";
 import { withComponentSuspense } from "@/hooks/withSuspense";
 import { useTranslation } from "react-i18next";
+import { EatMenu } from "./EatMenu";
 
 const EatNotesPanel = lazy(() => import("./EatNotesPanel"));
 
@@ -29,7 +31,8 @@ export const EatCard = React.memo(
   ({ restaurant }: { restaurant: IRestaurant }) => {
     const [isNotesExpanded, setIsNotesExpanded] = useState(false);
     const [isHistogramExpanded, setIsHistogramExpanded] = useState(false);
-    const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+    const [isMenuDialogOpen, setIsMenuDialogOpen] = useState(false);
     const [wasNotesInitialized, setWasNotesInitialized] = useState(false);
 
     const { t } = useTranslation();
@@ -46,12 +49,20 @@ export const EatCard = React.memo(
       }
     }, []);
 
-    const openDialog = useCallback(() => {
-      setIsDialogOpen(true);
+    const openEditDialog = useCallback(() => {
+      setIsEditDialogOpen(true);
     }, []);
 
-    const closeDialog = useCallback(() => {
-      setIsDialogOpen(false);
+    const closeEditDialog = useCallback(() => {
+      setIsEditDialogOpen(false);
+    }, []);
+
+    const openMenuDialog = useCallback(() => {
+      setIsMenuDialogOpen(true);
+    }, []);
+
+    const closeMenuDialog = useCallback(() => {
+      setIsMenuDialogOpen(false);
     }, []);
 
     const handleShare = useCallback(() => {
@@ -81,11 +92,14 @@ export const EatCard = React.memo(
     return (
       <div>
         <Dialog
-          open={isDialogOpen}
-          onClose={closeDialog}
+          open={isEditDialogOpen}
+          onClose={closeEditDialog}
           title="Edit Restaurant"
         >
-          <EatEditForm restaurant={restaurant} closeDialog={closeDialog} />
+          <EatEditForm restaurant={restaurant} closeDialog={closeEditDialog} />
+        </Dialog>
+        <Dialog open={isMenuDialogOpen} onClose={closeMenuDialog} title="Menu">
+          <EatMenu restaurant={restaurant} closeDialog={closeMenuDialog} />
         </Dialog>
         <div className="border border-gray-300 p-4 rounded-md">
           <h1 className="text-xl font-bold">
@@ -99,7 +113,7 @@ export const EatCard = React.memo(
 
           <div className="flex justify-between items-center w-full">
             {restaurant.cityAndState && (
-              <span className="px-2 py-0.5 bg-brand-vibrant text-white rounded-md">
+              <span className="px-2 py-0.5 bg-brand-light border-2 border-brand-soft text-brand-vibrant rounded-md">
                 {restaurant.cityAndState}
               </span>
             )}
@@ -156,8 +170,15 @@ export const EatCard = React.memo(
               </SecondaryButton>
             </div>
 
+            {/* Action buttons: Edit, Go, Menu */}
             <div className="flex">
-              <SecondaryButton disabled={!User} onClick={openDialog}>
+              {(true || restaurant.hasMenu) && (
+                <SecondaryButton onClick={openMenuDialog}>
+                  <FontAwesomeIcon icon={faBookOpen} className="mr-2" />
+                  {t("eat.card.menu")}
+                </SecondaryButton>
+              )}
+              <SecondaryButton disabled={!User} onClick={openEditDialog}>
                 <FontAwesomeIcon icon={faEdit} className="mr-2" />
                 {t("eat.card.edit")}
               </SecondaryButton>

@@ -31,13 +31,14 @@ export interface IRestaurant {
   stars?: Partial<IStarRating>;
   /**
    * Average rating of the restaurant. Should be read only, and only
-   * be modified by the firebase functions on user submit.
+   * be modified by the firebase functions on user rating submit.
    * Should be a string to allow for decimal places.
    */
   averageStars?: string;
   /**
+   * Not in use
    * Number of ratings of the restaurant. Should be read only, and only
-   * be modified by the firebase functions on user submit.
+   * be modified by the firebase functions on user rating submit.
    */
   starRatingCount?: number;
   /**
@@ -52,6 +53,11 @@ export interface IRestaurant {
    * City and state of the restaurant.
    */
   cityAndState?: string;
+  /**
+   * Whether the restaurant has a menu.
+   * When a user uploads a menu image, gemini API will be used to extract the menu items.
+   */
+  hasMenu?: boolean;
 }
 
 export interface IStarRating {
@@ -116,4 +122,24 @@ export interface ILocationTag {
    * Count of restaurants with this location tag. This is handled by the firebase functions.
    */
   count: number;
+}
+
+/**
+ * Payload for menu image upload
+ */
+export interface IMenuUploadPayload {
+  file: File;
+  restaurantId: string;
+}
+
+export interface IMenu {
+  id?: string;
+  restaurantId: string;
+  items: IMenuItem[];
+}
+
+export interface IMenuItem {
+  name: string;
+  price?: number;
+  description?: string;
 }
