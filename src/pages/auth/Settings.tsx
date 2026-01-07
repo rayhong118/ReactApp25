@@ -2,6 +2,7 @@ import { PrimaryButton } from "@/components/Buttons";
 import { useTranslation } from "react-i18next";
 import { useGetCurrentUser } from "../../utils/AuthenticationAtoms";
 import { useSignOut } from "../../utils/AuthServiceHooks";
+import type { User } from "firebase/auth";
 const languages = [
   { code: "en", name: "English" },
   { code: "zh", name: "中文" },
@@ -9,40 +10,41 @@ const languages = [
 
 const UserSettings = () => {
   const currentUser = useGetCurrentUser();
-  const signOut = useSignOut();
   const { t } = useTranslation();
-
+  const signOut = useSignOut();
   return (
-    <div className="flex flex-col gap-4">
-      {currentUser && (
-        <>
-          <h1 className="text-2xl font-bold">{t("settings.title")}</h1>
-          <h2 className="text-xl font-semibold">{t("settings.accountInfo")}</h2>
-          {currentUser.photoURL && (
-            <img
-              src={currentUser.photoURL}
-              alt={t("settings.profilePicture")}
-              className="w-20 h-20 rounded-full mb-4 object-cover"
-            />
-          )}
-          <h3 className="text-lg font-semibold text-gray-800">
-            {currentUser.displayName || "User"}
-          </h3>
-          <span className="font-semibold">{t("settings.email")}:</span>{" "}
-          {currentUser.email}
-          <span className="font-semibold">
-            {t("settings.emailVerificationStatus")}:
-          </span>
-          {currentUser.emailVerified
-            ? t("settings.emailVerified")
-            : t("settings.emailNotVerified")}
-          <PrimaryButton onClick={signOut}>
-            {t("settings.signOut")}
-          </PrimaryButton>
-        </>
-      )}
+    <div className="flex flex-col gap-4 max-w-sm">
+      {currentUser && accountSettings(currentUser, signOut, t)}
       <LanguageSettings />
     </div>
+  );
+};
+
+const accountSettings = (currentUser: User, signOut: () => void, t: any) => {
+  return (
+    <>
+      <h1 className="text-2xl font-bold">{t("settings.title")}</h1>
+      <h2 className="text-xl font-semibold">{t("settings.accountInfo")}</h2>
+      {currentUser.photoURL && (
+        <img
+          src={currentUser.photoURL}
+          alt={t("settings.profilePicture")}
+          className="w-20 h-20 rounded-full mb-4 object-cover"
+        />
+      )}
+      <h3 className="text-lg font-semibold text-gray-800">
+        {currentUser.displayName || "User"}
+      </h3>
+      <span className="font-semibold">{t("settings.email")}:</span>{" "}
+      {currentUser.email}
+      <span className="font-semibold">
+        {t("settings.emailVerificationStatus")}:
+      </span>
+      {currentUser.emailVerified
+        ? t("settings.emailVerified")
+        : t("settings.emailNotVerified")}
+      <PrimaryButton onClick={signOut}>{t("settings.signOut")}</PrimaryButton>
+    </>
   );
 };
 

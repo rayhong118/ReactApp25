@@ -78,5 +78,12 @@
       "deleteConfirmation": "确定要删除这个笔记吗？",
       "rate": "评分"
     }
+  },
+  "footer": {
+    "contact": {
+      "title": "联系",
+      "text": "你可以在 LinkedIn 和 GitHub 上找到我。"
+    },
+    "settings": "设置"
   }
 }

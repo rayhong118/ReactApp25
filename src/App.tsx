@@ -44,77 +44,75 @@ const App: React.FC = () => {
   }, [setCurrentUser]);
 
   return (
-    <>
-      <BrowserRouter>
-        <ScrollToTop />
-        <Navigation />
-        {withSuspense(<MessageBarsContainer />)}
+    <BrowserRouter>
+      <ScrollToTop />
+      <Navigation />
+      {withSuspense(<MessageBarsContainer />)}
 
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/auth" element={withSuspense(<AuthPage />)} />
-          <Route
-            path="/settings"
-            element={withSuspense(withDefaultPagePadding(<Settings />))}
-          />
-          <Route path="/about" element={withDefaultPagePadding(<About />)} />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/auth" element={withSuspense(<AuthPage />)} />
+        <Route
+          path="/settings"
+          element={withSuspense(withDefaultPagePadding(<Settings />))}
+        />
+        <Route path="/about" element={withDefaultPagePadding(<About />)} />
 
-          <Route
-            path="/experiments/fileUpload"
-            element={withSuspense(withDefaultPagePadding(<FileUpload />))}
-          />
-          <Route
-            path="/experiments/formValidation"
-            element={withSuspense(withDefaultPagePadding(<FormValidation />))}
-          />
-          <Route
-            path="/experiments/moveLists"
-            element={withSuspense(
-              withDefaultPagePadding(<WithAuthRequired component={MoveLists} />)
-            )}
-          />
-          <Route
-            path="/experiments/stopWatch"
-            element={withSuspense(withDefaultPagePadding(<StopWatch />))}
-          />
-          <Route
-            path="/experiments/imageCarousels"
-            element={withSuspense(withDefaultPagePadding(<ImageCarousel />))}
-          />
-          <Route
-            path="/experiments/ticTacToe"
-            element={withSuspense(withDefaultPagePadding(<JiZiQi />))}
-          />
-          <Route
-            path="/eat"
-            element={withSuspense(withDefaultPagePadding(<Eat />))}
-          />
-          <Route
-            path="/drawings"
-            element={withSuspense(withDefaultPagePadding(<Drawings />))}
-          />
-          <Route
-            path="/drawings/upload"
-            element={withSuspense(
-              withDefaultPagePadding(<WithAuthRequired component={Upload} />)
-            )}
-          />
-          <Route
-            path="/drawings/:id"
-            element={withSuspense(
-              withDefaultPagePadding(
-                <WithAuthRequired component={SingleDrawing} />
-              )
-            )}
-          />
-          <Route
-            path="*"
-            element={withSuspense(withDefaultPagePadding(<NotFound />))}
-          />
-        </Routes>
-      </BrowserRouter>
+        <Route
+          path="/experiments/fileUpload"
+          element={withSuspense(withDefaultPagePadding(<FileUpload />))}
+        />
+        <Route
+          path="/experiments/formValidation"
+          element={withSuspense(withDefaultPagePadding(<FormValidation />))}
+        />
+        <Route
+          path="/experiments/moveLists"
+          element={withSuspense(
+            withDefaultPagePadding(<WithAuthRequired component={MoveLists} />)
+          )}
+        />
+        <Route
+          path="/experiments/stopWatch"
+          element={withSuspense(withDefaultPagePadding(<StopWatch />))}
+        />
+        <Route
+          path="/experiments/imageCarousels"
+          element={withSuspense(withDefaultPagePadding(<ImageCarousel />))}
+        />
+        <Route
+          path="/experiments/ticTacToe"
+          element={withSuspense(withDefaultPagePadding(<JiZiQi />))}
+        />
+        <Route
+          path="/eat"
+          element={withSuspense(withDefaultPagePadding(<Eat />))}
+        />
+        <Route
+          path="/drawings"
+          element={withSuspense(withDefaultPagePadding(<Drawings />))}
+        />
+        <Route
+          path="/drawings/upload"
+          element={withSuspense(
+            withDefaultPagePadding(<WithAuthRequired component={Upload} />)
+          )}
+        />
+        <Route
+          path="/drawings/:id"
+          element={withSuspense(
+            withDefaultPagePadding(
+              <WithAuthRequired component={SingleDrawing} />
+            )
+          )}
+        />
+        <Route
+          path="*"
+          element={withSuspense(withDefaultPagePadding(<NotFound />))}
+        />
+      </Routes>
       {withSuspense(<Footer />)}
-    </>
+    </BrowserRouter>
   );
 };
 
