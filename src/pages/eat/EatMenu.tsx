@@ -1,9 +1,9 @@
-import { useGetCurrentUser } from "@/utils/AuthenticationAtoms";
-import type { IRestaurant } from "./Eat.types";
 import { SecondaryButton } from "@/components/Buttons";
-import { useState } from "react";
-import { useUploadMenuImage } from "./hooks/menuHooks";
 import { Loading } from "@/components/Loading";
+import { useGetCurrentUser } from "@/utils/AuthenticationAtoms";
+import { useState } from "react";
+import type { IMenuItem, IMenuItemByCategory, IRestaurant } from "./Eat.types";
+import { getMenuData, useUploadMenuImage } from "./hooks/menuHooks";
 
 /**
  * Menu component:
@@ -18,6 +18,9 @@ export const EatMenu = ({ restaurant, closeDialog }: IEatMenuProps) => {
   const currentUser = useGetCurrentUser();
   const [menuImage, setMenuImage] = useState<File>();
   const { mutateAsync: uploadMenuImage, isPending } = useUploadMenuImage();
+  const { data: menuData, isLoading: menuDataLoading } = getMenuData(
+    restaurant.id || ""
+  );
   const handleUploadImage = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!menuImage || !restaurant.id) return;
@@ -39,6 +42,31 @@ export const EatMenu = ({ restaurant, closeDialog }: IEatMenuProps) => {
           />
           <SecondaryButton type="submit">Upload</SecondaryButton>
         </form>
+      )}
+      {menuDataLoading && <Loading />}
+      {menuData && (
+        <div>
+          <h2>Menu</h2>
+          <ul>
+            {menuData.categories.map((category: IMenuItemByCategory) => (
+              <li key={category.name}>
+                <h3>{category.name}</h3>
+                <ul>
+                  {category.items.map((item: IMenuItem) => (
+                    <li key={item.name}>
+                      <h4>{item.name}</h4>
+                      <p>{item.price}</p>
+                      <p>{item.description}</p>
+                    </li>
+                  ))}
+                </ul>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+      {closeDialog && (
+        <SecondaryButton onClick={closeDialog}>Close</SecondaryButton>
       )}
     </div>
   );

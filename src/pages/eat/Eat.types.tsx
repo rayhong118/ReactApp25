@@ -135,11 +135,27 @@ export interface IMenuUploadPayload {
 export interface IMenu {
   id?: string;
   restaurantId: string;
+  categories: IMenuItemByCategory[];
+  isAYCE: boolean;
+  aycePrices?: IAYCEPrice[];
+}
+
+export interface IMenuItemByCategory {
+  name: string;
   items: IMenuItem[];
 }
 
 export interface IMenuItem {
   name: string;
-  price?: number;
+  /**
+   * Price of the menu item, can handle "market price" scenario
+   */
+  price?: number | string;
   description?: string;
+}
+
+export interface IAYCEPrice {
+  price: number;
+  timePeriod: "Lunch" | "Dinner" | "Weekend" | "Happy Hour" | string;
+  additionalInfo?: string;
 }

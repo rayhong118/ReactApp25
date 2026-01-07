@@ -1,7 +1,15 @@
 import { useAddMessageBars } from "@/utils/MessageBarsAtom";
-import { useMutation } from "@tanstack/react-query";
-import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import {
+  getDownloadURL,
+  getStorage,
+  ref,
+  uploadBytes,
+  type UploadMetadata,
+} from "firebase/storage";
 import type { IMenuUploadPayload } from "../Eat.types";
+import { doc, getDoc, setDoc } from "firebase/firestore";
+import { db } from "@/firebase";
 
 export const useUploadMenuImage = () => {
   const addMessageBar = useAddMessageBars();
@@ -19,9 +27,27 @@ export const useUploadMenuImage = () => {
           "_" +
           currentDate
       );
+      const metadata = {
+        customMetadata: {
+          restaurantId: uploadPayload.restaurantId,
+          uploadTime: currentDate.toString(),
+        },
+      } as UploadMetadata;
       try {
-        const snapshot = await uploadBytes(storageRef, uploadPayload.file);
+        const snapshot = await uploadBytes(
+          storageRef,
+          uploadPayload.file,
+          metadata
+        );
         const downloadURL = await getDownloadURL(snapshot.ref);
+        // In firestore menu collection, add a document with the restaurant ID and the image URL
+        const menuDoc = doc(db, "menu-images", uploadPayload.restaurantId);
+        await setDoc(menuDoc, {
+          restaurantId: uploadPayload.restaurantId,
+          imageUrl: downloadURL,
+          menuStatus: "pending",
+          createdAt: currentDate,
+        });
         return downloadURL;
       } catch (error) {
         console.error(error);
@@ -52,4 +78,19 @@ export const useUploadMenuImage = () => {
   });
 
   return { mutateAsync, isPending, isSuccess };
+};
+
+export const getMenuData = (restaurantId: string) => {
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["menu-data", restaurantId],
+    queryFn: async () => {
+      const menuDoc = doc(db, "menus", restaurantId);
+      const menuDocSnapshot = await getDoc(menuDoc);
+      return menuDocSnapshot.data();
+    },
+    enabled: !!restaurantId,
+    staleTime: 60 * 60 * 1000,
+  });
+
+  return { data, isLoading, error };
 };

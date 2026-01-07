@@ -172,12 +172,10 @@ export const EatCard = React.memo(
 
             {/* Action buttons: Edit, Go, Menu */}
             <div className="flex">
-              {(true || restaurant.hasMenu) && (
-                <SecondaryButton onClick={openMenuDialog}>
-                  <FontAwesomeIcon icon={faBookOpen} className="mr-2" />
-                  {t("eat.card.menu")}
-                </SecondaryButton>
-              )}
+              <SecondaryButton onClick={openMenuDialog}>
+                <FontAwesomeIcon icon={faBookOpen} className="mr-2" />
+                {t("eat.card.menu")}
+              </SecondaryButton>
               <SecondaryButton disabled={!User} onClick={openEditDialog}>
                 <FontAwesomeIcon icon={faEdit} className="mr-2" />
                 {t("eat.card.edit")}
