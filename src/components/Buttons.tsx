@@ -14,7 +14,7 @@ export const PrimaryButton = (props: IButtonProps) => {
       type={props.type}
       className={`
     bg-brand-primary text-white font-semibold py-1 px-2 rounded
-    hover-bg-brand-vibrant 
+    hover:bg-brand-vibrant 
     disabled:bg-gray-400 cursor-pointer disabled:cursor-not-allowed 
     ${props.className || ""}
   `
@@ -34,8 +34,8 @@ export const SecondaryButton = (props: IButtonProps) => {
       type={props.type}
       className={`
     bg-transparent text-gray-800 font-semibold py-1 px-2 rounded 
-    border-2 border-transparent
-    hover-bg-brand-soft hover-border-brand-soft 
+    border-2 border-transparent 
+    hover:bg-brand-soft 
     disabled:bg-gray-400 disabled:cursor-not-allowed cursor-pointer
     ${props.className || ""}
   `
