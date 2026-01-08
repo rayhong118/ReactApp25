@@ -78,7 +78,7 @@ export const Dialog: React.FC<IDialogProps> = (props: IDialogProps) => {
           role="dialog"
           className={`rounded-md flex flex-col space-around justify-between gap-0 
           fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 m-0 
-          bg-white shadow-xl shadow-gray z-50 w-[calc(100vw-2rem)] 
+          bg-white shadow-xl shadow-gray z-50 w-full 
           max-w-7xl max-h-[calc(100vh-4rem)] ${customizedClassName}`}
         >
           <div className="flex flex-row justify-between items-center px-5 pt-5">

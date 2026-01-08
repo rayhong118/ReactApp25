@@ -39,7 +39,15 @@ export const EatMenu = ({ restaurant, closeDialog }: IEatMenuProps) => {
   return (
     <div>
       {isPending && <Loading />}
-      {menuImage && <img src={URL.createObjectURL(menuImage)} alt="Menu" />}
+      {menuImage && (
+        <div className="flex justify-center h-[60vh]">
+          <img
+            src={URL.createObjectURL(menuImage)}
+            alt="Menu"
+            className="w-auto object-contain rounded-lg shadow-sm"
+          />
+        </div>
+      )}
       {currentUser && (
         <form onSubmit={handleUploadImage}>
           <input

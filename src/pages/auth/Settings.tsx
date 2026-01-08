@@ -3,6 +3,8 @@ import { useTranslation } from "react-i18next";
 import { useGetCurrentUser } from "../../utils/AuthenticationAtoms";
 import { useSignOut } from "../../utils/AuthServiceHooks";
 import type { User } from "firebase/auth";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faUser, faGlobe } from "@fortawesome/free-solid-svg-icons";
 const languages = [
   { code: "en", name: "English" },
   { code: "zh", name: "中文" },
@@ -15,6 +17,7 @@ const UserSettings = () => {
   return (
     <div className="flex flex-col gap-4 max-w-sm">
       {currentUser && accountSettings(currentUser, signOut, t)}
+      <hr />
       <LanguageSettings />
     </div>
   );
@@ -24,7 +27,9 @@ const accountSettings = (currentUser: User, signOut: () => void, t: any) => {
   return (
     <>
       <h1 className="text-2xl font-bold">{t("settings.title")}</h1>
-      <h2 className="text-xl font-semibold">{t("settings.accountInfo")}</h2>
+      <h2 className="text-xl font-semibold">
+        <FontAwesomeIcon icon={faUser} /> {t("settings.accountInfo")}
+      </h2>
       {currentUser.photoURL && (
         <img
           src={currentUser.photoURL}
@@ -53,7 +58,9 @@ const LanguageSettings = () => {
 
   return (
     <div className="flex flex-col gap-4">
-      <h2 className="text-xl font-semibold">{t("settings.language")}</h2>
+      <h2 className="text-xl font-semibold">
+        <FontAwesomeIcon icon={faGlobe} /> {t("settings.language")}
+      </h2>
       <select
         className="w-full p-2 border border-gray-300 rounded"
         value={i18n.language}
