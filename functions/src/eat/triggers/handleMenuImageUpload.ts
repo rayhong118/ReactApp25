@@ -3,7 +3,7 @@ import { onObjectFinalized } from "firebase-functions/storage";
 import genAI from "../../utils/genAIClient";
 
 export const handleMenuImageUpload = onObjectFinalized(
-  { secrets: ["GENAI_API_KEY"] },
+  { secrets: ["GEMINI_API_KEY"] },
   async (event) => {
     // Filter to only process files in the menuImages folder
     const filePath = event.data.name;
