@@ -192,6 +192,7 @@ const UserPromptSection = () => {
         open={!!selectedRestaurant}
         title="AI Recommendation"
         onClose={() => setSelectedRestaurant(null)}
+        customizedClassName="w-lg"
       >
         <div>
           <p>{data?.reason}</p>

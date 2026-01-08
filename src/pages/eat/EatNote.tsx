@@ -63,6 +63,7 @@ const EatNote = ({ note, refetch }: { note: INote; refetch: () => void }) => {
         onClose={() => setIsDialogOpen(false)}
         actions={dialogActions}
         title={t("eat.notes.deleteTitle")}
+        customizedClassName="w-lg"
       >
         {t("eat.notes.deleteConfirmation")}
       </Dialog>

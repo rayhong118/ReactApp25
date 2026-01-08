@@ -50,15 +50,15 @@ export const EatMenu = ({ restaurant, closeDialog }: IEatMenuProps) => {
             className="hidden"
           />
           <SecondaryButton onClick={() => fileInputRef.current?.click()}>
-            {t("menu.uploadMenuImage")}
+            {t("eat.menu.uploadMenuImage")}
           </SecondaryButton>
-          <PrimaryButton type="submit">{t("menu.submit")}</PrimaryButton>
+          <PrimaryButton type="submit">{t("eat.menu.submit")}</PrimaryButton>
         </form>
       )}
       {menuDataLoading && <Loading />}
       {menuData && (
         <div>
-          <h2>{t("menu.title")}</h2>
+          <h2>{t("eat.menu.title")}</h2>
           <ul>
             {Object.entries(menuData.categories).map(
               ([categoryName, items]) => (

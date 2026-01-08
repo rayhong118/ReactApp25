@@ -17,12 +17,14 @@ interface IDialogProps {
   actions?: IDialogAction[];
   onClose?: () => void;
   children?: React.ReactNode;
+  customizedClassName?: string;
 }
 
 let scrollLockCount = 0;
 
 export const Dialog: React.FC<IDialogProps> = (props: IDialogProps) => {
-  const { title, actions, open, onClose, children } = props;
+  const { title, actions, open, onClose, children, customizedClassName } =
+    props;
 
   useEffect(() => {
     if (!open) {
@@ -74,9 +76,9 @@ export const Dialog: React.FC<IDialogProps> = (props: IDialogProps) => {
           open={open}
           aria-modal="true"
           role="dialog"
-          className="rounded-md flex flex-col space-around justify-between gap-0 
+          className={`rounded-md flex flex-col space-around justify-between gap-0 
           fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 m-0 
-          bg-white shadow-xl shadow-gray z-50 w-full max-w-lg max-h-[calc(100vh-4rem)]"
+          bg-white shadow-xl shadow-gray z-50 w-full max-w-7xl max-h-[calc(100vh-4rem)] ${customizedClassName}`}
         >
           <div className="flex flex-row justify-between items-center px-5 pt-5">
             <h1 className="text-xl font-bold">{title}</h1>
