@@ -1,7 +1,7 @@
-import { SecondaryButton } from "@/components/Buttons";
+import { PrimaryButton, SecondaryButton } from "@/components/Buttons";
 import { Loading } from "@/components/Loading";
 import { useGetCurrentUser } from "@/utils/AuthenticationAtoms";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import type { IMenuItem, IMenuItemByCategory, IRestaurant } from "./Eat.types";
 import { getMenuData, useUploadMenuImage } from "./hooks/menuHooks";
 
@@ -21,6 +21,7 @@ export const EatMenu = ({ restaurant, closeDialog }: IEatMenuProps) => {
   const { data: menuData, isLoading: menuDataLoading } = getMenuData(
     restaurant.id || ""
   );
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const handleUploadImage = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!menuImage || !restaurant.id) return;
@@ -34,13 +35,20 @@ export const EatMenu = ({ restaurant, closeDialog }: IEatMenuProps) => {
   return (
     <div>
       {isPending && <Loading />}
+      {menuImage && <img src={URL.createObjectURL(menuImage)} alt="Menu" />}
       {currentUser && (
         <form onSubmit={handleUploadImage}>
           <input
             type="file"
+            ref={fileInputRef}
             onChange={(e) => setMenuImage(e.target.files?.[0])}
+            accept="image/*"
+            className="hidden"
           />
-          <SecondaryButton type="submit">Upload</SecondaryButton>
+          <SecondaryButton onClick={() => fileInputRef.current?.click()}>
+            Upload Menu Image
+          </SecondaryButton>
+          <PrimaryButton type="submit">Submit</PrimaryButton>
         </form>
       )}
       {menuDataLoading && <Loading />}

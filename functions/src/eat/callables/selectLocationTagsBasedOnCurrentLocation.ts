@@ -4,7 +4,6 @@ import genAI from "../../utils/genAIClient";
 
 export const selectLocationTagsBasedOnCurrentLocation = onCall(
   {
-    region: "us-central1",
     cors: true,
     secrets: ["GEMINI_API_KEY"],
   },

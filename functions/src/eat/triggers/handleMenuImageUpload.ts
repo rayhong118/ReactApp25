@@ -3,13 +3,18 @@ import { onObjectFinalized } from "firebase-functions/storage";
 import genAI from "../../utils/genAIClient";
 
 export const handleMenuImageUpload = onObjectFinalized(
-  "menuImages",
+  { secrets: ["GENAI_API_KEY"] },
   async (event) => {
-    // TODO: handle menu image upload
+    // Filter to only process files in the menuImages folder
+    const filePath = event.data.name;
+    if (!filePath.startsWith("menuImages/")) {
+      console.log(`Ignoring file outside menuImages folder: ${filePath}`);
+      return;
+    }
 
     // Get restaurant menu info regarding the image
     const restaurantId = event.data.metadata?.restaurantId;
-    const uploadTime = event.data.metadata?.uploadTime;
+    // const uploadTime = event.data.metadata?.uploadTime;
 
     if (!restaurantId) {
       throw new Error("No restaurant ID found");
@@ -18,16 +23,14 @@ export const handleMenuImageUpload = onObjectFinalized(
     const menuImageDocSnapshot = await menuImagesCollection
       .where("restaurantId", "==", restaurantId)
       // time comparison might fail. Need to fix this
-      .where("createdAt", "==", uploadTime)
+      // .where("createdAt", "==", uploadTime)
       .get();
 
     if (menuImageDocSnapshot.empty) {
       throw new Error("Menu not found");
     }
-    const filePath = event.data.name;
-    const bucketName = event.data.bucket;
-    // 1. Acquire the file from Storage
-    const bucket = admin.storage().bucket(bucketName);
+    // 1. Acquire the file from Storage (using default bucket)
+    const bucket = admin.storage().bucket();
     const file = bucket.file(filePath);
     const [fileBuffer] = await file.download();
     const base64Image = fileBuffer.toString("base64");
@@ -73,7 +76,7 @@ export const handleMenuImageUpload = onObjectFinalized(
 
     // update menu collection
     const menuDoc = menuCollectionRef.doc(restaurantId);
-    await menuDoc.set(menu);
+    await menuDoc.set(menu, { merge: true });
 
     // update menu image collection
     const menuImageDoc = menuImagesCollection.doc(

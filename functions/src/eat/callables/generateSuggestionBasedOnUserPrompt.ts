@@ -5,7 +5,6 @@ export const generateSuggestionBasedOnUserPrompt = onCall(
   {
     secrets: ["GEMINI_API_KEY"],
     cors: true,
-    region: "us-central1",
   },
   async (request) => {
     // 1. Data Validation

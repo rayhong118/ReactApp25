@@ -5,7 +5,6 @@ export const generateNotesSummary = onCall(
   {
     secrets: ["GEMINI_API_KEY"],
     cors: true,
-    region: "us-central1",
   },
   async (req, res) => {
     const notes = req.data?.notes;

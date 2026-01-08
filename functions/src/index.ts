@@ -25,7 +25,7 @@ import * as admin from "firebase-admin";
 // functions should each use functions.runWith({ maxInstances: 10 }) instead.
 // In the v1 API, each function can only serve one request per container, so
 // this will be the maximum concurrent request count.
-setGlobalOptions({ maxInstances: 10 });
+setGlobalOptions({ maxInstances: 10, region: "us-west2" });
 
 // export const helloWorld = onRequest((request, response) => {
 //   logger.info("Hello logs!", {structuredData: true});
@@ -41,3 +41,4 @@ export { updateRestaurantAverageRating } from "./eat/triggers/updateRestaurantAv
 export { selectLocationTagsBasedOnCurrentLocation } from "./eat/callables/selectLocationTagsBasedOnCurrentLocation";
 export { generateNotesSummary } from "./eat/callables/generateNotesSummary";
 export { verifyRecaptcha } from "./reCaptcha/reCaptcha";
+export { handleMenuImageUpload } from "./eat/triggers/handleMenuImageUpload";

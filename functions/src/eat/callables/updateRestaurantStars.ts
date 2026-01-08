@@ -6,7 +6,6 @@ import { onCall } from "firebase-functions/https";
 // called when user rates a restaurant
 export const updateRestaurantStars = onCall(
   {
-    region: "us-central1",
     cors: true,
   },
   async (request) => {
