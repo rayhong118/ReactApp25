@@ -57,26 +57,32 @@ export const EatMenu = ({ restaurant, closeDialog }: IEatMenuProps) => {
       )}
       {menuDataLoading && <Loading />}
       {menuData && (
-        <div>
-          <h2>{t("eat.menu.title")}</h2>
-          <ul>
-            {Object.entries(menuData.categories).map(
-              ([categoryName, items]) => (
-                <li key={categoryName}>
-                  <h3>{categoryName}</h3>
-                  <ul>
-                    {items.map((item: IMenuItem, index: number) => (
-                      <li key={index}>
-                        <h4>{item.name[language] || item.name.en}</h4>
-                        <p>{item.price}</p>
-                        <p>{item.description}</p>
-                      </li>
-                    ))}
-                  </ul>
-                </li>
-              )
-            )}
-          </ul>
+        <div className="flex flex-col gap-4">
+          {Object.entries(menuData.categories).map(
+            ([categoryKey, category]) => (
+              <div key={categoryKey}>
+                <h3 className="text-xl font-bold">
+                  {category.name[language] || category.name.en}
+                </h3>
+
+                <div className="flex flex-wrap">
+                  {category.items.map((item: IMenuItem, index: number) => (
+                    <div key={index} className="w-1/2 min-w-xs">
+                      <div className="pl-4 w-full flex justify-between gap-10">
+                        <h4 className="text-lg font-semibold">
+                          {item.name[language] || item.name.en}
+                        </h4>
+                        <p className="text-lg font-semibold">{item.price}</p>
+                      </div>
+                      {item.description && (
+                        <p className="pl-4 text-lg">{item.description}</p>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )
+          )}
         </div>
       )}
       {closeDialog && (

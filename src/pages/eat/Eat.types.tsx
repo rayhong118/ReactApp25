@@ -135,7 +135,15 @@ export interface IMenuUploadPayload {
 export interface IMenu {
   id?: string;
   restaurantId: string;
-  categories: { [categoryName: string]: IMenuItem[] };
+  categories: {
+    [categoryKey: string]: {
+      name: {
+        en: string;
+        zh: string;
+      };
+      items: IMenuItem[];
+    };
+  };
   isAYCE: boolean;
   aycePrices?: IAYCEPrice[];
 }

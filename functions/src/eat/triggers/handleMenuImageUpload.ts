@@ -46,24 +46,40 @@ export const handleMenuImageUpload = onObjectFinalized(
       },
     };
 
-    const prompt = `
-    Read this menu image and return a JSON list of all menu items. 
-    Analyze this menu image.
+    const prompt = `Extract menu data from this image and return structured JSON.
 
-    1. Determine if this is an 'All You Can Eat' (AYCE) menu.
-    2. Extract a JSON object containing the pricing tiers.
-    3. Map out the different prices based on time or day (e.g., Lunch vs. Dinner, Weekday vs. Weekend).
-    4. List all food categories and items.
-    For each item, include the 'name', 'price', and a short 'description' if available. 
-    Group them by their category (e.g., Appetizers, Main Course).
-    `;
+INSTRUCTIONS:
+1. AYCE Detection: Set "isAYCE" to true if this is an All-You-Can-Eat menu, false otherwise.
+
+2. AYCE Pricing (if applicable): Extract pricing tiers into "aycePrices" array with:
+   - price: numeric value
+   - timePeriod: "Lunch", "Dinner", "Weekend", "Happy Hour", etc.
+   - additionalInfo: any restrictions or notes (optional)
+
+3. Categories: Organize items by category (e.g., "appetizers", "main_course", "desserts").
+   - Each category MUST have:
+     * name: object with "en" (English) and "zh" (Chinese) translations
+     * items: array of menu items
+   - Use lowercase snake_case for category keys (e.g., "hot_appetizers")
+
+4. Menu Items: For each item, extract:
+   - name: object with "en" and "zh" translations
+   - price: number or string (use "Market Price" if price varies)
+   - description: brief description if available (optional)
+
+IMPORTANT:
+- Extract both English and Chinese names when visible
+- If only one language is present, translate it to populate the other field
+  (e.g., if only English is shown, provide a Chinese translation and vice versa)
+- Group similar items logically (e.g., all sushi rolls together)
+- Return valid JSON matching the provided schema`;
 
     const result = await genAI.models.generateContent({
       model: "gemini-3-flash-preview",
       contents: [prompt, imagePart],
       config: {
         responseMimeType: "application/json",
-        responseSchema,
+        responseJsonSchema: responseJsonSchema,
       },
     });
 
@@ -88,53 +104,51 @@ export const handleMenuImageUpload = onObjectFinalized(
   }
 );
 
-const responseSchema = {
+const responseJsonSchema = {
+  $defs: {
+    // reusable menu item schema
+    menuItem: {
+      type: "object",
+      properties: {
+        name: {
+          type: "object",
+          properties: {
+            en: { type: "string" },
+            zh: { type: "string" },
+          },
+          required: ["en", "zh"],
+        },
+        description: { type: "string" },
+        price: { anyOf: [{ type: "number" }, { type: "string" }] },
+      },
+      required: ["name"],
+    },
+  },
   type: "object",
+  // schema main body
   properties: {
-    restaurantId: { type: "string" },
     isAYCE: { type: "boolean" },
     categories: {
       type: "object",
-      properties: {
-        uncategorized: {
-          type: "array",
-          items: {
+      // Each property key is a category identifier
+      // Each property value is an object with localized name and items array
+      additionalProperties: {
+        type: "object",
+        properties: {
+          name: {
             type: "object",
             properties: {
-              name: {
-                type: "object",
-                properties: {
-                  en: { type: "string" },
-                  zh: { type: "string" },
-                },
-                required: ["en", "zh"],
-              },
-              price: { anyOf: [{ type: "number" }, { type: "string" }] },
-              description: { type: "string" },
+              en: { type: "string" },
+              zh: { type: "string" },
             },
-            required: ["name"],
+            required: ["en", "zh"],
+          },
+          items: {
+            type: "array",
+            items: { $ref: "#/$defs/menuItem" },
           },
         },
-      },
-
-      additionalProperties: {
-        type: "array",
-        items: {
-          type: "object",
-          properties: {
-            name: {
-              type: "object",
-              properties: {
-                en: { type: "string" },
-                zh: { type: "string" },
-              },
-              required: ["en", "zh"],
-            },
-            price: { anyOf: [{ type: "number" }, { type: "string" }] },
-            description: { type: "string" },
-          },
-          required: ["name"],
-        },
+        required: ["name", "items"],
       },
     },
     aycePrices: {
@@ -150,5 +164,5 @@ const responseSchema = {
       },
     },
   },
-  required: ["restaurantId", "categories", "isAYCE"],
+  required: ["isAYCE", "categories"],
 };
