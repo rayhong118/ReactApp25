@@ -89,53 +89,51 @@ export const handleMenuImageUpload = onObjectFinalized(
 );
 
 const responseSchema = {
-  $defs: {
-    menuItem: {
-      type: "object",
-      properties: {
-        name: {
-          type: "string",
-          description: "The name of the menu item",
-        },
-        price: {
-          type: "number",
-          description: "The price of the menu item",
-        },
-        description: {
-          type: "string",
-          description: "A description of the menu item",
-        },
-      },
-      required: ["name", "price"],
-    },
-  },
   type: "object",
   properties: {
-    restaurantId: {
-      type: "string",
-      description: "The unique ID of the restaurant",
-    },
-    isAYCE: {
-      type: "boolean",
-      description: "True if the menu is an 'All You Can Eat' buffet style",
-    },
+    restaurantId: { type: "string" },
+    isAYCE: { type: "boolean" },
     categories: {
       type: "object",
-      description:
-        "A map where keys are category names (e.g. 'Appetizers') and values are lists of items",
       properties: {
         uncategorized: {
           type: "array",
           items: {
-            $ref: "#/definitions/menuItem",
+            type: "object",
+            properties: {
+              name: {
+                type: "object",
+                properties: {
+                  en: { type: "string" },
+                  zh: { type: "string" },
+                },
+                required: ["en", "zh"],
+              },
+              price: { anyOf: [{ type: "number" }, { type: "string" }] },
+              description: { type: "string" },
+            },
+            required: ["name"],
           },
         },
       },
-      // This implements {[categoryName: string]: IMenuItem[]}
+
       additionalProperties: {
         type: "array",
         items: {
-          $ref: "#/definitions/menuItem",
+          type: "object",
+          properties: {
+            name: {
+              type: "object",
+              properties: {
+                en: { type: "string" },
+                zh: { type: "string" },
+              },
+              required: ["en", "zh"],
+            },
+            price: { anyOf: [{ type: "number" }, { type: "string" }] },
+            description: { type: "string" },
+          },
+          required: ["name"],
         },
       },
     },
