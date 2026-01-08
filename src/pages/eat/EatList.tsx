@@ -57,7 +57,6 @@ export const EatList = () => {
         open={isDialogOpen}
         onClose={handleDialogClose}
         title={t("eat.list.addRestaurant")}
-        customizedClassName="w-lg"
       >
         <EatEditForm restaurant={undefined} closeDialog={handleDialogClose} />
       </Dialog>

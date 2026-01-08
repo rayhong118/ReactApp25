@@ -95,7 +95,7 @@ export const EatCard = React.memo(
           open={isEditDialogOpen}
           onClose={closeEditDialog}
           title="Edit Restaurant"
-          customizedClassName="w-lg"
+          customizedClassName="max-w-md"
         >
           <EatEditForm restaurant={restaurant} closeDialog={closeEditDialog} />
         </Dialog>
@@ -103,6 +103,7 @@ export const EatCard = React.memo(
           open={isMenuDialogOpen}
           onClose={closeMenuDialog}
           title={t("eat.menu.title")}
+          customizedClassName="max-w-3xl"
         >
           <EatMenu restaurant={restaurant} closeDialog={closeMenuDialog} />
         </Dialog>

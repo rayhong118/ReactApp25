@@ -161,7 +161,6 @@ export const EatEditForm = (props: IEatEditFormProps) => {
             onClick: () => setShowDeleteConfirmation(false),
           },
         ]}
-        customizedClassName="w-md"
       >
         Are you sure you want to delete this restaurant?
       </Dialog>
