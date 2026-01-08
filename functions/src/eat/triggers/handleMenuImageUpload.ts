@@ -89,6 +89,26 @@ export const handleMenuImageUpload = onObjectFinalized(
 );
 
 const responseSchema = {
+  $defs: {
+    menuItem: {
+      type: "object",
+      properties: {
+        name: {
+          type: "string",
+          description: "The name of the menu item",
+        },
+        price: {
+          type: "number",
+          description: "The price of the menu item",
+        },
+        description: {
+          type: "string",
+          description: "A description of the menu item",
+        },
+      },
+      required: ["name", "price"],
+    },
+  },
   type: "object",
   properties: {
     restaurantId: {
@@ -103,24 +123,19 @@ const responseSchema = {
       type: "object",
       description:
         "A map where keys are category names (e.g. 'Appetizers') and values are lists of items",
+      properties: {
+        uncategorized: {
+          type: "array",
+          items: {
+            $ref: "#/definitions/menuItem",
+          },
+        },
+      },
       // This implements {[categoryName: string]: IMenuItem[]}
       additionalProperties: {
         type: "array",
         items: {
-          type: "object",
-          properties: {
-            name: {
-              en: { type: "string" },
-              zh: { type: "string" },
-            },
-            description: { type: "string" },
-            price: {
-              // Implements number | string
-              anyOf: [{ type: "number" }, { type: "string" }],
-              description: "Numeric price or string like 'Market Price'",
-            },
-          },
-          required: ["name"],
+          $ref: "#/definitions/menuItem",
         },
       },
     },
@@ -130,10 +145,7 @@ const responseSchema = {
         type: "object",
         properties: {
           price: { type: "number" },
-          timePeriod: {
-            type: "string",
-            description: "e.g., 'Lunch', 'Dinner', 'Weekend'",
-          },
+          timePeriod: { type: "string" },
           additionalInfo: { type: "string" },
         },
         required: ["price", "timePeriod"],
