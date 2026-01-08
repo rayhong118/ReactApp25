@@ -78,6 +78,11 @@
       "deleteTitle": "删除笔记",
       "deleteConfirmation": "确定要删除这个笔记吗？",
       "rate": "评分"
+    },
+    "menu": {
+      "title": "菜单",
+      "uploadMenuImage": "上传菜单图片",
+      "submit": "提交"
     }
   },
   "footer": {

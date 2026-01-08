@@ -36,7 +36,7 @@ export const handleMenuImageUpload = onObjectFinalized(
     const base64Image = fileBuffer.toString("base64");
 
     // menu collection stores actual menu data. key is restaurantId
-    const menuCollectionRef = admin.firestore().collection("menus");
+    const menuCollectionRef = admin.firestore().collection("restaurant-menus");
 
     // send image and prompt to genAI
     const imagePart = {
@@ -91,24 +91,36 @@ export const handleMenuImageUpload = onObjectFinalized(
 const responseSchema = {
   type: "object",
   properties: {
-    isAYCE: { type: "boolean" },
+    restaurantId: {
+      type: "string",
+      description: "The unique ID of the restaurant",
+    },
+    isAYCE: {
+      type: "boolean",
+      description: "True if the menu is an 'All You Can Eat' buffet style",
+    },
     categories: {
-      type: "array",
-      items: {
-        type: "object",
-        properties: {
-          name: { type: "string" },
-          items: {
-            type: "array",
-            items: {
-              type: "object",
-              properties: {
-                name: { type: "string" },
-                price: { type: "number" },
-                description: { type: "string" },
-              },
+      type: "object",
+      description:
+        "A map where keys are category names (e.g. 'Appetizers') and values are lists of items",
+      // This implements {[categoryName: string]: IMenuItem[]}
+      additionalProperties: {
+        type: "array",
+        items: {
+          type: "object",
+          properties: {
+            name: {
+              en: { type: "string" },
+              zh: { type: "string" },
+            },
+            description: { type: "string" },
+            price: {
+              // Implements number | string
+              anyOf: [{ type: "number" }, { type: "string" }],
+              description: "Numeric price or string like 'Market Price'",
             },
           },
+          required: ["name"],
         },
       },
     },
@@ -118,10 +130,15 @@ const responseSchema = {
         type: "object",
         properties: {
           price: { type: "number" },
-          timePeriod: { type: "string" },
+          timePeriod: {
+            type: "string",
+            description: "e.g., 'Lunch', 'Dinner', 'Weekend'",
+          },
           additionalInfo: { type: "string" },
         },
+        required: ["price", "timePeriod"],
       },
     },
   },
+  required: ["restaurantId", "categories", "isAYCE"],
 };

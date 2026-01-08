@@ -98,7 +98,11 @@ export const EatCard = React.memo(
         >
           <EatEditForm restaurant={restaurant} closeDialog={closeEditDialog} />
         </Dialog>
-        <Dialog open={isMenuDialogOpen} onClose={closeMenuDialog} title="Menu">
+        <Dialog
+          open={isMenuDialogOpen}
+          onClose={closeMenuDialog}
+          title={t("menu.title")}
+        >
           <EatMenu restaurant={restaurant} closeDialog={closeMenuDialog} />
         </Dialog>
         <div className="border border-gray-300 p-4 rounded-md">

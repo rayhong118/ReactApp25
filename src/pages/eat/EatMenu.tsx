@@ -2,7 +2,8 @@ import { PrimaryButton, SecondaryButton } from "@/components/Buttons";
 import { Loading } from "@/components/Loading";
 import { useGetCurrentUser } from "@/utils/AuthenticationAtoms";
 import { useRef, useState } from "react";
-import type { IMenuItem, IMenuItemByCategory, IRestaurant } from "./Eat.types";
+import { useTranslation } from "react-i18next";
+import type { IMenuItem, IRestaurant } from "./Eat.types";
 import { getMenuData, useUploadMenuImage } from "./hooks/menuHooks";
 
 /**
@@ -32,6 +33,9 @@ export const EatMenu = ({ restaurant, closeDialog }: IEatMenuProps) => {
     });
   };
 
+  const { t, i18n } = useTranslation();
+  const language: "en" | "zh" = i18n.language as "en" | "zh";
+
   return (
     <div>
       {isPending && <Loading />}
@@ -46,30 +50,32 @@ export const EatMenu = ({ restaurant, closeDialog }: IEatMenuProps) => {
             className="hidden"
           />
           <SecondaryButton onClick={() => fileInputRef.current?.click()}>
-            Upload Menu Image
+            {t("menu.uploadMenuImage")}
           </SecondaryButton>
-          <PrimaryButton type="submit">Submit</PrimaryButton>
+          <PrimaryButton type="submit">{t("menu.submit")}</PrimaryButton>
         </form>
       )}
       {menuDataLoading && <Loading />}
       {menuData && (
         <div>
-          <h2>Menu</h2>
+          <h2>{t("menu.title")}</h2>
           <ul>
-            {menuData.categories.map((category: IMenuItemByCategory) => (
-              <li key={category.name}>
-                <h3>{category.name}</h3>
-                <ul>
-                  {category.items.map((item: IMenuItem) => (
-                    <li key={item.name}>
-                      <h4>{item.name}</h4>
-                      <p>{item.price}</p>
-                      <p>{item.description}</p>
-                    </li>
-                  ))}
-                </ul>
-              </li>
-            ))}
+            {Object.entries(menuData.categories).map(
+              ([categoryName, items]) => (
+                <li key={categoryName}>
+                  <h3>{categoryName}</h3>
+                  <ul>
+                    {items.map((item: IMenuItem, index: number) => (
+                      <li key={index}>
+                        <h4>{item.name[language] || item.name.en}</h4>
+                        <p>{item.price}</p>
+                        <p>{item.description}</p>
+                      </li>
+                    ))}
+                  </ul>
+                </li>
+              )
+            )}
           </ul>
         </div>
       )}

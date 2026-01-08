@@ -135,18 +135,16 @@ export interface IMenuUploadPayload {
 export interface IMenu {
   id?: string;
   restaurantId: string;
-  categories: IMenuItemByCategory[];
+  categories: { [categoryName: string]: IMenuItem[] };
   isAYCE: boolean;
   aycePrices?: IAYCEPrice[];
 }
 
-export interface IMenuItemByCategory {
-  name: string;
-  items: IMenuItem[];
-}
-
 export interface IMenuItem {
-  name: string;
+  name: {
+    en: string;
+    zh: string;
+  };
   /**
    * Price of the menu item, can handle "market price" scenario
    */

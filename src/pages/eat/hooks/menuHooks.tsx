@@ -7,7 +7,7 @@ import {
   uploadBytes,
   type UploadMetadata,
 } from "firebase/storage";
-import type { IMenuUploadPayload } from "../Eat.types";
+import type { IMenu, IMenuUploadPayload } from "../Eat.types";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { db } from "@/firebase";
 
@@ -80,13 +80,15 @@ export const useUploadMenuImage = () => {
   return { mutateAsync, isPending, isSuccess };
 };
 
+export const MENU_COLLECTION = "restaurant-menus";
+
 export const getMenuData = (restaurantId: string) => {
   const { data, isLoading, error } = useQuery({
     queryKey: ["menu-data", restaurantId],
     queryFn: async () => {
-      const menuDoc = doc(db, "menus", restaurantId);
+      const menuDoc = doc(db, MENU_COLLECTION, restaurantId);
       const menuDocSnapshot = await getDoc(menuDoc);
-      return menuDocSnapshot.data();
+      return menuDocSnapshot.data() as IMenu;
     },
     enabled: !!restaurantId,
     staleTime: 60 * 60 * 1000,
