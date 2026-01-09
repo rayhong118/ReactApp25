@@ -164,33 +164,44 @@ export const EatCard = React.memo(
             </div>
           )}
 
-          <div className="flex justify-between align-center">
+          <div className="flex justify-between align-center flex-wrap">
+            {/* Action buttons: Edit, Go, Menu */}
+            <div className="flex">
+              <SecondaryButton
+                onClick={openMenuDialog}
+                className=" whitespace-nowrap"
+              >
+                <FontAwesomeIcon icon={faBookOpen} className="mr-2" />
+                {t("eat.card.menu")}
+              </SecondaryButton>
+              <SecondaryButton
+                disabled={!User}
+                onClick={openEditDialog}
+                className=" whitespace-nowrap"
+              >
+                <FontAwesomeIcon icon={faEdit} className="mr-2" />
+                {t("eat.card.edit")}
+              </SecondaryButton>
+              <SecondaryButton
+                onClick={() => window.open(restaurant.url, "_blank")}
+                className=" whitespace-nowrap"
+              >
+                <FontAwesomeIcon icon={faDirections} className="mr-2" />
+                {t("eat.card.go")}
+              </SecondaryButton>
+            </div>
+
             <div className="flex align-center">
-              <SecondaryButton onClick={toggleNotes}>
+              <SecondaryButton
+                onClick={toggleNotes}
+                className=" whitespace-nowrap"
+              >
                 {t("eat.card.notesAndRatings")}
                 {isNotesExpanded ? (
                   <FontAwesomeIcon icon={faAngleDown} className="ml-2" />
                 ) : (
                   <FontAwesomeIcon icon={faAngleUp} className="ml-2" />
                 )}
-              </SecondaryButton>
-            </div>
-
-            {/* Action buttons: Edit, Go, Menu */}
-            <div className="flex">
-              <SecondaryButton onClick={openMenuDialog}>
-                <FontAwesomeIcon icon={faBookOpen} className="mr-2" />
-                {t("eat.card.menu")}
-              </SecondaryButton>
-              <SecondaryButton disabled={!User} onClick={openEditDialog}>
-                <FontAwesomeIcon icon={faEdit} className="mr-2" />
-                {t("eat.card.edit")}
-              </SecondaryButton>
-              <SecondaryButton
-                onClick={() => window.open(restaurant.url, "_blank")}
-              >
-                <FontAwesomeIcon icon={faDirections} className="mr-2" />
-                {t("eat.card.go")}
               </SecondaryButton>
             </div>
           </div>
