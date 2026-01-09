@@ -1,5 +1,7 @@
+import { db } from "@/firebase";
 import { useAddMessageBars } from "@/utils/MessageBarsAtom";
 import { useMutation, useQuery } from "@tanstack/react-query";
+import { doc, getDoc } from "firebase/firestore";
 import {
   getDownloadURL,
   getStorage,
@@ -8,8 +10,6 @@ import {
   type UploadMetadata,
 } from "firebase/storage";
 import type { IMenu, IMenuUploadPayload } from "../Eat.types";
-import { doc, getDoc, setDoc } from "firebase/firestore";
-import { db } from "@/firebase";
 
 export const useUploadMenuImage = () => {
   const addMessageBar = useAddMessageBars();
@@ -40,14 +40,7 @@ export const useUploadMenuImage = () => {
           metadata
         );
         const downloadURL = await getDownloadURL(snapshot.ref);
-        // In firestore menu collection, add a document with the restaurant ID and the image URL
-        const menuDoc = doc(db, "menu-images", uploadPayload.restaurantId);
-        await setDoc(menuDoc, {
-          restaurantId: uploadPayload.restaurantId,
-          imageUrl: downloadURL,
-          menuStatus: "pending",
-          createdAt: currentDate,
-        });
+
         return downloadURL;
       } catch (error) {
         console.error(error);

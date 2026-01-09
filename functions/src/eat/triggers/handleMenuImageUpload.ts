@@ -14,39 +14,51 @@ export const handleMenuImageUpload = onObjectFinalized(
 
     // Get restaurant menu info regarding the image
     const restaurantId = event.data.metadata?.restaurantId;
-    // const uploadTime = event.data.metadata?.uploadTime;
+    const uploadTime = new Date(event.data.metadata?.uploadTime || "");
 
     if (!restaurantId) {
       throw new Error("No restaurant ID found");
     }
+
+    // TODO: Create image info with status "pending".
     const menuImagesCollection = admin.firestore().collection("menu-images");
-    const menuImageDocSnapshot = await menuImagesCollection
-      .where("restaurantId", "==", restaurantId)
-      // time comparison might fail. Need to fix this
-      // .where("createdAt", "==", uploadTime)
-      .get();
+    const menuImageDoc = menuImagesCollection.doc();
+    await menuImageDoc.create({
+      restaurantId,
+      uploadTime,
+      status: "pending",
+    });
+    try {
+      // 1. Acquire the file from Storage (using default bucket)
+      const bucket = admin.storage().bucket();
+      const file = bucket.file(filePath);
+      const [fileBuffer] = await file.download();
+      const base64Image = fileBuffer.toString("base64");
 
-    if (menuImageDocSnapshot.empty) {
-      throw new Error("Menu not found");
-    }
-    // 1. Acquire the file from Storage (using default bucket)
-    const bucket = admin.storage().bucket();
-    const file = bucket.file(filePath);
-    const [fileBuffer] = await file.download();
-    const base64Image = fileBuffer.toString("base64");
+      // menu collection stores actual menu data. key is restaurantId
+      const menuCollectionRef = admin
+        .firestore()
+        .collection("restaurant-menus");
 
-    // menu collection stores actual menu data. key is restaurantId
-    const menuCollectionRef = admin.firestore().collection("restaurant-menus");
+      const restaurantDoc = menuCollectionRef.doc(restaurantId);
+      const restaurantDocSnapshot = await restaurantDoc.get();
+      if (!restaurantDocSnapshot.exists) {
+        throw new Error("Restaurant not found");
+      }
+      const restaurantData = restaurantDocSnapshot.data();
+      if (!restaurantData) {
+        throw new Error("Restaurant data not found");
+      }
 
-    // send image and prompt to genAI
-    const imagePart = {
-      inlineData: {
-        mimeType: "image/jpeg",
-        data: base64Image,
-      },
-    };
+      // send image and prompt to genAI
+      const imagePart = {
+        inlineData: {
+          mimeType: "image/jpeg",
+          data: base64Image,
+        },
+      };
 
-    const prompt = `Extract menu data from this image and return structured JSON.
+      const prompt = `Extract menu data from this image and return structured JSON.
 
 INSTRUCTIONS:
 1. AYCE Detection: Set "isAYCE" to true if this is an All-You-Can-Eat menu, false otherwise.
@@ -68,39 +80,56 @@ INSTRUCTIONS:
    - description: brief description if available (optional)
 
 IMPORTANT:
+- Validation: If the image is NOT a menu, or if the menu items clearly
+  do NOT belong to the provided restaurant context, 
+  populate "invalidMenuReason" with a brief explanation and return.
 - Extract both English and Chinese names when visible
 - If only one language is present, translate it to populate the other field
   (e.g., if only English is shown, provide a Chinese translation and vice versa)
 - Group similar items logically (e.g., all sushi rolls together)
 - Return valid JSON matching the provided schema`;
 
-    const result = await genAI.models.generateContent({
-      model: "gemini-3-flash-preview",
-      contents: [prompt, imagePart],
-      config: {
-        responseMimeType: "application/json",
-        responseJsonSchema: responseJsonSchema,
-      },
-    });
+      const result = await genAI.models.generateContent({
+        model: "gemini-3-flash-preview",
+        contents: [prompt, imagePart, restaurantData],
+        config: {
+          responseMimeType: "application/json",
+          responseJsonSchema: responseJsonSchema,
+        },
+      });
 
-    // handle result
-    const menuData = result.text;
-    if (!menuData) {
-      throw new Error("Menu data not found");
+      // handle result
+      const menuData = result.text;
+      if (!menuData) {
+        throw new Error("Menu data not found");
+      }
+      const menu = JSON.parse(menuData);
+
+      if (menu.invalidMenuReason) {
+        console.warn(`Invalid menu detected: ${menu.invalidMenuReason}`);
+        await menuImageDoc.update({
+          status: "invalid",
+          invalidReason: menu.invalidMenuReason,
+        });
+        return;
+      }
+
+      // update menu collection
+      const menuDoc = menuCollectionRef.doc(restaurantId);
+      await menuDoc.set(menu, { merge: true });
+
+      // update menu image collection
+      await menuImageDoc.update({
+        status: "completed",
+      });
+    } catch (error) {
+      console.error(error);
+      await menuImageDoc.update({
+        status: "failed",
+        error: error,
+      });
+      throw error;
     }
-    const menu = JSON.parse(menuData);
-
-    // update menu collection
-    const menuDoc = menuCollectionRef.doc(restaurantId);
-    await menuDoc.set(menu, { merge: true });
-
-    // update menu image collection
-    const menuImageDoc = menuImagesCollection.doc(
-      menuImageDocSnapshot.docs[0].id
-    );
-    await menuImageDoc.update({
-      menuStatus: "completed",
-    });
   }
 );
 
@@ -127,6 +156,11 @@ const responseJsonSchema = {
   type: "object",
   // schema main body
   properties: {
+    invalidMenuReason: {
+      type: "string",
+      description:
+        "Explain why the image is not a valid menu (e.g. 'not a menu', 'wrong restaurant')",
+    },
     isAYCE: { type: "boolean" },
     categories: {
       type: "object",
