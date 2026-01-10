@@ -166,7 +166,7 @@ export const EatCard = React.memo(
 
           <div className="flex justify-between align-center flex-wrap">
             {/* Action buttons: Edit, Go, Menu */}
-            <div className="flex">
+            <div className="flex gap-2">
               <SecondaryButton
                 onClick={openMenuDialog}
                 className=" whitespace-nowrap"

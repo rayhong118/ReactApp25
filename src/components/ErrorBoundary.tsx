@@ -1,5 +1,7 @@
 import { Component } from "react";
 import type { ErrorInfo, ReactNode } from "react";
+import { ErrorMessagePanel } from "./ErrorMessagePanel";
+import { withDefaultPagePadding } from "@/hooks/withDefaultPagePadding";
 
 interface Props {
   children?: ReactNode;
@@ -27,13 +29,12 @@ class ErrorBoundary extends Component<Props, State> {
   public render() {
     if (this.state.hasError) {
       return (
-        this.props.fallback || (
-          <div className="p-4 border border-red-200 bg-red-50 text-red-800 rounded-md text-sm">
-            Something went wrong with this component.
-            <button className="ml-2" onClick={window.location.reload}>
-              Try again?
-            </button>
-          </div>
+        this.props.fallback ||
+        withDefaultPagePadding(
+          <ErrorMessagePanel
+            message="Something went wrong with this component."
+            onRetry={() => window.location.reload()}
+          />
         )
       );
     }

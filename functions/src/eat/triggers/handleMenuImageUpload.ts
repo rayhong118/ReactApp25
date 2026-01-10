@@ -118,12 +118,7 @@ IMPORTANT:
       const menu = JSON.parse(menuData);
 
       if (menu.invalidMenuReason) {
-        console.warn(`Invalid menu detected: ${menu.invalidMenuReason}`);
-        await menuImageDoc.update({
-          status: "invalid",
-          invalidReason: menu.invalidMenuReason,
-        });
-        return;
+        throw new Error(menu.invalidMenuReason);
       }
 
       // update menu collection
@@ -135,7 +130,7 @@ IMPORTANT:
         status: "completed",
       });
     } catch (error) {
-      console.error(error);
+      logger.error(error);
       await menuImageDoc.update({
         status: "failed",
         error: error,

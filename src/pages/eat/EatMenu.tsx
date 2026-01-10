@@ -57,10 +57,15 @@ export const EatMenu = ({ restaurant, closeDialog }: IEatMenuProps) => {
             accept="image/*"
             className="hidden"
           />
-          <SecondaryButton onClick={() => fileInputRef.current?.click()}>
+          <SecondaryButton
+            type="button"
+            onClick={() => fileInputRef.current?.click()}
+          >
             {t("eat.menu.uploadMenuImage")}
           </SecondaryButton>
-          <PrimaryButton type="submit">{t("eat.menu.submit")}</PrimaryButton>
+          <PrimaryButton type="submit" disabled={isPending || !menuImage}>
+            {t("eat.menu.submit")}
+          </PrimaryButton>
         </form>
       )}
       {menuDataLoading && <Loading />}
