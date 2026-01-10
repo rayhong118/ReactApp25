@@ -1,6 +1,7 @@
 import admin from "firebase-admin";
 import { onObjectFinalized } from "firebase-functions/storage";
 import genAI from "../../utils/genAIClient";
+import { logger } from "firebase-functions";
 
 export const handleMenuImageUpload = onObjectFinalized(
   { secrets: ["GEMINI_API_KEY"] },
@@ -14,7 +15,10 @@ export const handleMenuImageUpload = onObjectFinalized(
 
     // Get restaurant menu info regarding the image
     const restaurantId = event.data.metadata?.restaurantId;
-    const uploadTime = new Date(event.data.metadata?.uploadTime || "");
+    // Parse uploadTime with fallback to current time
+    const rawUploadTime = event.data.metadata?.uploadTime;
+    const parsedTime = rawUploadTime ? parseInt(rawUploadTime) : Date.now();
+    const uploadDate = new Date(isNaN(parsedTime) ? Date.now() : parsedTime);
 
     if (!restaurantId) {
       throw new Error("No restaurant ID found");
@@ -25,7 +29,7 @@ export const handleMenuImageUpload = onObjectFinalized(
     const menuImageDoc = menuImagesCollection.doc();
     await menuImageDoc.create({
       restaurantId,
-      uploadTime,
+      uploadTime: uploadDate,
       status: "pending",
     });
     try {
@@ -40,7 +44,11 @@ export const handleMenuImageUpload = onObjectFinalized(
         .firestore()
         .collection("restaurant-menus");
 
-      const restaurantDoc = menuCollectionRef.doc(restaurantId);
+      const restaurantCollectionRef = admin
+        .firestore()
+        .collection("restaurants");
+
+      const restaurantDoc = restaurantCollectionRef.doc(restaurantId);
       const restaurantDocSnapshot = await restaurantDoc.get();
       if (!restaurantDocSnapshot.exists) {
         throw new Error("Restaurant not found");
@@ -88,6 +96,8 @@ IMPORTANT:
   (e.g., if only English is shown, provide a Chinese translation and vice versa)
 - Group similar items logically (e.g., all sushi rolls together)
 - Return valid JSON matching the provided schema`;
+
+      logger.info("Restaurant Data:", restaurantData);
 
       const result = await genAI.models.generateContent({
         model: "gemini-3-flash-preview",
