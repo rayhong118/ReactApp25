@@ -48,13 +48,17 @@ export const handleMenuImageUpload = onObjectFinalized(
         .firestore()
         .collection("restaurants");
 
+      logger.info("Restaurant ID:", restaurantId);
+
       const restaurantDoc = restaurantCollectionRef.doc(restaurantId);
       const restaurantDocSnapshot = await restaurantDoc.get();
       if (!restaurantDocSnapshot.exists) {
+        logger.error("Restaurant not found");
         throw new Error("Restaurant not found");
       }
       const restaurantData = restaurantDocSnapshot.data();
       if (!restaurantData) {
+        logger.error("Restaurant data not found");
         throw new Error("Restaurant data not found");
       }
 
@@ -97,11 +101,9 @@ IMPORTANT:
 - Group similar items logically (e.g., all sushi rolls together)
 - Return valid JSON matching the provided schema`;
 
-      logger.info("Restaurant Data:", restaurantData);
-
       const result = await genAI.models.generateContent({
         model: "gemini-3-flash-preview",
-        contents: [prompt, imagePart, restaurantData],
+        contents: [prompt, imagePart, JSON.stringify(restaurantData)],
         config: {
           responseMimeType: "application/json",
           responseJsonSchema: responseJsonSchema,
