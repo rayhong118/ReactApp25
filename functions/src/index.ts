@@ -11,6 +11,7 @@ import { setGlobalOptions } from "firebase-functions";
 // import {onRequest} from "firebase-functions/https";
 // import * as logger from "firebase-functions/logger";
 import * as admin from "firebase-admin";
+import { onInit } from "firebase-functions/v2";
 
 // Start writing functions
 // https://firebase.google.com/docs/functions/typescript
@@ -32,7 +33,12 @@ setGlobalOptions({ maxInstances: 10, region: "us-west2" });
 //   response.send("Hello from Firebase!");
 // });
 
-admin.initializeApp();
+onInit(() => {
+  // This code runs only in the production env during cold starts.
+  admin.initializeApp();
+  // db = admin.firestore();
+  console.log("Firebase Admin initialized via onInit");
+});
 
 export { handleRestaurantLocationTags } from "./eat/triggers/handleRestaurantLocationTags";
 export { generateSuggestionBasedOnUserPrompt } from "./eat/callables/generateSuggestionBasedOnUserPrompt";

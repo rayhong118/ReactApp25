@@ -1,9 +1,13 @@
-import ReactDOM from "react-dom";
+import {
+  faClose,
+  faMagnifyingGlassMinus,
+  faMagnifyingGlassPlus,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faClose } from "@fortawesome/free-solid-svg-icons";
-import { CustomizedButton } from "./Buttons";
-import { useEffect } from "react";
 import { FocusTrap } from "focus-trap-react";
+import { useEffect, useState } from "react";
+import ReactDOM from "react-dom";
+import { CustomizedButton } from "./Buttons";
 
 interface ImageDisplayProps {
   src: string;
@@ -19,6 +23,7 @@ export const ImageDisplay = ({
   open,
   onClose,
 }: ImageDisplayProps) => {
+  const [displayScale, setDisplayScale] = useState(100);
   useEffect(() => {
     if (!open) {
       return;
@@ -50,7 +55,7 @@ export const ImageDisplay = ({
     >
       <div
         className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 
-      overflow-y-scroll flex flex-col items-center min-h-full w-full"
+      overflow-y-scroll flex flex-col items-center "
       >
         <div
           className="sticky top-0 left-0 p-4 w-full flex flex-row justify-between 
@@ -69,11 +74,40 @@ export const ImageDisplay = ({
             <FontAwesomeIcon icon={faClose} className="text-xl" />
           </CustomizedButton>
         </div>
+
         <img
-          className="m-auto object-contain max-w-full p-5 md:p-10"
+          className={`transition-transform duration-300 scale-[calc(var(--menu-scale)_/_100)] `}
+          style={{ "--menu-scale": displayScale } as React.CSSProperties}
           src={src}
           alt={alt}
         />
+
+        <div className="sticky bottom-0 z-50 bg-black/50 flex flex-row justify-center items-center">
+          <CustomizedButton
+            onClick={() =>
+              setDisplayScale((prev) => (prev === 400 ? prev : prev + 25))
+            }
+            disabled={displayScale === 400}
+          >
+            <FontAwesomeIcon
+              icon={faMagnifyingGlassPlus}
+              className="text-2xl pointer-events-auto bg-black/20 hover:bg-black/40 
+              text-white p-2"
+            />
+          </CustomizedButton>
+          <CustomizedButton
+            onClick={() =>
+              setDisplayScale((prev) => (prev === 50 ? prev : prev - 25))
+            }
+            disabled={displayScale === 50}
+          >
+            <FontAwesomeIcon
+              icon={faMagnifyingGlassMinus}
+              className="text-2xl pointer-events-auto bg-black/20 hover:bg-black/40 
+              text-white p-2"
+            />
+          </CustomizedButton>
+        </div>
       </div>
     </FocusTrap>,
     document.body
