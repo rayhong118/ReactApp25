@@ -82,30 +82,26 @@ export const ImageDisplay = ({
           alt={alt}
         />
 
-        <div className="sticky bottom-0 z-50 bg-black/50 flex flex-row justify-center items-center">
+        <div className="sticky bottom-0 z-50 bg-black/50 flex flex-row justify-center items-center rounded-xl">
           <CustomizedButton
             onClick={() =>
-              setDisplayScale((prev) => (prev === 400 ? prev : prev + 25))
+              setDisplayScale((prev) => (prev === 200 ? prev : prev + 25))
             }
-            disabled={displayScale === 400}
+            disabled={displayScale === 200}
+            className="text-2xl pointer-events-auto hover:bg-black/40 
+              text-white p-2 rounded-l-xl"
           >
-            <FontAwesomeIcon
-              icon={faMagnifyingGlassPlus}
-              className="text-2xl pointer-events-auto bg-black/20 hover:bg-black/40 
-              text-white p-2"
-            />
+            <FontAwesomeIcon icon={faMagnifyingGlassPlus} />
           </CustomizedButton>
           <CustomizedButton
             onClick={() =>
               setDisplayScale((prev) => (prev === 50 ? prev : prev - 25))
             }
             disabled={displayScale === 50}
+            className="text-2xl pointer-events-auto hover:bg-black/40 
+              text-white p-2 rounded-r-xl"
           >
-            <FontAwesomeIcon
-              icon={faMagnifyingGlassMinus}
-              className="text-2xl pointer-events-auto bg-black/20 hover:bg-black/40 
-              text-white p-2"
-            />
+            <FontAwesomeIcon icon={faMagnifyingGlassMinus} />
           </CustomizedButton>
         </div>
       </div>
