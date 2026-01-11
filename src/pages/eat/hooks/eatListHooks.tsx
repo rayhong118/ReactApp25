@@ -41,7 +41,9 @@ export const useEatListSort = () => {
 };
 
 /**
- * This hook handles fetching restaurants for eat list
+ * This hook handles fetching restaurants for eat list.
+ * Acquires eat query from atom and uses it to fetch restaurants.
+ * @param orderBy: object containing field and direction. Passed to useGetRestaurants hook to sort restaurants.
  * @returns restaurants: array of restaurants
  * @returns error: error if any
  * @returns hasNextPage: boolean to check if there are more pages

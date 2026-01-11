@@ -1,6 +1,6 @@
 interface IButtonProps {
   children: React.ReactNode;
-  onClick?: (e: React.MouseEvent) => void;
+  onClick?: React.MouseEventHandler<HTMLButtonElement>;
   disabled?: boolean;
   type?: "button" | "submit" | "reset";
   className?: string;

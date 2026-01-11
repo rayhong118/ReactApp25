@@ -109,6 +109,10 @@ export interface IEatQuery {
    * ID of the restaurant
    */
   id?: string;
+  /**
+   * Name of the restaurant
+   */
+  name?: string;
 }
 
 export type TUserRatings = { [restaurantId: string]: number };
