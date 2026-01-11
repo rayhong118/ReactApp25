@@ -20,6 +20,7 @@ export const PrimaryButton = (props: IButtonProps) => {
   `
         .replace(/\s+/g, " ")
         .trim()}
+      data-testid="primary-button"
     >
       {props.children}
     </button>
@@ -42,6 +43,7 @@ export const SecondaryButton = (props: IButtonProps) => {
   `
         .replace(/\s+/g, " ")
         .trim()}
+      data-testid="secondary-button"
     >
       {props.children}
     </button>
@@ -61,6 +63,7 @@ export const CustomizedButton = (props: IButtonProps) => {
   `
         .replace(/\s+/g, " ")
         .trim()}
+      data-testid="customized-button"
     >
       {props.children}
     </button>

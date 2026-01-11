@@ -189,7 +189,7 @@ export const EatEditForm = (props: IEatEditFormProps) => {
               value={eatData?.name || ""}
             />
             <label htmlFor="name">
-              Name - <text className="text-xs">Populated by Google Maps</text>
+              Name - <span className="text-xs">Populated by Google Maps</span>
             </label>
           </div>
           <div className="labeled-input">
@@ -210,7 +210,7 @@ export const EatEditForm = (props: IEatEditFormProps) => {
               name="description"
               placeholder=""
               value={eatData?.description || ""}
-              onBlur={handleChange}
+              onChange={handleChange}
             />
             <label htmlFor="description">Description</label>
           </div>
@@ -224,7 +224,7 @@ export const EatEditForm = (props: IEatEditFormProps) => {
             />
             <label htmlFor="address">
               Address -{" "}
-              <text className="text-xs">Populated by Google Maps</text>
+              <span className="text-xs">Populated by Google Maps</span>
             </label>
           </div>
           <div className="labeled-input">
@@ -237,7 +237,8 @@ export const EatEditForm = (props: IEatEditFormProps) => {
               onChange={handleChange}
             />
             <label htmlFor="price">
-              Price per person <text className="text-red-500 font-bold">*</text>
+              Price per person (integer only)
+              <span className="text-red-500 font-bold">*</span>
             </label>
           </div>
           <div className="labeled-input">
@@ -250,7 +251,7 @@ export const EatEditForm = (props: IEatEditFormProps) => {
             />
             <label htmlFor="phoneNumber">
               Phone Number -{" "}
-              <text className="text-xs">Populated by Google Maps</text>
+              <span className="text-xs">Populated by Google Maps</span>
             </label>
           </div>
           <div className="labeled-input">
@@ -260,10 +261,11 @@ export const EatEditForm = (props: IEatEditFormProps) => {
               id="cityAndState"
               placeholder=""
               value={eatData?.cityAndState || ""}
+              onChange={handleChange}
             />
             <label htmlFor="cityAndState">
               City and State -{" "}
-              <text className="text-xs">Populated by Google Maps</text>
+              <span className="text-xs">Populated by Google Maps</span>
             </label>
           </div>
 
