@@ -61,6 +61,7 @@ export const handleMenuImageUpload = onObjectFinalized(
         logger.error("Restaurant data not found");
         throw new Error("Restaurant data not found");
       }
+      logger.info("Restaurant data:", restaurantData);
 
       // send image and prompt to genAI
       const imagePart = {
@@ -109,6 +110,8 @@ IMPORTANT:
           responseJsonSchema: responseJsonSchema,
         },
       });
+
+      logger.info("Menu data:", result.text);
 
       // handle result
       const menuData = result.text;

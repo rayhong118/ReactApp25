@@ -71,6 +71,17 @@ export const EatMenu = ({ restaurant, closeDialog }: IEatMenuProps) => {
       {menuDataLoading && <Loading />}
       {menuData && (
         <div className="flex flex-col gap-4">
+          {menuData.isAYCE && (
+            <div className="text-lg">
+              <h2 className="text-xl font-bold">All you can eat pricing</h2>
+              {menuData.aycePrices?.map((price) => (
+                <div key={price.timePeriod}>
+                  {price.price} {price.timePeriod} {price.additionalInfo}
+                </div>
+              ))}
+            </div>
+          )}
+          <h2 className="text-xl font-bold">Menu items</h2>
           {Object.entries(menuData.categories).map(
             ([categoryKey, category]) => (
               <div key={categoryKey}>
@@ -80,7 +91,7 @@ export const EatMenu = ({ restaurant, closeDialog }: IEatMenuProps) => {
 
                 <div className="flex flex-wrap">
                   {category.items.map((item: IMenuItem, index: number) => (
-                    <div key={index} className="w-1/2 min-w-xs">
+                    <div key={index} className="w-1/2 min-w-xs pb-2">
                       <div className="pl-4 w-full flex justify-between gap-10">
                         <h4 className="text-lg font-semibold">
                           {item.name[language] || item.name.en}
@@ -88,7 +99,7 @@ export const EatMenu = ({ restaurant, closeDialog }: IEatMenuProps) => {
                         <p className="text-lg font-semibold">{item.price}</p>
                       </div>
                       {item.description && (
-                        <p className="pl-4 text-lg">{item.description}</p>
+                        <p className="pl-4">{item.description}</p>
                       )}
                     </div>
                   ))}
