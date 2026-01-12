@@ -1,5 +1,7 @@
 import React from "react";
 import { useGetCurrentUser } from "../utils/AuthenticationAtoms";
+import { useNavigate } from "react-router-dom";
+import { CustomizedButton } from "./Buttons";
 
 type WithAuthRequiredProps = {
   component: React.ComponentType<Record<string, never>>;
@@ -9,6 +11,7 @@ export const WithAuthRequired: React.FC<WithAuthRequiredProps> = ({
   component: Component,
 }) => {
   const currentUser = useGetCurrentUser();
+  const navigate = useNavigate();
 
   if (!currentUser) {
     return (
@@ -22,6 +25,13 @@ export const WithAuthRequired: React.FC<WithAuthRequiredProps> = ({
             You must be signed in to view this page. Please log in or register
             to continue.
           </p>
+          <hr className="my-4" />
+          <CustomizedButton
+            className="border-1 "
+            onClick={() => navigate("/auth")}
+          >
+            Sign In
+          </CustomizedButton>
         </div>
       </div>
     );
