@@ -5,6 +5,9 @@ import GiftCard from "./GiftCard";
 import { PrimaryButton } from "@/components/Buttons";
 import "./Gift.scss";
 import GiftForm from "./GiftForm";
+import { useParams, useSearchParams } from "react-router-dom";
+import { useGetCurrentUser } from "@/utils/AuthenticationAtoms";
+import { useGetGiftList } from "./hooks/GiftHooks";
 
 const mockGifts: IGift[] = [
   {
@@ -24,38 +27,88 @@ const mockGifts: IGift[] = [
 ];
 
 const GiftPage = () => {
-  const gifts: IGift[] = mockGifts;
-
-  const preferredGifts = gifts.filter((gift) => gift.type === "preferred");
-  const avoidGifts = gifts.filter((gift) => gift.type === "avoid");
-
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [currentGift, setCurrentGift] = useState<Partial<IGift>>();
+
+  const [searchParams] = useSearchParams();
+  const currentUser = useGetCurrentUser();
+  const searchParamUserId = searchParams.get("id");
+  const currentUserId = searchParamUserId || currentUser?.uid;
+
+  const { data: giftData } = useGetGiftList(currentUserId!);
+
+  const preferredGifts = giftData?.filter((gift) => gift.type === "preferred");
+  const avoidGifts = giftData?.filter((gift) => gift.type === "avoid");
 
   return (
     <div>
       <Dialog
         open={dialogOpen}
-        title="Add Gift"
+        title={`Add ${currentGift?.type} gift`}
         customizedClassName="max-w-sm"
-        onClose={() => setDialogOpen(false)}
+        onClose={() => {
+          setDialogOpen(false);
+        }}
       >
-        <GiftForm closeDialog={() => setDialogOpen(false)} />
+        <GiftForm closeDialog={() => setDialogOpen(false)} gift={currentGift} />
       </Dialog>
-      <h1 className="text-2xl font-bold">Gift Page</h1>
-      <h2 className="text-xl font-bold">Preffered Gifts</h2>
-      <PrimaryButton onClick={() => setDialogOpen(true)}>
-        Add Gift
-      </PrimaryButton>
-      <p>Create a list of gifts you would like to receive</p>
-      {preferredGifts.map((gift) => (
-        <GiftCard key={gift.name} gift={gift} />
-      ))}
+      <h1 className="text-2xl font-bold">
+        Gift Page of {searchParamUserId && currentUser?.displayName}
+      </h1>
+      <p>Gifts are items you would like to receive or avoid</p>
 
-      <h2 className="text-xl font-bold">Avoid Gifts</h2>
+      <div className="flex justify-between">
+        <h2 className="text-xl font-bold">Preffered Gifts</h2>
+        {!searchParamUserId && (
+          <PrimaryButton
+            onClick={() => {
+              setCurrentGift({ type: "preferred" });
+              setDialogOpen(true);
+            }}
+          >
+            Add Preferred Gift
+          </PrimaryButton>
+        )}
+      </div>
+
+      <p>Create a list of gifts you would like to receive</p>
+      {preferredGifts && preferredGifts.length > 0 ? (
+        <div className="flex flex-col gap-2">
+          {preferredGifts.map((gift) => (
+            <GiftCard key={gift.name} gift={gift} />
+          ))}
+        </div>
+      ) : (
+        <div className="text-center bg-amber-50 border-amber-500 p-2 rounded border text-lg font-semibold">
+          No preferred gifts found
+        </div>
+      )}
+      <hr className="my-4" />
+      <div className="flex justify-between">
+        <h2 className="text-xl font-bold">Avoid Gifts</h2>
+        {!searchParamUserId && (
+          <PrimaryButton
+            onClick={() => {
+              setCurrentGift({ type: "avoid" });
+              setDialogOpen(true);
+            }}
+          >
+            Add Avoid Gift
+          </PrimaryButton>
+        )}
+      </div>
       <p>Create a list of gifts you would not like to receive</p>
-      {avoidGifts.map((gift) => (
-        <GiftCard key={gift.name} gift={gift} />
-      ))}
+      {avoidGifts && avoidGifts.length > 0 ? (
+        <div className="flex flex-col gap-2">
+          {avoidGifts.map((gift) => (
+            <GiftCard key={gift.name} gift={gift} />
+          ))}
+        </div>
+      ) : (
+        <div className="text-center bg-stone-50 border-stone-500 p-2 rounded border text-lg font-semibold">
+          No avoid gifts found
+        </div>
+      )}
     </div>
   );
 };

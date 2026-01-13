@@ -4,12 +4,14 @@ import type { IGift } from "./Gift.types";
 
 interface IGiftFormProps {
   closeDialog: () => void;
-  gift?: IGift;
+  gift?: Partial<IGift>;
 }
 
 const GiftForm = (props: IGiftFormProps) => {
   const { closeDialog, gift } = props;
-  const [giftForm, setGiftForm] = useState<IGift>(gift || ({} as IGift));
+  const [giftForm, setGiftForm] = useState<Partial<IGift>>(
+    gift || ({} as IGift)
+  );
 
   const handleGiftFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
