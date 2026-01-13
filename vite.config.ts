@@ -11,4 +11,20 @@ export default defineConfig({
       "@": path.resolve("./src"),
     },
   },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: (id: string) => {
+          if (
+            id.includes("node_modules/react") ||
+            id.includes("node_modules/react-dom")
+          ) {
+            return "vendor-core";
+          } else if (id.includes("node_modules/firebase")) {
+            return "vendor-firebase";
+          }
+        },
+      },
+    },
+  },
 });
