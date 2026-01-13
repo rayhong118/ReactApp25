@@ -1,0 +1,49 @@
+import { PrimaryButton, SecondaryButton } from "@/components/Buttons";
+import { useState } from "react";
+import type { IGift } from "./Gift.types";
+
+interface IGiftFormProps {
+  closeDialog: () => void;
+  gift?: IGift;
+}
+
+const GiftForm = (props: IGiftFormProps) => {
+  const { closeDialog, gift } = props;
+  const [giftForm, setGiftForm] = useState<IGift>(gift || ({} as IGift));
+
+  const handleGiftFormSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log(giftForm);
+  };
+  return (
+    <div>
+      <form onSubmit={handleGiftFormSubmit}>
+        <div className="labeled-input">
+          <input
+            type="text"
+            placeholder=""
+            value={giftForm.name}
+            onChange={(e) => setGiftForm({ ...giftForm, name: e.target.value })}
+          />
+          <label htmlFor="name">Gift Name</label>
+        </div>
+        <div className="labeled-input">
+          <textarea
+            placeholder=""
+            value={giftForm.description}
+            onChange={(e) =>
+              setGiftForm({ ...giftForm, description: e.target.value })
+            }
+          />
+          <label htmlFor="description">Gift Description</label>
+        </div>
+        <div className="flex justify-end">
+          <SecondaryButton onClick={closeDialog}>Cancel</SecondaryButton>
+          <PrimaryButton type="submit">Submit</PrimaryButton>
+        </div>
+      </form>
+    </div>
+  );
+};
+
+export default GiftForm;
