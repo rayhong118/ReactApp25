@@ -39,6 +39,7 @@ const GiftForm = (props: IGiftFormProps) => {
           />
           <label htmlFor="name">Gift Name</label>
         </div>
+
         <div className="labeled-input">
           <textarea
             placeholder=""
@@ -49,6 +50,20 @@ const GiftForm = (props: IGiftFormProps) => {
           />
           <label htmlFor="description">Gift Description</label>
         </div>
+
+        {gift?.type === "preferred" && giftForm.isFulfilled === true && (
+          <div>
+            <input
+              type="checkbox"
+              checked={giftForm.isFulfilled || false}
+              onChange={(e) =>
+                setGiftForm({ ...giftForm, isFulfilled: e.target.checked })
+              }
+            />
+            <label htmlFor="fulfilled">Fulfilled</label>
+          </div>
+        )}
+
         <div className="flex justify-end">
           <SecondaryButton onClick={closeDialog}>Cancel</SecondaryButton>
           <PrimaryButton type="submit">Submit</PrimaryButton>

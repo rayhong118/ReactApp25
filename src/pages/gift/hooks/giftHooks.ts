@@ -2,6 +2,8 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   addDoc,
   collection,
+  deleteDoc,
+  deleteField,
   doc,
   getDocs,
   Timestamp,
@@ -9,8 +11,8 @@ import {
 } from "firebase/firestore";
 
 import { db } from "@/firebase";
-import type { IGift } from "../Gift.types";
 import { useAddMessageBars } from "@/utils/MessageBarsAtom";
+import type { IGift } from "../Gift.types";
 
 const USERS_COLLECTION: string = "users";
 
@@ -102,6 +104,10 @@ export const useUpdateGift = (userId: string) => {
       const giftListDocRef = collection(db, USERS_COLLECTION, userId, "gifts");
       const giftDocRef = doc(giftListDocRef, gift.id!);
       await updateDoc(giftDocRef, gift);
+      // if gift is not fulfilled and fulfilledAt is set, remove fulfilledAt
+      if (!gift.isFulfilled && gift.fulfilledAt) {
+        await updateDoc(giftDocRef, { fulfilledAt: deleteField() });
+      }
     },
     onSuccess: () => {
       addMessageBar([
@@ -131,4 +137,40 @@ export const useUpdateGift = (userId: string) => {
   return { updateGift };
 };
 
-export const useDeleteGift = () => {};
+export const useDeleteGift = (userId: string) => {
+  const queryClient = useQueryClient();
+  const addMessageBar = useAddMessageBars();
+  const { mutateAsync: deleteGift } = useMutation({
+    mutationKey: ["deleteGift", USERS_COLLECTION],
+    mutationFn: async (giftId: string) => {
+      const giftListDocRef = collection(db, USERS_COLLECTION, userId, "gifts");
+      const giftDocRef = doc(giftListDocRef, giftId);
+      await deleteDoc(giftDocRef);
+    },
+    onSuccess: () => {
+      addMessageBar([
+        {
+          id: "delete-gift-success",
+          message: "Gift deleted successfully!",
+          type: "success",
+          autoDismiss: true,
+        },
+      ]);
+      queryClient.invalidateQueries({
+        queryKey: ["getGiftList"],
+      });
+    },
+    onError: (error) => {
+      addMessageBar([
+        {
+          id: "delete-gift-error",
+          message: "Error deleting gift!" + error,
+          type: "error",
+          autoDismiss: true,
+        },
+      ]);
+    },
+  });
+
+  return { deleteGift };
+};
