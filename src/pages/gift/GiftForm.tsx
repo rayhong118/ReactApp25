@@ -1,6 +1,8 @@
 import { PrimaryButton, SecondaryButton } from "@/components/Buttons";
 import { useState } from "react";
 import type { IGift } from "./Gift.types";
+import { useAddGift } from "./hooks/giftHooks";
+import { useGetCurrentUser } from "@/utils/AuthenticationAtoms";
 
 interface IGiftFormProps {
   closeDialog: () => void;
@@ -9,13 +11,16 @@ interface IGiftFormProps {
 
 const GiftForm = (props: IGiftFormProps) => {
   const { closeDialog, gift } = props;
+  const currentUser = useGetCurrentUser();
+  const { addGift } = useAddGift(currentUser!.uid);
   const [giftForm, setGiftForm] = useState<Partial<IGift>>(
     gift || ({} as IGift)
   );
 
-  const handleGiftFormSubmit = (e: React.FormEvent) => {
+  const handleGiftFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log(giftForm);
+    await addGift(giftForm);
+    closeDialog();
   };
   return (
     <div>

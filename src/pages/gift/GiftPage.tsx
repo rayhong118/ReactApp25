@@ -1,14 +1,14 @@
 import { PrimaryButton } from "@/components/Buttons";
 import { Dialog } from "@/components/Dialog";
 import { useGetCurrentUser } from "@/utils/AuthenticationAtoms";
+import { useGetDisplayName } from "@/utils/UserHooks";
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import "./Gift.scss";
 import { type IGift } from "./Gift.types";
 import GiftCard from "./GiftCard";
 import GiftForm from "./GiftForm";
-import { useGetGiftList } from "./hooks/GiftHooks";
-import { useGetDisplayName } from "@/utils/AuthServiceHooks";
+import { useGetGiftList } from "./hooks/giftHooks";
 
 const GiftPage = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -20,6 +20,7 @@ const GiftPage = () => {
   const currentUserId = searchParamUserId || currentUser?.uid;
 
   const { data: giftData } = useGetGiftList(currentUserId!);
+
   const { data: displayName } = useGetDisplayName(searchParamUserId || "");
 
   const preferredGifts = giftData?.filter((gift) => gift.type === "preferred");

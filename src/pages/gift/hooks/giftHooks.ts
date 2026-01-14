@@ -1,8 +1,9 @@
-import { useQuery } from "@tanstack/react-query";
-import { collection, getDocs } from "firebase/firestore";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { addDoc, collection, getDocs } from "firebase/firestore";
 
 import { db } from "@/firebase";
 import type { IGift } from "../Gift.types";
+import { useAddMessageBars } from "@/utils/MessageBarsAtom";
 
 const USERS_COLLECTION: string = "users";
 
@@ -34,7 +35,56 @@ export const useGetGiftList = (userId: string) => {
   return { data };
 };
 
-export const useAddGift = () => {};
+/**
+ * Add gift to user's gift list
+ * @param userId
+ */
+export const useAddGift = (userId: string) => {
+  const queryClient = useQueryClient();
+  const addMessageBar = useAddMessageBars();
+  const { mutateAsync: addGift } = useMutation({
+    mutationKey: ["addGift", USERS_COLLECTION, userId],
+
+    mutationFn: async (gift: Partial<IGift>) => {
+      /**
+       * Add gift to user's gift list. On creation,
+       * @param gift should contain: name, type.
+       * optional: description
+       */
+      const giftData: Partial<IGift> = {
+        ...gift,
+        addedAt: new Date(),
+      };
+      const giftListDocRef = collection(db, USERS_COLLECTION, userId, "gifts");
+      await addDoc(giftListDocRef, giftData);
+    },
+    onSuccess: () => {
+      addMessageBar([
+        {
+          id: "add-gift-success",
+          message: "Gift added successfully!",
+          type: "success",
+          autoDismiss: true,
+        },
+      ]);
+      queryClient.invalidateQueries({
+        queryKey: ["getGiftList"],
+      });
+    },
+    onError: (error) => {
+      addMessageBar([
+        {
+          id: "add-gift-error",
+          message: "Error adding gift!" + error,
+          type: "error",
+          autoDismiss: true,
+        },
+      ]);
+    },
+  });
+
+  return { addGift };
+};
 
 export const useUpdateGift = () => {};
 

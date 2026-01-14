@@ -1,10 +1,10 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import {
+  getAdditionalUserInfo,
   signInWithPopup,
   updateProfile,
-  getAdditionalUserInfo,
 } from "firebase/auth";
-import { doc, getDoc, updateDoc } from "firebase/firestore";
+import { doc, updateDoc } from "firebase/firestore";
 import { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { auth, db, githubProvider, googleProvider } from "../firebase";
@@ -176,22 +176,4 @@ export const useUpdateDisplayName = () => {
     },
   });
   return { mutateAsync, isPending };
-};
-
-export const useGetDisplayName = (userId: string) => {
-  const { data } = useQuery({
-    queryKey: ["getDisplayName", userId],
-    queryFn: async () => {
-      const userDoc = doc(db, "users", userId);
-      const userDocSnap = await getDoc(userDoc);
-      if (userDocSnap.exists()) {
-        const displayName = userDocSnap.data().displayName as string;
-        console.log("displayName", displayName);
-        return displayName;
-      }
-      return "";
-    },
-    enabled: !!userId,
-  });
-  return { data };
 };
