@@ -1,24 +1,19 @@
 import { useQuery } from "@tanstack/react-query";
-import { collection, getDocs, getFirestore } from "firebase/firestore";
+import { collection, getDocs } from "firebase/firestore";
 
+import { db } from "@/firebase";
 import type { IGift } from "../Gift.types";
 
-const GIFT_LIST_COLLECTION: string = "gift-lists";
+const USERS_COLLECTION: string = "users";
 
 /**
  * Get gift list of user by user id
  */
 export const useGetGiftList = (userId: string) => {
   const { data } = useQuery({
-    queryKey: ["getGiftList", GIFT_LIST_COLLECTION, userId],
+    queryKey: ["getGiftList", USERS_COLLECTION, userId],
     queryFn: async () => {
-      const db = getFirestore();
-      const giftListDocRef = collection(
-        db,
-        GIFT_LIST_COLLECTION,
-        userId,
-        "gifts"
-      );
+      const giftListDocRef = collection(db, USERS_COLLECTION, userId, "gifts");
       const giftListDoc = await getDocs(giftListDocRef);
       if (giftListDoc.docs.length > 0) {
         const result = giftListDoc.docs.map((doc) => {

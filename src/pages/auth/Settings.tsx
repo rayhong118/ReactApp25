@@ -1,10 +1,17 @@
-import { PrimaryButton } from "@/components/Buttons";
+import { PrimaryButton, SecondaryButton } from "@/components/Buttons";
+import {
+  faEdit,
+  faGlobe,
+  faSignOut,
+  faUser,
+} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import type { User } from "firebase/auth";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useGetCurrentUser } from "../../utils/AuthenticationAtoms";
 import { useSignOut } from "../../utils/AuthServiceHooks";
-import type { User } from "firebase/auth";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUser, faGlobe } from "@fortawesome/free-solid-svg-icons";
+import { useUpdateDisplayName } from "../../utils/AuthServiceHooks";
 const languages = [
   { code: "en", name: "English" },
   { code: "zh", name: "中文" },
@@ -24,6 +31,13 @@ const UserSettings = () => {
 };
 
 const accountSettings = (currentUser: User, signOut: () => void, t: any) => {
+  const [showEditDisplayName, setShowEditDisplayName] = useState(false);
+  const [displayName, setDisplayName] = useState(currentUser.displayName || "");
+  const handleUpdateDisplayName = () => {
+    setShowEditDisplayName(false);
+    updateDisplayName(displayName);
+  };
+  const { mutateAsync: updateDisplayName } = useUpdateDisplayName();
   return (
     <>
       <h1 className="text-2xl font-bold">{t("settings.title")}</h1>
@@ -38,8 +52,34 @@ const accountSettings = (currentUser: User, signOut: () => void, t: any) => {
         />
       )}
       <h3 className="text-lg font-semibold text-gray-800">
-        {currentUser.displayName || "User"}
+        {showEditDisplayName ? (
+          <input
+            className="w-full border border-gray-300 rounded p-2"
+            type="text"
+            value={displayName}
+            onChange={(e) => setDisplayName(e.target.value)}
+          />
+        ) : (
+          currentUser.displayName || "User"
+        )}
       </h3>
+      <SecondaryButton
+        onClick={() => setShowEditDisplayName(!showEditDisplayName)}
+      >
+        {showEditDisplayName ? (
+          t("settings.displayName.cancel")
+        ) : (
+          <>
+            <FontAwesomeIcon className="mr-2" icon={faEdit} />
+            {t("settings.displayName.edit")}
+          </>
+        )}
+      </SecondaryButton>
+      {showEditDisplayName && (
+        <PrimaryButton onClick={handleUpdateDisplayName}>
+          {t("settings.displayName.save")}
+        </PrimaryButton>
+      )}
       <span className="font-semibold">{t("settings.email")}:</span>{" "}
       {currentUser.email}
       <span className="font-semibold">
@@ -48,7 +88,10 @@ const accountSettings = (currentUser: User, signOut: () => void, t: any) => {
       {currentUser.emailVerified
         ? t("settings.emailVerified")
         : t("settings.emailNotVerified")}
-      <PrimaryButton onClick={signOut}>{t("settings.signOut")}</PrimaryButton>
+      <PrimaryButton onClick={signOut}>
+        <FontAwesomeIcon className="mr-2" icon={faSignOut} />
+        {t("settings.signOut")}
+      </PrimaryButton>
     </>
   );
 };

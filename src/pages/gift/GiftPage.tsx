@@ -1,30 +1,14 @@
-import { useState } from "react";
-import { type IGift } from "./Gift.types";
-import { Dialog } from "@/components/Dialog";
-import GiftCard from "./GiftCard";
 import { PrimaryButton } from "@/components/Buttons";
-import "./Gift.scss";
-import GiftForm from "./GiftForm";
-import { useParams, useSearchParams } from "react-router-dom";
+import { Dialog } from "@/components/Dialog";
 import { useGetCurrentUser } from "@/utils/AuthenticationAtoms";
+import { useState } from "react";
+import { useSearchParams } from "react-router-dom";
+import "./Gift.scss";
+import { type IGift } from "./Gift.types";
+import GiftCard from "./GiftCard";
+import GiftForm from "./GiftForm";
 import { useGetGiftList } from "./hooks/GiftHooks";
-
-const mockGifts: IGift[] = [
-  {
-    name: "Gift 1",
-    description: "Description 1",
-    type: "preferred",
-    addedAt: new Date(),
-    isFulfilled: false,
-  },
-  {
-    name: "Gift 2",
-    description: "Description 2",
-    type: "avoid",
-    addedAt: new Date(),
-    isFulfilled: false,
-  },
-];
+import { useGetDisplayName } from "@/utils/AuthServiceHooks";
 
 const GiftPage = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -36,9 +20,13 @@ const GiftPage = () => {
   const currentUserId = searchParamUserId || currentUser?.uid;
 
   const { data: giftData } = useGetGiftList(currentUserId!);
+  const { data: displayName } = useGetDisplayName(searchParamUserId || "");
 
   const preferredGifts = giftData?.filter((gift) => gift.type === "preferred");
   const avoidGifts = giftData?.filter((gift) => gift.type === "avoid");
+
+  const enableAddButtons: boolean =
+    !searchParamUserId || currentUser?.uid === searchParamUserId;
 
   return (
     <div>
@@ -53,13 +41,13 @@ const GiftPage = () => {
         <GiftForm closeDialog={() => setDialogOpen(false)} gift={currentGift} />
       </Dialog>
       <h1 className="text-2xl font-bold">
-        Gift Page of {searchParamUserId && currentUser?.displayName}
+        Gift Page {searchParamUserId && displayName}
       </h1>
       <p>Gifts are items you would like to receive or avoid</p>
 
       <div className="flex justify-between">
         <h2 className="text-xl font-bold">Preffered Gifts</h2>
-        {!searchParamUserId && (
+        {enableAddButtons && (
           <PrimaryButton
             onClick={() => {
               setCurrentGift({ type: "preferred" });
@@ -86,7 +74,7 @@ const GiftPage = () => {
       <hr className="my-4" />
       <div className="flex justify-between">
         <h2 className="text-xl font-bold">Avoid Gifts</h2>
-        {!searchParamUserId && (
+        {enableAddButtons && (
           <PrimaryButton
             onClick={() => {
               setCurrentGift({ type: "avoid" });

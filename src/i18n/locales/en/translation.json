@@ -32,7 +32,12 @@
     "emailVerified": "Verified",
     "emailNotVerified": "Not Verified",
     "signOut": "Sign Out",
-    "language": "Language"
+    "language": "Language",
+    "displayName": {
+      "edit": "Edit Display Name",
+      "cancel": "Cancel",
+      "save": "Save Display Name"
+    }
   },
   "eat": {
     "title": "Eat",
