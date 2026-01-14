@@ -94,6 +94,12 @@
       "submit": "Submit"
     }
   },
+  "gift": {
+    "title": "Gift page",
+    "edit": "Edit",
+    "delete": "Delete",
+    "fulfill": "Fulfill"
+  },
   "footer": {
     "contact": {
       "title": "Contact",

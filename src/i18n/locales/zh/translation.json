@@ -91,6 +91,12 @@
       "submit": "提交"
     }
   },
+  "gift": {
+    "title": "礼物页面",
+    "edit": "编辑",
+    "delete": "删除",
+    "fulfill": "履行"
+  },
   "footer": {
     "contact": {
       "title": "联系",

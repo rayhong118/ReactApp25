@@ -1,11 +1,13 @@
+import type { Timestamp } from "firebase/firestore";
+
 export interface IGift {
   id?: string;
   type: "preferred" | "avoid";
   name: string;
   description?: string;
-  addedAt?: Date;
+  addedAt?: Timestamp;
   isFulfilled: boolean;
-  fulfilledAt?: Date;
+  fulfilledAt?: Timestamp;
 }
 
 export interface IGiftList {

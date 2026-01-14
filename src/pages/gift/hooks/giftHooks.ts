@@ -1,5 +1,12 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { addDoc, collection, getDocs } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  doc,
+  getDocs,
+  Timestamp,
+  updateDoc,
+} from "firebase/firestore";
 
 import { db } from "@/firebase";
 import type { IGift } from "../Gift.types";
@@ -53,7 +60,7 @@ export const useAddGift = (userId: string) => {
        */
       const giftData: Partial<IGift> = {
         ...gift,
-        addedAt: new Date(),
+        addedAt: Timestamp.fromDate(new Date()),
       };
       const giftListDocRef = collection(db, USERS_COLLECTION, userId, "gifts");
       await addDoc(giftListDocRef, giftData);
@@ -86,6 +93,42 @@ export const useAddGift = (userId: string) => {
   return { addGift };
 };
 
-export const useUpdateGift = () => {};
+export const useUpdateGift = (userId: string) => {
+  const queryClient = useQueryClient();
+  const addMessageBar = useAddMessageBars();
+  const { mutateAsync: updateGift } = useMutation({
+    mutationKey: ["updateGift", USERS_COLLECTION, userId],
+    mutationFn: async (gift: Partial<IGift>) => {
+      const giftListDocRef = collection(db, USERS_COLLECTION, userId, "gifts");
+      const giftDocRef = doc(giftListDocRef, gift.id!);
+      await updateDoc(giftDocRef, gift);
+    },
+    onSuccess: () => {
+      addMessageBar([
+        {
+          id: "update-gift-success",
+          message: "Gift updated successfully!",
+          type: "success",
+          autoDismiss: true,
+        },
+      ]);
+      queryClient.invalidateQueries({
+        queryKey: ["getGiftList"],
+      });
+    },
+    onError: (error) => {
+      addMessageBar([
+        {
+          id: "update-gift-error",
+          message: "Error updating gift!" + error,
+          type: "error",
+          autoDismiss: true,
+        },
+      ]);
+    },
+  });
+
+  return { updateGift };
+};
 
 export const useDeleteGift = () => {};

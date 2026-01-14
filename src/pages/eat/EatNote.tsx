@@ -15,7 +15,7 @@ import { useTranslation } from "react-i18next";
  */
 const EatNote = ({ note, refetch }: { note: INote; refetch: () => void }) => {
   const User = useGetCurrentUser();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { mutate: deleteNote, isPending: isDeletingNote } =
     useDeleteRestaurantNote();
 
@@ -41,7 +41,7 @@ const EatNote = ({ note, refetch }: { note: INote; refetch: () => void }) => {
       <p>{note.content}</p>
       <div className="flex justify-between items-center">
         <p className="text-sm font-bold">
-          {note.date.toDate().toLocaleDateString("en-US", {
+          {note.date.toDate().toLocaleDateString(i18n.language, {
             year: "numeric",
             month: "long",
             day: "numeric",

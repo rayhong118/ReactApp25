@@ -3,7 +3,7 @@ import { useState } from "react";
 import type { IGift } from "./Gift.types";
 import { useAddGift } from "./hooks/giftHooks";
 import { useGetCurrentUser } from "@/utils/AuthenticationAtoms";
-
+import { useUpdateGift } from "./hooks/giftHooks";
 interface IGiftFormProps {
   closeDialog: () => void;
   gift?: Partial<IGift>;
@@ -13,13 +13,18 @@ const GiftForm = (props: IGiftFormProps) => {
   const { closeDialog, gift } = props;
   const currentUser = useGetCurrentUser();
   const { addGift } = useAddGift(currentUser!.uid);
+  const { updateGift } = useUpdateGift(currentUser!.uid);
   const [giftForm, setGiftForm] = useState<Partial<IGift>>(
     gift || ({} as IGift)
   );
 
   const handleGiftFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await addGift(giftForm);
+    if (gift?.id) {
+      await updateGift(giftForm);
+    } else {
+      await addGift(giftForm);
+    }
     closeDialog();
   };
   return (
