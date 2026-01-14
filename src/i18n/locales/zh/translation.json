@@ -4,6 +4,7 @@
     "about": "关于",
     "drawings": "图",
     "eat": "吃饭",
+    "gifts": "礼物",
     "lab": {
       "title": "实验室",
       "formValidation": "表单验证",
@@ -32,7 +33,12 @@
     "emailVerified": "已验证",
     "emailNotVerified": "未验证",
     "signOut": "退出登录",
-    "language": "语言"
+    "language": "语言",
+    "displayName": {
+      "edit": "编辑显示名",
+      "cancel": "取消",
+      "save": "保存显示名"
+    }
   },
   "eat": {
     "title": "吃饭",

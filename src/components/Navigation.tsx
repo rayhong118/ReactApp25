@@ -111,7 +111,7 @@ const Navigation = () => {
             </button>
           </div>
 
-          <div className="hidden md:flex md:items-center md:space-x-2">
+          <div className="hidden md:flex md:items-center">
             {navButton({
               label: "navbar.about",
               to: "/about",
@@ -227,6 +227,12 @@ const Navigation = () => {
               to: "/drawings",
               nested: true,
               icon: faImage,
+            })}
+            {navButton({
+              label: "navbar.gifts",
+              to: "/gifts",
+              nested: true,
+              icon: faGift,
             })}
             <div>
               <button

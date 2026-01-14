@@ -6,8 +6,10 @@ import type { IGift } from "../Gift.types";
 
 const USERS_COLLECTION: string = "users";
 
+// TODO: loading indication and error handling
 /**
  * Get gift list of user by user id
+ * @param userId
  */
 export const useGetGiftList = (userId: string) => {
   const { data } = useQuery({
@@ -35,3 +37,5 @@ export const useGetGiftList = (userId: string) => {
 export const useAddGift = () => {};
 
 export const useUpdateGift = () => {};
+
+export const useDeleteGift = () => {};
