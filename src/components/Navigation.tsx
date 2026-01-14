@@ -2,6 +2,7 @@ import type { IconProp } from "@fortawesome/fontawesome-svg-core";
 import {
   faFlask,
   faGear,
+  faGift,
   faImage,
   faInfoCircle,
   faSignInAlt,
@@ -121,6 +122,11 @@ const Navigation = () => {
               label: "navbar.drawings",
               to: "/drawings",
               icon: faImage,
+            })}
+            {navButton({
+              label: "navbar.gifts",
+              to: "/gifts",
+              icon: faGift,
             })}
 
             <div className="relative">

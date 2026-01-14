@@ -1,6 +1,6 @@
 import { onAuthStateChanged } from "firebase/auth";
 import { lazy, useEffect } from "react";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import "./App.css";
 import { auth } from "./firebase";
 import { useSetCurrentUser } from "./utils/AuthenticationAtoms";
@@ -107,8 +107,9 @@ const App: React.FC = () => {
             )
           )}
         />
+        <Route path="/gift" element={<Navigate to="/gifts" replace />} />
         <Route
-          path="/gift"
+          path="/gifts"
           element={withSuspense(
             withDefaultPagePadding(<WithAuthRequired component={GiftPage} />)
           )}
