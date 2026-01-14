@@ -22,7 +22,12 @@
   "auth": {
     "title": "Sign In / Sign Up",
     "google": "Sign in with Google",
-    "github": "Sign in with GitHub"
+    "github": "Sign in with GitHub",
+    "withAuthRequired": {
+      "accessDenied": "Access denied",
+      "youMustBeSignedIn": "You must be signed in to view this page. Please log in or register to continue.",
+      "signIn": "Sign In"
+    }
   },
   "settings": {
     "title": "Settings",

@@ -22,7 +22,12 @@
   "auth": {
     "title": "注册/登录",
     "google": "使用 Google 登录",
-    "github": "使用 GitHub 登录"
+    "github": "使用 GitHub 登录",
+    "withAuthRequired": {
+      "accessDenied": "访问被拒绝",
+      "youMustBeSignedIn": "您必须登录才能查看此页面。请登录或注册以继续。",
+      "signIn": "登录"
+    }
   },
   "settings": {
     "title": "设置",
