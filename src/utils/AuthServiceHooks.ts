@@ -1,5 +1,9 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { signInWithPopup, updateProfile } from "firebase/auth";
+import {
+  signInWithPopup,
+  updateProfile,
+  getAdditionalUserInfo,
+} from "firebase/auth";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
@@ -17,6 +21,17 @@ export const useFirebaseSignInWithGoogle = () => {
       const userCredential = await signInWithPopup(auth, googleProvider);
 
       setCurrentUser(userCredential.user);
+      // Use this helper function to extract metadata
+      const details = getAdditionalUserInfo(userCredential);
+
+      if (details && details.isNewUser) {
+        // update user display name in users collection
+        const userDoc = doc(db, "users", userCredential.user.uid);
+        await updateDoc(userDoc, {
+          displayName: userCredential.user.displayName,
+        });
+      }
+
       addMessageBars([
         {
           id: new Date().toISOString(),
@@ -50,6 +65,16 @@ export const useFirebaseSignInWithGitHub = () => {
     try {
       const userCredential = await signInWithPopup(auth, githubProvider);
       setCurrentUser(userCredential.user);
+
+      const details = getAdditionalUserInfo(userCredential);
+      if (details && details.isNewUser) {
+        // update user display name in users collection
+        const userDoc = doc(db, "users", userCredential.user.uid);
+        await updateDoc(userDoc, {
+          displayName: userCredential.user.displayName,
+        });
+      }
+
       addMessageBars([
         {
           id: new Date().toISOString(),
