@@ -9,13 +9,12 @@ import { useTranslation } from "react-i18next";
 import type { IRestaurant } from "./Eat.types";
 import { EatCard } from "./EatCard.tsx";
 import { EatEditForm } from "./EatEditForm";
-import { useEatListSort, useRestaurantList } from "./hooks/eatListHooks.tsx";
+import { useRestaurantList } from "./hooks/eatListHooks.tsx";
 import { EatSort } from "./EatSort";
 
 export const EatList = () => {
   const { t } = useTranslation();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const { orderBy } = useEatListSort();
   const {
     restaurants: allRestaurants,
     error,
@@ -23,7 +22,7 @@ export const EatList = () => {
     fetchNextPage,
     isFetchingNextPage,
     eatQuery,
-  } = useRestaurantList(orderBy);
+  } = useRestaurantList();
 
   const handleDialogClose = () => {
     setIsDialogOpen(false);

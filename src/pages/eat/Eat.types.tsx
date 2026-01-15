@@ -115,6 +115,11 @@ export interface IEatQuery {
   name?: string;
 }
 
+export type TEatSort = {
+  field: string;
+  direction: "asc" | "desc";
+};
+
 export type TUserRatings = { [restaurantId: string]: number };
 
 export interface ILocationTag {

@@ -32,6 +32,7 @@ import type {
   IEatQuery,
   ILocationTag,
   IRestaurant,
+  TEatSort,
   TUserRatings,
 } from "../Eat.types";
 
@@ -42,10 +43,7 @@ export const PAGE_SIZE = 4;
  * @returns isLoading: boolean
  * @returns error: error object
  */
-export const useGetRestaurants = (
-  eatQuery?: IEatQuery,
-  orderByField?: { field: string; direction: "asc" | "desc" }
-) => {
+export const useGetRestaurants = (eatQuery?: IEatQuery, sort?: TEatSort) => {
   const {
     data,
     error,
@@ -54,7 +52,7 @@ export const useGetRestaurants = (
     fetchNextPage,
     isFetchingNextPage,
   } = useInfiniteQuery({
-    queryKey: ["restaurants", eatQuery, orderByField],
+    queryKey: ["restaurants", eatQuery, sort?.field, sort?.direction],
     queryFn: async ({
       pageParam,
     }: {
@@ -80,16 +78,16 @@ export const useGetRestaurants = (
 
       if (hasPriceFilter) {
         // If we have a price filter, price MUST be the first orderBy
-        constraints.push(orderBy("price", orderByField?.direction || "asc"));
+        constraints.push(orderBy("price", sort?.direction || "asc"));
 
         // If the user wanted to sort by something else (like 'name'),
         // it must come AFTER 'price' as a secondary sort.
-        if (orderByField && orderByField.field !== "price") {
-          constraints.push(orderBy(orderByField.field, orderByField.direction));
+        if (sort && sort.field !== "price") {
+          constraints.push(orderBy(sort.field, sort.direction));
         }
-      } else if (orderByField) {
+      } else if (sort) {
         // No price filter? Use the requested sort.
-        constraints.push(orderBy(orderByField.field, orderByField.direction));
+        constraints.push(orderBy(sort.field, sort.direction));
       } else {
         // Default fallback
         constraints.push(orderBy(documentId()));

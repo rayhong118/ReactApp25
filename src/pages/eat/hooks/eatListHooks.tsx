@@ -1,12 +1,15 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect } from "react";
 import {
   useGetFilterSearchQuery,
   useSetCurrentUserRestaurantRatings,
+  useGetEatSort,
+  useSetEatSort,
 } from "../EatAtoms";
 import {
   useFetchCurrentUserRestaurantRatings,
   useGetRestaurants,
 } from "./hooks";
+import type { TEatSort } from "../Eat.types";
 
 /**
  * This hook handles sort for eat list
@@ -14,26 +17,10 @@ import {
  * @returns handleSortChange: function to handle sort change
  */
 export const useEatListSort = () => {
-  const [orderBy, setOrderBy] = useState<
-    | {
-        field: string;
-        direction: "asc" | "desc";
-      }
-    | undefined
-  >();
+  const orderBy = useGetEatSort();
+  const setOrderBy = useSetEatSort();
 
-  const handleSortChange = (
-    sortInput:
-      | {
-          field: string;
-          direction: "asc" | "desc";
-        }
-      | undefined
-  ) => {
-    if (!sortInput) {
-      setOrderBy(undefined);
-      return;
-    }
+  const handleSortChange = (sortInput: TEatSort | undefined) => {
     setOrderBy(sortInput);
   };
 
@@ -51,39 +38,26 @@ export const useEatListSort = () => {
  * @returns isFetchingNextPage: boolean to check if next page is being fetched
  * @returns eatQuery: query for filtering and searching restaurants
  */
-export const useRestaurantList = (
-  orderBy: { field: string; direction: "asc" | "desc" } | undefined
-) => {
+export const useRestaurantList = () => {
   const eatQuery = useGetFilterSearchQuery();
+  const { orderBy } = useEatListSort();
   const {
     data: restaurants,
     error,
     hasNextPage,
     fetchNextPage,
-    refetch,
     isFetchingNextPage,
   } = useGetRestaurants(eatQuery, orderBy);
 
   const { data: currentUserRatings } = useFetchCurrentUserRestaurantRatings();
   const setCurrentUserRatings = useSetCurrentUserRestaurantRatings();
 
-  const timeoutRef = useRef<NodeJS.Timeout>(null);
-
   useEffect(() => {
     // populate currentUserRatings for each restaurant
     if (currentUserRatings) {
       setCurrentUserRatings(currentUserRatings);
     }
-  }, [currentUserRatings]);
-
-  useEffect(() => {
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-    }
-    timeoutRef.current = setTimeout(() => {
-      refetch();
-    }, 500);
-  }, [orderBy]);
+  }, [currentUserRatings, setCurrentUserRatings]);
 
   const allRestaurants = restaurants?.pages.flatMap((page) => page.restaurants);
 
