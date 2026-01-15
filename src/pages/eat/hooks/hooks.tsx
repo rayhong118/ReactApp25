@@ -490,6 +490,7 @@ export const useSubmitRestaurantRating = () => {
  * @returns isFetching: boolean
  */
 export const useGetUserLocation = () => {
+  const addMessageBars = useAddMessageBars();
   const { data, error, refetch, isFetching } = useQuery({
     queryKey: ["user-location"],
     queryFn: async () => {
@@ -538,6 +539,14 @@ export const useGetUserLocation = () => {
               2: "Position unavailable. GPS signal might be weak.",
               3: "Location request timed out.",
             };
+            addMessageBars([
+              {
+                id: new Date().toISOString(),
+                message: messages[geoError.code] || geoError.message,
+                type: "error",
+                autoDismiss: true,
+              },
+            ]);
             reject(new Error(messages[geoError.code] || geoError.message));
           },
           { timeout: 5000, enableHighAccuracy: false, maximumAge: 60000 * 60 }
@@ -566,20 +575,47 @@ export const useGetUserLocation = () => {
 export const useGetCitiesCloseToCurrentUserLocation = (
   cityAndState: string
 ) => {
+  const addMessageBars = useAddMessageBars();
   const { data, error, refetch, isFetching } = useQuery({
     queryKey: ["citiesCloseToCurrentUserLocation", cityAndState],
     queryFn: async () => {
       if (!cityAndState) {
         return [];
       }
-      const selectLocationTagsBasedOnCurrentLocation = httpsCallable<
-        { cityAndState: string },
-        { locationTags: string[] }
-      >(firebaseFunctions, "selectLocationTagsBasedOnCurrentLocation");
-      const result = await selectLocationTagsBasedOnCurrentLocation({
-        cityAndState,
-      });
-      return result.data?.locationTags || [];
+      try {
+        const selectLocationTagsBasedOnCurrentLocation = httpsCallable<
+          { cityAndState: string },
+          { locationTags: string[] }
+        >(firebaseFunctions, "selectLocationTagsBasedOnCurrentLocation");
+        const result = await selectLocationTagsBasedOnCurrentLocation({
+          cityAndState,
+        });
+        addMessageBars([
+          {
+            id: new Date().toISOString(),
+            message:
+              "Cities close to current user location fetched successfully",
+            type: "success",
+            autoDismiss: true,
+          },
+        ]);
+        return result.data?.locationTags || [];
+      } catch (error) {
+        console.error(
+          "Error fetching cities close to current user location:",
+          error
+        );
+        addMessageBars([
+          {
+            id: new Date().toISOString(),
+            message:
+              "Error fetching cities close to current user location: " + error,
+            type: "error",
+            autoDismiss: true,
+          },
+        ]);
+        return [];
+      }
     },
     enabled: !!cityAndState,
     refetchOnWindowFocus: false,
