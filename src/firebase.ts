@@ -29,4 +29,4 @@ export const db = getFirestore(app);
 export const geminiModel = getGenerativeModel(ai, {
   model: "gemini-2.5-flash",
 });
-export const firebaseFunctions = getFunctions(app, "us-central1");
+export const firebaseFunctions = getFunctions(app, "us-west2");
