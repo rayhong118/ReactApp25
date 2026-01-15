@@ -11,13 +11,11 @@ export const EatSort = () => {
         onChange={(e) => {
           const value = e.target.value;
           if (!value) {
-            console.log("value", value);
             handleSortChange(undefined);
             return;
           }
           const [field, direction] = value.split(",");
-          console.log("field", field);
-          console.log("direction", direction);
+
           handleSortChange({
             field,
             direction: direction as "asc" | "desc",

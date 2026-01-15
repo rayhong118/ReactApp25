@@ -83,7 +83,6 @@ const EatFilterSearchForm = () => {
   useEffect(() => {
     const timeout = setTimeout(() => {
       setFilterQuery(tempQuery);
-      console.log("tempQuery", tempQuery);
     }, 500);
     return () => clearTimeout(timeout);
   }, [tempQuery]);
