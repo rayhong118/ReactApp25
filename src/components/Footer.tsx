@@ -1,5 +1,5 @@
 import { faGithub, faLinkedin } from "@fortawesome/free-brands-svg-icons";
-import { faCog } from "@fortawesome/free-solid-svg-icons";
+import { faCog, faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -27,10 +27,18 @@ const Footer = () => {
       <hr className="md:hidden my-4" />
 
       <div className="text-lg">
-        <FontAwesomeIcon icon={faCog} />{" "}
-        <a className="cursor-pointer" onClick={() => navigate("/settings")}>
-          {t("footer.settings")}
-        </a>
+        <div>
+          <FontAwesomeIcon className="mr-2" icon={faCog} />
+          <a className="cursor-pointer" onClick={() => navigate("/settings")}>
+            {t("footer.settings")}
+          </a>
+        </div>
+        <div>
+          <FontAwesomeIcon className="mr-2" icon={faInfoCircle} />
+          <a className="cursor-pointer" onClick={() => navigate("/about")}>
+            {t("footer.about")}
+          </a>
+        </div>
       </div>
     </div>
   );

@@ -4,7 +4,6 @@ import {
   faGear,
   faGift,
   faImage,
-  faInfoCircle,
   faSignInAlt,
   faUtensils,
 } from "@fortawesome/free-solid-svg-icons";
@@ -112,11 +111,6 @@ const Navigation = () => {
           </div>
 
           <div className="hidden md:flex md:items-center">
-            {navButton({
-              label: "navbar.about",
-              to: "/about",
-              icon: faInfoCircle,
-            })}
             {navButton({ label: "navbar.eat", to: "/eat", icon: faUtensils })}
             {navButton({
               label: "navbar.drawings",
@@ -210,12 +204,6 @@ const Navigation = () => {
       {mobileOpen && (
         <div className="md:hidden bg-white">
           <div className="px-2 pt-2 pb-3 space-y-1">
-            {navButton({
-              label: "navbar.about",
-              to: "/about",
-              nested: true,
-              icon: faInfoCircle,
-            })}
             {navButton({
               label: "navbar.eat",
               to: "/eat",
