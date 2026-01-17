@@ -9,6 +9,8 @@
     border: 2px solid #999;
     border-radius: 6px;
     background-color: transparent;
+    color: var(--color-foreground);
+    background-color: var(--color-background);
   }
 
   textarea {
@@ -19,8 +21,8 @@
   input:disabled ~ label,
   textarea:disabled,
   textarea:disabled ~ label {
-    color: #999;
-    border-color: #999;
+    color: var(--color-foreground);
+    border-color: var(--color-foreground);
     cursor: not-allowed;
   }
 
@@ -31,7 +33,7 @@
     cursor: text;
     user-select: none;
     transition: transform 0.2s ease-in;
-    background-color: white;
+    background-color: var(--color-background);
     margin: 0.5rem 0;
     padding-left: 0.25rem;
     padding-right: 0.25rem;

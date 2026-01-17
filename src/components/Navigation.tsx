@@ -60,7 +60,7 @@ const Navigation = () => {
       }}
       key={label}
       className={`flex items-center px-3 py-2 rounded-md text-md font-medium 
-         text-gray-700 hover:bg-gray-100 text-start whitespace-nowrap cursor-pointer ${
+         text-foreground hover:bg-brand-soft text-start whitespace-nowrap cursor-pointer ${
            nested ? "w-full" : ""
          }`}
     >
@@ -90,14 +90,14 @@ const Navigation = () => {
   return (
     <div
       ref={wrapperRef}
-      className="fixed top-0 w-full bg-white shadow-sm z-40"
+      className="fixed top-0 w-full bg-background shadow-md z-40 shadow-foreground/10"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           <div className="flex items-center">
             <button
               onClick={() => navigate("/")}
-              className="flex items-center gap-2 text-md font-semibold text-gray-900 
+              className="flex items-center gap-2 text-md font-semibold text-foreground 
               hover:text-gray-700 cursor-pointer px-3 py-2"
               aria-label="Go to home"
             >
@@ -129,7 +129,7 @@ const Navigation = () => {
                 aria-haspopup="true"
                 aria-expanded={dropdownOpen}
                 className="inline-flex items-center px-3 py-2 rounded-md text-md font-medium
-                 text-gray-700 hover:bg-gray-100 whitespace-nowrap cursor-pointer"
+                 text-foreground hover:bg-brand-soft whitespace-nowrap cursor-pointer"
               >
                 <FontAwesomeIcon icon={faFlask} className="mr-2 pt-0.5" />
                 {t("navbar.lab.title")}
@@ -151,11 +151,11 @@ const Navigation = () => {
 
               {dropdownOpen && (
                 <div
-                  className="absolute right-0 mt-2 w-60 bg-white ring-1 ring-black/5
+                  className="absolute right-0 mt-2 w-60 bg-background ring-1 ring-black/5
                  rounded-md shadow-lg py-1"
                 >
                   {experimentsNavItems.map((item) =>
-                    navButton({ label: item.label, to: item.to, nested: true })
+                    navButton({ label: item.label, to: item.to, nested: true }),
                   )}
                 </div>
               )}
@@ -170,7 +170,7 @@ const Navigation = () => {
               onClick={() => setMobileOpen((s) => !s)}
               aria-label="Toggle menu"
               className="inline-flex items-center justify-center p-2 rounded-md 
-              text-gray-700 hover:bg-gray-100"
+              text-foreground hover:bg-brand-soft"
             >
               <svg
                 className="h-6 w-6"
@@ -202,7 +202,7 @@ const Navigation = () => {
 
       {/* Mobile panel */}
       {mobileOpen && (
-        <div className="md:hidden bg-white">
+        <div className="md:hidden bg-background">
           <div className="px-2 pt-2 pb-3 space-y-1">
             {navButton({
               label: "navbar.eat",
@@ -225,8 +225,8 @@ const Navigation = () => {
             <div>
               <button
                 onClick={() => setDropdownOpen((s) => !s)}
-                className="w-full text-left px-3 py-2 rounded-md text-md font-medium text-gray-700 
-                hover:bg-gray-100 flex items-center justify-between cursor-pointer"
+                className="w-full text-left px-3 py-2 rounded-md text-md font-medium text-foreground 
+                hover:bg-brand-soft flex items-center justify-between cursor-pointer"
               >
                 <span>
                   <FontAwesomeIcon icon={faFlask} className="mr-2 pt-0.5" />
@@ -234,7 +234,7 @@ const Navigation = () => {
                 </span>
 
                 <svg
-                  className="h-4 w-4 text-gray-500"
+                  className="h-4 w-4 text-foreground"
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
@@ -256,7 +256,7 @@ const Navigation = () => {
                       label: item.label,
                       to: item.to,
                       nested: true,
-                    })
+                    }),
                   )}
                 </div>
               )}

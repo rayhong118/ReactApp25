@@ -14,13 +14,20 @@
   /* Your Surface colors */
   --color-surface: #faf9f6;
   --color-surface-card: #ffffff;
+
+  --color-background: #faf9f6;
+  --color-foreground: #1e1e1e;
 }
 
 @layer base {
   .dark {
     --color-brand-light: #2d1a05;
     --color-brand-soft: #43280b;
+    --color-brand-primary: #fb923c;
+    --color-brand-vibrant: #f97316;
     --color-surface: #121212;
     --color-surface-card: #1e1e1e;
+    --color-background: #1e1e1e;
+    --color-foreground: #faf9f6;
   }
 }
