@@ -59,8 +59,8 @@ const EatFilterSearchForm = () => {
         actualValue = isNaN(valueAsNumber)
           ? 0
           : valueAsNumber < 0
-          ? 0
-          : valueAsNumber;
+            ? 0
+            : valueAsNumber;
         break;
       case "date":
         actualValue = valueAsDate;
@@ -93,7 +93,7 @@ const EatFilterSearchForm = () => {
       <hr className="w-full" />
       <label>{t("eat.filter.priceRange")}</label>
       <div className="flex gap-2">
-        <div className="material-labeled-input">
+        <div className="labeled-input">
           <input
             type="number"
             id="priceRangeLower"
@@ -107,7 +107,7 @@ const EatFilterSearchForm = () => {
             {t("eat.filter.priceRangeLower")}
           </label>
         </div>
-        <div className="material-labeled-input">
+        <div className="labeled-input">
           <input
             type="number"
             id="priceRangeUpper"
@@ -202,7 +202,7 @@ const UserPromptSection = () => {
       <div className="flex flex-col gap-2">
         <p>{t("eat.filter.userPromptDescription")}</p>
 
-        <div className="material-labeled-input">
+        <div className="labeled-input">
           <textarea
             placeholder=""
             onChange={(e) => setUserPromptInput(e.target.value)}
@@ -247,12 +247,12 @@ const LocationTagsList = () => {
   const filterSearchQuery = useGetFilterSearchQuery();
   const [tagNameFilter, setTagNameFilter] = useState("");
   const [selectedLocationTags, setSelectedLocationTags] = useState<string[]>(
-    filterSearchQuery.cityAndState || []
+    filterSearchQuery.cityAndState || [],
   );
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const { selectNearby, inProgress } = useLocationTagAutoSelector(
     locationTags,
-    setSelectedLocationTags
+    setSelectedLocationTags,
   );
   const { t } = useTranslation();
 
@@ -284,15 +284,15 @@ const LocationTagsList = () => {
       locationTags?.filter(
         (tag) =>
           tag.count > 0 &&
-          tag.value.toLowerCase().includes(tagNameFilter.toLowerCase())
+          tag.value.toLowerCase().includes(tagNameFilter.toLowerCase()),
       ),
-    [locationTags, tagNameFilter]
+    [locationTags, tagNameFilter],
   );
 
   return (
     <div className="flex flex-wrap gap-2">
       <hr className="w-full my-2" />
-      <div className="material-labeled-input">
+      <div className="labeled-input">
         <input
           type="text"
           id="tagNameFilter"

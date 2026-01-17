@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "./styles/lable-input.scss";
 
 /* Fix hover beavior on touchscreen laptops */
 @custom-variant hover (&:hover);

@@ -1,65 +1,19 @@
-.material-labeled-input {
-  position: relative;
-  width: 100%;
-
-  input,
-  textarea {
-    padding: 0.5rem;
-    width: 100%;
-    border: 2px solid #999;
-    border-radius: 6px;
-    background-color: transparent;
-  }
-
-  textarea {
-    min-height: 4rem;
-  }
-
-  input:disabled,
-  input:disabled~label,
-  textarea:disabled,
-  textarea:disabled~label {
-    color: #999;
-    border-color: #999;
-    cursor: not-allowed;
-  }
-
-  label {
-    position: absolute;
-    top: 0rem;
-    left: 0.5rem;
-    cursor: text;
-    user-select: none;
-    transition: transform 0.2s ease-in;
-    background-color: white;
-    margin: 0.5rem 0;
-    padding-left: 0.25rem;
-    padding-right: 0.25rem;
-    transform-origin: top left;
-    pointer-events: none;
-  }
-
-  input:focus~label,
-  input:not(:placeholder-shown)~label,
-  textarea:focus~label,
-  textarea:not(:placeholder-shown)~label {
-    transform: translateY(-1rem) scale(0.8);
-  }
-}
-
 @media (max-width: 767px) {
   .filter-panel-container {
     display: grid;
     grid-template-rows: 0fr; /* Collapsed by default on mobile */
-    transition: grid-template-rows 0.5s ease-out, visibility 0s 0.5s ;
+    transition:
+      grid-template-rows 0.5s ease-out,
+      visibility 0s 0.5s;
     overflow: hidden;
     visibility: hidden;
-
   }
   .filter-panel-container.open {
     grid-template-rows: 1fr; /* Expanded when .open is added */
     visibility: visible;
-    transition: grid-template-rows 0.5s ease-out, visibility 0s 0s ;    
+    transition:
+      grid-template-rows 0.5s ease-out,
+      visibility 0s 0s;
   }
 }
 /* Base style for md and above (no grid trick needed) */

@@ -12,7 +12,6 @@ import {
   useUpdateArtwork,
   useUploadFile,
 } from "./hooks";
-import "./Upload.scss";
 
 const Upload = () => {
   const [imageFile, setImageFile] = useState<File | null>(null);
@@ -20,7 +19,7 @@ const Upload = () => {
 
   const [searchParams] = useSearchParams();
   const { data: specificArtwork } = useFetchArtworkById(
-    searchParams.get("id") || ""
+    searchParams.get("id") || "",
   );
 
   const { uploadFile, isPending, isSuccess } = useUploadFile();
