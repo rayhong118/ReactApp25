@@ -1,5 +1,10 @@
 import { PrimaryButton, SecondaryButton } from "@/components/Buttons";
 import {
+  useThemeValue,
+  useSetTheme,
+  type TColorTheme,
+} from "@/utils/UtilAtoms";
+import {
   faEdit,
   faGlobe,
   faSignOut,
@@ -10,8 +15,7 @@ import type { User } from "firebase/auth";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useGetCurrentUser } from "../../utils/AuthenticationAtoms";
-import { useSignOut } from "../../utils/AuthServiceHooks";
-import { useUpdateDisplayName } from "../../utils/AuthServiceHooks";
+import { useSignOut, useUpdateDisplayName } from "../../utils/AuthServiceHooks";
 const languages = [
   { code: "en", name: "English" },
   { code: "zh", name: "中文" },
@@ -26,6 +30,8 @@ const UserSettings = () => {
       {currentUser && accountSettings(currentUser, signOut, t)}
       <hr />
       <LanguageSettings />
+      <hr />
+      <ThemeSettings />
     </div>
   );
 };
@@ -114,6 +120,28 @@ const LanguageSettings = () => {
             {language.code} - {language.name}
           </option>
         ))}
+      </select>
+    </div>
+  );
+};
+
+const ThemeSettings = () => {
+  const { t } = useTranslation();
+  const theme = useThemeValue();
+  const setTheme = useSetTheme();
+
+  return (
+    <div className="flex flex-col gap-4">
+      <h2 className="text-xl font-semibold">
+        <FontAwesomeIcon icon={faGlobe} /> {t("settings.theme.title")}
+      </h2>
+      <select
+        className="w-full p-2 border border-gray-300 rounded"
+        value={theme}
+        onChange={(e) => setTheme(e.target.value as TColorTheme)}
+      >
+        <option value="light">{t("settings.theme.light")}</option>
+        <option value="dark">{t("settings.theme.dark")}</option>
       </select>
     </div>
   );

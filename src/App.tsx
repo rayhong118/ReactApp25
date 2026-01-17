@@ -9,6 +9,7 @@ import { withDefaultPagePadding } from "./hooks/withDefaultPagePadding";
 import { withSuspense } from "./hooks/withSuspense";
 
 import ScrollToTop from "./utils/ScrollToTop";
+import ThemeHandler from "./components/ThemeHandler";
 
 const Navigation = lazy(() => import("./components/Navigation"));
 const Home = lazy(() => import("./pages/home/Home"));
@@ -20,7 +21,7 @@ const StopWatch = lazy(() => import("./pages/experiments/StopWatch"));
 const FileUpload = lazy(() => import("./pages/experiments/FileUpload"));
 const FormValidation = lazy(() => import("./pages/experiments/FormValidation"));
 const ImageCarousel = lazy(
-  () => import("./pages/experiments/imageCarousel/ImageCarousel")
+  () => import("./pages/experiments/imageCarousel/ImageCarousel"),
 );
 const MoveLists = lazy(() => import("./pages/experiments/MoveLists"));
 const AuthPage = lazy(() => import("./pages/auth/Auth"));
@@ -46,6 +47,7 @@ const App: React.FC = () => {
 
   return (
     <BrowserRouter>
+      <ThemeHandler />
       <ScrollToTop />
       <Navigation />
       {withSuspense(<MessageBarsContainer />)}
@@ -70,7 +72,7 @@ const App: React.FC = () => {
         <Route
           path="/experiments/moveLists"
           element={withSuspense(
-            withDefaultPagePadding(<WithAuthRequired component={MoveLists} />)
+            withDefaultPagePadding(<WithAuthRequired component={MoveLists} />),
           )}
         />
         <Route
@@ -96,22 +98,22 @@ const App: React.FC = () => {
         <Route
           path="/drawings/upload"
           element={withSuspense(
-            withDefaultPagePadding(<WithAuthRequired component={Upload} />)
+            withDefaultPagePadding(<WithAuthRequired component={Upload} />),
           )}
         />
         <Route
           path="/drawings/:id"
           element={withSuspense(
             withDefaultPagePadding(
-              <WithAuthRequired component={SingleDrawing} />
-            )
+              <WithAuthRequired component={SingleDrawing} />,
+            ),
           )}
         />
         <Route path="/gift" element={<Navigate to="/gifts" replace />} />
         <Route
           path="/gifts"
           element={withSuspense(
-            withDefaultPagePadding(<WithAuthRequired component={GiftPage} />)
+            withDefaultPagePadding(<WithAuthRequired component={GiftPage} />),
           )}
         />
         <Route

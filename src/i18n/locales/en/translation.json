@@ -43,6 +43,11 @@
       "edit": "Edit Display Name",
       "cancel": "Cancel",
       "save": "Save Display Name"
+    },
+    "theme": {
+      "title": "Theme",
+      "dark": "Dark",
+      "light": "Light"
     }
   },
   "eat": {
