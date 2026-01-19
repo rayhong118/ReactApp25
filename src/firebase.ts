@@ -4,7 +4,7 @@ import { initializeAppCheck, ReCaptchaV3Provider } from "firebase/app-check";
 import { getAuth, GithubAuthProvider, GoogleAuthProvider } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 import { getFunctions } from "firebase/functions";
-import { firebaseApiKey, googleReCaptchaSiteKey } from "./apikeys.ts";
+import { firebaseApiKey, googleReCaptchaSiteKey } from "./apikeys";
 
 const firebaseConfig = {
   apiKey: firebaseApiKey,
