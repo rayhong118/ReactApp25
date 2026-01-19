@@ -39,7 +39,7 @@ test.describe("Settings Page Integration", () => {
     // Change to Chinese (simplified) if available or just check interaction
     await languageSelect.selectOption("zh");
 
-    // Verify it doesn't crash after interaction
-    await page.waitForTimeout(500);
+    // Verify it doesn't crash after interaction by waiting for network/render to settle
+    await page.waitForLoadState("networkidle");
   });
 });
