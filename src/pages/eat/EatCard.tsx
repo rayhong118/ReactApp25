@@ -1,5 +1,6 @@
 import { SecondaryButton } from "@/components/Buttons";
 import { Dialog } from "@/components/Dialog";
+import { withComponentSuspense } from "@/hooks/withSuspense";
 import { useGetCurrentUser } from "@/utils/AuthenticationAtoms";
 import { useAddMessageBars } from "@/utils/MessageBarsAtom";
 import {
@@ -14,16 +15,15 @@ import {
   faEdit,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { lazy, useCallback, useState } from "react";
+import React, { lazy, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { StarRating } from "../experiments/StarRating";
 import type { IRestaurant } from "./Eat.types";
 import { useGetCurrentUserRestaurantRating } from "./EatAtoms";
 import { EatEditForm } from "./EatEditForm";
+import { EatMenu } from "./EatMenu";
 import "./EatNotesPanel.scss";
 import { EatRatingHistogram } from "./EatRatingHistogram";
-import { withComponentSuspense } from "@/hooks/withSuspense";
-import { useTranslation } from "react-i18next";
-import { EatMenu } from "./EatMenu";
 
 const EatNotesPanel = lazy(() => import("./EatNotesPanel"));
 
@@ -38,34 +38,34 @@ export const EatCard = React.memo(
     const { t } = useTranslation();
     const User = useGetCurrentUser();
     const currentUserRating = useGetCurrentUserRestaurantRating(
-      restaurant.id || ""
+      restaurant.id || "",
     );
     const addMessageBars = useAddMessageBars();
 
-    const toggleNotes = useCallback(() => {
+    const toggleNotes = () => {
       setIsNotesExpanded((prev) => !prev);
       if (!wasNotesInitialized) {
         setWasNotesInitialized(true);
       }
-    }, []);
+    };
 
-    const openEditDialog = useCallback(() => {
+    const openEditDialog = () => {
       setIsEditDialogOpen(true);
-    }, []);
+    };
 
-    const closeEditDialog = useCallback(() => {
+    const closeEditDialog = () => {
       setIsEditDialogOpen(false);
-    }, []);
+    };
 
-    const openMenuDialog = useCallback(() => {
+    const openMenuDialog = () => {
       setIsMenuDialogOpen(true);
-    }, []);
+    };
 
-    const closeMenuDialog = useCallback(() => {
+    const closeMenuDialog = () => {
       setIsMenuDialogOpen(false);
-    }, []);
+    };
 
-    const handleShare = useCallback(() => {
+    const handleShare = () => {
       const baseURL = window.location.origin;
       navigator.clipboard.writeText(`${baseURL}/eat?id=${restaurant.id}`);
 
@@ -87,7 +87,7 @@ export const EatCard = React.memo(
           },
         ]);
       }
-    }, []);
+    };
 
     return (
       <div>
@@ -215,5 +215,5 @@ export const EatCard = React.memo(
         </div>
       </div>
     );
-  }
+  },
 );

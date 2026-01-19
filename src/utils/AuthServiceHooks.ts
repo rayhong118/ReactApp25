@@ -5,7 +5,6 @@ import {
   updateProfile,
 } from "firebase/auth";
 import { doc, updateDoc } from "firebase/firestore";
-import { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { auth, db, githubProvider, googleProvider } from "../firebase";
 import { useSetCurrentUser } from "./AuthenticationAtoms";
@@ -16,7 +15,7 @@ export const useFirebaseSignInWithGoogle = () => {
   const addMessageBars = useAddMessageBars();
   const navigate = useNavigate();
   // Implementation for sign in with Google can be added here
-  return useCallback(async () => {
+  return async () => {
     try {
       const userCredential = await signInWithPopup(auth, googleProvider);
 
@@ -53,7 +52,7 @@ export const useFirebaseSignInWithGoogle = () => {
       ]);
       return null;
     }
-  }, [setCurrentUser]);
+  };
 };
 
 export const useFirebaseSignInWithGitHub = () => {
@@ -61,7 +60,7 @@ export const useFirebaseSignInWithGitHub = () => {
   const addMessageBars = useAddMessageBars();
   const navigate = useNavigate();
   // Implementation for sign in with Google can be added here
-  return useCallback(async () => {
+  return async () => {
     try {
       const userCredential = await signInWithPopup(auth, githubProvider);
       setCurrentUser(userCredential.user);
@@ -96,14 +95,14 @@ export const useFirebaseSignInWithGitHub = () => {
       ]);
       return null;
     }
-  }, [setCurrentUser]);
+  };
 };
 
 export const useSignOut = () => {
   const setCurrentUser = useSetCurrentUser();
   const addMessageBars = useAddMessageBars();
   const navigate = useNavigate();
-  return useCallback(async () => {
+  return async () => {
     try {
       await auth.signOut();
       setCurrentUser(null);
@@ -126,7 +125,7 @@ export const useSignOut = () => {
         },
       ]);
     }
-  }, [setCurrentUser]);
+  };
 };
 
 export const useUpdateDisplayName = () => {

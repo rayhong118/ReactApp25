@@ -1,5 +1,4 @@
 import * as d3 from "d3";
-import { useMemo } from "react";
 import type { IStarRating } from "./Eat.types";
 
 export const EatRatingHistogram = ({
@@ -20,25 +19,17 @@ export const EatRatingHistogram = ({
   const innerWidth = 320;
   const innerHeight = 100;
   const margin = { top: 0, right: 20, bottom: 0, left: 40 };
-  const xScale = useMemo(
-    () =>
-      d3
-        .scaleLinear()
-        .domain([0, d3.max(completeRatings, (d) => d.count) || 10])
-        .range([0, innerWidth]),
-    [completeRatings, innerWidth]
-  );
+  const xScale = d3
+    .scaleLinear()
+    .domain([0, d3.max(completeRatings, (d) => d.count) || 10])
+    .range([0, innerWidth]);
 
   // 3. Y Scale: Band for the star categories
-  const yScale = useMemo(
-    () =>
-      d3
-        .scaleBand()
-        .domain(completeRatings.map((d) => d.stars.toString()))
-        .range([0, innerHeight])
-        .padding(0.3),
-    [completeRatings, innerHeight]
-  );
+  const yScale = d3
+    .scaleBand()
+    .domain(completeRatings.map((d) => d.stars.toString()))
+    .range([0, innerHeight])
+    .padding(0.3);
 
   return (
     <svg

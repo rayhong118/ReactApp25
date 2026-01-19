@@ -7,7 +7,8 @@ import {
   faSpinner,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import type { IEatQuery, IRestaurant } from "./Eat.types";
 import {
   useGetFilterSearchQuery,
@@ -22,7 +23,6 @@ import {
   useGetUserLocation,
   useLocationTagAutoSelector,
 } from "./hooks/hooks.tsx";
-import { useTranslation } from "react-i18next";
 
 export const EatFilterSearch = ({
   showFilterSearch,
@@ -279,14 +279,10 @@ const LocationTagsList = () => {
     };
   }, [selectedLocationTags]);
 
-  const displayedData = useMemo(
-    () =>
-      locationTags?.filter(
-        (tag) =>
-          tag.count > 0 &&
-          tag.value.toLowerCase().includes(tagNameFilter.toLowerCase()),
-      ),
-    [locationTags, tagNameFilter],
+  const displayedData = locationTags?.filter(
+    (tag) =>
+      tag.count > 0 &&
+      tag.value.toLowerCase().includes(tagNameFilter.toLowerCase()),
   );
 
   return (

@@ -1,6 +1,7 @@
 import js from "@eslint/js";
 import globals from "globals";
 import tseslint from "typescript-eslint";
+import eslintPlugin from "eslint-plugin-react-compiler";
 
 export default tseslint.config(
   {
@@ -9,6 +10,7 @@ export default tseslint.config(
   },
   js.configs.recommended,
   ...tseslint.configs.recommended,
+  eslintPlugin.configs.recommended,
   {
     languageOptions: {
       ecmaVersion: 2022,
@@ -26,5 +28,5 @@ export default tseslint.config(
       "no-undef": "off",
       "max-len": ["error", { code: 120 }],
     },
-  }
+  },
 );

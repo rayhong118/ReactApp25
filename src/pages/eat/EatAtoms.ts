@@ -1,5 +1,4 @@
 import { atom, useAtomValue, useSetAtom } from "jotai";
-import { useCallback, useMemo } from "react";
 import type { IEatQuery, TEatSort, TUserRatings } from "./Eat.types";
 
 /**
@@ -24,12 +23,9 @@ export const useSetFilterSearchQuery = () =>
  */
 export const useUpdateFilterSearchQueryCityAndState = () => {
   const setQuery = useSetFilterSearchQuery();
-  return useCallback(
-    (cityAndState: string[]) => {
-      setQuery((currentQuery) => ({ ...currentQuery, cityAndState }));
-    },
-    [setQuery]
-  );
+  return (cityAndState: string[]) => {
+    setQuery((currentQuery) => ({ ...currentQuery, cityAndState }));
+  };
 };
 
 /**
@@ -41,10 +37,8 @@ export const useGetCurrentUserRestaurantRatings = () =>
   useAtomValue(currentUserRestaurantRatingsAtom);
 
 export const useGetCurrentUserRestaurantRating = (restaurantId: string) => {
-  const ratingAtom = useMemo(
-    () =>
-      atom((get) => get(currentUserRestaurantRatingsAtom)[restaurantId] || 0),
-    [restaurantId]
+  const ratingAtom = atom(
+    (get) => get(currentUserRestaurantRatingsAtom)[restaurantId] || 0,
   );
   return useAtomValue(ratingAtom);
 };
@@ -54,10 +48,7 @@ export const useSetCurrentUserRestaurantRatings = () =>
 
 export const useUpdateCurrentUserRestaurantRatings = () => {
   const setRatings = useSetCurrentUserRestaurantRatings();
-  return useCallback(
-    (value: TUserRatings) => {
-      setRatings((currentRatings) => ({ ...currentRatings, ...value }));
-    },
-    [setRatings]
-  );
+  return (value: TUserRatings) => {
+    setRatings((currentRatings) => ({ ...currentRatings, ...value }));
+  };
 };

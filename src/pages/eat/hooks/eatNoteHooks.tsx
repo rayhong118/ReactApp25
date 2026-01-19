@@ -11,7 +11,7 @@ import {
   where,
 } from "firebase/firestore";
 import { httpsCallable } from "firebase/functions";
-import { useCallback, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import type { INote, IRestaurant } from "../Eat.types";
 
 /**
@@ -28,7 +28,7 @@ export const useGetRestaurantNotes = (restaurantId: string) => {
     queryFn: async () => {
       const q = query(
         collection(db, "restaurant-notes"),
-        where("restaurantId", "==", restaurantId)
+        where("restaurantId", "==", restaurantId),
       );
       const querySnapshot = await getDocs(q);
       const notes = querySnapshot.docs.map(
@@ -36,7 +36,7 @@ export const useGetRestaurantNotes = (restaurantId: string) => {
           ({
             id: doc.id,
             ...doc.data(),
-          } as INote)
+          }) as INote,
       );
       return notes || [];
     },
@@ -133,48 +133,49 @@ export const useGenerateNotesSummary = () => {
   const [isStreaming, setIsStreaming] = useState(false);
   const abortControllerRef = useRef<AbortController | null>(null);
 
-  const generateNotesSummary = useCallback(
-    async (notes: INote[], restaurant: IRestaurant, language: string) => {
-      setSummary("");
-      setIsStreaming(true);
+  const generateNotesSummary = async (
+    notes: INote[],
+    restaurant: IRestaurant,
+    language: string,
+  ) => {
+    setSummary("");
+    setIsStreaming(true);
 
-      const callable = httpsCallable<
-        {
-          notes: string[];
-          restaurant: IRestaurant;
-          language: string;
-        },
-        ReadableStream<Uint8Array>
-      >(firebaseFunctions, "generateNotesSummary");
+    const callable = httpsCallable<
+      {
+        notes: string[];
+        restaurant: IRestaurant;
+        language: string;
+      },
+      ReadableStream<Uint8Array>
+    >(firebaseFunctions, "generateNotesSummary");
 
-      try {
-        const { stream, data } = await callable.stream({
-          notes: notes.map((note) => note.content),
-          restaurant,
-          language,
-        });
+    try {
+      const { stream, data } = await callable.stream({
+        notes: notes.map((note) => note.content),
+        restaurant,
+        language,
+      });
 
-        for await (const chunk of stream) {
-          setSummary((prev) => prev + chunk);
-        }
-        const finalData = await data;
-        console.log(finalData);
-      } catch (error) {
-        addMessageBars([
-          {
-            id: new Date().toISOString(),
-            message: "Error generating summary: " + error,
-            type: "error",
-            autoDismiss: true,
-          },
-        ]);
-        throw error;
-      } finally {
-        setIsStreaming(false);
+      for await (const chunk of stream) {
+        setSummary((prev) => prev + chunk);
       }
-    },
-    [firebaseFunctions]
-  );
+      const finalData = await data;
+      console.log(finalData);
+    } catch (error) {
+      addMessageBars([
+        {
+          id: new Date().toISOString(),
+          message: "Error generating summary: " + error,
+          type: "error",
+          autoDismiss: true,
+        },
+      ]);
+      throw error;
+    } finally {
+      setIsStreaming(false);
+    }
+  };
 
   const stop = () => {
     abortControllerRef.current?.abort();
