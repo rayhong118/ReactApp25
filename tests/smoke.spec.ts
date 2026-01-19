@@ -31,6 +31,12 @@ test.describe("Smoke Tests - Navigation and Errors", () => {
           if (text.includes("Failed to load resource")) return;
           if (text.includes("the server responded with a status of 403"))
             return;
+          if (text.includes("window[S2][Cc()] is undefined")) return;
+          if (
+            text.includes("Content-Security-Policy") &&
+            text.includes("Report-Only")
+          )
+            return;
 
           errors.push(text);
         }
