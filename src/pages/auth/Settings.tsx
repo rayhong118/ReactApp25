@@ -1,7 +1,7 @@
 import { PrimaryButton, SecondaryButton } from "@/components/Buttons";
 import {
-  useThemeValue,
   useSetTheme,
+  useThemeValue,
   type TColorTheme,
 } from "@/utils/UtilAtoms";
 import {
@@ -16,6 +16,7 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useGetCurrentUser } from "../../utils/AuthenticationAtoms";
 import { useSignOut, useUpdateDisplayName } from "../../utils/AuthServiceHooks";
+
 const languages = [
   { code: "en", name: "English" },
   { code: "zh", name: "中文" },
@@ -27,7 +28,9 @@ const UserSettings = () => {
   const signOut = useSignOut();
   return (
     <div className="flex flex-col gap-4 max-w-sm">
-      {currentUser && accountSettings(currentUser, signOut, t)}
+      {currentUser && (
+        <AccountSettings currentUser={currentUser} signOut={signOut} t={t} />
+      )}
       <hr />
       <LanguageSettings />
       <hr />
@@ -36,7 +39,15 @@ const UserSettings = () => {
   );
 };
 
-const accountSettings = (currentUser: User, signOut: () => void, t: any) => {
+const AccountSettings = ({
+  currentUser,
+  signOut,
+  t,
+}: {
+  currentUser: User;
+  signOut: () => void;
+  t: any;
+}) => {
   const [showEditDisplayName, setShowEditDisplayName] = useState(false);
   const [displayName, setDisplayName] = useState(currentUser.displayName || "");
   const handleUpdateDisplayName = () => {
