@@ -5,8 +5,8 @@ export const Loading = ({ fullHeight }: { fullHeight?: boolean }) => {
     <div
       className={
         fullHeight
-          ? "flex flex-col items-center justify-center min-h-screen bg-gray-100 w-full"
-          : "flex flex-col items-center justify-center bg-gray-100 w-full"
+          ? "flex flex-col items-center justify-center min-h-screen bg-[var(--color-background)] w-full"
+          : "flex flex-col items-center justify-center bg-[var(--color-background)] w-full"
       }
     >
       <div id="loading"></div>

@@ -1,6 +1,6 @@
 #loading {
-  border: 8px solid #f3f3f3;
-  border-top: 8px solid #ff9d00;
+  border: 8px solid var(--color-background);
+  border-top: 8px solid var(--color-brand-vibrant);
   border-radius: 50%;
   width: 40px;
   height: 40px;

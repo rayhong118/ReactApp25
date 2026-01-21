@@ -78,19 +78,15 @@ export const Dialog: React.FC<IDialogProps> = (props: IDialogProps) => {
           role="dialog"
           className={`rounded-md flex flex-col space-around justify-between gap-0 
           fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 m-0 
-          bg-white shadow-xl shadow-gray z-50 w-full md:w-[calc(100vw-2rem)] 
+          bg-[var(--color-background)] shadow-xl shadow-gray z-50 w-full md:w-[calc(100vw-2rem)] 
           max-w-7xl max-h-[calc(100vh-2rem)] ${customizedClassName}`}
         >
           <div className="flex flex-row justify-between items-center px-5 pt-5">
-            <h1 className="text-xl font-bold">{title}</h1>
-            <SecondaryButton
-              onClick={onClose}
-              className="cursor-pointer hover:bg-gray-100 border-gray-200 border rounded-md p-2"
-            >
-              <FontAwesomeIcon
-                icon={faClose}
-                className="h-6 w-6 text-gray-600"
-              />
+            <h1 className="text-xl font-bold text-[var(--color-foreground)]">
+              {title}
+            </h1>
+            <SecondaryButton onClick={onClose} className="cursor-pointer">
+              <FontAwesomeIcon icon={faClose} className="h-6 w-6" />
             </SecondaryButton>
           </div>
 
@@ -112,6 +108,6 @@ export const Dialog: React.FC<IDialogProps> = (props: IDialogProps) => {
         </dialog>
       </FocusTrap>
     </>,
-    document.body
+    document.body,
   );
 };

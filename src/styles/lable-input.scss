@@ -39,6 +39,7 @@
     padding-right: 0.25rem;
     transform-origin: top left;
     pointer-events: none;
+    color: var(--color-foreground);
   }
 
   input:focus ~ label,
