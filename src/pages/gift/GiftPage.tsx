@@ -68,9 +68,7 @@ const GiftPage = () => {
           ))}
         </div>
       ) : (
-        <div className="text-center bg-amber-50 border-amber-500 p-2 rounded border text-lg font-semibold">
-          No preferred gifts found
-        </div>
+        <div className="preferred-gift-card">No preferred gifts found</div>
       )}
       <hr className="my-4" />
       <div className="flex justify-between">
@@ -94,9 +92,7 @@ const GiftPage = () => {
           ))}
         </div>
       ) : (
-        <div className="text-center bg-stone-50 border-stone-500 p-2 rounded border text-lg font-semibold">
-          No avoid gifts found
-        </div>
+        <div className="avoid-gift-card">No avoid gifts found</div>
       )}
     </div>
   );

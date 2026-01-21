@@ -3,3 +3,33 @@ form {
   flex-direction: column;
   gap: 1rem;
 }
+
+.preferred-gift-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1rem;
+  border: 1px solid #f59e0b; /* amber-500 */
+  background-color: #fffbeb; /* amber-50 */
+  border-radius: 0.5rem;
+}
+
+.avoid-gift-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1rem;
+  border: 1px solid #78716c; /* stone-500 */
+  background-color: #fafaf9; /* stone-50 */
+  border-radius: 0.5rem;
+}
+
+.dark .preferred-gift-card {
+  border: 2px solid #f59e0b; /* amber-500 */
+  background-color: inherit;
+}
+
+.dark .avoid-gift-card {
+  border: 2px solid #78716c; /* stone-500 */
+  background-color: inherit;
+}

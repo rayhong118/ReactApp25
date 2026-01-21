@@ -9,6 +9,7 @@ import { useTranslation } from "react-i18next";
 import type { IGift } from "./Gift.types";
 import GiftForm from "./GiftForm";
 import { useDeleteGift, useUpdateGift } from "./hooks/giftHooks";
+import "./Gift.scss";
 
 interface IGiftCardProps {
   gift: IGift;
@@ -17,10 +18,8 @@ interface IGiftCardProps {
 const GiftCard = ({ gift }: IGiftCardProps) => {
   const { t, i18n } = useTranslation();
   const currentUser = useGetCurrentUser();
-  const colorClass =
-    gift.type === "preferred"
-      ? "bg-amber-50 border-amber-500"
-      : "bg-stone-50 border-stone-500";
+  const giftCardClass =
+    gift.type === "preferred" ? "preferred-gift-card" : "avoid-gift-card";
   const [dialogOpen, setDialogOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const { deleteGift } = useDeleteGift(currentUser!.uid);
@@ -65,7 +64,7 @@ const GiftCard = ({ gift }: IGiftCardProps) => {
       >
         <p>Are you sure you want to delete this gift?</p>
       </Dialog>
-      <div className={`p-4 border rounded ${colorClass}`}>
+      <div className={giftCardClass}>
         <div className="flex justify-between items-center">
           <h2 className="text-lg font-bold">{gift.name}</h2>
           {gift.isFulfilled && (
