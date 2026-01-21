@@ -10,7 +10,9 @@ export const Loading = ({ fullHeight }: { fullHeight?: boolean }) => {
       }
     >
       <div id="loading"></div>
-      <p className="text-2xl font-bold">Loading...</p>
+      <p className="text-2xl font-bold text-[var(--color-foreground)]">
+        Loading...
+      </p>
     </div>
   );
 };
