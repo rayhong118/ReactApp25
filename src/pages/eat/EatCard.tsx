@@ -152,7 +152,7 @@ export const EatCard = React.memo(
           </div>
 
           {restaurant.stars && isHistogramExpanded && (
-            <div className="flex items-start gap-2 md:scale-90 bg-gray-100 p-2 rounded-md">
+            <div className="flex items-start gap-2 md:scale-90 bg-background p-2 rounded-md border-2 border-brand-soft">
               <EatRatingHistogram ratings={restaurant.stars} />
             </div>
           )}

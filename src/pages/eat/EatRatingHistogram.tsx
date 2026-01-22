@@ -49,7 +49,7 @@ export const EatRatingHistogram = ({
               y={yScale(d.stars.toString())}
               width={xScale(d.count)}
               height={yScale.bandwidth()}
-              fill="#fbbf24"
+              fill="var(--color-brand-primary)"
               rx={8}
               ry={8}
             />
@@ -58,7 +58,7 @@ export const EatRatingHistogram = ({
               x={xScale(d.count) + 5}
               y={(yScale(d.stars.toString()) || 0) + yScale.bandwidth() / 2}
               fontSize="16"
-              fill="#4b5563"
+              fill="var(--color-foreground)"
               dominantBaseline="central"
             >
               {d.count}
@@ -74,6 +74,7 @@ export const EatRatingHistogram = ({
             y={(yScale(d.stars.toString()) || 0) + yScale.bandwidth() / 2}
             textAnchor="end"
             fontSize="16"
+            fill="var(--color-foreground)"
             dominantBaseline="central"
           >
             {d.stars} ★

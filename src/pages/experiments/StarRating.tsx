@@ -30,12 +30,12 @@ export const StarRating = React.memo(
                   {star <= displayRating ? (
                     <FontAwesomeIcon
                       icon={solidStar}
-                      className={`text-yellow-300`}
+                      className={`text-[var(--color-brand-vibrant)]`}
                     />
                   ) : (
                     <FontAwesomeIcon
                       icon={regularStar}
-                      className={`text-yellow-300`}
+                      className={`text-[var(--color-brand-vibrant)]`}
                     />
                   )}
                 </span>
@@ -45,12 +45,12 @@ export const StarRating = React.memo(
                   {star <= displayRating ? (
                     <FontAwesomeIcon
                       icon={solidStar}
-                      className={`text-yellow-300`}
+                      className={`text-[var(--color-brand-vibrant)]`}
                     />
                   ) : (
                     <FontAwesomeIcon
                       icon={regularStar}
-                      className={`text-yellow-300`}
+                      className={`text-[var(--color-brand-vibrant)]`}
                     />
                   )}
                 </span>
@@ -58,5 +58,5 @@ export const StarRating = React.memo(
         </div>
       </div>
     );
-  }
+  },
 );
