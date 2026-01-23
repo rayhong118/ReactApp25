@@ -1,3 +1,6 @@
+@use "sass:math";
+@use "sass:list";
+
 #homepage_title {
   display: flex;
   text-wrap: nowrap;
@@ -136,14 +139,15 @@
     animation-delay: $i * 0.1s;
   }
   #animatedGrid:has(.card:nth-child(#{$i}):hover) {
-    $row: floor(($i - 1) / 3 +1);
-    $col: ($i - 1) % 3 +1;
+    $row: math.floor(($i - 1) / 3 + 1);
+    $col: (($i - 1) % 3 + 1);
     $arr: 1fr 1fr 1fr;
-    $rows: set-nth($arr, $row, 2fr);
-    $cols: set-nth($arr, $col, 2fr);
+    $rows: list.set-nth($arr, $row, 2fr);
+    $cols: list.set-nth($arr, $col, 2fr);
     grid-template-columns: $cols;
     grid-template-rows: $rows;
-    transition: grid-template-columns 0.5s ease-in-out,
+    transition:
+      grid-template-columns 0.5s ease-in-out,
       grid-template-rows 0.5s ease-in-out;
   }
 }
