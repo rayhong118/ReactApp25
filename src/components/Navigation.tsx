@@ -12,6 +12,8 @@ import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { useGetCurrentUser } from "../utils/AuthenticationAtoms";
+import { Tooltip, TooltipContent, TooltipTrigger } from "./Tooltip";
+import { LanguageSettings, ThemeSettings } from "@/pages/auth/Settings";
 
 const experimentsNavItems = [
   { label: "navbar.lab.formValidation", to: "/experiments/formValidation" },
@@ -72,19 +74,39 @@ const Navigation = () => {
   const authButtons = () => {
     // You can add authentication related buttons here
     if (!getCurrentUser) {
-      return navButton({
-        label: "navbar.auth.login",
-        to: "/auth",
-        nested: true,
-        icon: faSignInAlt,
-      });
+      return (
+        <Tooltip>
+          <TooltipTrigger>
+            {navButton({
+              label: "navbar.auth.login",
+              to: "/auth",
+              nested: true,
+              icon: faSignInAlt,
+            })}
+          </TooltipTrigger>
+          <TooltipContent>
+            <ThemeSettings />
+            <LanguageSettings />
+          </TooltipContent>
+        </Tooltip>
+      );
     } else
-      return navButton({
-        label: "navbar.auth.settings",
-        to: "/settings",
-        nested: true,
-        icon: faGear,
-      });
+      return (
+        <Tooltip>
+          <TooltipTrigger>
+            {navButton({
+              label: "navbar.auth.settings",
+              to: "/settings",
+              nested: true,
+              icon: faGear,
+            })}
+          </TooltipTrigger>
+          <TooltipContent>
+            <ThemeSettings />
+            <LanguageSettings />
+          </TooltipContent>
+        </Tooltip>
+      );
   };
 
   return (

@@ -7,6 +7,7 @@ import {
 import {
   faEdit,
   faGlobe,
+  faMoon,
   faSignOut,
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
@@ -113,7 +114,7 @@ const AccountSettings = ({
   );
 };
 
-const LanguageSettings = () => {
+export const LanguageSettings = () => {
   const { i18n, t } = useTranslation();
 
   return (
@@ -136,7 +137,7 @@ const LanguageSettings = () => {
   );
 };
 
-const ThemeSettings = () => {
+export const ThemeSettings = () => {
   const { t } = useTranslation();
   const theme = useThemeValue();
   const setTheme = useSetTheme();
@@ -144,7 +145,7 @@ const ThemeSettings = () => {
   return (
     <div className="flex flex-col gap-4">
       <h2 className="text-xl font-semibold">
-        <FontAwesomeIcon icon={faGlobe} /> {t("settings.theme.title")}
+        <FontAwesomeIcon icon={faMoon} /> {t("settings.theme.title")}
       </h2>
       <select
         className="w-full p-2 border border-gray-300 rounded"
