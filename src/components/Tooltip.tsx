@@ -1,7 +1,13 @@
-import React from "react";
+import React, { createContext } from "react";
 import { useState } from "react";
 
-export const Tooltip = ({ children }: { children: React.ReactNode }) => {
+const TooltipContext = createContext({
+  isVisible: false,
+  show: () => {},
+  hide: () => {},
+});
+
+const Tooltip = ({ children }: { children: React.ReactNode }) => {
   const [isVisible, setIsVisible] = useState(false);
   const timeoutRef = React.useRef<NodeJS.Timeout | null>(null);
 
@@ -21,24 +27,21 @@ export const Tooltip = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   return (
-    <div
-      className="relative inline-block"
-      onMouseEnter={show}
-      onMouseLeave={hide}
-      onFocus={show}
-      onBlur={hide}
-    >
-      {React.Children.map(children, (child) => {
-        if (React.isValidElement(child) && child.type === TooltipContent) {
-          return isVisible ? child : null;
-        }
-        return child;
-      })}
-    </div>
+    <TooltipContext.Provider value={{ isVisible, show, hide }}>
+      <div
+        className="relative inline-block"
+        onMouseEnter={show}
+        onMouseLeave={hide}
+        onFocus={show}
+        onBlur={hide}
+      >
+        {children}
+      </div>
+    </TooltipContext.Provider>
   );
 };
 
-export const TooltipTrigger = ({
+const Trigger = ({
   children,
   ...props
 }: {
@@ -48,13 +51,21 @@ export const TooltipTrigger = ({
   return <div {...props}>{children}</div>;
 };
 
-export const TooltipContent = ({ children }: { children: React.ReactNode }) => {
+const Content = ({ children }: { children: React.ReactNode }) => {
+  const { isVisible } = React.useContext(TooltipContext);
   return (
-    <div
-      className="absolute left-1/2 -translate-x-1/2 p-2 rounded-md shadow-lg bg-background border border-foreground
+    isVisible && (
+      <div
+        className="absolute left-1/2 -translate-x-1/2 p-2 rounded-md shadow-lg bg-background border border-foreground
     whitespace-nowrap"
-    >
-      <div className="p-2 rounded-md flex flex-col gap-4">{children}</div>
-    </div>
+      >
+        <div className="p-2 rounded-md flex flex-col gap-4">{children}</div>
+      </div>
+    )
   );
 };
+
+Tooltip.Trigger = Trigger;
+Tooltip.Content = Content;
+
+export default Tooltip;

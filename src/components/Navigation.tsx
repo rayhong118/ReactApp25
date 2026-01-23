@@ -12,7 +12,7 @@ import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { useGetCurrentUser } from "../utils/AuthenticationAtoms";
-import { Tooltip, TooltipContent, TooltipTrigger } from "./Tooltip";
+import Tooltip from "./Tooltip";
 import { LanguageSettings, ThemeSettings } from "@/pages/auth/Settings";
 
 const experimentsNavItems = [
@@ -76,35 +76,35 @@ const Navigation = () => {
     if (!getCurrentUser) {
       return (
         <Tooltip>
-          <TooltipTrigger>
+          <Tooltip.Trigger>
             {navButton({
               label: "navbar.auth.login",
               to: "/auth",
               nested: true,
               icon: faSignInAlt,
             })}
-          </TooltipTrigger>
-          <TooltipContent>
+          </Tooltip.Trigger>
+          <Tooltip.Content>
             <ThemeSettings />
             <LanguageSettings />
-          </TooltipContent>
+          </Tooltip.Content>
         </Tooltip>
       );
     } else
       return (
         <Tooltip>
-          <TooltipTrigger>
+          <Tooltip.Trigger>
             {navButton({
               label: "navbar.auth.settings",
               to: "/settings",
               nested: true,
               icon: faGear,
             })}
-          </TooltipTrigger>
-          <TooltipContent>
+          </Tooltip.Trigger>
+          <Tooltip.Content>
             <ThemeSettings />
             <LanguageSettings />
-          </TooltipContent>
+          </Tooltip.Content>
         </Tooltip>
       );
   };
