@@ -3,8 +3,6 @@ import { useState } from "react";
 
 const TooltipContext = createContext({
   isVisible: false,
-  show: () => {},
-  hide: () => {},
 });
 
 const Tooltip = ({ children }: { children: React.ReactNode }) => {
@@ -27,7 +25,7 @@ const Tooltip = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   return (
-    <TooltipContext.Provider value={{ isVisible, show, hide }}>
+    <TooltipContext.Provider value={{ isVisible }}>
       <div
         className="relative inline-block"
         onMouseEnter={show}
