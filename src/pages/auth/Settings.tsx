@@ -69,10 +69,10 @@ const AccountSettings = ({
           className="w-20 h-20 rounded-full mb-4 object-cover"
         />
       )}
-      <h3 className="text-lg font-semibold text-gray-800">
+      <h3 className="text-lg font-semibold text-foreground">
         {showEditDisplayName ? (
           <input
-            className="w-full border border-gray-300 rounded p-2"
+            className="w-full border border-foreground rounded p-2"
             type="text"
             value={displayName}
             onChange={(e) => setDisplayName(e.target.value)}

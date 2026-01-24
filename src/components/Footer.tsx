@@ -8,36 +8,38 @@ const Footer = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
   return (
-    <div className="bg-gray-800 text-white px-5 py-20 md:p-20 md:flex gap-20">
-      <div>
-        <h2 className="text-lg font-bold">{t("footer.contact.title")}</h2>
-        <p className="text-lg">{t("footer.contact.text")}</p>
-        <p className="text-lg">
-          <a href="https://www.linkedin.com/in/zhihao-h-a6b28b182">
-            <FontAwesomeIcon icon={faLinkedin} /> LinkedIn
-          </a>
-        </p>
-        <p className="text-lg">
-          <a href="https://github.com/rayhong118">
-            <FontAwesomeIcon icon={faGithub} /> GitHub
-          </a>
-        </p>
-      </div>
-
-      <hr className="md:hidden my-4" />
-
-      <div className="text-lg">
+    <div className="bg-gray-800 text-white ">
+      <div className="max-w-7xl mx-auto md:flex md:p-20 px-5 py-20 gap-20">
         <div>
-          <FontAwesomeIcon className="mr-2" icon={faCog} />
-          <a className="cursor-pointer" onClick={() => navigate("/settings")}>
-            {t("footer.settings")}
-          </a>
+          <h2 className="text-lg font-bold">{t("footer.contact.title")}</h2>
+          <p className="text-lg">{t("footer.contact.text")}</p>
+          <p className="text-lg">
+            <a href="https://www.linkedin.com/in/zhihao-h-a6b28b182">
+              <FontAwesomeIcon icon={faLinkedin} /> LinkedIn
+            </a>
+          </p>
+          <p className="text-lg">
+            <a href="https://github.com/rayhong118">
+              <FontAwesomeIcon icon={faGithub} /> GitHub
+            </a>
+          </p>
         </div>
-        <div>
-          <FontAwesomeIcon className="mr-2" icon={faInfoCircle} />
-          <a className="cursor-pointer" onClick={() => navigate("/about")}>
-            {t("footer.about")}
-          </a>
+
+        <hr className="md:hidden my-4" />
+
+        <div className="text-lg">
+          <div>
+            <FontAwesomeIcon className="mr-2" icon={faCog} />
+            <a className="cursor-pointer" onClick={() => navigate("/settings")}>
+              {t("footer.settings")}
+            </a>
+          </div>
+          <div>
+            <FontAwesomeIcon className="mr-2" icon={faInfoCircle} />
+            <a className="cursor-pointer" onClick={() => navigate("/about")}>
+              {t("footer.about")}
+            </a>
+          </div>
         </div>
       </div>
     </div>

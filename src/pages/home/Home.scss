@@ -48,12 +48,10 @@
 
 .homepage-container {
   overflow-x: hidden;
-  // scroll-snap-type: both proximity;
+  overflow-anchor: none; /* Disable scroll anchoring to prevent auto-scroll during animation */
 }
 
 .homepage-panel {
-  // scroll-snap-align: start;
-  // scroll-snap-stop: always;
   min-height: 100vh;
 }
 
