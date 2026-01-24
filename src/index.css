@@ -26,6 +26,12 @@
 }
 
 @layer base {
+  body {
+    transition-property:
+      background-color, color, border-color; /* Add other properties if needed */
+    transition-duration: 500ms;
+    transition-timing-function: ease-in-out;
+  }
   .dark {
     --color-brand-light: #2d1a05;
     --color-brand-soft: #43280b;
