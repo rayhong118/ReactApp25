@@ -21,9 +21,8 @@
   input:disabled ~ label,
   textarea:disabled,
   textarea:disabled ~ label {
-    color: var(--color-foreground);
-    border-color: var(--color-foreground);
-    opacity: 0.5;
+    color: color-mix(in srgb, var(--color-foreground), transparent 50%);
+    border-color: color-mix(in srgb, var(--color-foreground), transparent 50%);
     cursor: not-allowed;
   }
 

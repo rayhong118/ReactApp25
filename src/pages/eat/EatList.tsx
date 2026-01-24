@@ -33,10 +33,12 @@ export const EatList = () => {
 
   return (
     <div className="flex flex-col gap-5 w-full">
-      <PrimaryButton disabled={!User} onClick={() => setIsDialogOpen(true)}>
-        <FontAwesomeIcon icon={faPlus} className="mr-2" />
-        {t("eat.list.addRestaurant")}
-      </PrimaryButton>
+      {!eatQuery.id && (
+        <PrimaryButton disabled={!User} onClick={() => setIsDialogOpen(true)}>
+          <FontAwesomeIcon icon={faPlus} className="mr-2" />
+          {t("eat.list.addRestaurant")}
+        </PrimaryButton>
+      )}
 
       {!eatQuery.id && <EatSort />}
 
@@ -56,6 +58,7 @@ export const EatList = () => {
         open={isDialogOpen}
         onClose={handleDialogClose}
         title={t("eat.list.addRestaurant")}
+        customizedClassName="max-w-md"
       >
         <EatEditForm restaurant={undefined} closeDialog={handleDialogClose} />
       </Dialog>

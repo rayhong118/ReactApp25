@@ -20,7 +20,7 @@ export const EatMenu = ({ restaurant, closeDialog }: IEatMenuProps) => {
   const [menuImage, setMenuImage] = useState<File>();
   const { mutateAsync: uploadMenuImage, isPending } = useUploadMenuImage();
   const { data: menuData, isLoading: menuDataLoading } = getMenuData(
-    restaurant.id || ""
+    restaurant.id || "",
   );
   const fileInputRef = useRef<HTMLInputElement>(null);
   const handleUploadImage = (e: React.FormEvent<HTMLFormElement>) => {
@@ -63,9 +63,11 @@ export const EatMenu = ({ restaurant, closeDialog }: IEatMenuProps) => {
           >
             {t("eat.menu.uploadMenuImage")}
           </SecondaryButton>
-          <PrimaryButton type="submit" disabled={isPending || !menuImage}>
-            {t("eat.menu.submit")}
-          </PrimaryButton>
+          {currentUser && menuImage && (
+            <PrimaryButton type="submit" disabled={isPending || !menuImage}>
+              {t("eat.menu.submit")}
+            </PrimaryButton>
+          )}
         </form>
       )}
       {menuDataLoading && <Loading />}
@@ -73,7 +75,9 @@ export const EatMenu = ({ restaurant, closeDialog }: IEatMenuProps) => {
         <div className="flex flex-col gap-4">
           {menuData.isAYCE && (
             <div className="text-lg">
-              <h2 className="text-xl font-bold">All you can eat pricing</h2>
+              <h2 className="text-xl text-foreground font-bold">
+                All you can eat pricing
+              </h2>
               {menuData.aycePrices?.map((price) => (
                 <div key={price.timePeriod}>
                   {price.price} {price.timePeriod} {price.additionalInfo}
@@ -81,11 +85,11 @@ export const EatMenu = ({ restaurant, closeDialog }: IEatMenuProps) => {
               ))}
             </div>
           )}
-          <h2 className="text-xl font-bold">Menu items</h2>
+          <h2 className="text-xl text-foreground font-bold">Menu items</h2>
           {Object.entries(menuData.categories).map(
             ([categoryKey, category]) => (
               <div key={categoryKey}>
-                <h3 className="text-xl font-bold">
+                <h3 className="text-xl text-foreground font-bold">
                   {category.name[language] || category.name.en}
                 </h3>
 
@@ -93,10 +97,12 @@ export const EatMenu = ({ restaurant, closeDialog }: IEatMenuProps) => {
                   {category.items.map((item: IMenuItem, index: number) => (
                     <div key={index} className="w-1/2 min-w-xs pb-2">
                       <div className="pl-4 w-full flex justify-between gap-10">
-                        <h4 className="text-lg font-semibold">
+                        <h4 className="text-lg text-foreground font-semibold">
                           {item.name[language] || item.name.en}
                         </h4>
-                        <p className="text-lg font-semibold">{item.price}</p>
+                        <p className="text-lg text-foreground font-semibold">
+                          {item.price}
+                        </p>
                       </div>
                       {item.description && (
                         <p className="pl-4">{item.description}</p>
@@ -105,7 +111,7 @@ export const EatMenu = ({ restaurant, closeDialog }: IEatMenuProps) => {
                   ))}
                 </div>
               </div>
-            )
+            ),
           )}
         </div>
       )}
