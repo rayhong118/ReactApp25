@@ -23,6 +23,7 @@
   textarea:disabled ~ label {
     color: var(--color-foreground);
     border-color: var(--color-foreground);
+    opacity: 0.5;
     cursor: not-allowed;
   }
 

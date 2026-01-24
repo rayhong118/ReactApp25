@@ -22,7 +22,7 @@ export interface IRestaurant {
    */
   address: string;
   /**
-   * Price per person
+   * Price per person. Only integer is allowed.
    */
   price?: number;
   /**

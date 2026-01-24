@@ -9,6 +9,7 @@ export interface IDialogAction {
   label: string;
   onClick: () => void;
   color?: string;
+  customizedClassName?: string;
 }
 
 interface IDialogProps {
@@ -94,14 +95,13 @@ export const Dialog: React.FC<IDialogProps> = (props: IDialogProps) => {
           {actions && (
             <div className="flex flex-row justify-end gap-2 px-5 pb-5">
               {actions.map((action, index) => (
-                <button
+                <SecondaryButton
                   key={index}
                   onClick={action.onClick}
-                  className="cursor-pointer hover:bg-gray-100 px-4 py-2 border-gray-200 border-1 
-                  rounded-md"
+                  className={action.customizedClassName}
                 >
                   {action.label}
-                </button>
+                </SecondaryButton>
               ))}
             </div>
           )}

@@ -99,6 +99,26 @@
       "title": "菜单",
       "uploadMenuImage": "上传菜单图片",
       "submit": "提交"
+    },
+    "editForm": {
+      "searchForRestaurant": "搜索餐厅",
+      "title": "编辑餐厅",
+      "name": "名称",
+      "nameComment": "使用 Google Maps 数据",
+      "displayName": "显示名称",
+      "description": "描述",
+      "address": "地址",
+      "addressComment": "使用 Google Maps 数据",
+      "price": "人均价格(整数)",
+      "phoneNumber": "电话号码",
+      "phoneNumberComment": "使用 Google Maps 数据",
+      "cityAndState": "城市和州",
+      "cityAndStateComment": "使用 Google Maps 数据",
+
+      "delete": "删除",
+      "deleteConfirmationTitle": "删除餐厅",
+      "deleteConfirmation": "确定要删除这个餐厅吗？",
+      "submit": "提交"
     }
   },
   "gift": {

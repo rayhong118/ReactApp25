@@ -102,6 +102,26 @@
       "title": "Menu",
       "uploadMenuImage": "Upload Menu Image",
       "submit": "Submit"
+    },
+    "editForm": {
+      "searchForRestaurant": "Search for the Restaurant",
+      "title": "Edit Form",
+      "name": "Name",
+      "nameComment": "Populated by Google Maps",
+      "displayName": "Display Name",
+      "description": "Description",
+      "address": "Address",
+      "addressComment": "Populated by Google Maps",
+      "price": "Price per person (integer only)",
+      "phoneNumber": "Phone Number",
+      "phoneNumberComment": "Populated by Google Maps",
+      "cityAndState": "City and State",
+      "cityAndStateComment": "Populated by Google Maps",
+
+      "delete": "Delete",
+      "deleteConfirmationTitle": "Delete Restaurant",
+      "deleteConfirmation": "Are you sure you want to delete this restaurant?",
+      "submit": "Submit"
     }
   },
   "gift": {

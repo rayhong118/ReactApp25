@@ -15,6 +15,7 @@ import {
   useDeleteRestaurant,
   useEditRestaurant,
 } from "./hooks/hooks";
+import { useTranslation } from "react-i18next";
 
 interface IEatEditFormProps {
   restaurant?: IRestaurant;
@@ -24,7 +25,7 @@ interface IEatEditFormProps {
 export const EatEditForm = (props: IEatEditFormProps) => {
   const { restaurant, closeDialog } = props;
   const [eatData, setEatData] = useState<Partial<IRestaurant> | undefined>(
-    restaurant
+    restaurant,
   );
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const placeAutocompleteRef = useRef<HTMLInputElement | null>(null);
@@ -43,6 +44,8 @@ export const EatEditForm = (props: IEatEditFormProps) => {
 
   const administrativeAreaLevel1 = "administrative_area_level_1";
   const locality = "locality";
+
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (!placeAutocompleteRef.current) {
@@ -68,7 +71,7 @@ export const EatEditForm = (props: IEatEditFormProps) => {
          * Restrict the autocomplete to the United States
          */
         componentRestrictions: { country: "us" },
-      }
+      },
     );
 
     if (!autocomplete) {
@@ -80,10 +83,10 @@ export const EatEditForm = (props: IEatEditFormProps) => {
         const place = autocomplete.getPlace();
         if (place) {
           const city = place.address_components?.find((component) =>
-            component.types.includes(locality)
+            component.types.includes(locality),
           )?.short_name;
           const state = place.address_components?.find((component) =>
-            component.types.includes(administrativeAreaLevel1)
+            component.types.includes(administrativeAreaLevel1),
           )?.short_name;
           const cityAndState = `${city}, ${state}`;
 
@@ -96,7 +99,7 @@ export const EatEditForm = (props: IEatEditFormProps) => {
             cityAndState: cityAndState,
           }));
         }
-      }
+      },
     );
 
     return () => {
@@ -106,7 +109,7 @@ export const EatEditForm = (props: IEatEditFormProps) => {
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, valueAsNumber, type } = event.target;
-    const actualValue = type === "number" ? valueAsNumber : value;
+    const actualValue = type === "number" ? valueAsNumber.toFixed(0) : value;
     setEatData((prev) => ({ ...prev, [name]: actualValue }));
   };
 
@@ -149,7 +152,7 @@ export const EatEditForm = (props: IEatEditFormProps) => {
     <div>
       <Dialog
         open={showDeleteConfirmation}
-        title="Delete Restaurant"
+        title={t("eat.editForm.deleteConfirmationTitle")}
         onClose={() => setShowDeleteConfirmation(false)}
         actions={[
           {
@@ -162,7 +165,7 @@ export const EatEditForm = (props: IEatEditFormProps) => {
           },
         ]}
       >
-        Are you sure you want to delete this restaurant?
+        {t("eat.editForm.deleteConfirmation")}
       </Dialog>
       <div className="eat-edit-dialog">
         <form onSubmit={handleSubmit}>
@@ -175,7 +178,7 @@ export const EatEditForm = (props: IEatEditFormProps) => {
             />
             <label htmlFor="googleSearch">
               <FontAwesomeIcon icon={faSearch} className="mr-2" />
-              Search for the restaurant
+              {t("eat.editForm.searchForRestaurant")}
             </label>
           </div>
 
@@ -189,7 +192,8 @@ export const EatEditForm = (props: IEatEditFormProps) => {
               value={eatData?.name || ""}
             />
             <label htmlFor="name">
-              Name - <span className="text-xs">Populated by Google Maps</span>
+              {t("eat.editForm.name")} -{" "}
+              <span className="text-xs">{t("eat.editForm.nameComment")}</span>
             </label>
           </div>
           <div className="labeled-input">
@@ -201,7 +205,7 @@ export const EatEditForm = (props: IEatEditFormProps) => {
               value={eatData?.displayName || ""}
               onChange={handleChange}
             />
-            <label htmlFor="displayName">Display Name</label>
+            <label htmlFor="displayName">{t("eat.editForm.displayName")}</label>
           </div>
           <div className="labeled-input">
             <input
@@ -212,7 +216,7 @@ export const EatEditForm = (props: IEatEditFormProps) => {
               value={eatData?.description || ""}
               onChange={handleChange}
             />
-            <label htmlFor="description">Description</label>
+            <label htmlFor="description">{t("eat.editForm.description")}</label>
           </div>
           <div className="labeled-input">
             <input
@@ -223,8 +227,10 @@ export const EatEditForm = (props: IEatEditFormProps) => {
               value={eatData?.address || ""}
             />
             <label htmlFor="address">
-              Address -{" "}
-              <span className="text-xs">Populated by Google Maps</span>
+              {t("eat.editForm.address")} -{" "}
+              <span className="text-xs">
+                {t("eat.editForm.addressComment")}
+              </span>
             </label>
           </div>
           <div className="labeled-input">
@@ -237,7 +243,7 @@ export const EatEditForm = (props: IEatEditFormProps) => {
               onChange={handleChange}
             />
             <label htmlFor="price">
-              Price per person (integer only)
+              {t("eat.editForm.price")}
               <span className="text-red-500 font-bold">*</span>
             </label>
           </div>
@@ -250,8 +256,10 @@ export const EatEditForm = (props: IEatEditFormProps) => {
               value={eatData?.phoneNumber || ""}
             />
             <label htmlFor="phoneNumber">
-              Phone Number -{" "}
-              <span className="text-xs">Populated by Google Maps</span>
+              {t("eat.editForm.phoneNumber")} -{" "}
+              <span className="text-xs">
+                {t("eat.editForm.phoneNumberComment")}
+              </span>
             </label>
           </div>
           <div className="labeled-input">
@@ -264,8 +272,10 @@ export const EatEditForm = (props: IEatEditFormProps) => {
               onChange={handleChange}
             />
             <label htmlFor="cityAndState">
-              City and State -{" "}
-              <span className="text-xs">Populated by Google Maps</span>
+              {t("eat.editForm.cityAndState")} -{" "}
+              <span className="text-xs">
+                {t("eat.editForm.cityAndStateComment")}
+              </span>
             </label>
           </div>
 
@@ -287,7 +297,7 @@ export const EatEditForm = (props: IEatEditFormProps) => {
                 ) : (
                   <FontAwesomeIcon icon={faTrash} className="mr-2" />
                 )}
-                Delete
+                {t("eat.editForm.delete")}
               </CustomizedButton>
             )}
             <PrimaryButton
@@ -304,7 +314,7 @@ export const EatEditForm = (props: IEatEditFormProps) => {
               ) : (
                 <FontAwesomeIcon icon={faCheck} className="mr-2" />
               )}
-              Submit
+              {t("eat.editForm.submit")}
             </PrimaryButton>
           </div>
         </form>
