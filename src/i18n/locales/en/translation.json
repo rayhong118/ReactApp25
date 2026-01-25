@@ -100,8 +100,11 @@
     },
     "menu": {
       "title": "Menu",
-      "uploadMenuImage": "Upload Menu Image",
-      "submit": "Submit"
+      "submitMenuImage": "Submit Menu Image",
+      "submitMenuUrl": "Submit Menu URL",
+      "selectImage": "Select Image",
+      "submit": "Submit",
+      "cancel": "Cancel"
     },
     "editForm": {
       "searchForRestaurant": "Search for the Restaurant",

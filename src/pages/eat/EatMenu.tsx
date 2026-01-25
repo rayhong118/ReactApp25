@@ -1,10 +1,10 @@
-import { PrimaryButton, SecondaryButton } from "@/components/Buttons";
+import { SecondaryButton } from "@/components/Buttons";
 import { Loading } from "@/components/Loading";
-import { useGetCurrentUser } from "@/utils/AuthenticationAtoms";
-import { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import type { IMenuItem, IRestaurant } from "./Eat.types";
-import { getMenuData, useUploadMenuImage } from "./hooks/menuHooks";
+import { EatMenuUpload } from "./EatMenuUpload";
+import { getMenuData } from "./hooks/menuHooks";
+import { useGetCurrentUser } from "@/utils/AuthenticationAtoms";
 
 /**
  * Menu component:
@@ -16,60 +16,18 @@ interface IEatMenuProps {
   closeDialog: () => void;
 }
 export const EatMenu = ({ restaurant, closeDialog }: IEatMenuProps) => {
-  const currentUser = useGetCurrentUser();
-  const [menuImage, setMenuImage] = useState<File>();
-  const { mutateAsync: uploadMenuImage, isPending } = useUploadMenuImage();
   const { data: menuData, isLoading: menuDataLoading } = getMenuData(
     restaurant.id || "",
   );
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const handleUploadImage = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (!menuImage || !restaurant.id) return;
+  const currentUser = useGetCurrentUser();
 
-    uploadMenuImage({
-      file: menuImage,
-      restaurantId: restaurant.id,
-    });
-  };
-
-  const { t, i18n } = useTranslation();
+  const { i18n } = useTranslation();
   const language: "en" | "zh" = i18n.language as "en" | "zh";
 
   return (
     <div>
-      {isPending && <Loading />}
-      {menuImage && (
-        <div className="flex justify-center h-[60vh]">
-          <img
-            src={URL.createObjectURL(menuImage)}
-            alt="Menu"
-            className="w-auto object-contain rounded-lg shadow-sm"
-          />
-        </div>
-      )}
-      {currentUser && (
-        <form onSubmit={handleUploadImage}>
-          <input
-            type="file"
-            ref={fileInputRef}
-            onChange={(e) => setMenuImage(e.target.files?.[0])}
-            accept="image/*"
-            className="hidden"
-          />
-          <SecondaryButton
-            type="button"
-            onClick={() => fileInputRef.current?.click()}
-          >
-            {t("eat.menu.uploadMenuImage")}
-          </SecondaryButton>
-          {currentUser && menuImage && (
-            <PrimaryButton type="submit" disabled={isPending || !menuImage}>
-              {t("eat.menu.submit")}
-            </PrimaryButton>
-          )}
-        </form>
-      )}
+      {currentUser && <EatMenuUpload restaurant={restaurant} />}
+      {currentUser && <hr className="my-4" />}
       {menuDataLoading && <Loading />}
       {menuData && (
         <div className="flex flex-col gap-4">
@@ -85,7 +43,7 @@ export const EatMenu = ({ restaurant, closeDialog }: IEatMenuProps) => {
               ))}
             </div>
           )}
-          <h2 className="text-xl text-foreground font-bold">Menu items</h2>
+
           {Object.entries(menuData.categories).map(
             ([categoryKey, category]) => (
               <div key={categoryKey}>

@@ -1,4 +1,4 @@
-import { db } from "@/firebase";
+import { db, firebaseFunctions } from "@/firebase";
 import { useAddMessageBars } from "@/utils/MessageBarsAtom";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { doc, getDoc } from "firebase/firestore";
@@ -10,6 +10,7 @@ import {
   type UploadMetadata,
 } from "firebase/storage";
 import type { IMenu, IMenuUploadPayload } from "../Eat.types";
+import { httpsCallable } from "firebase/functions";
 
 export const useUploadMenuImage = () => {
   const addMessageBar = useAddMessageBars();
@@ -25,7 +26,7 @@ export const useUploadMenuImage = () => {
           "_" +
           uploadPayload.file.name +
           "_" +
-          currentDate
+          currentDate,
       );
       const metadata = {
         customMetadata: {
@@ -37,7 +38,7 @@ export const useUploadMenuImage = () => {
         const snapshot = await uploadBytes(
           storageRef,
           uploadPayload.file,
-          metadata
+          metadata,
         );
         const downloadURL = await getDownloadURL(snapshot.ref);
 
@@ -88,4 +89,54 @@ export const getMenuData = (restaurantId: string) => {
   });
 
   return { data, isLoading, error };
+};
+
+export const useSubmitMenuURL = () => {
+  const addMessageBar = useAddMessageBars();
+  const { mutateAsync, isPending, isSuccess } = useMutation({
+    mutationKey: ["submit-menu-url"],
+    mutationFn: async ({
+      restaurantId,
+      url,
+    }: {
+      restaurantId: string;
+      url: string;
+    }) => {
+      const getMenuItemsFromURL = httpsCallable<
+        {
+          restaurantId: string;
+          url: string;
+        },
+        string
+      >(firebaseFunctions, "getMenuItemsFromURL");
+      const response = await getMenuItemsFromURL({
+        restaurantId,
+        url,
+      });
+      return response.data;
+    },
+    onSuccess: () => {
+      addMessageBar([
+        {
+          id: "submit-success",
+          message:
+            "Menu URL submitted successfully! Check back soon for menu items.",
+          type: "success",
+          autoDismiss: true,
+        },
+      ]);
+    },
+    onError: () => {
+      addMessageBar([
+        {
+          id: "submit-error",
+          message: "Failed to submit menu URL!",
+          type: "error",
+          autoDismiss: true,
+        },
+      ]);
+    },
+  });
+
+  return { mutateAsync, isPending, isSuccess };
 };

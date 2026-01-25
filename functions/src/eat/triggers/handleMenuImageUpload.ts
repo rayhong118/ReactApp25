@@ -1,7 +1,7 @@
 import admin from "firebase-admin";
+import { logger } from "firebase-functions";
 import { onObjectFinalized } from "firebase-functions/storage";
 import genAI from "../../utils/genAIClient";
-import { logger } from "firebase-functions";
 
 export const handleMenuImageUpload = onObjectFinalized(
   { secrets: ["GEMINI_API_KEY"] },
@@ -121,7 +121,7 @@ RULES:
   },
 );
 
-const responseJsonSchema = {
+export const responseJsonSchema = {
   $defs: {
     // reusable menu item schema
     menuItem: {

@@ -97,8 +97,11 @@
     },
     "menu": {
       "title": "菜单",
-      "uploadMenuImage": "上传菜单图片",
-      "submit": "提交"
+      "submitMenuImage": "提交菜单图片",
+      "submitMenuUrl": "提交菜单 URL",
+      "selectImage": "选择图片",
+      "submit": "提交",
+      "cancel": "取消"
     },
     "editForm": {
       "searchForRestaurant": "搜索餐厅",
