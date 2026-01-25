@@ -71,36 +71,14 @@ export const handleMenuImageUpload = onObjectFinalized(
         },
       };
 
-      const prompt = `Extract menu data from this image and return structured JSON.
+      const prompt = `Extract menu data from this image. Follow the JSON schema provided.
 
-INSTRUCTIONS:
-1. AYCE Detection: Set "isAYCE" to true if this is an All-You-Can-Eat menu, false otherwise.
-
-2. AYCE Pricing (if applicable): Extract pricing tiers into "aycePrices" array with:
-   - price: numeric value
-   - timePeriod: "Lunch", "Dinner", "Weekend", "Happy Hour", etc.
-   - additionalInfo: any restrictions or notes (optional)
-
-3. Categories: Organize items by category (e.g., "appetizers", "main_course", "desserts").
-   - Each category MUST have:
-     * name: object with "en" (English) and "zh" (Chinese) translations
-     * items: array of menu items
-   - Use lowercase snake_case for category keys (e.g., "hot_appetizers")
-
-4. Menu Items: For each item, extract:
-   - name: object with "en" and "zh" translations
-   - price: number or string (use "Market Price" if price varies)
-   - description: brief description if available (optional)
-
-IMPORTANT:
-- Validation: If the image is NOT a menu, or if the menu items clearly
-  do NOT belong to the provided restaurant context, 
-  populate "invalidMenuReason" with a brief explanation and return.
-- Extract both English and Chinese names when visible
-- If only one language is present, translate it to populate the other field
-  (e.g., if only English is shown, provide a Chinese translation and vice versa)
-- Group similar items logically (e.g., all sushi rolls together)
-- Return valid JSON matching the provided schema`;
+RULES:
+- Set "isAYCE" true for All-You-Can-Eat menus
+- Provide both "en" and "zh" for all names (translate if only one language visible)
+- Use snake_case for category keys (e.g., "hot_appetizers")
+- Group similar items together
+- If NOT a valid menu or wrong restaurant, set "invalidMenuReason" and return`;
 
       const result = await genAI.models.generateContent({
         model: "gemini-3-flash-preview",
@@ -140,7 +118,7 @@ IMPORTANT:
       });
       throw error;
     }
-  }
+  },
 );
 
 const responseJsonSchema = {
