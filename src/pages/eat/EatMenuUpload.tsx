@@ -93,16 +93,32 @@ const ImageUpload = ({ restaurant }: { restaurant: IRestaurant }) => {
 const UrlUpload = ({ restaurant }: { restaurant: IRestaurant }) => {
   const { t } = useTranslation();
   const [menuUrl, setMenuUrl] = useState("");
+  const [isValid, setIsValid] = useState(true);
 
   const { mutateAsync: submitMenuUrl, isPending } = useSubmitMenuURL();
 
-  // TODO: simple validation for url
+  const validateUrl = (url: string) => {
+    if (!url) return true;
+    try {
+      new URL(url);
+      return true;
+    } catch {
+      return false;
+    }
+  };
+
+  const handleUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setMenuUrl(value);
+    setIsValid(validateUrl(value));
+  };
 
   return (
     <div>
       <form
         onSubmit={(e) => {
           e.preventDefault();
+          if (!validateUrl(menuUrl)) return;
           submitMenuUrl({
             url: menuUrl,
             restaurantId: restaurant.id!,
@@ -117,11 +133,20 @@ const UrlUpload = ({ restaurant }: { restaurant: IRestaurant }) => {
             id="menuUrl"
             placeholder=""
             value={menuUrl}
-            onChange={(e) => setMenuUrl(e.target.value)}
+            onChange={handleUrlChange}
+            className={!isValid ? "border-red-500" : ""}
           />
           <label htmlFor="menuUrl">{t("eat.menu.submitMenuUrl")}</label>
+          {!isValid && (
+            <span className="text-red-500 text-xs mt-1">
+              Please enter a valid URL
+            </span>
+          )}
         </div>
-        <PrimaryButton type="submit" disabled={isPending || !menuUrl}>
+        <PrimaryButton
+          type="submit"
+          disabled={isPending || !menuUrl || !isValid}
+        >
           {t("eat.menu.submit")}
         </PrimaryButton>
       </form>

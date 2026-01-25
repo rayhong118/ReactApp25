@@ -1,10 +1,10 @@
 import { SecondaryButton } from "@/components/Buttons";
 import { Loading } from "@/components/Loading";
+import { useGetCurrentUser } from "@/utils/AuthenticationAtoms";
 import { useTranslation } from "react-i18next";
 import type { IMenuItem, IRestaurant } from "./Eat.types";
 import { EatMenuUpload } from "./EatMenuUpload";
 import { getMenuData } from "./hooks/menuHooks";
-import { useGetCurrentUser } from "@/utils/AuthenticationAtoms";
 
 /**
  * Menu component:

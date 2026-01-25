@@ -5,7 +5,7 @@ import genAI from "../../utils/genAIClient";
 import { responseJsonSchema } from "../triggers/handleMenuImageUpload";
 
 const getMenuItemsFromURL = onCall(
-  { secrets: ["GEMINI_API_KEY"] },
+  { cors: true, secrets: ["GEMINI_API_KEY"] },
   async (request) => {
     const { url, restaurantId } = request.data;
     if (!url) {
