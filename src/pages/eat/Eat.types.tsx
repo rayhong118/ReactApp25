@@ -141,17 +141,23 @@ export interface IMenuUploadPayload {
   restaurantId: string;
 }
 
+interface ICategory {
+  name: {
+    en: string;
+    zh: string;
+  };
+  items: IMenuItem[];
+  /**
+   * Index for sorting.
+   */
+  indexField?: number;
+}
+
 export interface IMenu {
   id?: string;
   restaurantId: string;
   categories: {
-    [categoryKey: string]: {
-      name: {
-        en: string;
-        zh: string;
-      };
-      items: IMenuItem[];
-    };
+    [categoryKey: string]: ICategory;
   };
   isAYCE: boolean;
   aycePrices?: IAYCEPrice[];
