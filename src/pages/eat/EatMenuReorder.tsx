@@ -20,7 +20,7 @@ interface EatMenuReorderProps {
 }
 
 const EatMenuReorder = ({ menuData, onSave }: EatMenuReorderProps) => {
-  const { i18n } = useTranslation();
+  const { i18n, t } = useTranslation();
   const language: "en" | "zh" = i18n.language as "en" | "zh";
 
   // Initialize state from menuData
@@ -45,7 +45,7 @@ const EatMenuReorder = ({ menuData, onSave }: EatMenuReorderProps) => {
       }));
 
     return { unsorted, sorted };
-  }, [menuData]);
+  }, [menuData, language]);
 
   const [unsortedCategories, setUnsortedCategories] = useState<CategoryEntry[]>(
     initializeCategories().unsorted,
@@ -170,11 +170,11 @@ const EatMenuReorder = ({ menuData, onSave }: EatMenuReorderProps) => {
           onDrop={handleDropOnUnsorted}
         >
           <h2 className="text-lg font-semibold mb-3 text-foreground/70">
-            Unsorted Categories
+            {t("eat.menu.unsortedCategories")}
           </h2>
           {unsortedCategories.length === 0 ? (
             <p className="text-foreground/50 text-sm italic">
-              All categories are sorted!
+              {t("eat.menu.allSorted")}
             </p>
           ) : (
             <div className="flex flex-col gap-2">
@@ -200,7 +200,7 @@ const EatMenuReorder = ({ menuData, onSave }: EatMenuReorderProps) => {
           }`}
         >
           <h2 className="text-lg font-semibold mb-3 text-foreground/70">
-            Sorted Categories
+            {t("eat.menu.sortedCategories")}
           </h2>
           {sortedCategories.length === 0 ? (
             <div
@@ -210,7 +210,7 @@ const EatMenuReorder = ({ menuData, onSave }: EatMenuReorderProps) => {
               onDrop={(e) => handleDropOnSorted(e, 0)}
             >
               <p className="text-foreground/50 text-sm italic">
-                Drag categories here to sort
+                {t("eat.menu.dragHere")}
               </p>
             </div>
           ) : (
@@ -251,10 +251,11 @@ const EatMenuReorder = ({ menuData, onSave }: EatMenuReorderProps) => {
       {onSave && (
         <div className="flex justify-end gap-2">
           <SecondaryButton onClick={handleReset}>
-            <FontAwesomeIcon icon={faArrowRotateLeft} className="pe-2" /> Reset
+            <FontAwesomeIcon icon={faArrowRotateLeft} className="pe-2" />{" "}
+            {t("eat.menu.reset")}
           </SecondaryButton>
           <PrimaryButton onClick={handleSave}>
-            Save Order ({sortedCategories.length} categories)
+            {t("eat.menu.saveOrder")} ({sortedCategories.length})
           </PrimaryButton>
         </div>
       )}

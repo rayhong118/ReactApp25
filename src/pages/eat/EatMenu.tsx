@@ -5,7 +5,7 @@ import { faArrowLeft, faShuffle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import type { ICategory, IMenuItem, IRestaurant } from "./Eat.types";
+import type { ICategory, IMenu, IMenuItem, IRestaurant } from "./Eat.types";
 import EatMenuReorder from "./EatMenuReorder";
 import { EatMenuUpload } from "./EatMenuUpload";
 import { getMenuData, useUpdateMenuData } from "./hooks/menuHooks";
@@ -33,7 +33,7 @@ export const EatMenu = ({ restaurant }: IEatMenuProps) => {
     (category) => category.indexField === undefined,
   );
 
-  const { i18n } = useTranslation();
+  const { t, i18n } = useTranslation();
   const language: "en" | "zh" = i18n.language as "en" | "zh";
 
   const { mutateAsync } = useUpdateMenuData(restaurant.id || "");
@@ -50,7 +50,7 @@ export const EatMenu = ({ restaurant }: IEatMenuProps) => {
 
     await mutateAsync(menuData);
   };
-  if (!menuData) {
+  if (menuDataLoading) {
     return <Loading />;
   }
 
@@ -63,22 +63,23 @@ export const EatMenu = ({ restaurant }: IEatMenuProps) => {
         >
           <FontAwesomeIcon icon={faArrowLeft} className="pe-2" /> Back
         </SecondaryButton>
-        <h1 className="text-lg font-bold">Reorder Menu Categories</h1>
 
-        <EatMenuReorder menuData={menuData} onSave={handleSaveOrder} />
+        <EatMenuReorder
+          menuData={menuData || ({} as IMenu)}
+          onSave={handleSaveOrder}
+        />
       </div>
     );
   }
 
   return (
-    <div>
+    <div className="flex flex-col gap-4">
       {currentUser && <EatMenuUpload restaurant={restaurant} />}
-      {currentUser && <hr className="my-4 border-foreground" />}
-      {menuDataLoading && <Loading />}
+      {currentUser && menuData && <hr className="border-foreground" />}
       {menuData && currentUser && (
         <SecondaryButton onClick={() => setIsReorderPanelOpen(true)}>
-          <FontAwesomeIcon icon={faShuffle} className="pe-2" /> Reorder menu
-          categories
+          <FontAwesomeIcon icon={faShuffle} className="pe-2" />{" "}
+          {t("eat.menu.reorderMenu")}
         </SecondaryButton>
       )}
       {menuData && (
@@ -86,7 +87,7 @@ export const EatMenu = ({ restaurant }: IEatMenuProps) => {
           {menuData.isAYCE && (
             <div className="text-lg">
               <h2 className="text-lg text-foreground font-bold">
-                All you can eat pricing
+                {t("eat.menu.allYouCanEat")}
               </h2>
               {menuData.aycePrices?.map((price) => (
                 <div key={price.timePeriod}>

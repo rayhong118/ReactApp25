@@ -128,7 +128,13 @@ export const EatCard = React.memo(
               {t("eat.card.share")}
             </SecondaryButton>
           </div>
-          <div className="text-sm">{restaurant.address}</div>
+          <div className="text-sm">
+            {restaurant.address}{" "}
+            {(window.location.hostname === "localhost" ||
+              window.location.hostname === "127.0.0.1") && (
+              <span className="text-brand-primary">{restaurant.id}</span>
+            )}
+          </div>
           <div>
             {t("eat.card.pricePerPerson")}: {restaurant.price}
           </div>

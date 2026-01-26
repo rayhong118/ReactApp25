@@ -52,6 +52,7 @@ const ImageUpload = ({ restaurant }: { restaurant: IRestaurant }) => {
       file: menuImage,
       restaurantId: restaurant.id,
     });
+    setMenuImage(undefined);
   };
 
   const { t } = useTranslation();

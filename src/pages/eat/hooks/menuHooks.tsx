@@ -87,6 +87,9 @@ export const getMenuData = (restaurantId: string) => {
     queryFn: async () => {
       const menuDoc = doc(db, MENU_COLLECTION, restaurantId);
       const menuDocSnapshot = await getDoc(menuDoc);
+      if (!menuDocSnapshot.exists()) {
+        return null;
+      }
       return menuDocSnapshot.data() as IMenu;
     },
     enabled: !!restaurantId,

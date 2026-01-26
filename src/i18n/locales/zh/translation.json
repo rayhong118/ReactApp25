@@ -102,7 +102,15 @@
       "avoidUsing": "避免使用。可能会返回不准确的结果。",
       "selectImage": "选择图片",
       "submit": "提交",
-      "cancel": "取消"
+      "cancel": "取消",
+      "allYouCanEat": "自助餐价格",
+      "reorderMenu": "重新排序菜单类别",
+      "unsortedCategories": "未排序类别",
+      "sortedCategories": "已排序类别",
+      "allSorted": "所有类别已排序！",
+      "dragHere": "拖动类别到此处进行排序",
+      "reset": "重置",
+      "saveOrder": "保存排序"
     },
     "editForm": {
       "searchForRestaurant": "搜索餐厅",
