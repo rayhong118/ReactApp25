@@ -19,7 +19,7 @@ export const EatMenuUpload = ({ restaurant }: IEatMenuUploadProps) => {
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex gap-2">
+      <div className="flex gap-2 flex-wrap justify-start align-start">
         <SecondaryButton onClick={() => setUploadType("image")}>
           <FontAwesomeIcon icon={faImage} /> {t("eat.menu.submitMenuImage")}
         </SecondaryButton>

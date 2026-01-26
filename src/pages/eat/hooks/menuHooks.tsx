@@ -96,6 +96,39 @@ export const getMenuData = (restaurantId: string) => {
   return { data, isLoading, error };
 };
 
+export const useUpdateMenuData = (restaurantId: string) => {
+  const addMessageBar = useAddMessageBars();
+  const { mutateAsync, isPending, isSuccess } = useMutation({
+    mutationKey: ["menu-data", restaurantId],
+    mutationFn: async (menuData: IMenu) => {
+      const menuDoc = doc(db, MENU_COLLECTION, restaurantId);
+      await setDoc(menuDoc, menuData);
+    },
+    onSuccess: () => {
+      addMessageBar([
+        {
+          id: "update-success",
+          message: "Menu updated successfully!",
+          type: "success",
+          autoDismiss: true,
+        },
+      ]);
+    },
+    onError: () => {
+      addMessageBar([
+        {
+          id: "update-error",
+          message: "Failed to update menu!",
+          type: "error",
+          autoDismiss: true,
+        },
+      ]);
+    },
+  });
+
+  return { mutateAsync, isPending, isSuccess };
+};
+
 export const useSubmitMenuURL = () => {
   const addMessageBar = useAddMessageBars();
   const { mutateAsync, isPending, isSuccess } = useMutation({

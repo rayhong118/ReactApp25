@@ -13,7 +13,7 @@ interface CategoryEntry {
 
 interface EatMenuReorderProps {
   menuData: IMenu;
-  onSave?: (orderedCategories: { key: string; index: number }[]) => void;
+  onSave?: (orderedCategories: string[]) => void;
 }
 
 const EatMenuReorder = ({ menuData, onSave }: EatMenuReorderProps) => {
@@ -129,10 +129,7 @@ const EatMenuReorder = ({ menuData, onSave }: EatMenuReorderProps) => {
   };
 
   const handleSave = () => {
-    const orderedCategories = sortedCategories.map((entry, index) => ({
-      key: entry.key,
-      index: index,
-    }));
+    const orderedCategories = sortedCategories.map((entry) => entry.key);
     onSave?.(orderedCategories);
   };
 

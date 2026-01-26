@@ -105,7 +105,7 @@ export const EatCard = React.memo(
           title={t("eat.menu.title")}
           customizedClassName="max-w-3xl"
         >
-          <EatMenu restaurant={restaurant} closeDialog={closeMenuDialog} />
+          <EatMenu restaurant={restaurant} />
         </Dialog>
         <div className="border border-gray-300 p-4 rounded-md">
           <h1 className="text-xl font-bold">
@@ -128,7 +128,7 @@ export const EatCard = React.memo(
               {t("eat.card.share")}
             </SecondaryButton>
           </div>
-          <div>{restaurant.address}</div>
+          <div className="text-sm">{restaurant.address}</div>
           <div>
             {t("eat.card.pricePerPerson")}: {restaurant.price}
           </div>

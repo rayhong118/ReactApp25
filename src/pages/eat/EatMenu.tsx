@@ -5,10 +5,10 @@ import { faArrowLeft, faShuffle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import type { IMenuItem, IRestaurant } from "./Eat.types";
-import { EatMenuUpload } from "./EatMenuUpload";
-import { getMenuData } from "./hooks/menuHooks";
+import type { ICategory, IMenuItem, IRestaurant } from "./Eat.types";
 import EatMenuReorder from "./EatMenuReorder";
+import { EatMenuUpload } from "./EatMenuUpload";
+import { getMenuData, useUpdateMenuData } from "./hooks/menuHooks";
 
 /**
  * Menu component:
@@ -25,23 +25,36 @@ export const EatMenu = ({ restaurant }: IEatMenuProps) => {
   const currentUser = useGetCurrentUser();
   const [isReorderPanelOpen, setIsReorderPanelOpen] = useState(false);
 
+  const orderedCategories = Object.values(menuData?.categories || {})
+    .filter((category) => category.indexField !== undefined)
+    .sort((a, b) => a.indexField! - b.indexField!);
+
+  const unorderedCategories = Object.values(menuData?.categories || {}).filter(
+    (category) => category.indexField === undefined,
+  );
+
   const { i18n } = useTranslation();
   const language: "en" | "zh" = i18n.language as "en" | "zh";
 
+  const { mutateAsync } = useUpdateMenuData(restaurant.id || "");
+  const handleSaveOrder = async (orderedCategories: string[]) => {
+    if (!menuData) {
+      return;
+    }
+
+    const currentCategories = menuData.categories;
+    orderedCategories.forEach((categoryKey, index) => {
+      const category = currentCategories[categoryKey];
+      category.indexField = index;
+    });
+
+    await mutateAsync(menuData);
+  };
   if (!menuData) {
     return <Loading />;
   }
 
   if (isReorderPanelOpen) {
-    const handleSaveOrder = async (
-      orderedCategories: { key: string; index: number }[],
-    ) => {
-      // TODO: Implement Firestore update to save the order
-      console.log("Saving order:", orderedCategories);
-      // For now, just close the panel after save
-      setIsReorderPanelOpen(false);
-    };
-
     return (
       <div className="flex flex-col gap-4 text-foreground">
         <SecondaryButton
@@ -50,7 +63,7 @@ export const EatMenu = ({ restaurant }: IEatMenuProps) => {
         >
           <FontAwesomeIcon icon={faArrowLeft} className="pe-2" /> Back
         </SecondaryButton>
-        <h1 className="text-xl font-bold">Reorder Menu Categories</h1>
+        <h1 className="text-lg font-bold">Reorder Menu Categories</h1>
 
         <EatMenuReorder menuData={menuData} onSave={handleSaveOrder} />
       </div>
@@ -72,7 +85,7 @@ export const EatMenu = ({ restaurant }: IEatMenuProps) => {
         <div className="flex flex-col gap-4">
           {menuData.isAYCE && (
             <div className="text-lg">
-              <h2 className="text-xl text-foreground font-bold">
+              <h2 className="text-lg text-foreground font-bold">
                 All you can eat pricing
               </h2>
               {menuData.aycePrices?.map((price) => (
@@ -83,40 +96,46 @@ export const EatMenu = ({ restaurant }: IEatMenuProps) => {
             </div>
           )}
 
-          {Object.entries(menuData.categories).map(
-            ([categoryKey, category]) => (
-              <div key={categoryKey} className="flex flex-col gap-2">
-                <h3 className="text-xl text-foreground font-bold">
-                  {category.name[language] || category.name.en}
-                </h3>
-
-                <div className="flex flex-wrap">
-                  {category.items.map((item: IMenuItem, index: number) => (
-                    <div
-                      key={index}
-                      className="w-1/2 min-w-xs pb-2 text-foreground"
-                    >
-                      <div className="pl-4 w-full flex justify-between gap-10">
-                        <h4 className="text-lg font-semibold">
-                          {item.name[language] || item.name.en}
-                        </h4>
-                        <p className="text-lg font-semibold">{item.price}</p>
-                      </div>
-                      {item.description && (
-                        <p className="pl-4">
-                          {typeof item.description === "string"
-                            ? item.description
-                            : item.description[language] || item.description.en}
-                        </p>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            ),
-          )}
+          <MenuCategory categories={orderedCategories} language={language} />
+          <MenuCategory categories={unorderedCategories} language={language} />
         </div>
       )}
     </div>
   );
+};
+
+const MenuCategory = ({
+  categories,
+  language,
+}: {
+  categories: ICategory[];
+  language: "en" | "zh";
+}) => {
+  return categories.map((category: ICategory) => (
+    <div className="flex flex-col gap-2">
+      <h3 className="text-lg text-foreground font-bold">
+        {category.name[language] || category.name.en}
+      </h3>
+
+      <div className="flex flex-wrap">
+        {category.items.map((item: IMenuItem, index: number) => (
+          <div key={index} className="w-1/2 min-w-xs pb-2 text-foreground">
+            <div className="pl-4 w-full flex justify-between gap-10">
+              <h4 className="font-semibold">
+                {item.name[language] || item.name.en}
+              </h4>
+              <p className="font-semibold">{item.price}</p>
+            </div>
+            {item.description && (
+              <p className="pl-4 text-sm">
+                {typeof item.description === "string"
+                  ? item.description
+                  : item.description[language] || item.description.en}
+              </p>
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
+  ));
 };
