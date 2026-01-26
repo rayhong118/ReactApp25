@@ -1,10 +1,13 @@
 // reorder menu categories with drag and drop
-import { faGripVertical } from "@fortawesome/free-solid-svg-icons";
+import { PrimaryButton, SecondaryButton } from "@/components/Buttons";
+import {
+  faArrowRotateLeft,
+  faGripVertical,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useState, useCallback } from "react";
+import { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
 import type { ICategory, IMenu } from "./Eat.types";
-import { PrimaryButton } from "@/components/Buttons";
 
 interface CategoryEntry {
   key: string;
@@ -35,12 +38,11 @@ const EatMenuReorder = ({ menuData, onSave }: EatMenuReorderProps) => {
     return { unsorted, sorted };
   }, [menuData]);
 
-  const initial = initializeCategories();
   const [unsortedCategories, setUnsortedCategories] = useState<CategoryEntry[]>(
-    initial.unsorted,
+    initializeCategories().unsorted,
   );
   const [sortedCategories, setSortedCategories] = useState<CategoryEntry[]>(
-    initial.sorted,
+    initializeCategories().sorted,
   );
   const [draggedItem, setDraggedItem] = useState<CategoryEntry | null>(null);
   const [dragSource, setDragSource] = useState<"unsorted" | "sorted" | null>(
@@ -123,6 +125,15 @@ const EatMenuReorder = ({ menuData, onSave }: EatMenuReorderProps) => {
 
     setSortedCategories(newSorted);
     setUnsortedCategories(newUnsorted);
+    setDropTargetIndex(null);
+    setDraggedItem(null);
+    setDragSource(null);
+  };
+
+  const handleReset = () => {
+    const { unsorted, sorted } = initializeCategories();
+    setUnsortedCategories(unsorted);
+    setSortedCategories(sorted);
     setDropTargetIndex(null);
     setDraggedItem(null);
     setDragSource(null);
@@ -231,7 +242,10 @@ const EatMenuReorder = ({ menuData, onSave }: EatMenuReorderProps) => {
 
       {/* Save Button */}
       {onSave && (
-        <div className="flex justify-end">
+        <div className="flex justify-end gap-2">
+          <SecondaryButton onClick={handleReset}>
+            <FontAwesomeIcon icon={faArrowRotateLeft} className="pe-2" /> Reset
+          </SecondaryButton>
           <PrimaryButton onClick={handleSave}>
             Save Order ({sortedCategories.length} categories)
           </PrimaryButton>
@@ -297,7 +311,7 @@ const CategoryItem = ({
         flex items-center gap-3 select-none transition-all duration-200
         ${
           isDragging
-            ? "opacity-50 border-primary bg-primary/10 scale-95"
+            ? "opacity-80 border-primary bg-primary/10 scale-95"
             : "border-foreground/20 bg-background hover:border-foreground/40 hover:shadow-md"
         }
       `}
