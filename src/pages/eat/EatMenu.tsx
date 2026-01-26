@@ -27,7 +27,7 @@ export const EatMenu = ({ restaurant, closeDialog }: IEatMenuProps) => {
   return (
     <div>
       {currentUser && <EatMenuUpload restaurant={restaurant} />}
-      {currentUser && <hr className="my-4" />}
+      {currentUser && <hr className="my-4 border-foreground" />}
       {menuDataLoading && <Loading />}
       {menuData && (
         <div className="flex flex-col gap-4">

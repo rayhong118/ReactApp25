@@ -102,6 +102,7 @@
       "title": "Menu",
       "submitMenuImage": "Submit Menu Image",
       "submitMenuUrl": "Submit Menu URL",
+      "avoidUsing": "Avoid using. Inaccurate results may be returned.",
       "selectImage": "Select Image",
       "submit": "Submit",
       "cancel": "Cancel"

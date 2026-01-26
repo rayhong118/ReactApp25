@@ -6,6 +6,8 @@ import { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import type { IRestaurant } from "./Eat.types";
 import { useSubmitMenuURL, useUploadMenuImage } from "./hooks/menuHooks";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faXmark, faImage, faLink } from "@fortawesome/free-solid-svg-icons";
 
 interface IEatMenuUploadProps {
   restaurant: IRestaurant;
@@ -19,10 +21,11 @@ export const EatMenuUpload = ({ restaurant }: IEatMenuUploadProps) => {
     <div className="flex flex-col gap-4">
       <div className="flex gap-2">
         <SecondaryButton onClick={() => setUploadType("image")}>
-          {t("eat.menu.submitMenuImage")}
+          <FontAwesomeIcon icon={faImage} /> {t("eat.menu.submitMenuImage")}
         </SecondaryButton>
         <SecondaryButton onClick={() => setUploadType("url")}>
-          {t("eat.menu.submitMenuUrl")}
+          <FontAwesomeIcon icon={faLink} /> {t("eat.menu.submitMenuUrl")}(
+          {t("eat.menu.avoidUsing")})
         </SecondaryButton>
       </div>
 
@@ -30,7 +33,7 @@ export const EatMenuUpload = ({ restaurant }: IEatMenuUploadProps) => {
       {uploadType === "url" && <UrlUpload restaurant={restaurant} />}
       {uploadType !== "none" && (
         <SecondaryButton onClick={() => setUploadType("none")}>
-          {t("eat.menu.cancel")}
+          <FontAwesomeIcon icon={faXmark} /> {t("eat.menu.cancel")}
         </SecondaryButton>
       )}
     </div>

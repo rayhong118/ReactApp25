@@ -62,6 +62,7 @@ RULES:
           responseMimeType: "application/json",
           responseJsonSchema: responseJsonSchema,
           tools: [{ urlContext: {} }],
+          temperature: 0,
         },
       });
 

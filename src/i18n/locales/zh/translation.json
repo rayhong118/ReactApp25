@@ -99,6 +99,7 @@
       "title": "菜单",
       "submitMenuImage": "提交菜单图片",
       "submitMenuUrl": "提交菜单 URL",
+      "avoidUsing": "避免使用。可能会返回不准确的结果。",
       "selectImage": "选择图片",
       "submit": "提交",
       "cancel": "取消"
