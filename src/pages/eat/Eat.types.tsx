@@ -141,7 +141,7 @@ export interface IMenuUploadPayload {
   restaurantId: string;
 }
 
-interface ICategory {
+export interface ICategory {
   name: {
     en: string;
     zh: string;

@@ -1,10 +1,14 @@
 import { SecondaryButton } from "@/components/Buttons";
 import { Loading } from "@/components/Loading";
 import { useGetCurrentUser } from "@/utils/AuthenticationAtoms";
+import { faArrowLeft, faShuffle } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import type { IMenuItem, IRestaurant } from "./Eat.types";
 import { EatMenuUpload } from "./EatMenuUpload";
 import { getMenuData } from "./hooks/menuHooks";
+import EatMenuReorder from "./EatMenuReorder";
 
 /**
  * Menu component:
@@ -13,22 +17,54 @@ import { getMenuData } from "./hooks/menuHooks";
  */
 interface IEatMenuProps {
   restaurant: IRestaurant;
-  closeDialog: () => void;
 }
-export const EatMenu = ({ restaurant, closeDialog }: IEatMenuProps) => {
+export const EatMenu = ({ restaurant }: IEatMenuProps) => {
   const { data: menuData, isLoading: menuDataLoading } = getMenuData(
     restaurant.id || "",
   );
   const currentUser = useGetCurrentUser();
+  const [isReorderPanelOpen, setIsReorderPanelOpen] = useState(false);
 
   const { i18n } = useTranslation();
   const language: "en" | "zh" = i18n.language as "en" | "zh";
+
+  if (!menuData) {
+    return <Loading />;
+  }
+
+  if (isReorderPanelOpen) {
+    return (
+      <div className="flex flex-col gap-4 text-foreground">
+        <SecondaryButton
+          onClick={() => setIsReorderPanelOpen(false)}
+          aria-label="Back"
+        >
+          <FontAwesomeIcon icon={faArrowLeft} className="pe-2" /> Back
+        </SecondaryButton>
+        <h1 className="text-xl font-bold">Reorder Menu Categories</h1>
+
+        <EatMenuReorder menuData={menuData} />
+        <SecondaryButton
+          onClick={() => setIsReorderPanelOpen(false)}
+          aria-label="Back"
+        >
+          <FontAwesomeIcon icon={faArrowLeft} className="pe-2" /> Back
+        </SecondaryButton>
+      </div>
+    );
+  }
 
   return (
     <div>
       {currentUser && <EatMenuUpload restaurant={restaurant} />}
       {currentUser && <hr className="my-4 border-foreground" />}
       {menuDataLoading && <Loading />}
+      {menuData && currentUser && (
+        <SecondaryButton onClick={() => setIsReorderPanelOpen(true)}>
+          <FontAwesomeIcon icon={faShuffle} className="pe-2" /> Reorder menu
+          categories
+        </SecondaryButton>
+      )}
       {menuData && (
         <div className="flex flex-col gap-4">
           {menuData.isAYCE && (
@@ -77,9 +113,6 @@ export const EatMenu = ({ restaurant, closeDialog }: IEatMenuProps) => {
             ),
           )}
         </div>
-      )}
-      {closeDialog && (
-        <SecondaryButton onClick={closeDialog}>Close</SecondaryButton>
       )}
     </div>
   );
