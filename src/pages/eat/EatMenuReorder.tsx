@@ -7,11 +7,11 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
-import type { ICategory, IMenu } from "./Eat.types";
+import type { IMenu } from "./Eat.types";
 
 interface CategoryEntry {
   key: string;
-  category: ICategory;
+  categoryName: string;
 }
 
 interface EatMenuReorderProps {
@@ -30,10 +30,19 @@ const EatMenuReorder = ({ menuData, onSave }: EatMenuReorderProps) => {
       category: cat,
     }));
 
-    const unsorted = entries.filter((e) => e.category.indexField === undefined);
+    const unsorted = entries
+      .filter((e) => e.category.indexField === undefined)
+      .map((e) => ({
+        key: e.key,
+        categoryName: e.category.name[language],
+      }));
     const sorted = entries
       .filter((e) => e.category.indexField !== undefined)
-      .sort((a, b) => a.category.indexField! - b.category.indexField!);
+      .sort((a, b) => a.category.indexField! - b.category.indexField!)
+      .map((e) => ({
+        key: e.key,
+        categoryName: e.category.name[language],
+      }));
 
     return { unsorted, sorted };
   }, [menuData]);
@@ -173,7 +182,6 @@ const EatMenuReorder = ({ menuData, onSave }: EatMenuReorderProps) => {
                 <CategoryItem
                   key={entry.key}
                   entry={entry}
-                  language={language}
                   onDragStart={(e) => handleDragStart(e, entry, "unsorted")}
                   onDragEnd={handleDragEnd}
                   isDragging={draggedItem?.key === entry.key}
@@ -219,7 +227,6 @@ const EatMenuReorder = ({ menuData, onSave }: EatMenuReorderProps) => {
                   />
                   <CategoryItem
                     entry={entry}
-                    language={language}
                     index={index + 1}
                     onDragStart={(e) => handleDragStart(e, entry, "sorted")}
                     onDragEnd={handleDragEnd}
@@ -288,14 +295,12 @@ const DropZone = ({
 // Draggable category item component
 const CategoryItem = ({
   entry,
-  language,
   index,
   onDragStart,
   onDragEnd,
   isDragging,
 }: {
   entry: CategoryEntry;
-  language: "en" | "zh";
   index?: number;
   onDragStart: (e: React.DragEvent) => void;
   onDragEnd: (e: React.DragEvent) => void;
@@ -325,7 +330,7 @@ const CategoryItem = ({
           {index}.
         </span>
       )}
-      <span className="flex-1">{entry.category.name[language]}</span>
+      <span className="flex-1">{entry.categoryName}</span>
     </div>
   );
 };
