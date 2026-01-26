@@ -48,5 +48,5 @@ export { selectLocationTagsBasedOnCurrentLocation } from "./eat/callables/select
 export { generateNotesSummary } from "./eat/callables/generateNotesSummary";
 export { verifyRecaptcha } from "./reCaptcha/reCaptcha";
 export { handleMenuImageUpload } from "./eat/triggers/handleMenuImageUpload";
+export { handleMenuUrlSubmission } from "./eat/triggers/handleMenuUrlSubmission";
 export { searchRestaurantByName } from "./eat/callables/searchRestaurantByName";
-export { getMenuItemsFromURL } from "./eat/callables/getMenuItemsFromURL";

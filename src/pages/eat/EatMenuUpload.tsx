@@ -113,6 +113,8 @@ const UrlUpload = ({ restaurant }: { restaurant: IRestaurant }) => {
     setIsValid(validateUrl(value));
   };
 
+  if (isPending) return <Loading />;
+
   return (
     <div>
       <form
@@ -143,10 +145,7 @@ const UrlUpload = ({ restaurant }: { restaurant: IRestaurant }) => {
             </span>
           )}
         </div>
-        <PrimaryButton
-          type="submit"
-          disabled={isPending || !menuUrl || !isValid}
-        >
+        <PrimaryButton type="submit" disabled={!menuUrl || !isValid}>
           {t("eat.menu.submit")}
         </PrimaryButton>
       </form>

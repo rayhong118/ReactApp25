@@ -46,24 +46,29 @@ export const EatMenu = ({ restaurant, closeDialog }: IEatMenuProps) => {
 
           {Object.entries(menuData.categories).map(
             ([categoryKey, category]) => (
-              <div key={categoryKey}>
+              <div key={categoryKey} className="flex flex-col gap-2">
                 <h3 className="text-xl text-foreground font-bold">
                   {category.name[language] || category.name.en}
                 </h3>
 
                 <div className="flex flex-wrap">
                   {category.items.map((item: IMenuItem, index: number) => (
-                    <div key={index} className="w-1/2 min-w-xs pb-2">
+                    <div
+                      key={index}
+                      className="w-1/2 min-w-xs pb-2 text-foreground"
+                    >
                       <div className="pl-4 w-full flex justify-between gap-10">
-                        <h4 className="text-lg text-foreground font-semibold">
+                        <h4 className="text-lg font-semibold">
                           {item.name[language] || item.name.en}
                         </h4>
-                        <p className="text-lg text-foreground font-semibold">
-                          {item.price}
-                        </p>
+                        <p className="text-lg font-semibold">{item.price}</p>
                       </div>
                       {item.description && (
-                        <p className="pl-4">{item.description}</p>
+                        <p className="pl-4">
+                          {typeof item.description === "string"
+                            ? item.description
+                            : item.description[language] || item.description.en}
+                        </p>
                       )}
                     </div>
                   ))}

@@ -1,7 +1,13 @@
-import { db, firebaseFunctions } from "@/firebase";
+import { db } from "@/firebase";
 import { useAddMessageBars } from "@/utils/MessageBarsAtom";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { doc, getDoc } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDoc,
+  serverTimestamp,
+  setDoc,
+} from "firebase/firestore";
 import {
   getDownloadURL,
   getStorage,
@@ -10,7 +16,6 @@ import {
   type UploadMetadata,
 } from "firebase/storage";
 import type { IMenu, IMenuUploadPayload } from "../Eat.types";
-import { httpsCallable } from "firebase/functions";
 
 export const useUploadMenuImage = () => {
   const addMessageBar = useAddMessageBars();
@@ -102,18 +107,15 @@ export const useSubmitMenuURL = () => {
       restaurantId: string;
       url: string;
     }) => {
-      const getMenuItemsFromURL = httpsCallable<
-        {
-          restaurantId: string;
-          url: string;
-        },
-        string
-      >(firebaseFunctions, "getMenuItemsFromURL");
-      const response = await getMenuItemsFromURL({
-        restaurantId,
+      // Write directly to Firestore - the trigger will process it
+      const submissionRef = doc(collection(db, "menu-url-submissions"));
+      await setDoc(submissionRef, {
         url,
+        restaurantId,
+        status: "pending",
+        createdAt: serverTimestamp(),
       });
-      return response.data;
+      return { submissionId: submissionRef.id };
     },
     onSuccess: () => {
       addMessageBar([

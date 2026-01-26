@@ -166,7 +166,12 @@ export interface IMenuItem {
    * Price of the menu item, can handle "market price" scenario
    */
   price?: number | string;
-  description?: string;
+  description?:
+    | {
+        en: string;
+        zh: string;
+      }
+    | string;
 }
 
 export interface IAYCEPrice {

@@ -75,7 +75,7 @@ export const handleMenuImageUpload = onObjectFinalized(
 
 RULES:
 - Set "isAYCE" true for All-You-Can-Eat menus
-- Provide both "en" and "zh" for all names (translate if only one language visible)
+- Provide both "en" and "zh" for all names and descriptions (translate if only one language visible)
 - Use snake_case for category keys (e.g., "hot_appetizers")
 - Group similar items together
 - If NOT a valid menu or wrong restaurant, set "invalidMenuReason" and return`;
@@ -135,7 +135,14 @@ export const responseJsonSchema = {
           },
           required: ["en", "zh"],
         },
-        description: { type: "string" },
+        description: {
+          type: "object",
+          properties: {
+            en: { type: "string" },
+            zh: { type: "string" },
+          },
+          required: ["en", "zh"],
+        },
         price: { anyOf: [{ type: "number" }, { type: "string" }] },
       },
       required: ["name"],
