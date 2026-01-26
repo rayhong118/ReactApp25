@@ -33,6 +33,15 @@ export const EatMenu = ({ restaurant }: IEatMenuProps) => {
   }
 
   if (isReorderPanelOpen) {
+    const handleSaveOrder = async (
+      orderedCategories: { key: string; index: number }[],
+    ) => {
+      // TODO: Implement Firestore update to save the order
+      console.log("Saving order:", orderedCategories);
+      // For now, just close the panel after save
+      setIsReorderPanelOpen(false);
+    };
+
     return (
       <div className="flex flex-col gap-4 text-foreground">
         <SecondaryButton
@@ -43,13 +52,7 @@ export const EatMenu = ({ restaurant }: IEatMenuProps) => {
         </SecondaryButton>
         <h1 className="text-xl font-bold">Reorder Menu Categories</h1>
 
-        <EatMenuReorder menuData={menuData} />
-        <SecondaryButton
-          onClick={() => setIsReorderPanelOpen(false)}
-          aria-label="Back"
-        >
-          <FontAwesomeIcon icon={faArrowLeft} className="pe-2" /> Back
-        </SecondaryButton>
+        <EatMenuReorder menuData={menuData} onSave={handleSaveOrder} />
       </div>
     );
   }
