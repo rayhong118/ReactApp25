@@ -1,6 +1,10 @@
 // handles menu upload
 
-import { PrimaryButton, SecondaryButton } from "@/components/Buttons";
+import {
+  CustomizedButton,
+  PrimaryButton,
+  SecondaryButton,
+} from "@/components/Buttons";
 import { Loading } from "@/components/Loading";
 import { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -40,19 +44,20 @@ export const EatMenuUpload = ({ restaurant }: IEatMenuUploadProps) => {
   );
 };
 
+// const MAX_IMAGE_COUNT = 4;
 const ImageUpload = ({ restaurant }: { restaurant: IRestaurant }) => {
-  const [menuImage, setMenuImage] = useState<File>();
+  const [menuImages, setMenuImages] = useState<File[]>([]);
   const { mutateAsync: uploadMenuImage, isPending } = useUploadMenuImage();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const handleUploadImage = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!menuImage || !restaurant.id) return;
+    if (!menuImages || !restaurant.id) return;
 
     uploadMenuImage({
-      file: menuImage,
+      files: menuImages,
       restaurantId: restaurant.id,
     });
-    setMenuImage(undefined);
+    setMenuImages([]);
   };
 
   const { t } = useTranslation();
@@ -60,21 +65,18 @@ const ImageUpload = ({ restaurant }: { restaurant: IRestaurant }) => {
   return (
     <div className="flex flex-col gap-4">
       {isPending && <Loading />}
-      {menuImage && (
-        <div className="flex justify-center h-[60vh]">
-          <img
-            src={URL.createObjectURL(menuImage)}
-            alt="Menu"
-            className="w-auto object-contain rounded-lg shadow-sm"
-          />
-        </div>
+      {menuImages && (
+        <ImagePreviews menuImages={menuImages} setMenuImages={setMenuImages} />
       )}
 
       <form onSubmit={handleUploadImage} className="flex flex-col gap-2">
         <input
           type="file"
+          multiple
           ref={fileInputRef}
-          onChange={(e) => setMenuImage(e.target.files?.[0])}
+          onChange={(e) =>
+            setMenuImages((prev) => [...prev, ...(e.target.files || [])])
+          }
           accept="image/*"
           className="hidden"
         />
@@ -84,12 +86,47 @@ const ImageUpload = ({ restaurant }: { restaurant: IRestaurant }) => {
         >
           {t("eat.menu.selectImage")}
         </PrimaryButton>
-        {menuImage && (
-          <PrimaryButton type="submit" disabled={isPending || !menuImage}>
+        {menuImages && menuImages.length > 0 && (
+          <PrimaryButton type="submit" disabled={isPending || !menuImages}>
             {t("eat.menu.submit")}
           </PrimaryButton>
         )}
       </form>
+    </div>
+  );
+};
+
+const ImagePreviews = ({
+  menuImages,
+  setMenuImages,
+}: {
+  menuImages: File[];
+  setMenuImages: React.Dispatch<React.SetStateAction<File[]>>;
+}) => {
+  return (
+    <div className={`flex flex-wrap justify-center w-full`}>
+      {menuImages.map((menuImage, index) => (
+        <div
+          key={menuImage.name}
+          className="flex-1 flex justify-center items-center relative max-w-1/2"
+        >
+          <img
+            src={URL.createObjectURL(menuImage)}
+            alt="Menu"
+            className="w-auto object-contain rounded-lg shadow-sm"
+          />
+          <CustomizedButton
+            onClick={() =>
+              setMenuImages((prev: File[]) =>
+                prev.filter((_: File, i: number) => i !== index),
+              )
+            }
+            className="absolute top-0 right-0 bg-background/50"
+          >
+            <FontAwesomeIcon icon={faXmark} />
+          </CustomizedButton>
+        </div>
+      ))}
     </div>
   );
 };

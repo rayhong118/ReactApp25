@@ -17,6 +17,7 @@ import {
 } from "firebase/storage";
 import type { IMenu, IMenuUploadPayload } from "../Eat.types";
 
+const MENU_IMAGES_COLLECTION = "menu-images";
 export const useUploadMenuImage = () => {
   const addMessageBar = useAddMessageBars();
   const { mutateAsync, isPending, isSuccess } = useMutation({
@@ -24,14 +25,16 @@ export const useUploadMenuImage = () => {
     mutationFn: async (uploadPayload: IMenuUploadPayload) => {
       const storage = getStorage();
       const currentDate = new Date().getTime();
-      const storageRef = ref(
-        storage,
-        "menuImages/" +
-          uploadPayload.restaurantId +
-          "_" +
-          uploadPayload.file.name +
-          "_" +
-          currentDate,
+      const storageRefs = uploadPayload.files.map((file) =>
+        ref(
+          storage,
+          "menuImages/" +
+            uploadPayload.restaurantId +
+            "_" +
+            file.name +
+            "_" +
+            currentDate,
+        ),
       );
       const metadata = {
         customMetadata: {
@@ -40,14 +43,25 @@ export const useUploadMenuImage = () => {
         },
       } as UploadMetadata;
       try {
-        const snapshot = await uploadBytes(
-          storageRef,
-          uploadPayload.file,
-          metadata,
+        const snapshots = await Promise.all(
+          storageRefs.map((storageRef, index) =>
+            uploadBytes(storageRef, uploadPayload.files[index], metadata),
+          ),
         );
-        const downloadURL = await getDownloadURL(snapshot.ref);
+        const downloadURLs = await Promise.all(
+          snapshots.map((snapshot) => getDownloadURL(snapshot.ref)),
+        );
 
-        return downloadURL;
+        const menuImagesCollection = collection(db, MENU_IMAGES_COLLECTION);
+        const menuImageDoc = doc(menuImagesCollection);
+        await setDoc(menuImageDoc, {
+          restaurantId: uploadPayload.restaurantId,
+          uploadTime: currentDate,
+          status: "pending",
+          downloadURLs,
+        });
+
+        return;
       } catch (error) {
         console.error(error);
         throw error;
@@ -58,7 +72,7 @@ export const useUploadMenuImage = () => {
         {
           id: "upload-success",
           message:
-            "Menu image uploaded successfully! Check back soon for menu items.",
+            "Menu images uploaded successfully! Check back soon for menu items.",
           type: "success",
           autoDismiss: true,
         },
@@ -68,7 +82,7 @@ export const useUploadMenuImage = () => {
       addMessageBar([
         {
           id: "upload-error",
-          message: "Menu image upload failed!",
+          message: "Menu images upload failed!",
           type: "error",
           autoDismiss: true,
         },

@@ -137,7 +137,7 @@ export interface ILocationTag {
  * Payload for menu image upload
  */
 export interface IMenuUploadPayload {
-  file: File;
+  files: File[];
   restaurantId: string;
 }
 
