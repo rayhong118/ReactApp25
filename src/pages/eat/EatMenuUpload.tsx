@@ -27,7 +27,7 @@ export const EatMenuUpload = ({ restaurant }: IEatMenuUploadProps) => {
         <SecondaryButton onClick={() => setUploadType("image")}>
           <FontAwesomeIcon icon={faImage} /> {t("eat.menu.submitMenuImage")}
         </SecondaryButton>
-        <SecondaryButton onClick={() => setUploadType("url")}>
+        <SecondaryButton onClick={() => setUploadType("url")} disabled={true}>
           <FontAwesomeIcon icon={faLink} /> {t("eat.menu.submitMenuUrl")}(
           {t("eat.menu.avoidUsing")})
         </SecondaryButton>
