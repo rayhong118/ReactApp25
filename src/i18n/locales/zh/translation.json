@@ -105,10 +105,8 @@
       "cancel": "取消",
       "allYouCanEat": "自助餐价格",
       "reorderMenu": "重新排序菜单类别",
-      "unsortedCategories": "未排序类别",
-      "sortedCategories": "已排序类别",
+      "sortInstruction": "拖动类别进行排序。对于触摸屏设备，点击并按住进行拖动。",
       "allSorted": "所有类别已排序！",
-      "dragHere": "拖动类别到此处进行排序",
       "reset": "重置",
       "saveOrder": "保存排序"
     },

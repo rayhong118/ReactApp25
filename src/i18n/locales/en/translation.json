@@ -108,10 +108,8 @@
       "cancel": "Cancel",
       "allYouCanEat": "All you can eat",
       "reorderMenu": "Reorder Menu Categories",
-      "unsortedCategories": "Unsorted Categories",
-      "sortedCategories": "Sorted Categories",
+      "sortInstruction": "Drag categories to sort. For touch screen devices, tap and hold to drag.",
       "allSorted": "All categories are sorted!",
-      "dragHere": "Drag categories here to sort",
       "reset": "Reset",
       "saveOrder": "Save Order"
     },
