@@ -9,7 +9,6 @@ import {
   setDoc,
 } from "firebase/firestore";
 import {
-  getDownloadURL,
   getStorage,
   ref,
   uploadBytes,
@@ -18,6 +17,12 @@ import {
 import type { IMenu, IMenuUploadPayload } from "../Eat.types";
 
 const MENU_IMAGES_COLLECTION = "menu-images";
+/**
+ * Upload menu images to Firebase Storage and create a menu-images document.
+ * Firebase function will monitor the addtion to this collection and process the images.
+ * @param uploadPayload - Menu image upload payload
+ * @returns Upload menu image
+ */
 export const useUploadMenuImage = () => {
   const addMessageBar = useAddMessageBars();
   const { mutateAsync, isPending, isSuccess } = useMutation({
@@ -36,6 +41,7 @@ export const useUploadMenuImage = () => {
             currentDate,
         ),
       );
+      const storagePaths = storageRefs.map((ref) => ref.fullPath);
       const metadata = {
         customMetadata: {
           restaurantId: uploadPayload.restaurantId,
@@ -43,22 +49,18 @@ export const useUploadMenuImage = () => {
         },
       } as UploadMetadata;
       try {
-        const snapshots = await Promise.all(
+        await Promise.all(
           storageRefs.map((storageRef, index) =>
             uploadBytes(storageRef, uploadPayload.files[index], metadata),
           ),
         );
-        const downloadURLs = await Promise.all(
-          snapshots.map((snapshot) => getDownloadURL(snapshot.ref)),
-        );
-
         const menuImagesCollection = collection(db, MENU_IMAGES_COLLECTION);
         const menuImageDoc = doc(menuImagesCollection);
         await setDoc(menuImageDoc, {
           restaurantId: uploadPayload.restaurantId,
           uploadTime: currentDate,
           status: "pending",
-          downloadURLs,
+          storagePaths,
         });
 
         return;

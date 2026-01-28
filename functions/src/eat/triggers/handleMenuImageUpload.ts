@@ -1,43 +1,44 @@
 import admin from "firebase-admin";
 import { logger } from "firebase-functions";
-import { onObjectFinalized } from "firebase-functions/storage";
+import { onDocumentCreated } from "firebase-functions/firestore";
+import { File } from "@google-cloud/storage";
 import genAI from "../../utils/genAIClient";
 
-export const handleMenuImageUpload = onObjectFinalized(
-  { secrets: ["GEMINI_API_KEY"] },
+export const handleMenuImageUpload = onDocumentCreated(
+  "menu-images/{menuImageDocId}",
   async (event) => {
-    // Filter to only process files in the menuImages folder
-    const filePath = event.data.name;
-    if (!filePath.startsWith("menuImages/")) {
-      console.log(`Ignoring file outside menuImages folder: ${filePath}`);
+    const menuImageDoc = event.data;
+    if (!menuImageDoc) {
+      logger.error("No menu image doc found");
+      return;
+    }
+    const menuImageData = menuImageDoc.data();
+    if (!menuImageData) {
+      logger.error("No menu image data found");
+      return;
+    }
+    const storagePaths = menuImageData.storagePaths;
+    if (!storagePaths || storagePaths.length === 0) {
+      logger.error("No storage paths found");
       return;
     }
 
     // Get restaurant menu info regarding the image
-    const restaurantId = event.data.metadata?.restaurantId;
-    // Parse uploadTime with fallback to current time
-    const rawUploadTime = event.data.metadata?.uploadTime;
-    const parsedTime = rawUploadTime ? parseInt(rawUploadTime) : Date.now();
-    const uploadDate = new Date(isNaN(parsedTime) ? Date.now() : parsedTime);
+    const restaurantId = menuImageData.restaurantId;
 
     if (!restaurantId) {
       throw new Error("No restaurant ID found");
     }
 
-    // TODO: Create image info with status "pending".
-    const menuImagesCollection = admin.firestore().collection("menu-images");
-    const menuImageDoc = menuImagesCollection.doc();
-    await menuImageDoc.create({
-      restaurantId,
-      uploadTime: uploadDate,
-      status: "pending",
-    });
     try {
-      // 1. Acquire the file from Storage (using default bucket)
+      // 1. Acquire the files from Storage (using default bucket)
       const bucket = admin.storage().bucket();
-      const file = bucket.file(filePath);
-      const [fileBuffer] = await file.download();
-      const base64Image = fileBuffer.toString("base64");
+      const files = storagePaths.map((path: string) => bucket.file(path));
+
+      // Download all files
+      const downloadPromises = files.map((file: File) => file.download());
+      const downloadedFiles = await Promise.all(downloadPromises);
+      const imageBuffers = downloadedFiles.map((response) => response[0]);
 
       // menu collection stores actual menu data. key is restaurantId
       const menuCollectionRef = admin
@@ -63,15 +64,15 @@ export const handleMenuImageUpload = onObjectFinalized(
       }
       logger.info("Restaurant data:", restaurantData);
 
-      // send image and prompt to genAI
-      const imagePart = {
+      // send images and prompt to genAI
+      const imageParts = imageBuffers.map((buffer) => ({
         inlineData: {
           mimeType: "image/jpeg",
-          data: base64Image,
+          data: buffer.toString("base64"),
         },
-      };
+      }));
 
-      const prompt = `Extract menu data from this image. Follow the JSON schema provided.
+      const prompt = `Extract menu data from these images. Follow the JSON schema provided.
 
 RULES:
 - Set "isAYCE" true for All-You-Can-Eat menus
@@ -82,7 +83,7 @@ RULES:
 
       const result = await genAI.models.generateContent({
         model: "gemini-3-flash-preview",
-        contents: [prompt, imagePart, JSON.stringify(restaurantData)],
+        contents: [prompt, ...imageParts, JSON.stringify(restaurantData)],
         config: {
           responseMimeType: "application/json",
           responseJsonSchema: responseJsonSchema,
@@ -107,14 +108,14 @@ RULES:
       await menuDoc.set(menu, { merge: true });
 
       // update menu image collection
-      await menuImageDoc.update({
+      await menuImageDoc.ref.update({
         status: "completed",
       });
     } catch (error) {
       logger.error(error);
-      await menuImageDoc.update({
+      await menuImageDoc.ref.update({
         status: "failed",
-        error: error,
+        error: error instanceof Error ? error.message : String(error),
       });
       throw error;
     }

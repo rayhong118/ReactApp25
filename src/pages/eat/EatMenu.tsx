@@ -112,8 +112,8 @@ const MenuCategory = ({
   categories: ICategory[];
   language: "en" | "zh";
 }) => {
-  return categories.map((category: ICategory) => (
-    <div className="flex flex-col gap-2">
+  return categories.map((category: ICategory, index: number) => (
+    <div className="flex flex-col gap-2" key={index}>
       <h3 className="text-lg text-foreground font-bold">
         {category.name[language] || category.name.en}
       </h3>
