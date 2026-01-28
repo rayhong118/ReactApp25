@@ -104,7 +104,7 @@ const ImagePreviews = ({
   setMenuImages: React.Dispatch<React.SetStateAction<File[]>>;
 }) => {
   return (
-    <div className={`flex flex-wrap justify-center w-full`}>
+    <div className={`flex flex-wrap justify-center w-full gap-4`}>
       {menuImages.map((menuImage, index) => (
         <div
           key={menuImage.name}
