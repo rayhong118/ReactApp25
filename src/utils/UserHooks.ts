@@ -4,16 +4,16 @@ import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { useAddMessageBars } from "./MessageBarsAtom";
 import { updateProfile } from "firebase/auth";
 
-export const useGetDisplayName = (userId: string) => {
+export const useGetAlias = (userId: string) => {
   const { data } = useQuery({
-    queryKey: ["getDisplayName", userId],
+    queryKey: ["getAlias", userId],
     queryFn: async () => {
       const userDoc = doc(db, "users", userId);
       const userDocSnap = await getDoc(userDoc);
       if (userDocSnap.exists()) {
-        const displayName = userDocSnap.data().displayName as string;
-        console.log("displayName", displayName);
-        return displayName;
+        const alias = userDocSnap.data().alias as string;
+        console.log("alias", alias);
+        return alias;
       }
       return "";
     },
@@ -26,7 +26,7 @@ export const useGetDisplayName = (userId: string) => {
 // update user profile image. default user image size is 64 x 64
 
 // update display name
-export const useUpdateDisplayName = () => {
+export const useUpdateAlias = () => {
   const addMessageBars = useAddMessageBars();
   const { mutateAsync, isPending } = useMutation({
     mutationFn: async (newName: string) => {
@@ -37,13 +37,13 @@ export const useUpdateDisplayName = () => {
         // also need to update user display name in users collection
         const userDoc = doc(db, "users", auth.currentUser!.uid);
         await updateDoc(userDoc, {
-          displayName: newName,
+          alias: newName,
         });
       } catch (error) {
         addMessageBars([
           {
             id: new Date().toISOString(),
-            message: "Error updating display name: " + error,
+            message: "Error updating alias: " + error,
             type: "error",
             autoDismiss: true,
           },
@@ -55,7 +55,7 @@ export const useUpdateDisplayName = () => {
       addMessageBars([
         {
           id: new Date().toISOString(),
-          message: "Display name updated successfully",
+          message: "Alias updated successfully",
           type: "success",
           autoDismiss: true,
         },
@@ -65,7 +65,7 @@ export const useUpdateDisplayName = () => {
       addMessageBars([
         {
           id: new Date().toISOString(),
-          message: "Error updating display name: " + error,
+          message: "Error updating alias: " + error,
           type: "error",
           autoDismiss: true,
         },

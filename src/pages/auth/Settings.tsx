@@ -17,7 +17,7 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useGetCurrentUser } from "../../utils/AuthenticationAtoms";
 import { useSignOut } from "../../utils/AuthServiceHooks";
-import { useUpdateDisplayName } from "@/utils/UserHooks";
+import { useGetAlias, useUpdateAlias } from "@/utils/UserHooks";
 
 const languages = [
   { code: "en", name: "English" },
@@ -50,13 +50,14 @@ const AccountSettings = ({
   signOut: () => void;
   t: any;
 }) => {
-  const [showEditDisplayName, setShowEditDisplayName] = useState(false);
-  const [displayName, setDisplayName] = useState(currentUser.displayName || "");
-  const handleUpdateDisplayName = () => {
-    setShowEditDisplayName(false);
-    updateDisplayName(displayName);
+  const [showEditAlias, setShowEditAlias] = useState(false);
+  const { data: alias } = useGetAlias(currentUser.uid);
+  const [newAlias, setNewAlias] = useState(alias || "");
+  const handleUpdateAlias = () => {
+    setShowEditAlias(false);
+    updateAlias(newAlias);
   };
-  const { mutateAsync: updateDisplayName } = useUpdateDisplayName();
+  const { mutateAsync: updateAlias } = useUpdateAlias();
   return (
     <>
       <h1 className="text-2xl font-bold">{t("settings.title")}</h1>
@@ -71,21 +72,19 @@ const AccountSettings = ({
         />
       )}
       <h3 className="text-lg font-semibold text-foreground">
-        {showEditDisplayName ? (
+        {showEditAlias ? (
           <input
             className="w-full border border-foreground rounded p-2"
             type="text"
-            value={displayName}
-            onChange={(e) => setDisplayName(e.target.value)}
+            value={newAlias}
+            onChange={(e) => setNewAlias(e.target.value)}
           />
         ) : (
-          currentUser.displayName || "User"
+          currentUser.displayName || alias || "User"
         )}
       </h3>
-      <SecondaryButton
-        onClick={() => setShowEditDisplayName(!showEditDisplayName)}
-      >
-        {showEditDisplayName ? (
+      <SecondaryButton onClick={() => setShowEditAlias(!showEditAlias)}>
+        {showEditAlias ? (
           t("settings.displayName.cancel")
         ) : (
           <>
@@ -94,8 +93,8 @@ const AccountSettings = ({
           </>
         )}
       </SecondaryButton>
-      {showEditDisplayName && (
-        <PrimaryButton onClick={handleUpdateDisplayName}>
+      {showEditAlias && (
+        <PrimaryButton onClick={handleUpdateAlias}>
           {t("settings.displayName.save")}
         </PrimaryButton>
       )}
