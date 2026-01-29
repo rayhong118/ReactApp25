@@ -15,7 +15,7 @@ export const PrimaryButton = (props: IButtonProps) => {
       className={`
     bg-brand-primary text-white font-semibold py-1 px-2 rounded
     hover:bg-brand-vibrant 
-    disabled:bg-gray-400 cursor-pointer disabled:cursor-not-allowed 
+    disabled:bg-brand-primary/50 cursor-pointer disabled:cursor-not-allowed 
     ${props.className || ""}
   `
         .replace(/\s+/g, " ")
@@ -38,7 +38,7 @@ export const SecondaryButton = (props: IButtonProps) => {
     border-2 border-transparent 
     hover:bg-brand-soft
     focus:border-brand-vibrant focus:outline-none focus:bg-brand-soft 
-    disabled:bg-gray-400 disabled:cursor-not-allowed cursor-pointer
+    disabled:bg-foreground/20 disabled:cursor-not-allowed cursor-pointer
     ${props.className || ""}
   `
         .replace(/\s+/g, " ")
@@ -58,7 +58,7 @@ export const CustomizedButton = (props: IButtonProps) => {
       type={props.type}
       className={`
     rounded text-[var(--color-foreground)] transition-colors duration-200 cursor-pointer py-1 px-2 
-    disabled:cursor-not-allowed 
+    disabled:cursor-not-allowed disabled:bg-foreground/20
     ${props.className || ""}
   `
         .replace(/\s+/g, " ")

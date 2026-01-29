@@ -5,31 +5,36 @@ form {
 }
 
 .preferred-gift-card {
+  --card-border: #f59e0b; /* amber-500 */
+  --card-bg: #fffbeb; /* amber-50 */
+
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
   padding: 1rem;
-  border: 1px solid #f59e0b; /* amber-500 */
-  background-color: #fffbeb; /* amber-50 */
+  border: 2px solid var(--card-border);
+  background-color: var(--card-bg);
   border-radius: 0.5rem;
+  transition: all 500ms ease-in-out;
 }
 
 .avoid-gift-card {
+  --card-border: #78716c; /* stone-500 */
+  --card-bg: #fafaf9; /* stone-50 */
+
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
   padding: 1rem;
-  border: 1px solid #78716c; /* stone-500 */
-  background-color: #fafaf9; /* stone-50 */
+  border: 2px solid var(--card-border);
+  background-color: var(--card-bg);
   border-radius: 0.5rem;
+  transition: all 500ms ease-in-out;
 }
 
-.dark .preferred-gift-card {
-  border: 2px solid #f59e0b; /* amber-500 */
-  background-color: inherit;
-}
-
-.dark .avoid-gift-card {
-  border: 2px solid #78716c; /* stone-500 */
-  background-color: inherit;
+.dark {
+  .preferred-gift-card,
+  .avoid-gift-card {
+    --card-bg: transparent;
+  }
 }

@@ -1,7 +1,11 @@
 import { CustomizedButton } from "@/components/Buttons";
 import { Dialog } from "@/components/Dialog";
 import { useGetCurrentUser } from "@/utils/AuthenticationAtoms";
-import { faSquareCheck } from "@fortawesome/free-solid-svg-icons";
+import {
+  faEdit,
+  faSquareCheck,
+  faTrash,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Timestamp } from "firebase/firestore";
 import { useState } from "react";
@@ -62,7 +66,9 @@ const GiftCard = ({ gift }: IGiftCardProps) => {
           },
         ]}
       >
-        <p>Are you sure you want to delete this gift?</p>
+        <p className="text-foreground">
+          Are you sure you want to delete this gift?
+        </p>
       </Dialog>
       <div className={giftCardClass}>
         <div className="flex justify-between items-center">
@@ -73,7 +79,7 @@ const GiftCard = ({ gift }: IGiftCardProps) => {
                 className="mr-2 text-green-500"
                 icon={faSquareCheck}
               />
-              <span className="text-gray-600 font-semibold">
+              <span className="text-foreground font-semibold">
                 {gift.fulfilledAt?.toDate().toLocaleDateString(i18n.language, {
                   year: "numeric",
                   month: "long",
@@ -83,7 +89,7 @@ const GiftCard = ({ gift }: IGiftCardProps) => {
             </div>
           )}
         </div>
-        <p className="text-gray-600">{gift.description}</p>
+        <p className="text-foreground">{gift.description}</p>
         {gift.addedAt && (
           <div>
             {gift.addedAt.toDate().toLocaleDateString(i18n.language, {
@@ -93,25 +99,25 @@ const GiftCard = ({ gift }: IGiftCardProps) => {
             })}
           </div>
         )}
-        <div>
+        <div className="flex gap-2">
           <CustomizedButton
             onClick={() => setDialogOpen(true)}
-            className="border-gray-500 border-2 text-gray-500 font-semibold hover:bg-gray-50 cursor-pointer"
+            className="border-gray-500 border-2 text-foreground font-semibold hover:bg-foreground/20 cursor-pointer"
           >
-            {t("gift.edit")}
+            <FontAwesomeIcon icon={faEdit} /> {t("gift.edit")}
           </CustomizedButton>
           <CustomizedButton
             onClick={() => setDeleteDialogOpen(true)}
-            className="border-gray-500 border-2 text-gray-500 font-semibold hover:bg-gray-50 cursor-pointer"
+            className="border-gray-500 border-2 text-foreground font-semibold hover:bg-foreground/20 cursor-pointer"
           >
-            {t("gift.delete")}
+            <FontAwesomeIcon icon={faTrash} /> {t("gift.delete")}
           </CustomizedButton>
           {!gift.isFulfilled && gift.type === "preferred" && (
             <CustomizedButton
               onClick={() => handleFulfillGift()}
-              className="border-gray-500 border-2 text-gray-500 font-semibold hover:bg-gray-50 cursor-pointer"
+              className="border-gray-500 border-2 text-foreground font-semibold hover:bg-foreground/20 cursor-pointer"
             >
-              {t("gift.fulfill")}
+              <FontAwesomeIcon icon={faSquareCheck} /> {t("gift.fulfill")}
             </CustomizedButton>
           )}
         </div>
