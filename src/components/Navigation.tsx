@@ -6,6 +6,7 @@ import {
   faImage,
   faSignInAlt,
   faUtensils,
+  faUserGroup,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useRef, useState } from "react";
@@ -144,6 +145,11 @@ const Navigation = () => {
               to: "/gifts",
               icon: faGift,
             })}
+            {navButton({
+              label: "navbar.friends",
+              to: "/friends",
+              icon: faUserGroup,
+            })}
 
             <div className="relative">
               <button
@@ -243,6 +249,12 @@ const Navigation = () => {
               to: "/gifts",
               nested: true,
               icon: faGift,
+            })}
+            {navButton({
+              label: "navbar.friends",
+              to: "/friends",
+              nested: true,
+              icon: faUserGroup,
             })}
             <div>
               <button

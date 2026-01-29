@@ -27,7 +27,7 @@ const Tooltip = ({ children }: { children: React.ReactNode }) => {
   return (
     <TooltipContext.Provider value={{ isVisible }}>
       <div
-        className="relative inline-block"
+        className="relative inline-block w-full"
         onMouseEnter={show}
         onMouseLeave={hide}
         onFocus={show}

@@ -33,6 +33,7 @@ const SingleDrawing = lazy(() => import("./pages/artworks/SingleDrawing"));
 const Upload = lazy(() => import("./pages/artworks/Upload"));
 const Footer = lazy(() => import("./components/Footer"));
 const GiftPage = lazy(() => import("./pages/gift/GiftPage"));
+const FriendsPage = lazy(() => import("./pages/friends/Friends"));
 
 const WithAuthRequired = lazy(() => import("./components/WithAuthRequired"));
 
@@ -114,6 +115,14 @@ const App: React.FC = () => {
           path="/gifts"
           element={withSuspense(
             withDefaultPagePadding(<WithAuthRequired component={GiftPage} />),
+          )}
+        />
+        <Route
+          path="/friends"
+          element={withSuspense(
+            withDefaultPagePadding(
+              <WithAuthRequired component={FriendsPage} />,
+            ),
           )}
         />
         <Route

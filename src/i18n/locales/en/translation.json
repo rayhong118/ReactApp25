@@ -5,6 +5,7 @@
     "drawings": "Drawings",
     "eat": "Eat",
     "gifts": "Gift",
+    "friends": "Friends",
     "lab": {
       "title": "Lab",
       "formValidation": "Form Validation",
@@ -139,6 +140,9 @@
     "edit": "Edit",
     "delete": "Delete",
     "fulfill": "Fulfill"
+  },
+  "friends": {
+    "title": "Friends"
   },
   "footer": {
     "contact": {
