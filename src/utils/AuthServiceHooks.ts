@@ -1,9 +1,4 @@
-import { useMutation } from "@tanstack/react-query";
-import {
-  getAdditionalUserInfo,
-  signInWithPopup,
-  updateProfile,
-} from "firebase/auth";
+import { getAdditionalUserInfo, signInWithPopup } from "firebase/auth";
 import { doc, updateDoc } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 import { auth, db, githubProvider, googleProvider } from "../firebase";
@@ -126,53 +121,4 @@ export const useSignOut = () => {
       ]);
     }
   };
-};
-
-export const useUpdateDisplayName = () => {
-  const addMessageBars = useAddMessageBars();
-  const { mutateAsync, isPending } = useMutation({
-    mutationFn: async (newName: string) => {
-      try {
-        await updateProfile(auth.currentUser!, {
-          displayName: newName,
-        });
-        // also need to update user display name in users collection
-        const userDoc = doc(db, "users", auth.currentUser!.uid);
-        await updateDoc(userDoc, {
-          displayName: newName,
-        });
-      } catch (error) {
-        addMessageBars([
-          {
-            id: new Date().toISOString(),
-            message: "Error updating display name: " + error,
-            type: "error",
-            autoDismiss: true,
-          },
-        ]);
-      }
-    },
-
-    onSuccess: () => {
-      addMessageBars([
-        {
-          id: new Date().toISOString(),
-          message: "Display name updated successfully",
-          type: "success",
-          autoDismiss: true,
-        },
-      ]);
-    },
-    onError: (error) => {
-      addMessageBars([
-        {
-          id: new Date().toISOString(),
-          message: "Error updating display name: " + error,
-          type: "error",
-          autoDismiss: true,
-        },
-      ]);
-    },
-  });
-  return { mutateAsync, isPending };
 };

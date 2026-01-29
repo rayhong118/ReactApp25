@@ -16,7 +16,8 @@ import type { User } from "firebase/auth";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useGetCurrentUser } from "../../utils/AuthenticationAtoms";
-import { useSignOut, useUpdateDisplayName } from "../../utils/AuthServiceHooks";
+import { useSignOut } from "../../utils/AuthServiceHooks";
+import { useUpdateDisplayName } from "@/utils/UserHooks";
 
 const languages = [
   { code: "en", name: "English" },
