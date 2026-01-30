@@ -14,7 +14,8 @@ import { db } from "@/firebase";
 import { useAddMessageBars } from "@/utils/MessageBarsAtom";
 import type { IGift } from "../Gift.types";
 
-const USERS_COLLECTION: string = "users";
+export const USERS_COLLECTION: string = "users";
+const GIFTS_COLLECTION: string = "gifts";
 
 // TODO: loading indication and error handling
 /**
@@ -25,7 +26,12 @@ export const useGetGiftList = (userId: string) => {
   const { data } = useQuery({
     queryKey: ["getGiftList", USERS_COLLECTION, userId],
     queryFn: async () => {
-      const giftListDocRef = collection(db, USERS_COLLECTION, userId, "gifts");
+      const giftListDocRef = collection(
+        db,
+        USERS_COLLECTION,
+        userId,
+        GIFTS_COLLECTION,
+      );
       const giftListDoc = await getDocs(giftListDocRef);
       if (giftListDoc.docs.length > 0) {
         const result = giftListDoc.docs.map((doc) => {
@@ -34,7 +40,7 @@ export const useGetGiftList = (userId: string) => {
             ...doc.data(),
           };
         }) as IGift[];
-        console.log(result);
+        // console.log(result);
         return result;
       }
       return [];
