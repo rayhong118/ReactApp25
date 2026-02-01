@@ -1,14 +1,23 @@
+import { db, firebaseFunctions } from "@/firebase";
 import { useGetCurrentUser } from "@/utils/AuthenticationAtoms";
-import { useQuery } from "@tanstack/react-query";
-import { collection, getDocs, query, where } from "firebase/firestore";
-import { db } from "../../../firebase";
-import type { IFriendRequest, IFriendRequestRecord } from "../Friend.types";
+import { useAddMessageBars } from "@/utils/MessageBarsAtom";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import {
+  addDoc,
+  collection,
+  doc,
+  getDoc,
+  serverTimestamp,
+  updateDoc,
+} from "firebase/firestore";
+import { httpsCallable } from "firebase/functions";
+import type { IFriendRequest } from "../Friend.types";
 
 const FRIEND_REQUESTS_COLLECTION: string = "friend-requests";
 
 /**
  * Get friend requests of current user, either sent or received
- * returns a query snapshot of the friendRequests collection
+ * returns an object with two arrays: sentRequests and receivedRequests
  */
 export const useGetFriendRequests = () => {
   const currentUserId = useGetCurrentUser()?.uid;
@@ -17,32 +26,13 @@ export const useGetFriendRequests = () => {
     queryKey: ["getFriendRequests", FRIEND_REQUESTS_COLLECTION, currentUserId],
     queryFn: async () => {
       if (!currentUserId) return [];
-      const senderQuery = query(
-        collection(db, FRIEND_REQUESTS_COLLECTION),
-        where("senderId", "==", currentUserId),
-      );
-      const receiverQuery = query(
-        collection(db, FRIEND_REQUESTS_COLLECTION),
-        where("receiverId", "==", currentUserId),
-      );
-      const senderSnapshot = await getDocs(senderQuery);
-      const receiverSnapshot = await getDocs(receiverQuery);
-      const result: IFriendRequestRecord = {
-        sent: [],
-        received: [],
-      };
-      senderSnapshot.docs.concat(receiverSnapshot.docs).forEach((doc) => {
-        const friendRequest = {
-          ...doc.data(),
-        } as IFriendRequest;
-        if (friendRequest.senderId === currentUserId) {
-          result.sent.push(friendRequest);
-        } else {
-          result.received.push(friendRequest);
-        }
-      });
+      const callable = httpsCallable(firebaseFunctions, "getFriendRequests");
+      const result = await callable();
       // console.log(result);
-      return result;
+      return result.data as {
+        sentRequests: IFriendRequest[];
+        receivedRequests: IFriendRequest[];
+      };
     },
   });
 
@@ -50,13 +40,85 @@ export const useGetFriendRequests = () => {
 };
 
 /**
- * Send friend request
+ * Create friend request
  * creates a new doc in the friendRequests collection
  */
-export const useSendFriendRequest = () => {};
+export const useCreateFriendRequest = () => {
+  const addMessageBars = useAddMessageBars();
+  const { mutate, isPending, isSuccess, error } = useMutation({
+    mutationKey: ["createFriendRequest"],
+    mutationFn: async (friendRequest: IFriendRequest) => {
+      await addDoc(collection(db, FRIEND_REQUESTS_COLLECTION), friendRequest);
+    },
+    onSuccess: () => {
+      addMessageBars([
+        {
+          id: new Date().toISOString(),
+          message: "Friend request sent successfully",
+          type: "success",
+          autoDismiss: true,
+        },
+      ]);
+    },
+    onError: (error) => {
+      addMessageBars([
+        {
+          id: new Date().toISOString(),
+          message: "Error sending friend request: " + error.message,
+          type: "error",
+          autoDismiss: true,
+        },
+      ]);
+    },
+  });
+
+  return { mutate, isPending, isSuccess, error };
+};
 
 /**
  * Accept friend request
- * call firebase function to modify both users friend list
+ * This will trigger firebase function to modify both users friend list
  */
-export const useAcceptFriendRequest = () => {};
+export const useAcceptFriendRequest = () => {
+  const addMessageBars = useAddMessageBars();
+  const { mutate, isPending, isSuccess, error } = useMutation({
+    mutationKey: ["acceptFriendRequest"],
+    mutationFn: async (friendRequestId: string) => {
+      const friendRequestRef = doc(
+        db,
+        FRIEND_REQUESTS_COLLECTION,
+        friendRequestId,
+      );
+      const friendRequest = await getDoc(friendRequestRef);
+      if (!friendRequest.exists()) {
+        throw new Error("Friend request not found");
+      }
+      await updateDoc(friendRequestRef, {
+        status: "accepted",
+        updatedAt: serverTimestamp(),
+      });
+    },
+    onSuccess: () => {
+      addMessageBars([
+        {
+          id: new Date().toISOString(),
+          message: "Friend request accepted successfully",
+          type: "success",
+          autoDismiss: true,
+        },
+      ]);
+    },
+    onError: (error) => {
+      addMessageBars([
+        {
+          id: new Date().toISOString(),
+          message: "Error accepting friend request: " + error.message,
+          type: "error",
+          autoDismiss: true,
+        },
+      ]);
+    },
+  });
+
+  return { mutate, isPending, isSuccess, error };
+};
