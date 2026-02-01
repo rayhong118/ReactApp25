@@ -11,8 +11,13 @@ export interface IFriendList {
 
 export interface IFriendRequest {
   id: string;
+  type: "sent" | "received";
   senderId: string;
+  senderAlias?: string;
+  senderAvatar?: string;
   receiverId: string;
+  receiverAlias?: string;
+  receiverAvatar?: string;
   status: "pending" | "accepted" | "rejected";
   addedAt: Timestamp;
   updatedAt: Timestamp;

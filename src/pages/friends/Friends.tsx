@@ -1,15 +1,11 @@
-import { useGetFriends } from "./hooks/friendHooks";
+import { FriendRequests } from "./FriendRequests";
 
 const Friends = () => {
-  const { data: friends } = useGetFriends();
   return (
     <div>
-      <h1>Friends</h1>
-      <ul>
-        {friends?.map((friend) => (
-          <li key={friend.id}>{friend.id}</li>
-        ))}
-      </ul>
+      <h1 className="text-2xl font-bold">Friends</h1>
+
+      <FriendRequests />
     </div>
   );
 };
