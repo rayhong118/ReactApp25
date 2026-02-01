@@ -12,7 +12,7 @@ const Friends = () => {
 
       <TabList
         tabs={tabs}
-        defaultActiveTab={activeTab}
+        selectedTab={activeTab}
         onTabSelect={(tab) => setActiveTab(tab)}
       />
 

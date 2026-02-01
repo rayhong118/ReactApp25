@@ -1,7 +1,16 @@
+.tablist {
+  width: 100%;
+  display: flex;
+  gap: 2px;
+  border-bottom: 2px inset var(--color-brand-soft);
+}
+
 .tab {
   cursor: pointer;
   padding: 0.5rem 1rem;
   border-radius: 0.5rem 0.5rem 0 0;
+  border: 2px solid var(--color-brand-soft);
+  border-bottom: none;
   transition: all 0.2s ease-in-out;
   font-weight: bold;
   &:hover {
@@ -9,7 +18,6 @@
     color: var(--color-brand-secondary-text);
   }
   &.active {
-    background-color: var(--color-brand-primary);
-    color: white;
+    background-color: var(--color-brand-soft);
   }
 }

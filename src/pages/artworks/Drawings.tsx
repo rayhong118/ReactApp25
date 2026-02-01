@@ -1,4 +1,4 @@
-import { CustomizedButton, PrimaryButton } from "@/components/Buttons";
+import { PrimaryButton } from "@/components/Buttons";
 import { ImageDisplay } from "@/components/ImageDisplay";
 import { Loading } from "@/components/Loading";
 import withScrollToTopButton from "@/hooks/withScrollToTopButton";
@@ -11,6 +11,7 @@ import type { IArtwork } from "./Artworks.types";
 import "./Drawings.scss";
 import { useGetArtworks, useGetCategories } from "./hooks";
 import { useGetCurrentUser } from "@/utils/AuthenticationAtoms";
+import TabList from "@/components/TabList";
 
 const Drawings = () => {
   const navigate = useNavigate();
@@ -18,7 +19,7 @@ const Drawings = () => {
 
   const { categories, isLoading } = useGetCategories();
   const [selectedCategory, setSelectedCategory] = useState<string>(
-    categories?.[0]
+    categories?.[0],
   );
   const [selectedImage, setSelectedImage] = useState<IArtwork>();
   const {
@@ -40,17 +41,13 @@ const Drawings = () => {
       />
       <h1 className="text-2xl font-bold">Drawings</h1>
       <div className="flex gap-2 flex-wrap">
-        {categories?.map((category) => (
-          <CustomizedButton
-            key={category}
-            onClick={() => setSelectedCategory(category)}
-            className={
-              selectedCategory === category ? "underline font-bold" : ""
-            }
-          >
-            {category}
-          </CustomizedButton>
-        ))}
+        {categories && (
+          <TabList
+            tabs={categories}
+            onTabSelect={(category: string) => setSelectedCategory(category)}
+            selectedTab={selectedCategory}
+          />
+        )}
       </div>
       {selectedCategory && (
         <div className="flex flex-col gap-4">
@@ -102,7 +99,7 @@ const Drawings = () => {
                             });
                           } else {
                             navigator.clipboard.writeText(
-                              `${baseURL}/drawings?id=${artwork.id}`
+                              `${baseURL}/drawings?id=${artwork.id}`,
                             );
                             addMessageBars([
                               {
@@ -141,7 +138,7 @@ const Drawings = () => {
         </div>
       )}
       {isFetchingNextPage && <Loading />}
-    </div>
+    </div>,
   );
 };
 

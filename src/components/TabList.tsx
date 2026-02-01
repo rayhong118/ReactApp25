@@ -3,14 +3,14 @@ import "./TabList.scss";
 
 interface ITabList {
   tabs: string[];
-  defaultActiveTab: string;
+  selectedTab: string;
   onTabSelect: (tab: string) => void;
 }
 
-const TabList = ({ tabs, defaultActiveTab, onTabSelect }: ITabList) => {
-  const [activeTab, setActiveTab] = useState(defaultActiveTab);
+const TabList = ({ tabs, selectedTab, onTabSelect }: ITabList) => {
+  const [activeTab, setActiveTab] = useState(selectedTab);
   return (
-    <div className="flex gap-2">
+    <div className="tablist">
       {tabs.map((tab) => (
         <Tab
           key={tab}
