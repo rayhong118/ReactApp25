@@ -7,7 +7,6 @@ import { faCancel, faCheck } from "@fortawesome/free-solid-svg-icons";
 export const FriendRequests = () => {
   return (
     <div>
-      <h1>Friend Requests</h1>
       <FriendRequest
         request={{
           id: "1",
