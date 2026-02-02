@@ -1,11 +1,10 @@
-import { db } from "@/firebase";
-import { USERS_COLLECTION } from "@/pages/gift/hooks/giftHooks";
 import { useGetCurrentUser } from "@/utils/AuthenticationAtoms";
 import { useQuery } from "@tanstack/react-query";
-import { collection, getDocs, query, where } from "firebase/firestore";
-import type { IFriend } from "../Friend.types";
+import { httpsCallable } from "firebase/functions";
+import { firebaseFunctions } from "@/firebase";
+// const FRIENDS_COLLECTION: string = "friends";
 
-const FRIENDS_COLLECTION: string = "friends";
+import type { IFriend } from "../Friend.types";
 
 /**
  * Get friends and full friend data
@@ -14,22 +13,20 @@ const FRIENDS_COLLECTION: string = "friends";
 export const useGetFriends = () => {
   const currentUser = useGetCurrentUser();
   const currentUserId = currentUser?.uid;
-  const { data, isLoading, error } = useQuery({
+  const { data, isLoading, error } = useQuery<IFriend[]>({
     queryKey: ["friends"],
     queryFn: async () => {
       if (!currentUserId) return [];
-      const q = query(
-        collection(db, USERS_COLLECTION, currentUserId, FRIENDS_COLLECTION),
-        where("userId", "==", currentUserId),
-      );
-      const querySnapshot = await getDocs(q);
-      const friends = querySnapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      })) as IFriend[];
+      const getFriendsData = httpsCallable(firebaseFunctions, "getFriendsData");
+      const result = await getFriendsData();
+      const friends = result.data as IFriend[];
       console.log("friends", friends);
       return friends;
     },
+    enabled: !!currentUserId,
+    staleTime: 60 * 60 * 1000,
+    retry: 3,
+    retryDelay: 1000,
   });
 
   return { data, isLoading, error };

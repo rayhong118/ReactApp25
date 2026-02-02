@@ -1,4 +1,6 @@
 import { PrimaryButton, SecondaryButton } from "@/components/Buttons";
+import { ColorPicker } from "@/components/ColorPicker";
+import { useGetUserInfo, useUpdateUserInfo } from "@/utils/UserHooks";
 import {
   useSetTheme,
   useThemeValue,
@@ -13,11 +15,10 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import type { User } from "firebase/auth";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useGetCurrentUser } from "../../utils/AuthenticationAtoms";
 import { useSignOut } from "../../utils/AuthServiceHooks";
-import { useGetAlias, useUpdateAlias } from "@/utils/UserHooks";
 
 const languages = [
   { code: "en", name: "English" },
@@ -50,41 +51,54 @@ const AccountSettings = ({
   signOut: () => void;
   t: any;
 }) => {
-  const [showEditAlias, setShowEditAlias] = useState(false);
-  const { data: alias } = useGetAlias(currentUser.uid);
-  const [newAlias, setNewAlias] = useState(alias || "");
-  const handleUpdateAlias = () => {
-    setShowEditAlias(false);
-    updateAlias(newAlias);
+  const [showEditUserInfo, setShowEditUserInfo] = useState(false);
+  const { data: userInfo } = useGetUserInfo(currentUser.uid);
+  const [newAlias, setNewAlias] = useState("");
+  const [color, setColor] = useState("#fb923c");
+
+  useEffect(() => {
+    if (userInfo) {
+      setNewAlias(userInfo.alias || currentUser.displayName || "");
+      if (userInfo.color) {
+        setColor(userInfo.color);
+      }
+    }
+  }, [userInfo, currentUser.displayName]);
+
+  const handleUpdateUserInfo = () => {
+    setShowEditUserInfo(false);
+    updateUserInfo({ name: newAlias, color });
   };
-  const { mutateAsync: updateAlias } = useUpdateAlias();
+  const { mutateAsync: updateUserInfo } = useUpdateUserInfo();
   return (
     <>
       <h1 className="text-2xl font-bold">{t("settings.title")}</h1>
       <h2 className="text-xl font-semibold">
         <FontAwesomeIcon icon={faUser} /> {t("settings.accountInfo")}
       </h2>
-      {currentUser.photoURL && (
-        <img
-          src={currentUser.photoURL}
-          alt={t("settings.profilePicture")}
-          className="w-20 h-20 rounded-full mb-4 object-cover"
-        />
-      )}
-      <h3 className="text-lg font-semibold text-foreground">
-        {showEditAlias ? (
-          <input
-            className="w-full border border-foreground rounded p-2"
-            type="text"
-            value={newAlias}
-            onChange={(e) => setNewAlias(e.target.value)}
-          />
-        ) : (
-          currentUser.displayName || alias || "User"
-        )}
-      </h3>
-      <SecondaryButton onClick={() => setShowEditAlias(!showEditAlias)}>
-        {showEditAlias ? (
+      <div className="flex flex-col gap-4 items-center">
+        <h3 className="text-lg font-semibold text-foreground w-full flex flex-col gap-4 items-center">
+          {showEditUserInfo ? (
+            <>
+              <ColorPicker color={color} setColor={setColor} />
+              <input
+                className="w-full border border-foreground rounded p-2"
+                type="text"
+                name="alias"
+                value={newAlias}
+                onChange={(e) => setNewAlias(e.target.value)}
+              />
+            </>
+          ) : (
+            <>
+              <ColorPicker color={color} setColor={setColor} disabled />
+              {currentUser.displayName || userInfo?.alias || "User"}
+            </>
+          )}
+        </h3>
+      </div>
+      <SecondaryButton onClick={() => setShowEditUserInfo(!showEditUserInfo)}>
+        {showEditUserInfo ? (
           t("settings.displayName.cancel")
         ) : (
           <>
@@ -93,8 +107,8 @@ const AccountSettings = ({
           </>
         )}
       </SecondaryButton>
-      {showEditAlias && (
-        <PrimaryButton onClick={handleUpdateAlias}>
+      {showEditUserInfo && (
+        <PrimaryButton onClick={handleUpdateUserInfo}>
           {t("settings.displayName.save")}
         </PrimaryButton>
       )}

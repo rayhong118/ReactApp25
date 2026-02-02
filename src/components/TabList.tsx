@@ -1,4 +1,3 @@
-import { useState } from "react";
 import "./TabList.scss";
 
 interface ITabList {
@@ -8,16 +7,14 @@ interface ITabList {
 }
 
 const TabList = ({ tabs, selectedTab, onTabSelect }: ITabList) => {
-  const [activeTab, setActiveTab] = useState(selectedTab);
   return (
     <div className="tablist">
       {tabs.map((tab) => (
         <Tab
           key={tab}
-          isActive={activeTab === tab}
+          isActive={selectedTab === tab}
           label={tab}
           onClick={() => {
-            setActiveTab(tab);
             onTabSelect(tab);
           }}
         />

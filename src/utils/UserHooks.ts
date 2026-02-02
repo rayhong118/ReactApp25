@@ -4,18 +4,18 @@ import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { useAddMessageBars } from "./MessageBarsAtom";
 import { updateProfile } from "firebase/auth";
 
-export const useGetAlias = (userId: string) => {
+export const useGetUserInfo = (userId: string) => {
   const { data } = useQuery({
-    queryKey: ["getAlias", userId],
+    queryKey: ["getUserInfo", userId],
     queryFn: async () => {
       const userDoc = doc(db, "users", userId);
       const userDocSnap = await getDoc(userDoc);
       if (userDocSnap.exists()) {
         const alias = userDocSnap.data().alias as string;
-        console.log("alias", alias);
-        return alias;
+        const color = userDocSnap.data().color as string;
+        return { alias, color };
       }
-      return "";
+      return { alias: "", color: "" };
     },
     enabled: !!userId,
   });
@@ -26,24 +26,32 @@ export const useGetAlias = (userId: string) => {
 // update user profile image. default user image size is 64 x 64
 
 // update display name
-export const useUpdateAlias = () => {
+export const useUpdateUserInfo = () => {
   const addMessageBars = useAddMessageBars();
   const { mutateAsync, isPending } = useMutation({
-    mutationFn: async (newName: string) => {
+    mutationFn: async (userInfo: { name?: string; color?: string }) => {
       try {
-        await updateProfile(auth.currentUser!, {
-          displayName: newName,
-        });
+        if (userInfo.name) {
+          await updateProfile(auth.currentUser!, {
+            displayName: userInfo.name,
+          });
+        }
+
         // also need to update user display name in users collection
         const userDoc = doc(db, "users", auth.currentUser!.uid);
-        await updateDoc(userDoc, {
-          alias: newName,
-        });
+        const payload: { alias?: string; color?: string } = {};
+        if (userInfo.name) {
+          payload.alias = userInfo.name;
+        }
+        if (userInfo.color) {
+          payload.color = userInfo.color;
+        }
+        await updateDoc(userDoc, payload);
       } catch (error) {
         addMessageBars([
           {
             id: new Date().toISOString(),
-            message: "Error updating alias: " + error,
+            message: "Error updating user info: " + error,
             type: "error",
             autoDismiss: true,
           },
@@ -55,7 +63,7 @@ export const useUpdateAlias = () => {
       addMessageBars([
         {
           id: new Date().toISOString(),
-          message: "Alias updated successfully",
+          message: "User info updated successfully",
           type: "success",
           autoDismiss: true,
         },
@@ -65,7 +73,7 @@ export const useUpdateAlias = () => {
       addMessageBars([
         {
           id: new Date().toISOString(),
-          message: "Error updating alias: " + error,
+          message: "Error updating user info: " + error,
           type: "error",
           autoDismiss: true,
         },

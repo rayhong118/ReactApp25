@@ -25,9 +25,9 @@ export const addFriend = async (user1Id: string, user2Id: string) => {
   }
 
   await user1Ref.update({
-    friends: [...currentUser1Friends, user2Id],
+    friendIds: [...currentUser1Friends, user2Id],
   });
   await user2Ref.update({
-    friends: [...currentUser2Friends, user1Id],
+    friendIds: [...currentUser2Friends, user1Id],
   });
 };

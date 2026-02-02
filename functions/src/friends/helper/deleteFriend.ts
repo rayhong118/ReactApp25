@@ -12,10 +12,10 @@ export const deleteFriend = async (user1Id: string, user2Id: string) => {
 
   const currentUser1Friends = await user1Ref
     .get()
-    .then((doc) => doc.data()?.friends);
+    .then((doc) => doc.data()?.friendIds);
   const currentUser2Friends = await user2Ref
     .get()
-    .then((doc) => doc.data()?.friends);
+    .then((doc) => doc.data()?.friendIds);
 
   if (!currentUser1Friends.includes(user2Id)) {
     throw new Error("User is not a friend");
@@ -25,12 +25,12 @@ export const deleteFriend = async (user1Id: string, user2Id: string) => {
   }
 
   await user1Ref.update({
-    friends: currentUser1Friends.filter(
+    friendIds: currentUser1Friends.filter(
       (friendId: string) => friendId !== user2Id,
     ),
   });
   await user2Ref.update({
-    friends: currentUser2Friends.filter(
+    friendIds: currentUser2Friends.filter(
       (friendId: string) => friendId !== user1Id,
     ),
   });
