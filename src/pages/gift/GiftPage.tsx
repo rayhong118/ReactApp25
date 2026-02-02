@@ -1,7 +1,7 @@
 import { PrimaryButton } from "@/components/Buttons";
 import { Dialog } from "@/components/Dialog";
 import { useGetCurrentUser } from "@/utils/AuthenticationAtoms";
-import { useGetAlias } from "@/utils/UserHooks";
+import { useGetUserInfo } from "@/utils/UserHooks";
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import "./Gift.scss";
@@ -21,7 +21,7 @@ const GiftPage = () => {
 
   const { data: giftData } = useGetGiftList(currentUserId!);
 
-  const { data: displayName } = useGetAlias(searchParamUserId || "");
+  const { data: userInfo } = useGetUserInfo(searchParamUserId || "");
 
   const preferredGifts = giftData?.filter((gift) => gift.type === "preferred");
   const avoidGifts = giftData?.filter((gift) => gift.type === "avoid");
@@ -42,7 +42,7 @@ const GiftPage = () => {
         <GiftForm closeDialog={() => setDialogOpen(false)} gift={currentGift} />
       </Dialog>
       <h1 className="text-2xl font-bold">
-        Gift Page {searchParamUserId && displayName}
+        Gift Page {searchParamUserId && userInfo?.alias}
       </h1>
       <p>Gifts are items you would like to receive or avoid</p>
 
