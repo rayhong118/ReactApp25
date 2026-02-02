@@ -15,10 +15,10 @@ export interface IFriendRequest {
   type: "sent" | "received";
   senderId: string;
   senderAlias?: string;
-  senderAvatar?: string;
+  senderColor?: string;
   receiverId: string;
   receiverAlias?: string;
-  receiverAvatar?: string;
+  receiverColor?: string;
   status: "pending" | "accepted" | "rejected";
   addedAt: Timestamp;
   updatedAt: Timestamp;

@@ -3,6 +3,7 @@ import type { IFriendRequest } from "./Friend.types";
 import { PrimaryButton, SecondaryButton } from "@/components/Buttons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCancel, faCheck } from "@fortawesome/free-solid-svg-icons";
+import { FriendCard } from "./FriendCard";
 
 export const FriendRequests = () => {
   return (
@@ -13,10 +14,10 @@ export const FriendRequests = () => {
           type: "received",
           senderId: "1",
           senderAlias: "John",
-          senderAvatar: "https://i.pravatar.cc/150?img=12",
+          senderColor: "#ff0000",
           receiverId: "2",
           receiverAlias: "Jane",
-          receiverAvatar: "https://i.pravatar.cc/150?img=13",
+          receiverColor: "#00ff00",
           status: "pending",
           addedAt: Timestamp.now(),
           updatedAt: Timestamp.now(),
@@ -28,15 +29,22 @@ export const FriendRequests = () => {
 
 const FriendRequest = ({ request }: { request: IFriendRequest }) => {
   return (
-    <div className="flex w-full max-w-md items-center justify-between gap-2">
-      <div className="flex items-center gap-2">
-        <img
-          className="w-10 h-10 rounded-full"
-          src={request.senderAvatar}
-          alt=""
-        />
-        {request.type === "sent" ? request.receiverAlias : request.senderAlias}
-      </div>
+    <div className="flex w-full max-w-md items-center justify-between gap-2 my-2">
+      <FriendCard
+        friend={
+          request.type === "sent"
+            ? {
+                id: request.receiverId,
+                alias: request.receiverAlias,
+                color: request.receiverColor,
+              }
+            : {
+                id: request.senderId,
+                alias: request.senderAlias,
+                color: request.senderColor,
+              }
+        }
+      />
       <div className="flex items-center gap-2">
         {request.type === "sent" ? (
           <SecondaryButton>
