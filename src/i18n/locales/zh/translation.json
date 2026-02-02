@@ -41,9 +41,9 @@
     "signOut": "退出登录",
     "language": "语言",
     "displayName": {
-      "edit": "编辑显示名",
+      "edit": "编辑显示名和颜色",
       "cancel": "取消",
-      "save": "保存显示名"
+      "save": "保存"
     },
     "theme": {
       "title": "颜色主题",

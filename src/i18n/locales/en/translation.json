@@ -41,9 +41,9 @@
     "signOut": "Sign Out",
     "language": "Language",
     "displayName": {
-      "edit": "Edit Display Name",
+      "edit": "Edit Display Name & Color",
       "cancel": "Cancel",
-      "save": "Save Display Name"
+      "save": "Save"
     },
     "theme": {
       "title": "Theme",
