@@ -1,6 +1,6 @@
 import { auth, db } from "@/firebase";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { doc, getDoc, updateDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 import { useAddMessageBars } from "./MessageBarsAtom";
 import { updateProfile } from "firebase/auth";
 
@@ -46,7 +46,7 @@ export const useUpdateUserInfo = () => {
         if (userInfo.color) {
           payload.color = userInfo.color;
         }
-        await updateDoc(userDoc, payload);
+        await setDoc(userDoc, payload, { merge: true });
       } catch (error) {
         addMessageBars([
           {
