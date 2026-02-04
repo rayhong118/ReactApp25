@@ -9,6 +9,7 @@ import { type IGift } from "./Gift.types";
 import GiftCard from "./GiftCard";
 import GiftForm from "./GiftForm";
 import { useGetGiftList } from "./hooks/giftHooks";
+import WIP from "@/components/WIP";
 
 const GiftPage = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -31,6 +32,7 @@ const GiftPage = () => {
 
   return (
     <div>
+      <WIP />
       <Dialog
         open={dialogOpen}
         title={`Add ${currentGift?.type} gift`}
