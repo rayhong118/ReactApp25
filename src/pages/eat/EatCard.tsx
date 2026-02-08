@@ -1,7 +1,7 @@
 import { SecondaryButton } from "@/components/Buttons";
 import { Dialog } from "@/components/Dialog";
 import { withComponentSuspense } from "@/hooks/withSuspense";
-import { useGetCurrentUser } from "@/utils/AuthenticationAtoms";
+import { useGetCurrentUser } from "@/pages/auth/AuthenticationAtoms";
 import { useAddMessageBars } from "@/utils/MessageBarsAtom";
 import {
   faChartBar,

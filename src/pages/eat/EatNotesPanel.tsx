@@ -1,4 +1,4 @@
-import { useGetCurrentUser } from "@/utils/AuthenticationAtoms";
+import { useGetCurrentUser } from "@/pages/auth/AuthenticationAtoms";
 import EatNote from "./EatNote";
 import { EatNoteInput } from "./EatNoteInput";
 import EatNotesSummary from "./EatNotesSummary";

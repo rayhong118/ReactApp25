@@ -1,6 +1,6 @@
 import { CustomizedButton } from "@/components/Buttons";
 import { type IDialogAction, Dialog } from "@/components/Dialog";
-import { useGetCurrentUser } from "@/utils/AuthenticationAtoms";
+import { useGetCurrentUser } from "@/pages/auth/AuthenticationAtoms";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";

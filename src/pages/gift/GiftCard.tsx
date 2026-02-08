@@ -1,6 +1,6 @@
 import { CustomizedButton } from "@/components/Buttons";
 import { Dialog } from "@/components/Dialog";
-import { useGetCurrentUser } from "@/utils/AuthenticationAtoms";
+import { useGetCurrentUser } from "@/pages/auth/AuthenticationAtoms";
 import {
   faEdit,
   faSquareCheck,

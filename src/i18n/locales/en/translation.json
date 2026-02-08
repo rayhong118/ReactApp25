@@ -49,6 +49,12 @@
       "title": "Theme",
       "dark": "Dark",
       "light": "Light"
+    },
+    "deleteAccount": {
+      "title": "Delete Account",
+      "warning": "Are you sure you want to delete your account?",
+      "cancel": "Cancel",
+      "delete": "Delete"
     }
   },
   "eat": {

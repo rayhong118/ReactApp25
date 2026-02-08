@@ -1,5 +1,5 @@
 // React hooks for eat page
-import { useGetCurrentUser } from "@/utils/AuthenticationAtoms";
+import { useGetCurrentUser } from "@/pages/auth/AuthenticationAtoms";
 import { useAddMessageBars } from "@/utils/MessageBarsAtom";
 import {
   useInfiniteQuery,
@@ -99,7 +99,7 @@ export const useGetRestaurants = (eatQuery?: IEatQuery, sort?: TEatSort) => {
       const q = query(
         collection(db, "restaurants"),
         ...constraints,
-        limit(PAGE_SIZE)
+        limit(PAGE_SIZE),
       );
       const querySnapshot = await getDocs(q);
 
@@ -109,7 +109,7 @@ export const useGetRestaurants = (eatQuery?: IEatQuery, sort?: TEatSort) => {
           ({
             id: doc.id,
             ...doc.data(),
-          } as IRestaurant)
+          }) as IRestaurant,
       );
       return { restaurants, nextCursor: lastVisible };
     },
@@ -153,7 +153,7 @@ export const useAddRestaurant = () => {
       // check duplication
       const q = query(
         collection(db, "restaurants"),
-        where("address", "==", restaurant.address)
+        where("address", "==", restaurant.address),
       );
       const querySnapshot = await getDocs(q);
       if (querySnapshot.docs.length > 0) {
@@ -293,7 +293,7 @@ export const useGetRestaurantLocationTags = () => {
           ({
             value: doc.data().value,
             count: doc.data().count,
-          } as ILocationTag)
+          }) as ILocationTag,
       );
       return locationTags || [];
     },
@@ -321,7 +321,7 @@ export const useGetRestaurantRecommendationNL = (userPrompt?: string) => {
           ({
             id: doc.id,
             ...doc.data(),
-          } as IRestaurant)
+          }) as IRestaurant,
       );
       const restaurantContext = restaurants.map((restaurant) => ({
         id: restaurant.id,
@@ -344,7 +344,7 @@ export const useGetRestaurantRecommendationNL = (userPrompt?: string) => {
       const { restaurantId: pickedRestaurantId, reason } = result.data;
 
       const pickedRestaurant = restaurants.find(
-        (restaurant) => restaurant.id === pickedRestaurantId
+        (restaurant) => restaurant.id === pickedRestaurantId,
       );
 
       const response = {
@@ -424,7 +424,7 @@ export const useSubmitRestaurantRating = () => {
       const userRestaurantRatingsRef = doc(
         db,
         "user-restaurant-ratings",
-        userId
+        userId,
       );
 
       const userRestaurantRatingsSnap = await getDoc(userRestaurantRatingsRef);
@@ -438,7 +438,7 @@ export const useSubmitRestaurantRating = () => {
         {
           [restaurantId]: rating,
         },
-        { merge: true }
+        { merge: true },
       );
 
       const updateRestaurantStars = httpsCallable<
@@ -525,8 +525,8 @@ export const useGetUserLocation = () => {
             } catch (error) {
               reject(
                 new Error(
-                  "Geolocation is not supported by this browser." + error
-                )
+                  "Geolocation is not supported by this browser." + error,
+                ),
               );
             }
           },
@@ -547,7 +547,7 @@ export const useGetUserLocation = () => {
             ]);
             reject(new Error(messages[geoError.code] || geoError.message));
           },
-          { timeout: 5000, enableHighAccuracy: false, maximumAge: 60000 * 60 }
+          { timeout: 5000, enableHighAccuracy: false, maximumAge: 60000 * 60 },
         );
       });
     },
@@ -571,7 +571,7 @@ export const useGetUserLocation = () => {
  * @returns isFetching: boolean
  */
 export const useGetCitiesCloseToCurrentUserLocation = (
-  cityAndState: string
+  cityAndState: string,
 ) => {
   const addMessageBars = useAddMessageBars();
   const { data, error, refetch, isFetching } = useQuery({
@@ -601,7 +601,7 @@ export const useGetCitiesCloseToCurrentUserLocation = (
       } catch (error) {
         console.error(
           "Error fetching cities close to current user location:",
-          error
+          error,
         );
         addMessageBars([
           {
@@ -634,7 +634,7 @@ export const useGetCitiesCloseToCurrentUserLocation = (
  */
 export const useLocationTagAutoSelector = (
   locationTags: ILocationTag[] | undefined,
-  setSelectedLocationTags: (tags: string[]) => void
+  setSelectedLocationTags: (tags: string[]) => void,
 ) => {
   const [isApplying, setIsApplying] = useState(false);
   const {

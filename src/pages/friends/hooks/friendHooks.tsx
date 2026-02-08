@@ -1,4 +1,4 @@
-import { useGetCurrentUser } from "@/utils/AuthenticationAtoms";
+import { useGetCurrentUser } from "@/pages/auth/AuthenticationAtoms";
 import { useQuery } from "@tanstack/react-query";
 import { httpsCallable } from "firebase/functions";
 import { firebaseFunctions } from "@/firebase";

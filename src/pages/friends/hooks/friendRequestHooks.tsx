@@ -1,5 +1,5 @@
 import { db, firebaseFunctions } from "@/firebase";
-import { useGetCurrentUser } from "@/utils/AuthenticationAtoms";
+import { useGetCurrentUser } from "@/pages/auth/AuthenticationAtoms";
 import { useAddMessageBars } from "@/utils/MessageBarsAtom";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import {

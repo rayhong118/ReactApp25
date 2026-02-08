@@ -1,5 +1,6 @@
 import { PrimaryButton, SecondaryButton } from "@/components/Buttons";
 import { ColorPicker } from "@/components/ColorPicker";
+import { Dialog } from "@/components/Dialog";
 import { useGetUserInfo, useUpdateUserInfo } from "@/utils/UserHooks";
 import {
   useSetTheme,
@@ -11,14 +12,15 @@ import {
   faGlobe,
   faMoon,
   faSignOut,
+  faTrash,
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import type { User } from "firebase/auth";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useGetCurrentUser } from "../../utils/AuthenticationAtoms";
-import { useSignOut } from "../../utils/AuthServiceHooks";
+import { useGetCurrentUser } from "./AuthenticationAtoms";
+import { useDeleteAccount, useSignOut } from "./AuthServiceHooks";
 
 const languages = [
   { code: "en", name: "English" },
@@ -38,6 +40,8 @@ const UserSettings = () => {
       <LanguageSettings />
       <hr />
       <ThemeSettings />
+      <hr />
+      <DeleteAccount />
     </div>
   );
 };
@@ -174,3 +178,42 @@ export const ThemeSettings = () => {
 };
 
 export default UserSettings;
+
+const DeleteAccount = () => {
+  const { t } = useTranslation();
+  const deleteAccount = useDeleteAccount();
+  const [open, setOpen] = useState(false);
+
+  return (
+    <div className="flex flex-col gap-4">
+      <Dialog
+        open={open}
+        onClose={() => setOpen(false)}
+        title={t("settings.deleteAccount.title")}
+      >
+        <p>{t("settings.deleteAccount.warning")}</p>
+        <div className="flex flex-row justify-end gap-2">
+          <SecondaryButton onClick={() => setOpen(false)}>
+            {t("settings.deleteAccount.cancel")}
+          </SecondaryButton>
+          <SecondaryButton
+            onClick={deleteAccount}
+            className="hover:bg-red-100 text-red-600 font-bold border-2"
+          >
+            <FontAwesomeIcon icon={faTrash} />{" "}
+            {t("settings.deleteAccount.title")}
+          </SecondaryButton>
+        </div>
+      </Dialog>
+      <h2 className="text-xl font-semibold">
+        <FontAwesomeIcon icon={faTrash} /> {t("settings.deleteAccount.title")}
+      </h2>
+      <SecondaryButton
+        onClick={() => setOpen(true)}
+        className="hover:bg-red-100 text-red-600 font-bold border-2 border-red-600"
+      >
+        <FontAwesomeIcon icon={faTrash} /> {t("settings.deleteAccount.title")}
+      </SecondaryButton>
+    </div>
+  );
+};

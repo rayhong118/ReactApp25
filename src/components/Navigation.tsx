@@ -12,7 +12,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import { useGetCurrentUser } from "../utils/AuthenticationAtoms";
+import { useGetCurrentUser } from "../pages/auth/AuthenticationAtoms";
 import Tooltip from "./Tooltip";
 import { LanguageSettings, ThemeSettings } from "@/pages/auth/Settings";
 

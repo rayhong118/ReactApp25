@@ -1,6 +1,6 @@
 import { PrimaryButton } from "@/components/Buttons";
 import { Dialog } from "@/components/Dialog";
-import { useGetCurrentUser } from "@/utils/AuthenticationAtoms";
+import { useGetCurrentUser } from "@/pages/auth/AuthenticationAtoms.ts";
 import InfiniteScrollTrigger from "@/utils/InfiniteScrollTrigger.tsx";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";

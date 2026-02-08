@@ -1,9 +1,9 @@
 import { getAdditionalUserInfo, signInWithPopup } from "firebase/auth";
 import { doc, updateDoc } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
-import { auth, db, githubProvider, googleProvider } from "../firebase";
+import { auth, db, githubProvider, googleProvider } from "../../firebase";
 import { useSetCurrentUser } from "./AuthenticationAtoms";
-import { useAddMessageBars } from "./MessageBarsAtom";
+import { useAddMessageBars } from "../../utils/MessageBarsAtom";
 
 export const useFirebaseSignInWithGoogle = () => {
   const setCurrentUser = useSetCurrentUser();
@@ -115,6 +115,36 @@ export const useSignOut = () => {
         {
           id: new Date().toISOString(),
           message: "Error signing out: " + error,
+          type: "error",
+          autoDismiss: true,
+        },
+      ]);
+    }
+  };
+};
+
+export const useDeleteAccount = () => {
+  const setCurrentUser = useSetCurrentUser();
+  const addMessageBars = useAddMessageBars();
+  const navigate = useNavigate();
+  return async () => {
+    try {
+      await auth.currentUser?.delete();
+      setCurrentUser(null);
+      addMessageBars([
+        {
+          id: new Date().toISOString(),
+          message: "Account Deleted Successfully",
+          type: "success",
+          autoDismiss: true,
+        },
+      ]);
+      navigate("/auth");
+    } catch (error) {
+      addMessageBars([
+        {
+          id: new Date().toISOString(),
+          message: "Error deleting account: " + error,
           type: "error",
           autoDismiss: true,
         },

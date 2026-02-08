@@ -3,7 +3,7 @@ import { lazy, useEffect } from "react";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import "./App.css";
 import { auth } from "./firebase";
-import { useSetCurrentUser } from "./utils/AuthenticationAtoms";
+import { useSetCurrentUser } from "./pages/auth/AuthenticationAtoms";
 
 import { withDefaultPagePadding } from "./hooks/withDefaultPagePadding";
 import { withSuspense } from "./hooks/withSuspense";

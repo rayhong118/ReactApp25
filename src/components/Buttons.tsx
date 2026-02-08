@@ -38,7 +38,7 @@ export const SecondaryButton = (props: IButtonProps) => {
     border-2 border-transparent 
     hover:bg-brand-soft
     focus:border-brand-vibrant focus:outline-none focus:bg-brand-soft 
-    disabled:bg-foreground/20 disabled:cursor-not-allowed cursor-pointer
+    disabled:bg-foreground/20 disabled:cursor-not-allowed cursor-pointer 
     ${props.className || ""}
   `
         .replace(/\s+/g, " ")

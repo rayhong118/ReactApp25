@@ -10,7 +10,7 @@ import { useNavigate } from "react-router-dom";
 import type { IArtwork } from "./Artworks.types";
 import "./Drawings.scss";
 import { useGetArtworks, useGetCategories } from "./hooks";
-import { useGetCurrentUser } from "@/utils/AuthenticationAtoms";
+import { useGetCurrentUser } from "@/pages/auth/AuthenticationAtoms";
 import TabList from "@/components/TabList";
 
 const Drawings = () => {

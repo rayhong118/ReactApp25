@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   useFirebaseSignInWithGitHub,
   useFirebaseSignInWithGoogle,
-} from "../../utils/AuthServiceHooks";
+} from "./AuthServiceHooks";
 import { useTranslation } from "react-i18next";
 
 const AuthPage = () => {

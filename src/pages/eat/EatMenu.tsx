@@ -1,6 +1,6 @@
 import { SecondaryButton } from "@/components/Buttons";
 import { Loading } from "@/components/Loading";
-import { useGetCurrentUser } from "@/utils/AuthenticationAtoms";
+import { useGetCurrentUser } from "@/pages/auth/AuthenticationAtoms";
 import { faArrowLeft, faShuffle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";

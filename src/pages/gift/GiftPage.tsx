@@ -1,6 +1,6 @@
 import { PrimaryButton } from "@/components/Buttons";
 import { Dialog } from "@/components/Dialog";
-import { useGetCurrentUser } from "@/utils/AuthenticationAtoms";
+import { useGetCurrentUser } from "@/pages/auth/AuthenticationAtoms";
 import { useGetUserInfo } from "@/utils/UserHooks";
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";

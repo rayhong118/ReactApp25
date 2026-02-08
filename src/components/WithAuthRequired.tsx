@@ -1,5 +1,5 @@
 import React from "react";
-import { useGetCurrentUser } from "../utils/AuthenticationAtoms";
+import { useGetCurrentUser } from "../pages/auth/AuthenticationAtoms";
 import { useNavigate } from "react-router-dom";
 import { CustomizedButton } from "./Buttons";
 import { useTranslation } from "react-i18next";
