@@ -14,22 +14,32 @@ export const generateNotesSummary = onCall(
     if (!notes || notes.length === 0) {
       throw new HttpsError("invalid-argument", "No notes provided");
     }
-    const prompt = `
-    Task: Summarize notes for the restaurant "${
-      restaurant.name
-    }" in ${language}.
-  
-    Formatting Rules:
-    - Use a Level 2 Heading (##) for the restaurant name.
-    - Use Level 3 Headings (###) for each summary category.
-    - Use bullet points (*) for details.
-    - Bold key terms like prices, wait times, or dish names.
-    - Use an emoji at the start of each category heading.
 
-    Notes to summarize: ${JSON.stringify(notes)}`;
     const result = await genAI.models.generateContentStream({
       model: "gemini-3-flash-preview",
-      contents: [{ parts: [{ text: prompt }] }],
+      contents: [
+        {
+          parts: [
+            {
+              text: `Notes to summarize: ${JSON.stringify(notes)}`,
+            },
+          ],
+        },
+      ],
+      config: {
+        systemInstruction: `
+          Summarize notes for the restaurant "${
+            restaurant.name
+          }" in ${language}.
+        
+          Formatting Rules:
+          - Use a Level 2 Heading (##) for the restaurant name.
+          - Use Level 3 Headings (###) for each summary category.
+          - Use bullet points (*) for details.
+          - Bold key terms like prices, wait times, or dish names.
+          - Use an emoji at the start of each category heading.
+        `,
+      },
     });
 
     let fullText = "";
@@ -48,5 +58,5 @@ export const generateNotesSummary = onCall(
     // You MUST return the final result for non-streaming clients
     // and to officially "end" the function.
     return fullText;
-  }
+  },
 );
