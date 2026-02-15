@@ -19,20 +19,28 @@ export const selectLocationTagsBasedOnCurrentLocation = onCall(
     const locationTags = locationTagsSnapshot.docs.map((doc) => doc.data());
 
     try {
-      const prompt = `
-      USER_CURRENT_LOCATION: "${cityAndState}"
-      CURRENT_LOCATION_TAGS: ${JSON.stringify(locationTags)}
-      
-      Task: Return all location tags from the CURRENT_LOCATION_TAGS that are in the 
-      same metropolitan area as the USER_CURRENT_LOCATION.
-      Return ONLY a JSON object: {"locationTags": "string[]"}
-    `;
-
       const result = await genAI.models.generateContent({
         model: "gemini-3-flash-preview",
-        contents: [{ role: "user", parts: [{ text: prompt }] }],
+        contents: [
+          {
+            role: "user",
+            parts: [
+              {
+                text: `
+                USER_CURRENT_LOCATION: "${cityAndState}"
+                CURRENT_LOCATION_TAGS: ${JSON.stringify(locationTags)}
+              `,
+              },
+            ],
+          },
+        ],
         config: {
+          systemInstruction: `
+            Task: Return all location tags from the CURRENT_LOCATION_TAGS that are in the 
+            same metropolitan area as the USER_CURRENT_LOCATION.
+          `,
           responseMimeType: "application/json",
+          responseJsonSchema: schema,
         },
       });
 
@@ -46,8 +54,19 @@ export const selectLocationTagsBasedOnCurrentLocation = onCall(
     } catch (error) {
       throw new HttpsError(
         "internal",
-        "Failed to generate recommendation." + error
+        "Failed to generate recommendation." + error,
       );
     }
-  }
+  },
 );
+
+const schema = {
+  type: "object",
+  properties: {
+    locationTags: {
+      type: "array",
+      items: { type: "string" },
+    },
+  },
+  required: ["locationTags"],
+};

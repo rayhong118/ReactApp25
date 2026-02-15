@@ -5,6 +5,8 @@ import genAI from "../../utils/genAIClient";
 import { responseJsonSchema } from "./handleMenuImageUpload";
 
 /**
+ * CURRENTLY NOT IN USE
+ * due to high token usage and low reliability
  * Firestore trigger that processes menu URL submissions in the background.
  * This runs when a new document is created in menu-url-submissions collection.
  */
