@@ -13,27 +13,31 @@ export const generateSuggestionBasedOnUserPrompt = onCall(
     if (!userPrompt || !restaurants) {
       throw new HttpsError(
         "invalid-argument",
-        "Missing prompt or restaurant list."
+        "Missing prompt or restaurant list.",
       );
     }
 
     try {
-      const prompt = `
-      USER_REQUEST: "${userPrompt}"
-      RESTAURANT_LIST: ${JSON.stringify(restaurants)}
-      
-      Task: Pick the best restaurant and explain why. If you don't have a clear 
-      and resonable pick, return reason only. The language of the response should 
-      be in the same language as the user request.
-      Return ONLY a JSON object: {"restaurantId": "string", "reason": "string"}
-    `;
-
       // 2. Call the Model
       const result = await genAI.models.generateContent({
         model: "gemini-3-flash-preview",
-        contents: [{ role: "user", parts: [{ text: prompt }] }],
+
+        contents: [
+          { role: "user", parts: [{ text: userPrompt }] },
+          {
+            role: "user",
+            parts: [
+              { text: `RESTAURANT_CONTEXT: ${JSON.stringify(restaurants)}` },
+            ],
+          },
+        ],
         config: {
+          systemInstruction:
+            "Pick the best restaurant from the list based on the user request and explain why. " +
+            "If no clear pick, return a reason why. Response language MUST match user request language.",
           responseMimeType: "application/json",
+          responseJsonSchema: schema, // Prevents JSON parse errors
+          temperature: 0, // Makes the recommendation more consistent
         },
       });
 
@@ -48,8 +52,18 @@ export const generateSuggestionBasedOnUserPrompt = onCall(
     } catch (error) {
       throw new HttpsError(
         "internal",
-        "Failed to generate recommendation." + error
+        "Failed to generate recommendation." + error,
       );
     }
-  }
+  },
 );
+
+// Define the schema for guaranteed structured output
+const schema = {
+  type: "object",
+  properties: {
+    restaurantId: { type: "string" },
+    reason: { type: "string" },
+  },
+  required: ["reason"],
+};
