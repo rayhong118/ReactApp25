@@ -1,3 +1,5 @@
+// Seems pointless since google calendar already requires user to input such information.
+
 import { PrimaryButton } from "@/components/Buttons";
 import { useState } from "react";
 

@@ -58,7 +58,7 @@ const AccountSettings = ({
   const [showEditUserInfo, setShowEditUserInfo] = useState(false);
   const { data: userInfo } = useGetUserInfo(currentUser.uid);
   const [newAlias, setNewAlias] = useState("");
-  const [color, setColor] = useState("#fb923c");
+  const [color, setColor] = useState(userInfo?.color || "#fb923c");
 
   useEffect(() => {
     if (userInfo) {
@@ -95,7 +95,11 @@ const AccountSettings = ({
             </>
           ) : (
             <>
-              <ColorPicker color={color} setColor={setColor} disabled />
+              <ColorPicker
+                color={userInfo?.color || "#fb923c"}
+                setColor={setColor}
+                disabled
+              />
               {currentUser.displayName || userInfo?.alias || "User"}
             </>
           )}
