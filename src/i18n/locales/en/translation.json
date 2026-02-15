@@ -13,7 +13,8 @@
       "stopWatch": "Stop Watch",
       "imageCarousels": "Image Carousels",
       "fileUpload": "File Upload",
-      "ticTacToe": "Tic Tac Toe"
+      "ticTacToe": "Tic Tac Toe",
+      "calendarEventGenerator": "Calendar Event Generator"
     },
     "auth": {
       "login": "Log in / Sign Up",

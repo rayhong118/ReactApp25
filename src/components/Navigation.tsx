@@ -22,6 +22,10 @@ const experimentsNavItems = [
   { label: "navbar.lab.stopWatch", to: "/experiments/stopWatch" },
   { label: "navbar.lab.imageCarousels", to: "/experiments/imageCarousels" },
   { label: "navbar.lab.fileUpload", to: "/experiments/fileUpload" },
+  {
+    label: "navbar.lab.calendarEventGenerator",
+    to: "/experiments/calendarEventGenerator",
+  },
   { label: "navbar.lab.ticTacToe", to: "/experiments/ticTacToe" },
 ];
 

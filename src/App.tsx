@@ -34,6 +34,9 @@ const Upload = lazy(() => import("./pages/artworks/Upload"));
 const Footer = lazy(() => import("./components/Footer"));
 const GiftPage = lazy(() => import("./pages/gift/GiftPage"));
 const FriendsPage = lazy(() => import("./pages/friends/Friends"));
+const CalendarEventGenerator = lazy(
+  () => import("./pages/experiments/CalendarEventGenerator"),
+);
 
 const WithAuthRequired = lazy(() => import("./components/WithAuthRequired"));
 
@@ -87,6 +90,12 @@ const App: React.FC = () => {
         <Route
           path="/experiments/ticTacToe"
           element={withSuspense(withDefaultPagePadding(<JiZiQi />))}
+        />
+        <Route
+          path="/experiments/calendarEventGenerator"
+          element={withSuspense(
+            withDefaultPagePadding(<CalendarEventGenerator />),
+          )}
         />
         <Route
           path="/eat"

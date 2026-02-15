@@ -13,7 +13,8 @@
       "stopWatch": "秒表",
       "imageCarousels": "图片轮播",
       "fileUpload": "文件上传",
-      "ticTacToe": "井字棋"
+      "ticTacToe": "井字棋",
+      "calendarEventGenerator": "日历事件生成器"
     },
     "auth": {
       "login": "注册/登录",
