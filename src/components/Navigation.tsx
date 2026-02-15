@@ -16,6 +16,13 @@ import { useGetCurrentUser } from "../pages/auth/AuthenticationAtoms";
 import Tooltip from "./Tooltip";
 import { LanguageSettings, ThemeSettings } from "@/pages/auth/Settings";
 
+const mainNavItems = [
+  { label: "navbar.eat", to: "/eat", icon: faUtensils },
+  { label: "navbar.drawings", to: "/drawings", icon: faImage },
+  { label: "navbar.gifts", to: "/gifts", icon: faGift },
+  { label: "navbar.friends", to: "/friends", icon: faUserGroup },
+];
+
 const experimentsNavItems = [
   { label: "navbar.lab.formValidation", to: "/experiments/formValidation" },
   { label: "navbar.lab.moveLists", to: "/experiments/moveLists" },
@@ -29,43 +36,24 @@ const experimentsNavItems = [
   { label: "navbar.lab.ticTacToe", to: "/experiments/ticTacToe" },
 ];
 
-const Navigation = () => {
+interface NavItemProps {
+  label: string;
+  to: string;
+  icon?: IconProp;
+  nested?: boolean;
+  onClick?: () => void;
+}
+
+const NavButton = ({ label, to, icon, nested, onClick }: NavItemProps) => {
   const navigate = useNavigate();
-  const [mobileOpen, setMobileOpen] = useState(false);
-  const [dropdownOpen, setDropdownOpen] = useState(false);
-  const wrapperRef = useRef<HTMLDivElement | null>(null);
-  const getCurrentUser = useGetCurrentUser();
   const { t } = useTranslation();
 
-  useEffect(() => {
-    function handleClickOutside(e: MouseEvent) {
-      if (
-        wrapperRef.current &&
-        !wrapperRef.current.contains(e.target as Node)
-      ) {
-        setMobileOpen(false);
-        setDropdownOpen(false);
-      }
-    }
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
-
-  interface INavButtonProps {
-    label: string;
-    to: string;
-    nested?: boolean;
-    icon?: IconProp;
-  }
-
-  const navButton = ({ label, to, nested, icon }: INavButtonProps) => (
+  return (
     <button
       onClick={() => {
         navigate(to);
-        setMobileOpen(false);
-        setDropdownOpen(false);
+        if (onClick) onClick();
       }}
-      key={label}
       className={`flex items-center px-3 py-2 rounded-md text-md font-medium 
          text-foreground hover:bg-brand-soft text-start whitespace-nowrap cursor-pointer ${
            nested ? "w-full" : ""
@@ -75,43 +63,177 @@ const Navigation = () => {
       {t(label)}
     </button>
   );
+};
 
-  const authButtons = () => {
-    // You can add authentication related buttons here
-    if (!getCurrentUser) {
-      return (
-        <Tooltip>
-          <Tooltip.Trigger>
-            {navButton({
-              label: "navbar.auth.login",
-              to: "/auth",
-              nested: true,
-              icon: faSignInAlt,
-            })}
-          </Tooltip.Trigger>
-          <Tooltip.Content>
-            <ThemeSettings />
-            <LanguageSettings />
-          </Tooltip.Content>
-        </Tooltip>
-      );
-    } else
-      return (
-        <Tooltip>
-          <Tooltip.Trigger>
-            {navButton({
-              label: "navbar.auth.settings",
-              to: "/settings",
-              nested: true,
-              icon: faGear,
-            })}
-          </Tooltip.Trigger>
-          <Tooltip.Content>
-            <ThemeSettings />
-            <LanguageSettings />
-          </Tooltip.Content>
-        </Tooltip>
-      );
+const AuthButton = ({ onClick }: { onClick: () => void }) => {
+  const getCurrentUser = useGetCurrentUser();
+
+  const buttonProps = !getCurrentUser
+    ? {
+        label: "navbar.auth.login",
+        to: "/auth",
+        icon: faSignInAlt,
+      }
+    : {
+        label: "navbar.auth.settings",
+        to: "/settings",
+        icon: faGear,
+      };
+
+  return (
+    <Tooltip>
+      <Tooltip.Trigger>
+        <NavButton {...buttonProps} nested onClick={onClick} />
+      </Tooltip.Trigger>
+      <Tooltip.Content>
+        <ThemeSettings />
+        <LanguageSettings />
+      </Tooltip.Content>
+    </Tooltip>
+  );
+};
+
+const NavDropdown = ({
+  onItemClick,
+  mobile,
+}: {
+  onItemClick: () => void;
+  mobile?: boolean;
+}) => {
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement | null>(null);
+  const { t } = useTranslation();
+
+  useEffect(() => {
+    if (mobile) return;
+    function handleClickOutside(e: MouseEvent) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(e.target as Node)
+      ) {
+        setDropdownOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [mobile]);
+
+  if (mobile) {
+    return (
+      <div>
+        <button
+          onClick={() => setDropdownOpen((s) => !s)}
+          className="w-full text-left px-3 py-2 rounded-md text-md font-medium text-foreground 
+          hover:bg-brand-soft flex items-center justify-between cursor-pointer"
+        >
+          <span>
+            <FontAwesomeIcon icon={faFlask} className="mr-2 pt-0.5" />
+            {t("navbar.lab.title")}
+          </span>
+          <svg
+            className={`h-4 w-4 text-foreground transition-transform ${dropdownOpen ? "rotate-180" : ""}`}
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M19 9l-7 7-7-7"
+            />
+          </svg>
+        </button>
+
+        {dropdownOpen && (
+          <div className="mt-1 space-y-1 pl-2">
+            {experimentsNavItems.map((item) => (
+              <NavButton
+                key={item.to}
+                {...item}
+                nested
+                onClick={() => {
+                  onItemClick();
+                  setDropdownOpen(false);
+                }}
+              />
+            ))}
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  return (
+    <div className="relative" ref={dropdownRef}>
+      <button
+        onClick={() => setDropdownOpen((s) => !s)}
+        aria-haspopup="true"
+        aria-expanded={dropdownOpen}
+        className="inline-flex items-center px-3 py-2 rounded-md text-md font-medium
+         text-foreground hover:bg-brand-soft whitespace-nowrap cursor-pointer"
+      >
+        <FontAwesomeIcon icon={faFlask} className="mr-2 pt-0.5" />
+        {t("navbar.lab.title")}
+        <svg
+          className={`ml-2 h-4 w-4 text-gray-500 transition-transform ${dropdownOpen ? "rotate-180" : ""}`}
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M19 9l-7 7-7-7"
+          />
+        </svg>
+      </button>
+
+      {dropdownOpen && (
+        <div
+          className="absolute right-0 mt-2 w-60 bg-background ring-1 ring-black/5
+         rounded-md shadow-lg py-1"
+        >
+          {experimentsNavItems.map((item) => (
+            <NavButton
+              key={item.to}
+              {...item}
+              nested
+              onClick={() => {
+                onItemClick();
+                setDropdownOpen(false);
+              }}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
+const Navigation = () => {
+  const navigate = useNavigate();
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const wrapperRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (
+        wrapperRef.current &&
+        !wrapperRef.current.contains(e.target as Node)
+      ) {
+        setMobileOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const closeMenus = () => {
+    setMobileOpen(false);
   };
 
   return (
@@ -123,7 +245,10 @@ const Navigation = () => {
         <div className="flex h-16 items-center justify-between">
           <div className="flex items-center">
             <button
-              onClick={() => navigate("/")}
+              onClick={() => {
+                navigate("/");
+                closeMenus();
+              }}
               className="flex items-center gap-2 text-md font-semibold text-foreground 
               hover:text-gray-700 cursor-pointer px-3 py-2"
               aria-label="Go to home"
@@ -138,62 +263,11 @@ const Navigation = () => {
           </div>
 
           <div className="hidden md:flex md:items-center">
-            {navButton({ label: "navbar.eat", to: "/eat", icon: faUtensils })}
-            {navButton({
-              label: "navbar.drawings",
-              to: "/drawings",
-              icon: faImage,
-            })}
-            {navButton({
-              label: "navbar.gifts",
-              to: "/gifts",
-              icon: faGift,
-            })}
-            {navButton({
-              label: "navbar.friends",
-              to: "/friends",
-              icon: faUserGroup,
-            })}
-
-            <div className="relative">
-              <button
-                onClick={() => setDropdownOpen((s) => !s)}
-                aria-haspopup="true"
-                aria-expanded={dropdownOpen}
-                className="inline-flex items-center px-3 py-2 rounded-md text-md font-medium
-                 text-foreground hover:bg-brand-soft whitespace-nowrap cursor-pointer"
-              >
-                <FontAwesomeIcon icon={faFlask} className="mr-2 pt-0.5" />
-                {t("navbar.lab.title")}
-                <svg
-                  className="ml-2 h-4 w-4 text-gray-500"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M19 9l-7 7-7-7"
-                  />
-                </svg>
-              </button>
-
-              {dropdownOpen && (
-                <div
-                  className="absolute right-0 mt-2 w-60 bg-background ring-1 ring-black/5
-                 rounded-md shadow-lg py-1"
-                >
-                  {experimentsNavItems.map((item) =>
-                    navButton({ label: item.label, to: item.to, nested: true }),
-                  )}
-                </div>
-              )}
-            </div>
-
-            {authButtons()}
+            {mainNavItems.map((item) => (
+              <NavButton key={item.to} {...item} onClick={closeMenus} />
+            ))}
+            <NavDropdown onItemClick={closeMenus} />
+            <AuthButton onClick={closeMenus} />
           </div>
 
           {/* Mobile menu button */}
@@ -236,75 +310,16 @@ const Navigation = () => {
       {mobileOpen && (
         <div className="md:hidden bg-background">
           <div className="px-2 pt-2 pb-3 space-y-1">
-            {navButton({
-              label: "navbar.eat",
-              to: "/eat",
-              nested: true,
-              icon: faUtensils,
-            })}
-            {navButton({
-              label: "navbar.drawings",
-              to: "/drawings",
-              nested: true,
-              icon: faImage,
-            })}
-            {navButton({
-              label: "navbar.gifts",
-              to: "/gifts",
-              nested: true,
-              icon: faGift,
-            })}
-            {navButton({
-              label: "navbar.friends",
-              to: "/friends",
-              nested: true,
-              icon: faUserGroup,
-            })}
-            <div>
-              <button
-                onClick={() => setDropdownOpen((s) => !s)}
-                className="w-full text-left px-3 py-2 rounded-md text-md font-medium text-foreground 
-                hover:bg-brand-soft flex items-center justify-between cursor-pointer"
-              >
-                <span>
-                  <FontAwesomeIcon icon={faFlask} className="mr-2 pt-0.5" />
-                  {t("navbar.lab.title")}
-                </span>
-
-                <svg
-                  className="h-4 w-4 text-foreground"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M19 9l-7 7-7-7"
-                  />
-                </svg>
-              </button>
-
-              {dropdownOpen && (
-                <div className="mt-1 space-y-1 pl-2">
-                  {experimentsNavItems.map((item) =>
-                    navButton({
-                      label: item.label,
-                      to: item.to,
-                      nested: true,
-                    }),
-                  )}
-                </div>
-              )}
-            </div>
-
-            {authButtons()}
+            {mainNavItems.map((item) => (
+              <NavButton key={item.to} {...item} nested onClick={closeMenus} />
+            ))}
+            <NavDropdown mobile onItemClick={closeMenus} />
+            <AuthButton onClick={closeMenus} />
           </div>
         </div>
       )}
     </div>
   );
 };
+
 export default Navigation;
