@@ -315,27 +315,22 @@ const LocationTagsList = () => {
         )}
         {t("eat.filter.selectNearby")}
       </SecondaryButton>
-
-      {inProgress ? (
-        <p>Loading...</p>
-      ) : (
-        displayedData?.map((tag) => (
-          <label
-            className="flex gap-2 px-2 py-1 items-center rounded-md cursor-pointer 
+      {displayedData?.map((tag) => (
+        <label
+          className="flex gap-2 px-2 py-1 items-center rounded-md cursor-pointer 
             text-sm border-2 border-brand-soft bg-brand-light"
-            key={tag.value}
-          >
-            <input
-              type="checkbox"
-              className="w-4 h-4"
-              value={tag.value}
-              checked={selectedLocationTags.includes(tag.value)}
-              onChange={handleTagToggle}
-            />
-            {tag.value} - {tag.count}
-          </label>
-        ))
-      )}
+          key={tag.value}
+        >
+          <input
+            type="checkbox"
+            className="w-4 h-4"
+            value={tag.value}
+            checked={selectedLocationTags.includes(tag.value)}
+            onChange={handleTagToggle}
+          />
+          {tag.value} - {tag.count}
+        </label>
+      ))}
     </div>
   );
 };

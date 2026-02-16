@@ -27,6 +27,12 @@ import {
 } from "firebase/firestore";
 import { httpsCallable } from "firebase/functions";
 import { useEffect, useState } from "react";
+import {
+  extractCityAndState,
+  getCurrentPosition,
+  getGeolocationErrorMessage,
+  reverseGeocode,
+} from "@/utils/LocationUtils";
 import { db, firebaseFunctions } from "../../../firebase";
 import type {
   IEatQuery,
@@ -480,6 +486,8 @@ export const useSubmitRestaurantRating = () => {
   return { mutate, isPending, isSuccess, error };
 };
 
+const LOCATION_STALE_TIME = 60 * 60 * 1000;
+
 /**
  * This hook handles get user location.
  * @returns data: user location city and state string
@@ -492,70 +500,49 @@ export const useGetUserLocation = () => {
   const { data, error, refetch, isFetching } = useQuery({
     queryKey: ["user-location"],
     queryFn: async () => {
-      const geoCoder = new google.maps.Geocoder();
-      if (!navigator.geolocation) {
-        throw new Error("Geolocation is not supported by this browser.");
+      try {
+        const position = await getCurrentPosition({
+          timeout: 5000,
+          enableHighAccuracy: false,
+          maximumAge: 60000 * 60,
+        });
+
+        const { latitude, longitude } = position.coords;
+        const response = await reverseGeocode({
+          lat: latitude,
+          lng: longitude,
+        });
+        const cityAndState = extractCityAndState(response.results);
+
+        if (!cityAndState) {
+          throw new Error("Could not determine city and state from location.");
+        }
+
+        return cityAndState;
+      } catch (err) {
+        let message = "An error occurred while fetching location.";
+        if (err instanceof Error) {
+          message = err.message;
+        } else if (typeof err === "object" && err !== null && "code" in err) {
+          message = getGeolocationErrorMessage(err as GeolocationPositionError);
+        }
+
+        addMessageBars([
+          {
+            id: new Date().toISOString(),
+            message,
+            type: "error",
+            autoDismiss: true,
+          },
+        ]);
+        throw new Error(message);
       }
-
-      return new Promise<string>((resolve, reject) => {
-        navigator.geolocation.getCurrentPosition(
-          async (position) => {
-            try {
-              const { latitude, longitude } = position.coords;
-              const latlng = { lat: latitude, lng: longitude };
-              const response = await geoCoder.geocode({ location: latlng });
-
-              if (response.results[0]) {
-                let city = "";
-                let state = "";
-
-                response.results[0].address_components.forEach((component) => {
-                  if (component.types.includes("locality")) {
-                    city = component.long_name;
-                  }
-                  if (component.types.includes("administrative_area_level_1")) {
-                    state = component.short_name;
-                  }
-                });
-
-                const cityAndState = `${city}, ${state}`;
-
-                resolve(cityAndState);
-              }
-            } catch (error) {
-              reject(
-                new Error(
-                  "Geolocation is not supported by this browser." + error,
-                ),
-              );
-            }
-          },
-          (geoError) => {
-            // Mapping specific Geolocation errors for better UX
-            const messages: Record<number, string> = {
-              1: "Permission denied. Please enable location in browser settings.",
-              2: "Position unavailable. GPS signal might be weak.",
-              3: "Location request timed out.",
-            };
-            addMessageBars([
-              {
-                id: new Date().toISOString(),
-                message: messages[geoError.code] || geoError.message,
-                type: "error",
-                autoDismiss: true,
-              },
-            ]);
-            reject(new Error(messages[geoError.code] || geoError.message));
-          },
-          { timeout: 5000, enableHighAccuracy: false, maximumAge: 60000 * 60 },
-        );
-      });
     },
     refetchOnWindowFocus: false,
     refetchOnMount: false,
     refetchOnReconnect: false,
     retry: false,
-    staleTime: Infinity,
+    staleTime: LOCATION_STALE_TIME,
     enabled: false,
   });
 
@@ -574,55 +561,38 @@ export const useGetCitiesCloseToCurrentUserLocation = (
   cityAndState: string,
 ) => {
   const addMessageBars = useAddMessageBars();
-  const { data, error, refetch, isFetching } = useQuery({
+  return useQuery({
     queryKey: ["citiesCloseToCurrentUserLocation", cityAndState],
     queryFn: async () => {
-      if (!cityAndState) {
-        return [];
-      }
-      try {
-        const selectLocationTagsBasedOnCurrentLocation = httpsCallable<
-          { cityAndState: string },
-          { locationTags: string[] }
-        >(firebaseFunctions, "selectLocationTagsBasedOnCurrentLocation");
-        const result = await selectLocationTagsBasedOnCurrentLocation({
-          cityAndState,
-        });
-        addMessageBars([
-          {
-            id: new Date().toISOString(),
-            message:
-              "Cities close to current user location fetched successfully",
-            type: "success",
-            autoDismiss: true,
-          },
-        ]);
-        return result.data?.locationTags || [];
-      } catch (error) {
-        console.error(
-          "Error fetching cities close to current user location:",
-          error,
-        );
-        addMessageBars([
-          {
-            id: new Date().toISOString(),
-            message:
-              "Error fetching cities close to current user location: " + error,
-            type: "error",
-            autoDismiss: true,
-          },
-        ]);
-        return [];
-      }
+      if (!cityAndState) return [];
+
+      const selectLocationTagsBasedOnCurrentLocation = httpsCallable<
+        { cityAndState: string },
+        { locationTags: string[] }
+      >(firebaseFunctions, "selectLocationTagsBasedOnCurrentLocation");
+
+      const result = await selectLocationTagsBasedOnCurrentLocation({
+        cityAndState,
+      });
+
+      addMessageBars([
+        {
+          id: new Date().toISOString(),
+          message: "Cities close to current user location fetched successfully",
+          type: "success",
+          autoDismiss: true,
+        },
+      ]);
+
+      return result.data?.locationTags || [];
     },
     enabled: !!cityAndState,
     refetchOnWindowFocus: false,
     refetchOnMount: false,
     refetchOnReconnect: false,
     retry: false,
-    staleTime: Infinity,
+    staleTime: LOCATION_STALE_TIME,
   });
-  return { data, error, refetch, isFetching };
 };
 
 /**
