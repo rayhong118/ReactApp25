@@ -309,7 +309,7 @@ const Navigation = () => {
       {/* Mobile panel */}
       {mobileOpen && (
         <div className="md:hidden bg-background">
-          <div className="px-2 pt-2 pb-3 space-y-1">
+          <div className="px-2 pt-2 pb-3 space-y-1 overflow-y-auto max-h-[calc(100vh-4rem)]">
             {mainNavItems.map((item) => (
               <NavButton key={item.to} {...item} nested onClick={closeMenus} />
             ))}
