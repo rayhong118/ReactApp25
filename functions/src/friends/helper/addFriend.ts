@@ -7,27 +7,34 @@ import * as admin from "firebase-admin";
  * @param user2Id - The ID of the second user
  */
 export const addFriend = async (user1Id: string, user2Id: string) => {
-  const user1Ref = admin.firestore().collection("users").doc(user1Id);
-  const user2Ref = admin.firestore().collection("users").doc(user2Id);
+  const db = admin.firestore();
+  const user1Ref = db.collection("users").doc(user1Id);
+  const user2Ref = db.collection("users").doc(user2Id);
 
-  const currentUser1Friends = await user1Ref
-    .get()
-    .then((doc) => doc.data()?.friends);
-  const currentUser2Friends = await user2Ref
-    .get()
-    .then((doc) => doc.data()?.friends);
+  await db.runTransaction(async (transaction) => {
+    const user1Doc = await transaction.get(user1Ref);
+    const user2Doc = await transaction.get(user2Ref);
 
-  if (currentUser1Friends.includes(user2Id)) {
-    throw new Error("User is already a friend");
-  }
-  if (currentUser2Friends.includes(user1Id)) {
-    throw new Error("User is already a friend");
-  }
+    if (!user1Doc.exists || !user2Doc.exists) {
+      throw new Error("One or both users do not exist");
+    }
 
-  await user1Ref.update({
-    friendIds: [...currentUser1Friends, user2Id],
-  });
-  await user2Ref.update({
-    friendIds: [...currentUser2Friends, user1Id],
+    const friends1 = user1Doc.data()?.friendIds || [];
+    const friends2 = user2Doc.data()?.friendIds || [];
+
+    // Check if already friends to avoid duplicates
+    if (friends1.includes(user2Id) && friends2.includes(user1Id)) {
+      return;
+    }
+
+    transaction.update(user1Ref, {
+      friendIds: admin.firestore.FieldValue.arrayUnion(user2Id),
+      updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+    });
+
+    transaction.update(user2Ref, {
+      friendIds: admin.firestore.FieldValue.arrayUnion(user1Id),
+      updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+    });
   });
 };
