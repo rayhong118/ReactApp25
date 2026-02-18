@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { AuthButton } from "./Navigation/AuthButton";
-import { NavButton } from "./Navigation/NavButton";
-import { NavDropdown } from "./Navigation/NavDropdown";
-import { mainNavItems } from "./Navigation/NavItems";
+import { AuthButton } from "./AuthButton";
+import { NavButton } from "./NavButton";
+import { NavDropdown } from "./NavDropdown";
+import { mainNavItems } from "./NavItems";
 
 const Navigation = () => {
   const navigate = useNavigate();

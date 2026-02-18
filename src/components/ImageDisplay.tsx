@@ -7,7 +7,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { FocusTrap } from "focus-trap-react";
 import { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
-import { CustomizedButton } from "./Buttons";
+import { CustomizedButton } from "@/components/Buttons";
 
 interface ImageDisplayProps {
   src: string;
@@ -106,6 +106,6 @@ export const ImageDisplay = ({
         </div>
       </div>
     </FocusTrap>,
-    document.body
+    document.body,
   );
 };

@@ -1,4 +1,4 @@
-import { CustomizedButton } from "./Buttons";
+import { CustomizedButton } from "@/components/Buttons";
 
 export const ErrorMessagePanel = ({
   message,

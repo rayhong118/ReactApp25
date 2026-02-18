@@ -1,7 +1,7 @@
 import React from "react";
 import { useGetCurrentUser } from "../pages/auth/AuthenticationAtoms";
 import { useNavigate } from "react-router-dom";
-import { CustomizedButton } from "./Buttons";
+import { CustomizedButton } from "@/components/Buttons";
 import { useTranslation } from "react-i18next";
 
 type WithAuthRequiredProps = {
