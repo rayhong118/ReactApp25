@@ -1,0 +1,16 @@
+.notification-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.dot {
+  position: absolute;
+  top: 0;
+  right: 0px;
+  height: 10px;
+  width: 10px;
+  transform: translate(-10px, 0);
+  background-color: red;
+  border-radius: 50%;
+  border: 2px solid white; /* Adds a "cutout" effect against the background */
+}

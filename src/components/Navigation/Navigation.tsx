@@ -4,6 +4,7 @@ import { AuthButton } from "./AuthButton";
 import { NavButton } from "./NavButton";
 import { NavDropdown } from "./NavDropdown";
 import { mainNavItems } from "./NavItems";
+// import { Notification } from "./Notification";
 
 const Navigation = () => {
   const navigate = useNavigate();
@@ -59,6 +60,7 @@ const Navigation = () => {
             ))}
             <NavDropdown onItemClick={closeMenus} />
             <AuthButton onClick={closeMenus} />
+            {/* <Notification /> */}
           </div>
 
           {/* Mobile menu button */}
@@ -106,6 +108,7 @@ const Navigation = () => {
             ))}
             <NavDropdown mobile onItemClick={closeMenus} />
             <AuthButton onClick={closeMenus} />
+            {/* <Notification /> */}
           </div>
         </div>
       )}
