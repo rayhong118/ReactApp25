@@ -1,6 +1,6 @@
 import { test, expect } from "@playwright/experimental-ct-react";
-import { PrimaryButton } from "./Buttons";
-import { SecondaryButton } from "./Buttons";
+import { PrimaryButton } from "./PrimaryButton";
+import { SecondaryButton } from "./SecondaryButton";
 
 test("primary button", async ({ mount }) => {
   const primaryButton = await mount(<PrimaryButton>Button</PrimaryButton>);
@@ -21,7 +21,7 @@ test("primary button hover state", async ({ mount }) => {
 
 test("primary button disabled state", async ({ mount }) => {
   const component = await mount(
-    <PrimaryButton disabled>Disabled</PrimaryButton>
+    <PrimaryButton disabled>Disabled</PrimaryButton>,
   );
 
   // Verify element is disabled
@@ -33,13 +33,13 @@ test("primary button disabled state", async ({ mount }) => {
 
 test("secondary button", async ({ mount }) => {
   const secondaryButton = await mount(
-    <SecondaryButton>Button</SecondaryButton>
+    <SecondaryButton>Button</SecondaryButton>,
   );
 
   await expect(secondaryButton).toHaveText("Button");
   await expect(secondaryButton).toHaveAttribute(
     "data-testid",
-    "secondary-button"
+    "secondary-button",
   );
 });
 
@@ -55,7 +55,7 @@ test("secondary button hover state", async ({ mount }) => {
 
 test("secondary button disabled state", async ({ mount }) => {
   const component = await mount(
-    <SecondaryButton disabled>Disabled</SecondaryButton>
+    <SecondaryButton disabled>Disabled</SecondaryButton>,
   );
 
   // Verify element is disabled
