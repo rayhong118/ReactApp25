@@ -6,11 +6,5 @@
     "apps/*",
     "packages/*"
   ],
-  "scripts": {
-    "web:dev": "npm run dev --workspace apps/web",
-    "web:build": "npm run build --workspace apps/web",
-    "functions:build": "npm run build --workspace packages/functions",
-    "functions:deploy": "firebase deploy --only functions",
-    "build:all": "npm run functions:build && npm run web:build"
-  }
+  "scripts": {}
 }

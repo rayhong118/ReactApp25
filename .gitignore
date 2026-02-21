@@ -40,3 +40,4 @@ apikeys.ts
 common/temp
 common/autoinstallers/*/.pnpm-debug.log
 common/deploy
+**/.rush
