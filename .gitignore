@@ -35,3 +35,8 @@ apikeys.ts
 /blob-report/
 /playwright/.cache/
 /playwright/.auth/
+
+# Rush
+common/temp
+common/autoinstallers/*/.pnpm-debug.log
+common/deploy

@@ -1,3 +1,4 @@
+import type { IUser } from "@shared/types";
 import * as admin from "firebase-admin";
 import { HttpsError } from "firebase-functions/https";
 import { onCall } from "firebase-functions/https";
@@ -37,8 +38,8 @@ export const getUserViaSearch = onCall(
     const result = snapshot.docs
       .filter((doc) => doc.id !== userId) // Exclude current user from search results
       .map((doc) => ({
+        ...(doc.data() as IUser),
         id: doc.id,
-        ...doc.data(),
       }));
 
     console.log(`Search result for "${searchTerm}":`, result.length, "results");

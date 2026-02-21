@@ -1,0 +1,40 @@
+import type { Timestamp } from "firebase/firestore";
+
+export interface IFriend {
+  id: string;
+  alias?: string;
+  color?: string;
+  searchAlias?: string;
+}
+
+export interface IFriendList {
+  [key: string]: IFriend;
+}
+
+export interface IFriendRequest {
+  id: string;
+  type: "sent" | "received";
+  senderId: string;
+  senderAlias?: string;
+  senderColor?: string;
+  receiverId: string;
+  receiverAlias?: string;
+  receiverColor?: string;
+  status: "pending" | "accepted" | "rejected";
+  addedAt: Timestamp;
+  updatedAt: Timestamp;
+}
+
+export interface IFriendRequestRecord {
+  sent: IFriendRequest[];
+  received: IFriendRequest[];
+}
+
+export interface IUser {
+  id: string;
+  alias?: string;
+  color?: string;
+  friendIds?: string[];
+  searchAlias?: string;
+  notifications?: any[];
+}

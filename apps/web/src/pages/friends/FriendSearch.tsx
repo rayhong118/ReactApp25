@@ -2,7 +2,7 @@ import { firebaseFunctions } from "@/firebase";
 import { httpsCallable } from "firebase/functions";
 import { useEffect, useState } from "react";
 import { useAddMessageBars } from "@/utils/MessageBarsAtom";
-import type { IFriend } from "./Friend.types";
+import type { IFriend } from "@shared/types";
 import { PrimaryButton } from "@/components/Buttons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";

@@ -16,8 +16,12 @@ export default tseslint.config(
       ecmaVersion: 2022,
       sourceType: "module",
       globals: {
-        ...globals.node, // Correct environment for Functions
+        ...globals.node,
         ...globals.jest,
+      },
+      parserOptions: {
+        project: ["./tsconfig.app.json", "./tsconfig.node.json"],
+        tsconfigRootDir: import.meta.dirname,
       },
     },
     rules: {
