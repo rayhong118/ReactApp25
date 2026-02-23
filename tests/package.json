@@ -3,6 +3,7 @@
   "private": true,
   "version": "1.0.0",
   "scripts": {
+    "build": "tsc --noEmit",
     "test": "playwright test",
     "install-browsers": "playwright install --with-deps"
   },
