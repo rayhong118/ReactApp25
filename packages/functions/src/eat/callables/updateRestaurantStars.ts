@@ -15,12 +15,12 @@ export const updateRestaurantStars = onCall(
 
     const updatedStars = oldRating
       ? {
-          [oldRating]: admin.firestore.FieldValue.increment(-1),
-          [newRating]: admin.firestore.FieldValue.increment(1),
-        }
+        [oldRating]: admin.firestore.FieldValue.increment(-1),
+        [newRating]: admin.firestore.FieldValue.increment(1),
+      }
       : {
-          [newRating]: admin.firestore.FieldValue.increment(1),
-        };
+        [newRating]: admin.firestore.FieldValue.increment(1),
+      };
 
     await restaurantRef.set({ stars: updatedStars }, { merge: true });
 

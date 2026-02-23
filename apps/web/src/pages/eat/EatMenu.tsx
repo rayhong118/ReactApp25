@@ -109,6 +109,11 @@ export const EatMenu = ({ restaurant }: IEatMenuProps) => {
   );
 };
 
+/**
+ * Menu Category component:
+ * Display menu categories in a list.
+ * Each category has a name and a list of menu items.
+ */
 const MenuCategory = ({
   categories,
   language,

@@ -24,7 +24,7 @@ export const verifyRecaptcha = onRequest({ cors: true }, async (req, res) => {
     // (set via Google Secret Manager or .env)
     const secretKey = process.env.RECAPTCHA_SECRET;
 
-    const verifyUrl = `https://www.google.com/recaptcha/api/siteverify`;
+    const verifyUrl = "https://www.google.com/recaptcha/api/siteverify";
 
     // Using axios with params for a cleaner request
     const response = await axios.post<RecaptchaResponse>(verifyUrl, null, {

@@ -29,8 +29,8 @@ export const generateNotesSummary = onCall(
       config: {
         systemInstruction: `
           Summarize notes for the restaurant "${
-            restaurant.name
-          }" in ${language}.
+  restaurant.name
+}" in ${language}.
         
           Formatting Rules:
           - Use a Level 2 Heading (##) for the restaurant name.
