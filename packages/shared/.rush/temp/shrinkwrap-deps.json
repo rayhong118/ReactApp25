@@ -1,5 +1,5 @@
 {
-  "../../packages/shared": "../../packages/shared:Tn0by2gg8n8bhtmIFZsShqYPgw+thYq34+FhiX7NyQs=:",
+  "../../packages/shared": "../../packages/shared:TowbmA6GQOXvOo6Uqw81UNRZQFlulnARjimS8qGUPvA=:",
   "@firebase/ai@2.8.0(@firebase/app-types@0.9.3)(@firebase/app@0.14.8)": "@firebase/ai@2.8.0(@firebase/app-types@0.9.3)(@firebase/app@0.14.8):2Wt2XQ+H9RSSC4Rw4zyShOP9Tr+tYlW4/8/DrkuKwGM=:",
   "@firebase/analytics-compat@0.2.25(@firebase/app-compat@0.5.8)(@firebase/app@0.14.8)": "@firebase/analytics-compat@0.2.25(@firebase/app-compat@0.5.8)(@firebase/app@0.14.8):RfT61hhUrU7ALIdBORCyTS+grEWKO0i2Hb3qa5yoN1I=:",
   "@firebase/analytics-types@0.8.3": "@firebase/analytics-types@0.8.3:qLlRBA8CwUhdiW3pM3q5/vNRh5wZa6xa+vMRc/2trRU=:",
@@ -78,6 +78,7 @@
   "string-width@4.2.3": "string-width@4.2.3:gYK5zuflVbH9skS1XoOO1HY5uPpaXendpMS4VxY5LMI=:",
   "strip-ansi@6.0.1": "strip-ansi@6.0.1:H3fHb0DtiRca76MXSa7UZS8Y063Ac3Gdas8GwsY5B2o=:",
   "tslib@2.8.1": "tslib@2.8.1:o48QCmUM9MfoEi9ASrI4rEhH1lFlrG3SwE/7n5u/YNY=:",
+  "typescript@5.9.3": "typescript@5.9.3:eI8aTp+SctcH9YRRTb0sGs12/GHmIV9ujz6IaZbdnEM=:",
   "undici-types@7.16.0": "undici-types@7.16.0:8ahA2WwxwXLtIEQPGpN69R/RbzA0MhFQxHqLjHM1VSg=:",
   "web-vitals@4.2.4": "web-vitals@4.2.4:96BECVPlvcwy+hlxq7TYNeCRT7iMVfhaQgbHIZ/DxiA=:",
   "websocket-driver@0.7.4": "websocket-driver@0.7.4:rFBENKkvzvwNPWD0J7pF1mfDfsnVShTq1f523gK07QA=:",
