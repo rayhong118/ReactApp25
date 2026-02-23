@@ -39,7 +39,9 @@ test.describe("Smoke Tests - Navigation and Errors", () => {
             text.includes("is undefined")
           )
             return;
-          if (text.includes("Missing required parameters: sitekey")) return;
+          const lowerText = text.toLowerCase();
+          if (lowerText.includes("missing required parameters: sitekey"))
+            return;
           if (
             text.toLowerCase().includes("content security policy") &&
             text.toLowerCase().includes("report-only")
