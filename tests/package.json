@@ -1,0 +1,14 @@
+{
+  "name": "@react-app-25/e2e-tests",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "test": "playwright test",
+    "install-browsers": "playwright install --with-deps"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.57.0",
+    "typescript": "~5.9.3",
+    "@types/node": "^24.10.3"
+  }
+}

@@ -18,14 +18,16 @@ jobs:
       - name: Create dummy apikeys.ts
         run: echo "export const firebaseApiKey = 'dummy'; export const googleMapsApiKey = 'dummy'; export const googleReCaptchaSiteKey = 'dummy';" > apps/web/src/apikeys.ts
       - name: Build projects
-        run: node common/scripts/install-run-rush.js build --to react-app-25
+        run: node common/scripts/install-run-rush.js build --to @react-app-25/e2e-tests
       - name: Install Playwright Browsers
-        run: ./apps/web/node_modules/.bin/playwright install --with-deps
+        run: node ../common/scripts/install-run-rushx.js install-browsers
+        working-directory: tests
       - name: Run Playwright tests
-        run: ./apps/web/node_modules/.bin/playwright test --project=chromium
+        run: node ../common/scripts/install-run-rushx.js test --project=chromium
+        working-directory: tests
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:
           name: playwright-report
-          path: playwright-report/
+          path: tests/playwright-report/
           retention-days: 30
