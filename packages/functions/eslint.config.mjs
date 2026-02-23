@@ -7,6 +7,14 @@ export default tseslint.config(
     // Ignore compiled output and other non-source directories
     ignores: ["lib/**", "generated/**", "node_modules/**"],
   },
+  {
+    // Set the root directory for TSConfig resolution globally for this config
+    languageOptions: {
+      parserOptions: {
+        tsconfigRootDir: import.meta.dirname,
+      },
+    },
+  },
   js.configs.recommended,
   ...tseslint.configs.recommended,
   {
@@ -21,7 +29,6 @@ export default tseslint.config(
       },
       parserOptions: {
         project: ["./tsconfig.json", "./tsconfig.dev.json"],
-        tsconfigRootDir: import.meta.dirname,
       },
     },
     rules: {
