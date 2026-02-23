@@ -15,6 +15,8 @@ jobs:
           node-version: lts/*
       - name: Install dependencies
         run: node common/scripts/install-run-rush.js install
+      - name: Create dummy apikeys.ts
+        run: echo "export const firebaseApiKey = 'dummy'; export const googleMapsApiKey = 'dummy'; export const googleReCaptchaSiteKey = 'dummy';" > apps/web/src/apikeys.ts
       - name: Build projects
         run: node common/scripts/install-run-rush.js build --to react-app-25
       - name: Install Playwright Browsers
