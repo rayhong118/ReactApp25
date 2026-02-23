@@ -13,8 +13,8 @@ import { responseJsonSchema } from "./handleMenuImageUpload";
 export const handleMenuUrlSubmission = onDocumentCreated(
   {
     document: "menu-url-submissions/{submissionId}",
-    secrets: ["GEMINI_API_KEY"],
     timeoutSeconds: 300, // 5 minutes for AI processing
+    secrets: ["GEMINI_API_KEY"],
   },
   async (event) => {
     const snapshot = event.data;

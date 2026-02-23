@@ -49,8 +49,8 @@ export const searchRestaurantByName = onCall(
     } catch (error) {
       throw new HttpsError(
         "internal",
-        "Failed to generate recommendation." + error
+        "Failed to generate recommendation." + error,
       );
     }
-  }
+  },
 );

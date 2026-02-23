@@ -1,11 +1,14 @@
 import admin from "firebase-admin";
 import { logger } from "firebase-functions";
-import { onDocumentCreated } from "firebase-functions/firestore";
+import { onDocumentCreated } from "firebase-functions/v2/firestore";
 import { File } from "@google-cloud/storage";
 import genAI from "../../utils/genAIClient";
 
 export const handleMenuImageUpload = onDocumentCreated(
-  "menu-images/{menuImageDocId}",
+  {
+    document: "menu-images/{menuImageDocId}",
+    secrets: ["GEMINI_API_KEY"],
+  },
   async (event) => {
     const menuImageDoc = event.data;
     if (!menuImageDoc) {

@@ -3,8 +3,8 @@ import genAI from "../../utils/genAIClient";
 
 export const generateSuggestionBasedOnUserPrompt = onCall(
   {
-    secrets: ["GEMINI_API_KEY"],
     cors: true,
+    secrets: ["GEMINI_API_KEY"],
   },
   async (request) => {
     // 1. Data Validation
