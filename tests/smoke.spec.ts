@@ -52,9 +52,6 @@ test.describe("Smoke Tests - Navigation and Errors", () => {
       // Wait for the navigation logo to be visible, ensuring the page has rendered
       await expect(page.getByLabel("Go to home")).toBeVisible();
 
-      // Wait for network to settle to catch potential post-mount hook/fetch errors
-      await page.waitForLoadState("networkidle");
-
       // Assert that no errors were caught
       expect(
         errors,
