@@ -72,8 +72,7 @@ export default defineConfig({
 
   /* Run your local dev server before starting the tests */
   webServer: {
-    command:
-      "node common/scripts/install-run-rush.js build -t react-app-25 && node common/scripts/install-run-rush.js dev -t react-app-25",
+    command: "node common/scripts/install-run-rush.js dev -t react-app-25",
     url: "http://localhost:5173",
     reuseExistingServer: !process.env.CI,
   },

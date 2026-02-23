@@ -15,6 +15,8 @@ jobs:
           node-version: lts/*
       - name: Install dependencies
         run: node common/scripts/install-run-rush.js install
+      - name: Build projects
+        run: node common/scripts/install-run-rush.js build --to react-app-25
       - name: Install Playwright Browsers
         run: ./apps/web/node_modules/.bin/playwright install --with-deps
       - name: Run Playwright tests
