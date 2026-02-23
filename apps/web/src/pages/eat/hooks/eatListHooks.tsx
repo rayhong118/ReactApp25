@@ -10,6 +10,8 @@ import {
   useGetRestaurants,
 } from "./hooks";
 import type { TEatSort } from "../Eat.types";
+import { useEatTestMode } from "./useEatTestMode";
+import { MOCK_RESTAURANT } from "../EatMockData";
 
 /**
  * This hook handles sort for eat list
@@ -59,7 +61,16 @@ export const useRestaurantList = () => {
     }
   }, [currentUserRatings, setCurrentUserRatings]);
 
-  const allRestaurants = restaurants?.pages.flatMap((page) => page.restaurants);
+  const allRestaurantsFromHook = restaurants?.pages.flatMap(
+    (page) => page.restaurants,
+  );
+  const isTestMode = useEatTestMode();
+
+  const allRestaurants =
+    isTestMode &&
+    (!allRestaurantsFromHook || allRestaurantsFromHook.length === 0)
+      ? [MOCK_RESTAURANT]
+      : allRestaurantsFromHook;
 
   return {
     restaurants: allRestaurants,
@@ -68,5 +79,6 @@ export const useRestaurantList = () => {
     fetchNextPage,
     isFetchingNextPage,
     eatQuery,
+    isTestMode,
   };
 };

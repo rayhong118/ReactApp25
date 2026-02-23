@@ -6,8 +6,8 @@ test.describe("Authentication Page", () => {
   });
 
   test("should display login options", async ({ page }) => {
-    // Verify title is visible (using a generic locator for the heading)
-    await expect(page.locator("h2")).toBeVisible();
+    // Verify title is visible
+    await expect(page.getByRole("heading", { name: /sign in/i })).toBeVisible();
 
     // Verify Google sign-in button is present
     // We search by text since it's translated, typically "Google" is a stable part of the key or text

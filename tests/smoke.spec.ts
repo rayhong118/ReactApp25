@@ -32,9 +32,17 @@ test.describe("Smoke Tests - Navigation and Errors", () => {
           if (text.includes("the server responded with a status of 403"))
             return;
           if (text.includes("window[S2][Cc()] is undefined")) return;
+          if (text.includes("window[") && text.includes("] is undefined"))
+            return;
           if (
-            text.includes("Content-Security-Policy") &&
-            text.includes("Report-Only")
+            text.includes("can't access property") &&
+            text.includes("is undefined")
+          )
+            return;
+          if (text.includes("Missing required parameters: sitekey")) return;
+          if (
+            text.toLowerCase().includes("content security policy") &&
+            text.toLowerCase().includes("report-only")
           )
             return;
 

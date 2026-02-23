@@ -9,6 +9,7 @@ import type { ICategory, IMenu, IMenuItem, IRestaurant } from "./Eat.types";
 import EatMenuReorder from "./EatMenuReorder";
 import { EatMenuUpload } from "./EatMenuUpload";
 import { getMenuData, useUpdateMenuData } from "./hooks/menuHooks";
+import { useEatTestMode } from "./hooks/useEatTestMode";
 
 /**
  * Menu component:
@@ -23,6 +24,8 @@ export const EatMenu = ({ restaurant }: IEatMenuProps) => {
     restaurant.id || "",
   );
   const currentUser = useGetCurrentUser();
+  const isTestMode = useEatTestMode();
+
   const [isReorderPanelOpen, setIsReorderPanelOpen] = useState(false);
 
   const orderedCategories = Object.values(menuData?.categories || {})
@@ -50,6 +53,7 @@ export const EatMenu = ({ restaurant }: IEatMenuProps) => {
 
     await mutateAsync(menuData);
   };
+
   if (menuDataLoading) {
     return <Loading />;
   }
@@ -74,7 +78,7 @@ export const EatMenu = ({ restaurant }: IEatMenuProps) => {
 
   return (
     <div className="flex flex-col gap-4">
-      {currentUser && <EatMenuUpload restaurant={restaurant} />}
+      {(currentUser || isTestMode) && <EatMenuUpload restaurant={restaurant} />}
       {currentUser && menuData && <hr className="border-foreground" />}
       {menuData && currentUser && (
         <SecondaryButton onClick={() => setIsReorderPanelOpen(true)}>

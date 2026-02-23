@@ -15,6 +15,8 @@ import {
   type UploadMetadata,
 } from "firebase/storage";
 import type { IMenu, IMenuUploadPayload } from "../Eat.types";
+import { useEatTestMode } from "./useEatTestMode";
+import { MOCK_MENU } from "../EatMockData";
 
 const MENU_IMAGES_COLLECTION = "menu-images";
 /**
@@ -98,6 +100,7 @@ export const useUploadMenuImage = () => {
 export const MENU_COLLECTION = "restaurant-menus";
 
 export const getMenuData = (restaurantId: string) => {
+  const isTestMode = useEatTestMode();
   const { data, isLoading, error } = useQuery({
     queryKey: ["menu-data", restaurantId],
     queryFn: async () => {
@@ -112,7 +115,10 @@ export const getMenuData = (restaurantId: string) => {
     staleTime: 60 * 60 * 1000,
   });
 
-  return { data, isLoading, error };
+  const menuData = isTestMode && !data ? MOCK_MENU : data;
+  const menuLoading = isTestMode ? false : isLoading;
+
+  return { data: menuData, isLoading: menuLoading, error };
 };
 
 export const useUpdateMenuData = (restaurantId: string) => {

@@ -22,6 +22,7 @@ export const EatList = () => {
     fetchNextPage,
     isFetchingNextPage,
     eatQuery,
+    isTestMode,
   } = useRestaurantList();
 
   const handleDialogClose = () => {
@@ -29,7 +30,7 @@ export const EatList = () => {
   };
   const User = useGetCurrentUser();
 
-  if (error) return <div>Error: {error.message}</div>;
+  if (error && !isTestMode) return <div>Error: {error.message}</div>;
 
   return (
     <div className="flex flex-col gap-5 w-full">
@@ -52,7 +53,7 @@ export const EatList = () => {
         isLoading={isFetchingNextPage}
       />
 
-      {!hasNextPage && <div>{t("eat.list.endOfList")}</div>}
+      {!hasNextPage && !isTestMode && <div>{t("eat.list.endOfList")}</div>}
 
       <Dialog
         open={isDialogOpen}

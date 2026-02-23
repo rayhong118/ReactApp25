@@ -107,7 +107,7 @@ export const EatCard = React.memo(
         >
           <EatMenu restaurant={restaurant} />
         </Dialog>
-        <div className="border border-gray-300 p-4 rounded-md">
+        <div className="eat-card border border-gray-300 p-4 rounded-md">
           <h1 className="text-xl font-bold">
             {restaurant.displayName || restaurant.name}
           </h1>
@@ -176,6 +176,7 @@ export const EatCard = React.memo(
               <SecondaryButton
                 onClick={openMenuDialog}
                 className=" whitespace-nowrap"
+                data-testid="menu-button"
               >
                 <FontAwesomeIcon icon={faBookOpen} className="mr-2" />
                 {t("eat.card.menu")}

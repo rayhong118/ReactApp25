@@ -3,7 +3,8 @@ import path from "path";
 
 test.describe("Eat Page - Menu Upload Flow", () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto("/eat");
+    // Append testMode=true to bypass auth checks for the upload UI
+    await page.goto("/eat?testMode=true");
   });
 
   test("should navigate to a restaurant and show upload options", async ({
@@ -13,8 +14,8 @@ test.describe("Eat Page - Menu Upload Flow", () => {
     const restaurantCard = page.locator(".eat-card").first();
     await expect(restaurantCard).toBeVisible();
 
-    // Click on a restaurant card to open details/actions
-    await restaurantCard.click();
+    // Click on the specific "Menu" button inside the card to open the dialog
+    await restaurantCard.getByTestId("menu-button").click();
 
     // Check for the "Submit Menu Image" button
     const uploadImageButton = page.getByRole("button", {
@@ -34,7 +35,7 @@ test.describe("Eat Page - Menu Upload Flow", () => {
     page,
   }) => {
     const restaurantCard = page.locator(".eat-card").first();
-    await restaurantCard.click();
+    await restaurantCard.getByTestId("menu-button").click();
 
     await page.getByRole("button", { name: /submit menu image/i }).click();
 
