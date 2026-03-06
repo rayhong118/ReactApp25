@@ -131,7 +131,8 @@ export const useGenerateNotesSummary = () => {
   const addMessageBars = useAddMessageBars();
   const [summary, setSummary] = useState("");
   const [isStreaming, setIsStreaming] = useState(false);
-  const abortControllerRef = useRef<AbortController | null>(null);
+  const isStoppedRef = useRef(false);
+  const bufferRef = { current: "" };
 
   const generateNotesSummary = async (
     notes: INote[],
@@ -140,6 +141,7 @@ export const useGenerateNotesSummary = () => {
   ) => {
     setSummary("");
     setIsStreaming(true);
+    isStoppedRef.current = false;
 
     const callable = httpsCallable<
       {
@@ -157,8 +159,28 @@ export const useGenerateNotesSummary = () => {
         language,
       });
 
+      let pendingSummaryUpdate = ""; // Buffer to hold newly arrived chunks
+      let rafId: number | null = null;
+
       for await (const chunk of stream) {
-        setSummary((prev) => prev + chunk);
+        if (isStoppedRef.current) break;
+        pendingSummaryUpdate += chunk;
+
+        bufferRef.current += chunk;
+
+        if (rafId === null) {
+          rafId = requestAnimationFrame(() => {
+            const toFlush = bufferRef.current;
+            bufferRef.current = "";
+            setSummary((prev) => prev + toFlush);
+            rafId = null;
+          });
+        }
+      }
+      // After the stream ends, flush any remaining chunks that didn't make the last frame
+      if (bufferRef.current) {
+        if (rafId !== null) cancelAnimationFrame(rafId);
+        setSummary((prev) => prev + pendingSummaryUpdate);
       }
       const finalData = await data;
       console.log(finalData);
@@ -178,7 +200,7 @@ export const useGenerateNotesSummary = () => {
   };
 
   const stop = () => {
-    abortControllerRef.current?.abort();
+    isStoppedRef.current = true;
     setIsStreaming(false);
   };
 
