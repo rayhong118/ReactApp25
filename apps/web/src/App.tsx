@@ -8,8 +8,8 @@ import { useSetCurrentUser } from "./pages/auth/AuthenticationAtoms";
 import { withDefaultPagePadding } from "./hooks/withDefaultPagePadding";
 import { withSuspense } from "./hooks/withSuspense";
 
-import ScrollToTop from "./utils/ScrollToTop";
 import ThemeHandler from "./components/ThemeHandler";
+import ScrollToTop from "./utils/ScrollToTop";
 
 const Navigation = lazy(() => import("./components/Navigation"));
 const Home = lazy(() => import("./pages/home/Home"));
@@ -37,6 +37,7 @@ const FriendsPage = lazy(() => import("./pages/friends/Friends"));
 const CalendarEventGenerator = lazy(
   () => import("./pages/experiments/CalendarEventGenerator"),
 );
+const FetchAPILab = lazy(() => import("./pages/experiments/FetchAPI"));
 
 const WithAuthRequired = lazy(() => import("./components/WithAuthRequired"));
 
@@ -96,6 +97,10 @@ const App: React.FC = () => {
           element={withSuspense(
             withDefaultPagePadding(<CalendarEventGenerator />),
           )}
+        />
+        <Route
+          path="/experiments/fetchApiLab"
+          element={withSuspense(withDefaultPagePadding(<FetchAPILab />))}
         />
         <Route
           path="/eat"
