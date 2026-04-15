@@ -8,7 +8,7 @@ const Home = () => {
        w-full max-h-screen flex flex-col justify-center items-center"
       >
         <h1 id="homepage_title" className="font-bold">
-          HOMEPAGE
+          FOOD, COMICS & MORE
         </h1>
         <h2 id="homepage_subtitle" className="text-2xl text-white">
           Doghead portal 2025
