@@ -50,3 +50,44 @@ A playground for technical exploration regarding UI/UX technologies.
 - **Unit Testing**: [Vitest](https://vitest.dev/), [Jest](https://jestjs.io/) (for Functions)
 - **UI Testing**: Testing Library (React/DOM)
 - **Linting**: ESLint with TypeScript support
+
+## 🛠️ Development & Deployment
+
+This project uses **Rush** to manage the monorepo.
+
+### Setup
+
+First, install the dependencies for all projects:
+
+```bash
+rush update
+```
+
+### Development
+
+Run the development server for the web app and functions (in parallel):
+
+```bash
+rush dev
+```
+
+### Build
+
+Build all projects in the correct dependency order:
+
+```bash
+rush build
+```
+
+### Deployment
+
+To deploy the entire stack (Hosting and Functions) to Firebase:
+
+```bash
+firebase deploy
+```
+
+> [!TIP]
+> You can also deploy specific components:
+> - `firebase deploy --only hosting`
+> - `firebase deploy --only functions`
