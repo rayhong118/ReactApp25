@@ -19,6 +19,7 @@ const genAI = {
       }
       _genAI = new GoogleGenAI({ apiKey });
     }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return (_genAI as any).models;
   },
 };
