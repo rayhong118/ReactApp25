@@ -3,7 +3,7 @@ import { Loading } from "@/components/Loading";
 import { useGetCurrentUser } from "@/pages/auth/AuthenticationAtoms";
 import { faArrowLeft, faShuffle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import type { ICategory, IMenu, IMenuItem, IRestaurant } from "./Eat.types";
 import EatMenuReorder from "./EatMenuReorder";
@@ -20,11 +20,19 @@ interface IEatMenuProps {
   restaurant: IRestaurant;
 }
 export const EatMenu = ({ restaurant }: IEatMenuProps) => {
-  const { data: menuData, isLoading: menuDataLoading } = getMenuData(
-    restaurant.id || "",
-  );
+  const {
+    data: menuData,
+    isLoading: menuDataLoading,
+    error: getMenuDataError,
+  } = getMenuData(restaurant.id || "");
   const currentUser = useGetCurrentUser();
   const isTestMode = useEatTestMode();
+
+  useEffect(() => {
+    if (getMenuDataError && !menuDataLoading) {
+      throw "Failed to fetch menu data";
+    }
+  }, [menuDataLoading, getMenuDataError]);
 
   const [isReorderPanelOpen, setIsReorderPanelOpen] = useState(false);
 
@@ -121,15 +129,18 @@ const MenuCategory = ({
   categories: ICategory[];
   language: "en" | "zh";
 }) => {
-  return categories.map((category: ICategory, index: number) => (
-    <div className="flex flex-col gap-2" key={index}>
+  return categories.map((category: ICategory) => (
+    <div className="flex flex-col gap-2" key={category.name.en}>
       <h3 className="text-lg text-foreground font-bold">
         {category.name[language] || category.name.en}
       </h3>
 
       <div className="flex flex-wrap">
-        {category.items.map((item: IMenuItem, index: number) => (
-          <div key={index} className="w-1/2 min-w-xs pb-2 text-foreground">
+        {category.items.map((item: IMenuItem) => (
+          <div
+            key={item.name.en}
+            className="w-1/2 min-w-xs pb-2 text-foreground"
+          >
             <div className="pl-4 w-full flex justify-between gap-10">
               <h4 className="font-semibold">
                 {item.name[language] || item.name.en}

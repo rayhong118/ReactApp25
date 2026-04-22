@@ -12,8 +12,8 @@ export const SecondaryButton = (
       type={type}
       className={`
     bg-transparent text-[var(--color-foreground)] font-semibold py-1 px-2 rounded 
-    border-2 border-transparent 
-    hover:bg-brand-soft
+    border-1 border-foreground/20 hover:border-brand-vibrant
+    hover:bg-brand-soft transition-colors duration-200
     focus:border-brand-vibrant focus:outline-none focus:bg-brand-soft 
     disabled:bg-foreground/20 disabled:cursor-not-allowed cursor-pointer 
     ${className || ""}
