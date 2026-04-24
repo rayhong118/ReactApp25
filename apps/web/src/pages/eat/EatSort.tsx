@@ -1,41 +1,46 @@
 import { useTranslation } from "react-i18next";
 import { useEatListSort } from "./hooks/eatListHooks";
 
+const SORT_OPTIONS = [
+  { key: "none", value: "", label: "eat.list.orderByNone" },
+  { key: "rating", value: "averageStars,desc", label: "eat.list.orderByAverageRating" },
+  { key: "price-asc", value: "price,asc", label: "eat.list.orderByPriceLowToHigh" },
+  { key: "price-desc", value: "price,desc", label: "eat.list.orderByPriceHighToLow" },
+];
+
 export const EatSort = () => {
   const { t } = useTranslation();
   const { orderBy, handleSortChange } = useEatListSort();
+
+  const currentValue = orderBy ? `${orderBy.field},${orderBy.direction}` : "";
+
   return (
     <div className="flex gap-2 items-center">
-      <div>{t("eat.list.orderBy")}</div>
+      <label htmlFor="eat-sort-select" className="text-sm font-medium">
+        {t("eat.list.orderBy")}
+      </label>
       <select
+        id="eat-sort-select"
         onChange={(e) => {
-          const value = e.target.value;
-          if (!value) {
+          const val = e.target.value;
+          if (!val) {
             handleSortChange(undefined);
             return;
           }
-          const [field, direction] = value.split(",");
-
+          const [field, direction] = val.split(",");
           handleSortChange({
             field,
             direction: direction as "asc" | "desc",
           });
         }}
-        value={orderBy?.field + "," + orderBy?.direction}
-        className="border border-gray-300 rounded p-2"
+        value={currentValue}
+        className="border border-gray-300 rounded p-2 bg-white focus:ring-2 focus:ring-brand"
       >
-        <option className="p-2" value={""}>
-          {t("eat.list.orderByNone")}
-        </option>
-        <option className="p-2" value={"averageStars,desc"}>
-          {t("eat.list.orderByAverageRating")}
-        </option>
-        <option className="p-2" value={"price,asc"}>
-          {t("eat.list.orderByPriceLowToHigh")}
-        </option>
-        <option className="p-2" value={"price,desc"}>
-          {t("eat.list.orderByPriceHighToLow")}
-        </option>
+        {SORT_OPTIONS.map((opt) => (
+          <option key={opt.key} value={opt.value}>
+            {t(opt.label)}
+          </option>
+        ))}
       </select>
     </div>
   );

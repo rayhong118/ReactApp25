@@ -1,12 +1,13 @@
+import { useState } from "react";
+import { useTranslation } from "react-i18next";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTrash } from "@fortawesome/free-solid-svg-icons";
+
 import { CustomizedButton } from "@/components/Buttons";
 import { type IDialogAction, Dialog } from "@/components/Dialog";
 import { useGetCurrentUser } from "@/pages/auth/AuthenticationAtoms";
-import { faTrash } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useState } from "react";
 import type { INote } from "./Eat.types";
 import { useDeleteRestaurantNote } from "./hooks/eatNoteHooks";
-import { useTranslation } from "react-i18next";
 
 /**
  * This component displays a note for a restaurant
@@ -19,12 +20,17 @@ const EatNote = ({ note, refetch }: { note: INote; refetch: () => void }) => {
   const { mutate: deleteNote, isPending: isDeletingNote } =
     useDeleteRestaurantNote();
 
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
   const handleDelete = () => {
-    deleteNote(note.id!);
-    refetch();
+    deleteNote(note.id!, {
+      onSuccess: () => {
+        setIsDialogOpen(false);
+        refetch();
+      },
+    });
   };
 
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const dialogActions: IDialogAction[] = [
     {
       label: "Yes",
@@ -36,22 +42,24 @@ const EatNote = ({ note, refetch }: { note: INote; refetch: () => void }) => {
     },
   ];
 
+  const formattedDate = note.date.toDate().toLocaleDateString(i18n.language, {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+
   return (
-    <div className="border-l-solid border-l-gray-200 border-l-5 px-2">
-      <p>{note.content}</p>
+    <div className="border-l-solid border-l-gray-200 border-l-5 px-2 py-1">
+      <p className="mb-2">{note.content}</p>
       <div className="flex justify-between items-center">
-        <p className="text-sm font-bold">
-          {note.date.toDate().toLocaleDateString(i18n.language, {
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-          })}
+        <p className="text-xs font-bold text-gray-500 uppercase tracking-wider">
+          {formattedDate}
         </p>
         {User?.uid === note.userId && (
           <CustomizedButton
             onClick={() => setIsDialogOpen(true)}
             disabled={isDeletingNote}
-            className="border-red-500 border-2 text-red-500 font-semibold hover:bg-red-50 cursor-pointer "
+            className="border-red-500 border-2 text-red-500 font-semibold hover:bg-red-50 cursor-pointer text-sm"
           >
             <FontAwesomeIcon icon={faTrash} className="mr-2" />
             {t("eat.notes.delete")}

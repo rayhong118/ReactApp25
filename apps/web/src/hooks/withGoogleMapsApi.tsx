@@ -6,8 +6,10 @@ import { ErrorMessagePanel } from "@/components/ErrorMessagePanel";
 type Library = "places" | "drawing" | "geometry" | "visualization";
 const LIBRARIES: Library[] = ["places"];
 
-export function withGoogleMapsApi(WrappedComponent: React.ComponentType) {
-  return function (props: any) {
+export function withGoogleMapsApi<P extends object>(
+  WrappedComponent: React.ComponentType<P>,
+) {
+  return function (props: P) {
     const { isLoaded, loadError } = useJsApiLoader({
       id: "google-map-script",
       googleMapsApiKey: googleMapsApiKey,

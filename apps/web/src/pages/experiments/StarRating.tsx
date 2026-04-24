@@ -16,46 +16,41 @@ export const StarRating = React.memo(
     const displayRating =
       hoverRating !== null ? hoverRating : Math.round(rating);
 
+    const isInteractive = !!setRating;
+
     return (
-      <div>
-        <div className="flex" onMouseLeave={() => setHoverRating(null)}>
-          {setRating
-            ? starArray.map((star, index) => (
-                <span
-                  key={index}
-                  onClick={() => setRating(star)}
-                  onMouseEnter={() => setHoverRating(star)}
-                  className="cursor-pointer px-2 text-lg"
-                >
-                  {star <= displayRating ? (
-                    <FontAwesomeIcon
-                      icon={solidStar}
-                      className={`text-[var(--color-brand-vibrant)]`}
-                    />
-                  ) : (
-                    <FontAwesomeIcon
-                      icon={regularStar}
-                      className={`text-[var(--color-brand-vibrant)]`}
-                    />
-                  )}
-                </span>
-              ))
-            : starArray.map((star, index) => (
-                <span key={index}>
-                  {star <= displayRating ? (
-                    <FontAwesomeIcon
-                      icon={solidStar}
-                      className={`text-[var(--color-brand-vibrant)]`}
-                    />
-                  ) : (
-                    <FontAwesomeIcon
-                      icon={regularStar}
-                      className={`text-[var(--color-brand-vibrant)]`}
-                    />
-                  )}
-                </span>
-              ))}
-        </div>
+      <div
+        className="flex"
+        onMouseLeave={isInteractive ? () => setHoverRating(null) : undefined}
+      >
+        {starArray.map((star) => (
+          <span
+            key={star}
+            role={isInteractive ? "button" : undefined}
+            tabIndex={isInteractive ? 0 : undefined}
+            aria-label={isInteractive ? `Rate ${star} out of 5 stars` : undefined}
+            onClick={isInteractive ? () => setRating(star) : undefined}
+            onMouseEnter={isInteractive ? () => setHoverRating(star) : undefined}
+            onKeyDown={
+              isInteractive
+                ? (e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      setRating(star);
+                    }
+                  }
+                : undefined
+            }
+            className={`${
+              isInteractive ? "cursor-pointer px-2" : ""
+            } text-lg transition-colors`}
+          >
+            <FontAwesomeIcon
+              icon={star <= displayRating ? solidStar : regularStar}
+              className="text-[var(--color-brand-vibrant)]"
+            />
+          </span>
+        ))}
       </div>
     );
   },

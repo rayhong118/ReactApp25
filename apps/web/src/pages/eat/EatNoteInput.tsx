@@ -35,16 +35,14 @@ export const EatNoteInput = ({
     }
   }, [currentRating]);
 
-  const onHandleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setNewNote(e.target.value);
-  };
-
   const onHandleNoteSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!newNote) return;
+    const content = newNote.trim();
+    if (!content) return;
+
     addNote(
       {
-        content: newNote,
+        content,
         userId,
         date: Timestamp.now(),
         restaurantId,
@@ -58,15 +56,20 @@ export const EatNoteInput = ({
     );
   };
 
-  const handleRatingSubmit = (rating: number) => {
-    if (rating === currentRating) return;
-    setRating(rating);
+  const handleRatingSubmit = (newRating: number) => {
+    if (newRating === currentRating) return;
+    setRating(newRating);
     submitRestaurantRating({
       restaurantId,
-      rating,
+      rating: newRating,
       userId,
     });
   };
+
+  // Derived state for cleaner JSX
+  const trimmedLength = newNote.trim().length;
+  const isOverLimit = trimmedLength > 250;
+  const isValid = trimmedLength > 0 && !isOverLimit;
 
   return (
     <form
@@ -84,25 +87,23 @@ export const EatNoteInput = ({
       <textarea
         name="note"
         value={newNote}
-        onChange={onHandleChange}
+        onChange={(e) => setNewNote(e.target.value)}
         placeholder={t("eat.notes.addNote")}
         className="w-full border border-black p-2 rounded-md"
       />
       <div className="flex justify-between items-start">
         <CustomizedButton
           type="submit"
-          disabled={
-            isAddingNote || !newNote.trim() || newNote.trim().length > 250
-          }
+          disabled={isAddingNote || !isValid}
         >
           {t("eat.notes.addNote")}
         </CustomizedButton>
         <span
           className={`text-sm font-bold ${
-            newNote.trim().length > 250 ? "text-red-500" : "text-gray-400"
+            isOverLimit ? "text-red-500" : "text-gray-400"
           }`}
         >
-          {newNote.trim().length}/250
+          {trimmedLength}/250
         </span>
       </div>
     </form>
