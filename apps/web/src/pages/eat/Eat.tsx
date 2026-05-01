@@ -16,6 +16,7 @@ import { EatList } from "./EatList";
 import { withGoogleReCaptchaProvider } from "@/hooks/withGoogleReCaptchaProvider";
 import withScrollToTopButton from "@/hooks/withScrollToTopButton";
 import { useTranslation } from "react-i18next";
+import SEO from "@/components/SEO";
 
 const EatListWithMaps = withGoogleMapsApi(EatList);
 
@@ -49,6 +50,10 @@ const Eat = () => {
 
   return withScrollToTopButton(
     <>
+      <SEO 
+        title={specificRestaurantId ? "Restaurant Details" : "Find Restaurants"} 
+        description="Discover and rate the best restaurants around you with our curated restaurant finder."
+      />
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold py-2">{t("eat.title")}</h1>
         {specificRestaurantId && (

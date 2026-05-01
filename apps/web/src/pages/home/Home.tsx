@@ -1,8 +1,19 @@
 import "./Home.scss";
+import SEO from "../../components/SEO";
 
 const Home = () => {
   return (
     <div className="homepage-container w-full">
+      <SEO 
+        title="Home" 
+        description="Welcome to Doghead portal 2025 - Your hub for Food, Comics, and more."
+        structuredData={{
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          "name": "Doghead portal 2025",
+          "url": "https://dogheadportal.web.app/"
+        }}
+      />
       <div
         className="homepage-panel bg-black overflow-hidden min-h-screen
        w-full max-h-screen flex flex-col justify-center items-center"
@@ -29,7 +40,7 @@ const Home = () => {
               src="2017dh.png"
               alt="Doghead"
             />
-            <h1 className="font-bold text-2xl">Doghead</h1>
+            <h2 className="font-bold text-2xl">Doghead</h2>
           </div>
         </div>
       </div>
@@ -40,7 +51,7 @@ const Home = () => {
         <div id="animatedGrid">
           {[...Array(9)].map((_, index) => (
             <div key={index} className="card">
-              <h1 className="font-bold text-2xl">{index}</h1>
+              <h3 className="font-bold text-2xl">{index}</h3>
             </div>
           ))}
         </div>

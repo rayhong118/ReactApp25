@@ -1,6 +1,12 @@
+import SEO from "../../components/SEO";
+
 const About = () => {
   return (
     <div>
+      <SEO
+        title="About"
+        description="Learn more about the developer and the features of Doghead Web App 25, including restaurant finders and interactive experiments."
+      />
       <h1 className="text-xl font-bold">About Me</h1>
       <p className="text-lg">
         I am a Software Development Engineer II at Microsoft with extensive
@@ -19,7 +25,7 @@ const About = () => {
         maintainability to every role.
       </p>
 
-      <h1 className="text-xl font-bold mt-5">About this app</h1>
+      <h2 className="text-xl font-bold mt-5">About this app</h2>
       <p className="text-lg">
         This is my personal website built using React and TypeScript, deployed
         using Google Firebase.{" "}

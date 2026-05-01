@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://dogheadportal.web.app/sitemap.xml
