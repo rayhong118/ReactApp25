@@ -5,7 +5,10 @@ const About = () => {
     <div>
       <SEO
         title="About"
-        description="Learn more about the developer and the features of Doghead Web App 25, including restaurant finders and interactive experiments."
+        description={
+          "Learn more about the developer and the features of Doghead " +
+          "Web App 25, including restaurant finders and interactive experiments."
+        }
       />
       <h1 className="text-xl font-bold">About Me</h1>
       <p className="text-lg">
