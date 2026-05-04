@@ -61,7 +61,7 @@
   min-height: 100vh;
 }
 
-.homepage-panel:nth-child(1) {
+.homepage-main-panel {
   background: url("/seattle.jpg") no-repeat center/cover fixed;
   animation: background-fade-in 6s ease-in-out forwards;
 }

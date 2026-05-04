@@ -4,18 +4,18 @@ import SEO from "../../components/SEO";
 const Home = () => {
   return (
     <div className="homepage-container w-full">
-      <SEO 
-        title="Home" 
+      <SEO
+        title="Home"
         description="Welcome to Doghead portal 2025 - Your hub for Food, Comics, and more."
         structuredData={{
           "@context": "https://schema.org",
           "@type": "WebSite",
-          "name": "Doghead portal 2025",
-          "url": "https://dogheadportal.web.app/"
+          name: "Doghead portal 2025",
+          url: "https://dogheadportal.web.app/",
         }}
       />
       <div
-        className="homepage-panel bg-black overflow-hidden min-h-screen
+        className="homepage-panel homepage-main-panel bg-black overflow-hidden min-h-screen
        w-full max-h-screen flex flex-col justify-center items-center"
       >
         <h1 id="homepage_title" className="font-bold">
