@@ -8,6 +8,7 @@ interface IFormData {
   phoneNumber?: string;
   date?: Date;
   number?: number;
+  datePractice?: Date;
 }
 
 const FormValidation = () => {
@@ -55,6 +56,21 @@ const FormValidation = () => {
             />
             <label className={"block mb-2"} htmlFor="email">
               Email:
+            </label>
+          </div>
+          <div className="labeled-input">
+            <input
+              type="date"
+              id="datePractice"
+              name="datePractice"
+              value={formData?.datePractice?.toISOString().split("T")[0] || ""}
+              className={"border p-2 w-full"}
+              placeholder=""
+              onChange={handleChange}
+              required
+            />
+            <label className={"block mb-2"} htmlFor="email">
+              Date Practice:
             </label>
           </div>
           <div className="labeled-input">
