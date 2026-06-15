@@ -143,10 +143,42 @@
     }
   },
   "gift": {
-    "title": "Gift page",
+    "title": "Wishlist",
+    "titleOfUser": "{{name}}'s Wishlist",
+    "subtitle": "Gifts are items you would like to receive or avoid",
     "edit": "Edit",
     "delete": "Delete",
-    "fulfill": "Fulfill"
+    "fulfill": "Fulfill",
+    "addTitle": "Add {{type}} gift",
+    "preferred": {
+      "title": "Preferred Gifts",
+      "subtitle": "Create a list of gifts you would like to receive",
+      "empty": "No preferred gifts found",
+      "add": "Add Preferred Gift"
+    },
+    "avoid": {
+      "title": "Avoid Gifts",
+      "subtitle": "Create a list of gifts you would not like to receive",
+      "empty": "No avoid gifts found",
+      "add": "Add Avoid Gift"
+    },
+    "types": {
+      "preferred": "preferred",
+      "avoid": "avoid"
+    },
+    "deleteConfirmation": {
+      "title": "Delete Gift",
+      "warning": "Are you sure you want to delete this gift?",
+      "yes": "Yes",
+      "no": "No"
+    },
+    "form": {
+      "nameLabel": "Gift Name",
+      "descriptionLabel": "Gift Description",
+      "fulfilledLabel": "Fulfilled",
+      "cancel": "Cancel",
+      "submit": "Submit"
+    }
   },
   "friends": {
     "title": "Friends",

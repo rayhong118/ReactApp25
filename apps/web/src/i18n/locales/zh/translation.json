@@ -140,10 +140,42 @@
     }
   },
   "gift": {
-    "title": "礼物页面",
+    "title": "心愿单",
+    "titleOfUser": "{{name}} 的心愿单",
+    "subtitle": "礼物是您想要收到或想要避开的项目",
     "edit": "编辑",
     "delete": "删除",
-    "fulfill": "履行"
+    "fulfill": "履行",
+    "addTitle": "添加 {{type}} 礼物",
+    "preferred": {
+      "title": "心仪礼物",
+      "subtitle": "创建一份您想要收到的礼物清单",
+      "empty": "未找到心仪礼物",
+      "add": "添加心仪礼物"
+    },
+    "avoid": {
+      "title": "避雷礼物",
+      "subtitle": "创建一份您不想收到的礼物清单",
+      "empty": "未找到避雷礼物",
+      "add": "添加避雷礼物"
+    },
+    "types": {
+      "preferred": "心仪",
+      "avoid": "避雷"
+    },
+    "deleteConfirmation": {
+      "title": "删除礼物",
+      "warning": "您确定要删除这个礼物吗？",
+      "yes": "是",
+      "no": "否"
+    },
+    "form": {
+      "nameLabel": "礼物名称",
+      "descriptionLabel": "礼物描述",
+      "fulfilledLabel": "已实现",
+      "cancel": "取消",
+      "submit": "提交"
+    }
   },
   "friends": {
     "title": "朋友",

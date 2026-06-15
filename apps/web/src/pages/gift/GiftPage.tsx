@@ -6,12 +6,13 @@ import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import "./Gift.scss";
 import { type IGift } from "./Gift.types";
+import { useTranslation } from "react-i18next";
 import GiftCard from "./GiftCard";
 import GiftForm from "./GiftForm";
 import { useGetGiftList } from "./hooks/giftHooks";
-import WIP from "@/components/WIP";
 
 const GiftPage = () => {
+  const { t } = useTranslation();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [currentGift, setCurrentGift] = useState<Partial<IGift>>();
 
@@ -32,10 +33,11 @@ const GiftPage = () => {
 
   return (
     <div>
-      <WIP />
       <Dialog
         open={dialogOpen}
-        title={`Add ${currentGift?.type} gift`}
+        title={t("gift.addTitle", {
+          type: currentGift?.type ? t(`gift.types.${currentGift.type}`) : "",
+        })}
         customizedClassName="max-w-sm"
         onClose={() => {
           setDialogOpen(false);
@@ -44,12 +46,14 @@ const GiftPage = () => {
         <GiftForm closeDialog={() => setDialogOpen(false)} gift={currentGift} />
       </Dialog>
       <h1 className="text-2xl font-bold">
-        Gift Page {searchParamUserId && userInfo?.alias}
+        {searchParamUserId && userInfo?.alias
+          ? t("gift.titleOfUser", { name: userInfo.alias })
+          : t("gift.title")}
       </h1>
-      <p>Gifts are items you would like to receive or avoid</p>
+      <p>{t("gift.subtitle")}</p>
 
-      <div className="flex justify-between">
-        <h2 className="text-xl font-bold">Preffered Gifts</h2>
+      <div className="flex justify-between mt-4">
+        <h2 className="text-xl font-bold">{t("gift.preferred.title")}</h2>
         {enableAddButtons && (
           <PrimaryButton
             onClick={() => {
@@ -57,12 +61,12 @@ const GiftPage = () => {
               setDialogOpen(true);
             }}
           >
-            Add Preferred Gift
+            {t("gift.preferred.add")}
           </PrimaryButton>
         )}
       </div>
 
-      <p>Create a list of gifts you would like to receive</p>
+      <p>{t("gift.preferred.subtitle")}</p>
       {preferredGifts && preferredGifts.length > 0 ? (
         <div className="flex flex-col gap-2">
           {preferredGifts.map((gift) => (
@@ -70,11 +74,11 @@ const GiftPage = () => {
           ))}
         </div>
       ) : (
-        <div className="preferred-gift-card">No preferred gifts found</div>
+        <div className="preferred-gift-card">{t("gift.preferred.empty")}</div>
       )}
       <hr className="my-4" />
       <div className="flex justify-between">
-        <h2 className="text-xl font-bold">Avoid Gifts</h2>
+        <h2 className="text-xl font-bold">{t("gift.avoid.title")}</h2>
         {enableAddButtons && (
           <PrimaryButton
             onClick={() => {
@@ -82,11 +86,11 @@ const GiftPage = () => {
               setDialogOpen(true);
             }}
           >
-            Add Avoid Gift
+            {t("gift.avoid.add")}
           </PrimaryButton>
         )}
       </div>
-      <p>Create a list of gifts you would not like to receive</p>
+      <p>{t("gift.avoid.subtitle")}</p>
       {avoidGifts && avoidGifts.length > 0 ? (
         <div className="flex flex-col gap-2">
           {avoidGifts.map((gift) => (
@@ -94,7 +98,7 @@ const GiftPage = () => {
           ))}
         </div>
       ) : (
-        <div className="avoid-gift-card">No avoid gifts found</div>
+        <div className="avoid-gift-card">{t("gift.avoid.empty")}</div>
       )}
     </div>
   );

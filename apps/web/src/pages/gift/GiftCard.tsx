@@ -55,14 +55,15 @@ const GiftCard = ({ gift, ownerId }: IGiftCardProps) => {
       <Dialog
         open={deleteDialogOpen}
         onClose={() => setDeleteDialogOpen(false)}
+        title={t("gift.deleteConfirmation.title")}
         customizedClassName="max-w-sm"
         actions={[
           {
-            label: "Yes",
+            label: t("gift.deleteConfirmation.yes"),
             onClick: handleDeleteGift,
           },
           {
-            label: "No",
+            label: t("gift.deleteConfirmation.no"),
             onClick: () => {
               setDeleteDialogOpen(false);
             },
@@ -70,7 +71,7 @@ const GiftCard = ({ gift, ownerId }: IGiftCardProps) => {
         ]}
       >
         <p className="text-foreground">
-          Are you sure you want to delete this gift?
+          {t("gift.deleteConfirmation.warning")}
         </p>
       </Dialog>
       <div className={giftCardClass}>
