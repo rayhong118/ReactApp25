@@ -149,7 +149,13 @@
     "fulfill": "Fulfill"
   },
   "friends": {
-    "title": "Friends"
+    "title": "Friends",
+    "list": {
+      "empty": "You haven't added any friends yet.",
+      "wishlist": "Wishlist",
+      "removeConfirmation": "Are you sure you want to remove {{name}}?",
+      "remove": "Remove"
+    }
   },
   "footer": {
     "contact": {

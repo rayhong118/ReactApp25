@@ -145,6 +145,15 @@
     "delete": "删除",
     "fulfill": "履行"
   },
+  "friends": {
+    "title": "朋友",
+    "list": {
+      "empty": "你还没有添加任何朋友。",
+      "wishlist": "心愿单",
+      "removeConfirmation": "确定要移除 {{name}} 吗？",
+      "remove": "移除"
+    }
+  },
   "footer": {
     "contact": {
       "title": "联系",
