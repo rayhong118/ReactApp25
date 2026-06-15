@@ -17,17 +17,20 @@ import "./Gift.scss";
 
 interface IGiftCardProps {
   gift: IGift;
+  ownerId: string;
 }
 
-const GiftCard = ({ gift }: IGiftCardProps) => {
+const GiftCard = ({ gift, ownerId }: IGiftCardProps) => {
   const { t, i18n } = useTranslation();
   const currentUser = useGetCurrentUser();
   const giftCardClass =
     gift.type === "preferred" ? "preferred-gift-card" : "avoid-gift-card";
   const [dialogOpen, setDialogOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const { deleteGift } = useDeleteGift(currentUser!.uid);
-  const { updateGift } = useUpdateGift(currentUser!.uid);
+  const { deleteGift } = useDeleteGift(ownerId);
+  const { updateGift } = useUpdateGift(ownerId);
+
+  const isOwner = currentUser?.uid === ownerId;
 
   const handleFulfillGift = () => {
     updateGift({
@@ -100,18 +103,22 @@ const GiftCard = ({ gift }: IGiftCardProps) => {
           </div>
         )}
         <div className="flex gap-2">
-          <CustomizedButton
-            onClick={() => setDialogOpen(true)}
-            className="border-gray-500 border-2 text-foreground font-semibold hover:bg-foreground/20 cursor-pointer"
-          >
-            <FontAwesomeIcon icon={faEdit} /> {t("gift.edit")}
-          </CustomizedButton>
-          <CustomizedButton
-            onClick={() => setDeleteDialogOpen(true)}
-            className="border-gray-500 border-2 text-foreground font-semibold hover:bg-foreground/20 cursor-pointer"
-          >
-            <FontAwesomeIcon icon={faTrash} /> {t("gift.delete")}
-          </CustomizedButton>
+          {isOwner && (
+            <>
+              <CustomizedButton
+                onClick={() => setDialogOpen(true)}
+                className="border-gray-500 border-2 text-foreground font-semibold hover:bg-foreground/20 cursor-pointer"
+              >
+                <FontAwesomeIcon icon={faEdit} /> {t("gift.edit")}
+              </CustomizedButton>
+              <CustomizedButton
+                onClick={() => setDeleteDialogOpen(true)}
+                className="border-gray-500 border-2 text-foreground font-semibold hover:bg-foreground/20 cursor-pointer"
+              >
+                <FontAwesomeIcon icon={faTrash} /> {t("gift.delete")}
+              </CustomizedButton>
+            </>
+          )}
           {!gift.isFulfilled && gift.type === "preferred" && (
             <CustomizedButton
               onClick={() => handleFulfillGift()}

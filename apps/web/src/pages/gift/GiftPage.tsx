@@ -66,7 +66,7 @@ const GiftPage = () => {
       {preferredGifts && preferredGifts.length > 0 ? (
         <div className="flex flex-col gap-2">
           {preferredGifts.map((gift) => (
-            <GiftCard key={gift.name} gift={gift} />
+            <GiftCard key={gift.id || gift.name} gift={gift} ownerId={currentUserId!} />
           ))}
         </div>
       ) : (
@@ -90,7 +90,7 @@ const GiftPage = () => {
       {avoidGifts && avoidGifts.length > 0 ? (
         <div className="flex flex-col gap-2">
           {avoidGifts.map((gift) => (
-            <GiftCard key={gift.name} gift={gift} />
+            <GiftCard key={gift.id || gift.name} gift={gift} ownerId={currentUserId!} />
           ))}
         </div>
       ) : (
