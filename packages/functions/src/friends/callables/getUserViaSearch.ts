@@ -21,26 +21,39 @@ export const getUserViaSearch = onCall(
       );
     }
 
-    const normalizedTerm = searchTerm.toLowerCase();
+    const normalizedTerm = searchTerm.toLowerCase().trim();
     const usersRef = admin.firestore().collection("users");
 
-    // Prefix search implementation:
-    // We search for strings that are greater than or equal to the searchTerm
-    // and less than the searchTerm with the last character incremented.
-    // \uf8ff is a high-watermark character in Unicode.
-    const query = usersRef
-      .where("searchAlias", ">=", normalizedTerm)
-      .where("searchAlias", "<", normalizedTerm + "\uf8ff")
-      .limit(20);
+    // Exact email or exact alias match
+    const queryEmail = usersRef.where("searchEmail", "==", normalizedTerm).limit(20);
+    const queryAlias = usersRef.where("searchAlias", "==", normalizedTerm).limit(20);
 
-    const snapshot = await query.get();
+    const [snapshotEmail, snapshotAlias] = await Promise.all([
+      queryEmail.get(),
+      queryAlias.get(),
+    ]);
 
-    const result = snapshot.docs
-      .filter((doc) => doc.id !== userId) // Exclude current user from search results
-      .map((doc) => ({
-        ...(doc.data() as IUser),
-        id: doc.id,
-      }));
+    const mergedDocs = new Map<string, IUser>();
+
+    snapshotEmail.docs.forEach((doc) => {
+      if (doc.id !== userId) {
+        mergedDocs.set(doc.id, {
+          ...(doc.data() as IUser),
+          id: doc.id,
+        });
+      }
+    });
+
+    snapshotAlias.docs.forEach((doc) => {
+      if (doc.id !== userId) {
+        mergedDocs.set(doc.id, {
+          ...(doc.data() as IUser),
+          id: doc.id,
+        });
+      }
+    });
+
+    const result = Array.from(mergedDocs.values());
 
     console.log(`Search result for "${searchTerm}":`, result.length, "results");
     return result;

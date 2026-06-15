@@ -1,5 +1,5 @@
-import { getAdditionalUserInfo, signInWithPopup } from "firebase/auth";
-import { doc, updateDoc } from "firebase/firestore";
+import { signInWithPopup, getAdditionalUserInfo } from "firebase/auth";
+import { doc, setDoc } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 import { auth, db, githubProvider, googleProvider } from "../../firebase";
 import { useSetCurrentUser } from "./AuthenticationAtoms";
@@ -15,16 +15,24 @@ export const useFirebaseSignInWithGoogle = () => {
       const userCredential = await signInWithPopup(auth, googleProvider);
 
       setCurrentUser(userCredential.user);
-      // Use this helper function to extract metadata
+      
+      // Update/create user document in users collection. Initialize alias only on first login (registration)
       const details = getAdditionalUserInfo(userCredential);
+      const isNewUser = details?.isNewUser;
 
-      if (details && details.isNewUser) {
-        // update user display name in users collection
-        const userDoc = doc(db, "users", userCredential.user.uid);
-        await updateDoc(userDoc, {
-          displayName: userCredential.user.displayName,
-        });
+      const userDoc = doc(db, "users", userCredential.user.uid);
+      const userData: Record<string, any> = {
+        email: userCredential.user.email || "",
+      };
+
+      if (isNewUser) {
+        userData.alias =
+          userCredential.user.displayName ||
+          userCredential.user.email?.split("@")[0] ||
+          "User";
       }
+
+      await setDoc(userDoc, userData, { merge: true });
 
       addMessageBars([
         {
@@ -60,14 +68,23 @@ export const useFirebaseSignInWithGitHub = () => {
       const userCredential = await signInWithPopup(auth, githubProvider);
       setCurrentUser(userCredential.user);
 
+      // Update/create user document in users collection. Initialize alias only on first login (registration)
       const details = getAdditionalUserInfo(userCredential);
-      if (details && details.isNewUser) {
-        // update user display name in users collection
-        const userDoc = doc(db, "users", userCredential.user.uid);
-        await updateDoc(userDoc, {
-          displayName: userCredential.user.displayName,
-        });
+      const isNewUser = details?.isNewUser;
+
+      const userDoc = doc(db, "users", userCredential.user.uid);
+      const userData: Record<string, any> = {
+        email: userCredential.user.email || "",
+      };
+
+      if (isNewUser) {
+        userData.alias =
+          userCredential.user.displayName ||
+          userCredential.user.email?.split("@")[0] ||
+          "User";
       }
+
+      await setDoc(userDoc, userData, { merge: true });
 
       addMessageBars([
         {

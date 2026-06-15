@@ -1,10 +1,11 @@
 import { db, firebaseFunctions } from "@/firebase";
 import { useGetCurrentUser } from "@/pages/auth/AuthenticationAtoms";
 import { useAddMessageBars } from "@/utils/MessageBarsAtom";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   addDoc,
   collection,
+  deleteDoc,
   doc,
   getDoc,
   serverTimestamp,
@@ -25,7 +26,7 @@ export const useGetFriendRequests = () => {
   const { data, isLoading, error } = useQuery({
     queryKey: ["getFriendRequests", FRIEND_REQUESTS_COLLECTION, currentUserId],
     queryFn: async () => {
-      if (!currentUserId) return [];
+      if (!currentUserId) return { sentRequests: [], receivedRequests: [] };
       const callable = httpsCallable(firebaseFunctions, "getFriendRequests");
       const result = await callable();
       // console.log(result);
@@ -45,12 +46,18 @@ export const useGetFriendRequests = () => {
  */
 export const useCreateFriendRequest = () => {
   const addMessageBars = useAddMessageBars();
+  const queryClient = useQueryClient();
+  const currentUserId = useGetCurrentUser()?.uid;
+
   const { mutate, isPending, isSuccess, error } = useMutation({
     mutationKey: ["createFriendRequest"],
-    mutationFn: async (friendRequest: IFriendRequest) => {
+    mutationFn: async (friendRequest: Omit<IFriendRequest, "id">) => {
       await addDoc(collection(db, FRIEND_REQUESTS_COLLECTION), friendRequest);
     },
     onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["getFriendRequests", FRIEND_REQUESTS_COLLECTION, currentUserId],
+      });
       addMessageBars([
         {
           id: new Date().toISOString(),
@@ -81,6 +88,9 @@ export const useCreateFriendRequest = () => {
  */
 export const useAcceptFriendRequest = () => {
   const addMessageBars = useAddMessageBars();
+  const queryClient = useQueryClient();
+  const currentUserId = useGetCurrentUser()?.uid;
+
   const { mutate, isPending, isSuccess, error } = useMutation({
     mutationKey: ["acceptFriendRequest"],
     mutationFn: async (friendRequestId: string) => {
@@ -99,6 +109,12 @@ export const useAcceptFriendRequest = () => {
       });
     },
     onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["getFriendRequests", FRIEND_REQUESTS_COLLECTION, currentUserId],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["friends"],
+      });
       addMessageBars([
         {
           id: new Date().toISOString(),
@@ -113,6 +129,52 @@ export const useAcceptFriendRequest = () => {
         {
           id: new Date().toISOString(),
           message: "Error accepting friend request: " + error.message,
+          type: "error",
+          autoDismiss: true,
+        },
+      ]);
+    },
+  });
+
+  return { mutate, isPending, isSuccess, error };
+};
+
+/**
+ * Delete friend request (Cancel/Decline)
+ */
+export const useDeleteFriendRequest = () => {
+  const addMessageBars = useAddMessageBars();
+  const queryClient = useQueryClient();
+  const currentUserId = useGetCurrentUser()?.uid;
+
+  const { mutate, isPending, isSuccess, error } = useMutation({
+    mutationKey: ["deleteFriendRequest"],
+    mutationFn: async (friendRequestId: string) => {
+      const friendRequestRef = doc(
+        db,
+        FRIEND_REQUESTS_COLLECTION,
+        friendRequestId,
+      );
+      await deleteDoc(friendRequestRef);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["getFriendRequests", FRIEND_REQUESTS_COLLECTION, currentUserId],
+      });
+      addMessageBars([
+        {
+          id: new Date().toISOString(),
+          message: "Friend request removed",
+          type: "success",
+          autoDismiss: true,
+        },
+      ]);
+    },
+    onError: (error) => {
+      addMessageBars([
+        {
+          id: new Date().toISOString(),
+          message: "Error removing friend request: " + error.message,
           type: "error",
           autoDismiss: true,
         },

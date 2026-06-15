@@ -8,6 +8,11 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import { Dialog } from "@/components/Dialog";
 import React from "react";
+import { useCreateFriendRequest, useGetFriendRequests } from "./hooks/friendRequestHooks";
+import { useGetFriends } from "./hooks/friendHooks";
+import { useGetCurrentUser } from "@/pages/auth/AuthenticationAtoms";
+import { useGetUserInfo } from "@/utils/UserHooks";
+import { serverTimestamp } from "firebase/firestore";
 
 export const FriendSearch = () => {
   const [open, setOpen] = useState(false);
@@ -16,7 +21,7 @@ export const FriendSearch = () => {
       <FriendSearchDialog open={open} onClose={() => setOpen(false)} />
       <PrimaryButton onClick={() => setOpen(true)}>
         <FontAwesomeIcon icon={faSearch} />
-        Add new friend
+        <span className="ms-2">Add new friend</span>
       </PrimaryButton>
     </div>
   );
@@ -33,6 +38,33 @@ const FriendSearchDialog = ({
   const [searchResults, setSearchResults] = useState<IFriend[]>([]);
   const [loading, setLoading] = useState(false);
   const addMessageBars = useAddMessageBars();
+
+  const currentUser = useGetCurrentUser();
+  const currentUserId = currentUser?.uid || "";
+  const { data: currentUserInfo } = useGetUserInfo(currentUserId);
+  const { mutate: createFriendRequest, isPending: isSending } =
+    useCreateFriendRequest();
+  const { data: friends } = useGetFriends();
+  const { data: friendRequests } = useGetFriendRequests();
+
+  const getFriendStatus = (userId: string) => {
+    if (userId === currentUserId) return "me";
+
+    const isFriend = friends?.some((f) => f.id === userId);
+    if (isFriend) return "friend";
+
+    const hasSentRequest = friendRequests?.sentRequests?.some(
+      (req) => req.receiverId === userId && req.status === "pending",
+    );
+    if (hasSentRequest) return "sent";
+
+    const hasReceivedRequest = friendRequests?.receivedRequests?.some(
+      (req) => req.senderId === userId && req.status === "pending",
+    );
+    if (hasReceivedRequest) return "received";
+
+    return "none";
+  };
 
   useEffect(() => {
     if (!open) {
@@ -68,17 +100,33 @@ const FriendSearchDialog = ({
     }
   };
 
-  const handleSendRequest = async (_userIdToRequest: string) => {
-    // Placeholder for sending friend request logic
-    console.log("Sending friend request to:", _userIdToRequest);
-    addMessageBars([
-      {
-        id: Date.now().toString(),
-        message: "Friend request functionality is being implemented.",
-        type: "success",
-        autoDismiss: true,
-      },
-    ]);
+  const handleSendRequest = async (targetUser: IFriend) => {
+    if (!currentUser || !currentUserInfo) {
+      addMessageBars([
+        {
+          id: Date.now().toString(),
+          message: "Unable to send request: profile still loading.",
+          type: "error",
+          autoDismiss: true,
+        },
+      ]);
+      return;
+    }
+
+    createFriendRequest({
+      type: "sent",
+      senderId: currentUser.uid,
+      senderAlias:
+        currentUserInfo.alias || currentUser.displayName || "Unknown",
+      senderColor: currentUserInfo.color || "#3b82f6",
+      receiverId: targetUser.id,
+      receiverAlias: targetUser.alias || "Unknown",
+      receiverColor: targetUser.color || "#10b981",
+      status: "pending",
+      addedAt: serverTimestamp() as any,
+      updatedAt: serverTimestamp() as any,
+    });
+    onClose();
   };
 
   return (
@@ -89,13 +137,14 @@ const FriendSearchDialog = ({
       title="Add new friend"
     >
       <form onSubmit={handleSearch}>
-        <div className="labeled-input">
+        <div className="labeled-input flex items-center">
           <input
             type="text"
             id="userInput"
             value={userInput}
             onChange={(e) => setUserInput(e.target.value)}
             placeholder=" "
+            className="flex-grow"
           />
           <label htmlFor="userInput">Search for a friend</label>
           <PrimaryButton type="submit" disabled={loading} className="ml-2">
@@ -125,12 +174,46 @@ const FriendSearchDialog = ({
                     </div>
                   </div>
                 </div>
-                <PrimaryButton
-                  onClick={() => handleSendRequest(user.id)}
-                  className="text-sm px-3 py-1"
-                >
-                  Add
-                </PrimaryButton>
+                {(() => {
+                  const status = getFriendStatus(user.id);
+                  if (status === "me") {
+                    return (
+                      <span className="text-sm text-gray-500 font-medium px-3 py-1">
+                        You
+                      </span>
+                    );
+                  }
+                  if (status === "friend") {
+                    return (
+                      <span className="text-sm text-green-600 dark:text-green-400 font-semibold px-3 py-1">
+                        Friend
+                      </span>
+                    );
+                  }
+                  if (status === "sent") {
+                    return (
+                      <span className="text-sm text-gray-500 italic px-3 py-1">
+                        Pending request
+                      </span>
+                    );
+                  }
+                  if (status === "received") {
+                    return (
+                      <span className="text-sm text-blue-600 dark:text-blue-400 font-medium px-3 py-1">
+                        Requested you
+                      </span>
+                    );
+                  }
+                  return (
+                    <PrimaryButton
+                      onClick={() => handleSendRequest(user)}
+                      disabled={isSending}
+                      className="text-sm px-3 py-1"
+                    >
+                      {isSending ? "Adding..." : "Add"}
+                    </PrimaryButton>
+                  );
+                })()}
               </li>
             ))}
           </ul>
@@ -138,8 +221,7 @@ const FriendSearchDialog = ({
           <p className="text-gray-500 text-center py-4">No users found.</p>
         ) : (
           <p className="text-gray-500 text-sm mt-2">
-            Search for a friend by their name. Partial prefix matches work
-            (e.g., search "ray" for "Rayhong").
+            Search for a friend by their exact email address or full alias name (case-insensitive).
           </p>
         )}
       </div>

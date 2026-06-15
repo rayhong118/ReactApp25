@@ -37,4 +37,6 @@ export interface IUser {
   friendIds?: string[];
   searchAlias?: string;
   notifications?: any[];
+  email?: string;
+  searchEmail?: string;
 }

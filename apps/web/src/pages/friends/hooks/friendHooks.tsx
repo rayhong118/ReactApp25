@@ -1,7 +1,8 @@
 import { useGetCurrentUser } from "@/pages/auth/AuthenticationAtoms";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { httpsCallable } from "firebase/functions";
 import { firebaseFunctions } from "@/firebase";
+import { useAddMessageBars } from "@/utils/MessageBarsAtom";
 // const FRIENDS_COLLECTION: string = "friends";
 
 import type { IFriend } from "../Friend.types";
@@ -30,4 +31,46 @@ export const useGetFriends = () => {
   });
 
   return { data, isLoading, error };
+};
+
+/**
+ * Delete / Remove a friend relationship
+ */
+export const useDeleteFriend = () => {
+  const addMessageBars = useAddMessageBars();
+  const queryClient = useQueryClient();
+
+  const { mutate, isPending } = useMutation({
+    mutationKey: ["deleteFriend"],
+    mutationFn: async (friendId: string) => {
+      const deleteFriendCallable = httpsCallable(
+        firebaseFunctions,
+        "deleteFriendCallable",
+      );
+      await deleteFriendCallable({ friendId });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["friends"] });
+      addMessageBars([
+        {
+          id: new Date().toISOString(),
+          message: "Friend removed successfully",
+          type: "success",
+          autoDismiss: true,
+        },
+      ]);
+    },
+    onError: (error) => {
+      addMessageBars([
+        {
+          id: new Date().toISOString(),
+          message: "Error removing friend: " + error.message,
+          type: "error",
+          autoDismiss: true,
+        },
+      ]);
+    },
+  });
+
+  return { mutate, isPending };
 };

@@ -2,7 +2,7 @@ import { onDocumentWritten } from "firebase-functions/v2/firestore";
 
 /**
  * Trigger to maintain a normalized search field in user documents.
- * This field is used for prefix search in Firestore.
+ * This field is used for prefix/exact search in Firestore.
  */
 export const handleUserSearchFieldUpdate = onDocumentWritten(
   "users/{userId}",
@@ -13,25 +13,31 @@ export const handleUserSearchFieldUpdate = onDocumentWritten(
     if (!afterData) return; // Document deleted
 
     const alias = afterData.alias || "";
-    const searchAlias = alias.toLowerCase();
+    const searchAlias = alias.toLowerCase().trim();
 
-    // Avoid infinite loop if the field is already correct
+    const email = afterData.email || "";
+    const searchEmail = email.toLowerCase().trim();
+
+    // Avoid infinite loop if the fields are already correct
     if (
       beforeData?.searchAlias === searchAlias &&
-      afterData.searchAlias === searchAlias
+      afterData.searchAlias === searchAlias &&
+      beforeData?.searchEmail === searchEmail &&
+      afterData.searchEmail === searchEmail
     ) {
       return;
     }
 
-    // Update the document with the normalized search field
+    // Update the document with the normalized search fields
     try {
       await event.data?.after.ref.update({
         searchAlias: searchAlias,
+        searchEmail: searchEmail,
       });
-      console.log(`Updated searchAlias for user ${event.params.userId}`);
+      console.log(`Updated searchAlias/searchEmail for user ${event.params.userId}`);
     } catch (error) {
       console.error(
-        `Error updating searchAlias for user ${event.params.userId}:`,
+        `Error updating searchAlias/searchEmail for user ${event.params.userId}:`,
         error,
       );
     }

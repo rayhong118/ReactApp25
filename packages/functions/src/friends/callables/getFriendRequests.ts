@@ -22,7 +22,15 @@ export const getFriendRequests = onCall(async (request) => {
   );
   const senderSnapshot = await senderQuery.get();
   const receiverSnapshot = await receiverQuery.get();
-  const sentRequests = senderSnapshot.docs.map((doc) => doc.data());
-  const receivedRequests = receiverSnapshot.docs.map((doc) => doc.data());
+  const sentRequests = senderSnapshot.docs.map((doc) => ({
+    id: doc.id,
+    type: "sent",
+    ...doc.data(),
+  }));
+  const receivedRequests = receiverSnapshot.docs.map((doc) => ({
+    id: doc.id,
+    type: "received",
+    ...doc.data(),
+  }));
   return { sentRequests, receivedRequests };
 });
