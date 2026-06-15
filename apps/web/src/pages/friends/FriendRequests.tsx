@@ -9,9 +9,11 @@ import {
   useDeleteFriendRequest,
 } from "./hooks/friendRequestHooks";
 import { Loading } from "@/components/Loading";
+import { useTranslation } from "react-i18next";
 
 export const FriendRequests = () => {
   const { data: requestData, isLoading } = useGetFriendRequests();
+  const { t } = useTranslation();
 
   if (isLoading) {
     return <Loading />;
@@ -23,7 +25,7 @@ export const FriendRequests = () => {
   if (received.length === 0 && sent.length === 0) {
     return (
       <div className="my-8 text-center text-gray-500">
-        No pending friend requests.
+        {t("friends.requests.empty")}
       </div>
     );
   }
@@ -33,7 +35,7 @@ export const FriendRequests = () => {
       {received.length > 0 && (
         <div>
           <h2 className="text-lg font-semibold mb-2 text-gray-700 dark:text-gray-300">
-            Received Requests ({received.length})
+            {t("friends.requests.received", { count: received.length })}
           </h2>
           <div className="flex flex-col gap-2">
             {received.map((req) => (
@@ -46,7 +48,7 @@ export const FriendRequests = () => {
       {sent.length > 0 && (
         <div>
           <h2 className="text-lg font-semibold mb-2 text-gray-700 dark:text-gray-300">
-            Sent Requests ({sent.length})
+            {t("friends.requests.sent", { count: sent.length })}
           </h2>
           <div className="flex flex-col gap-2">
             {sent.map((req) => (
@@ -60,6 +62,7 @@ export const FriendRequests = () => {
 };
 
 const FriendRequestCard = ({ request }: { request: IFriendRequest }) => {
+  const { t } = useTranslation();
   const { mutate: acceptRequest, isPending: isAccepting } =
     useAcceptFriendRequest();
   const { mutate: deleteRequest, isPending: isDeleting } =
@@ -92,7 +95,7 @@ const FriendRequestCard = ({ request }: { request: IFriendRequest }) => {
             className="text-red-500 hover:text-red-700 dark:hover:text-red-400"
           >
             <FontAwesomeIcon className="md:me-2" icon={faCancel} />
-            <span className="hidden md:inline">Cancel</span>
+            <span className="hidden md:inline">{t("friends.requests.cancel")}</span>
           </SecondaryButton>
         ) : (
           <>
@@ -101,7 +104,7 @@ const FriendRequestCard = ({ request }: { request: IFriendRequest }) => {
               onClick={() => acceptRequest(request.id)}
             >
               <FontAwesomeIcon className="md:me-2" icon={faCheck} />
-              <span className="hidden md:inline">Accept</span>
+              <span className="hidden md:inline">{t("friends.requests.accept")}</span>
             </PrimaryButton>
             <SecondaryButton
               disabled={isWorking}
@@ -109,7 +112,7 @@ const FriendRequestCard = ({ request }: { request: IFriendRequest }) => {
               className="text-red-500 hover:text-red-700 dark:hover:text-red-400"
             >
               <FontAwesomeIcon className="md:me-2" icon={faCancel} />
-              <span className="hidden md:inline">Decline</span>
+              <span className="hidden md:inline">{t("friends.requests.decline")}</span>
             </SecondaryButton>
           </>
         )}

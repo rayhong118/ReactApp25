@@ -150,6 +150,19 @@
   },
   "friends": {
     "title": "Friends",
+    "tabs": {
+      "friendList": "Friend List",
+      "friendRequests": "Friend Requests",
+      "friendRequestsWithCount": "Friend Requests ({{count}})"
+    },
+    "requests": {
+      "empty": "No pending friend requests.",
+      "received": "Received Requests ({{count}})",
+      "sent": "Sent Requests ({{count}})",
+      "cancel": "Cancel",
+      "accept": "Accept",
+      "decline": "Decline"
+    },
     "list": {
       "empty": "You haven't added any friends yet.",
       "wishlist": "Wishlist",

@@ -1,19 +1,25 @@
 import "./TabList.scss";
 
-interface ITabList {
-  tabs: string[];
-  selectedTab: string;
-  onTabSelect: (tab: string) => void;
+interface ITabList<T extends string = string> {
+  tabs: T[];
+  selectedTab: T;
+  onTabSelect: (tab: T) => void;
+  getLabel?: (tab: T) => string;
 }
 
-const TabList = ({ tabs, selectedTab, onTabSelect }: ITabList) => {
+const TabList = <T extends string>({
+  tabs,
+  selectedTab,
+  onTabSelect,
+  getLabel,
+}: ITabList<T>) => {
   return (
     <div className="tablist">
       {tabs.map((tab) => (
         <Tab
           key={tab}
           isActive={selectedTab === tab}
-          label={tab}
+          label={getLabel ? getLabel(tab) : tab}
           onClick={() => {
             onTabSelect(tab);
           }}

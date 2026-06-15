@@ -147,6 +147,19 @@
   },
   "friends": {
     "title": "朋友",
+    "tabs": {
+      "friendList": "好友列表",
+      "friendRequests": "好友请求",
+      "friendRequestsWithCount": "好友请求 ({{count}})"
+    },
+    "requests": {
+      "empty": "没有待处理的好友请求。",
+      "received": "收到的请求 ({{count}})",
+      "sent": "发送的请求 ({{count}})",
+      "cancel": "取消",
+      "accept": "接受",
+      "decline": "拒绝"
+    },
     "list": {
       "empty": "你还没有添加任何朋友。",
       "wishlist": "心愿单",
