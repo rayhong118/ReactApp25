@@ -61,6 +61,8 @@
   "eat": {
     "title": "吃饭",
     "showFullList": "显示完整列表",
+    "backToList": "返回餐厅列表",
+    "notFound": "未找到该餐厅",
     "filter": {
       "title": "过滤",
       "priceRange": "价格范围",

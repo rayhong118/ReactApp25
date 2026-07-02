@@ -62,6 +62,8 @@
     "title": "Eat",
     "showFullList": "Show full list",
     "_showFullList.comment": "This button is displayed when the user is on a specific restaurant page. Allows the user to see all restaurants.",
+    "backToList": "Back to Restaurants",
+    "notFound": "Restaurant Not Found",
     "filter": {
       "title": "Filter",
       "priceRange": "Price range",

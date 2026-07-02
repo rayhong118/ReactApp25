@@ -17,6 +17,7 @@ const About = lazy(() => import("./pages/about/About"));
 
 const JiZiQi = lazy(() => import("./pages/experiments/JiZiQi"));
 const Eat = lazy(() => import("./pages/eat/Eat"));
+const EatDetail = lazy(() => import("./pages/eat/EatDetail"));
 const StopWatch = lazy(() => import("./pages/experiments/StopWatch"));
 const FileUpload = lazy(() => import("./pages/experiments/FileUpload"));
 const FormValidation = lazy(() => import("./pages/experiments/FormValidation"));
@@ -105,6 +106,10 @@ const App: React.FC = () => {
         <Route
           path="/eat"
           element={withSuspense(withDefaultPagePadding(<Eat />))}
+        />
+        <Route
+          path="/eat/:id"
+          element={withSuspense(withDefaultPagePadding(<EatDetail />))}
         />
         <Route
           path="/drawings"

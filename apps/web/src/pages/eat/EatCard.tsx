@@ -9,6 +9,7 @@ import {
 } from "@fortawesome/free-regular-svg-icons";
 import {
   faAngleDown,
+  faAngleRight,
   faAngleUp,
   faBookOpen,
   faDirections,
@@ -16,6 +17,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { lazy, useState } from "react";
+import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { StarRating } from "../experiments/StarRating";
 import type { IRestaurant } from "./Eat.types";
@@ -67,18 +69,19 @@ export const EatCard = React.memo(
 
     const handleShare = () => {
       const baseURL = window.location.origin;
-      navigator.clipboard.writeText(`${baseURL}/eat?id=${restaurant.id}`);
+      const shareURL = `${baseURL}/eat/${restaurant.id}`;
+      navigator.clipboard.writeText(shareURL);
 
       // if Share API is available (mobile)
       if (navigator.share) {
         navigator.share({
           title: restaurant.name,
           text: "Share this restaurant",
-          url: `${baseURL}/eat?id=${restaurant.id}`,
+          url: shareURL,
         });
       } else {
         // fallback to copy to clipboard
-        navigator.clipboard.writeText(`${baseURL}/eat?id=${restaurant.id}`);
+        navigator.clipboard.writeText(shareURL);
         addMessageBars([
           {
             id: "share-success",
@@ -109,11 +112,26 @@ export const EatCard = React.memo(
         </Dialog>
         <div className="eat-card border border-gray-300 p-4 rounded-md">
           <h1 className="text-xl font-bold">
-            {restaurant.displayName || restaurant.name}
+            <Link
+              to={`/eat/${restaurant.id}`}
+              className={
+                "group inline-flex items-center gap-1.5 hover:text-brand-primary " +
+                "hover:underline transition-colors text-foreground"
+              }
+            >
+              {restaurant.displayName || restaurant.name}
+              <FontAwesomeIcon
+                icon={faAngleRight}
+                className={
+                  "text-xs text-gray-400 group-hover:text-brand-primary " +
+                  "group-hover:translate-x-0.5 transition-all duration-200"
+                }
+              />
+            </Link>
           </h1>
 
           {restaurant.displayName && (
-            <h2 className="text-lg font-bold">{restaurant.name}</h2>
+            <h2 className="text-lg font-bold text-gray-500">{restaurant.name}</h2>
           )}
           <div>{restaurant.description}</div>
 
@@ -214,7 +232,10 @@ export const EatCard = React.memo(
           </div>
 
           <div
-            className={"eat-note-container " + (isNotesExpanded ? "open" : "")}
+            className={
+              "eat-note-container " +
+              (isNotesExpanded ? "open" : "")
+            }
           >
             {wasNotesInitialized &&
               withComponentSuspense(<EatNotesPanel restaurant={restaurant} />)}

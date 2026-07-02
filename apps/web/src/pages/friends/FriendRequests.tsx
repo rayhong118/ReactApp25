@@ -71,7 +71,12 @@ const FriendRequestCard = ({ request }: { request: IFriendRequest }) => {
   const isWorking = isAccepting || isDeleting;
 
   return (
-    <div className="flex w-full max-w-md items-center justify-between gap-2 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+    <div
+      className={
+        "flex w-full max-w-md items-center justify-between gap-2 p-2 " +
+        "rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+      }
+    >
       <FriendCard
         friend={
           request.type === "sent"

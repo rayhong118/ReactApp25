@@ -645,3 +645,27 @@ export const useLocationTagAutoSelector = (
     inProgress: isApplying || isFetchingLocation || isFetchingNearby,
   };
 };
+
+/**
+ * This hook handles fetching a single restaurant by its ID from Firestore.
+ * @param id - The ID of the restaurant.
+ * @returns data: The restaurant object or undefined.
+ * @returns isLoading: boolean.
+ * @returns error: error object if any.
+ */
+export const useGetRestaurant = (id: string | undefined) => {
+  return useQuery({
+    queryKey: ["restaurant", id],
+    queryFn: async () => {
+      if (!id) return null;
+      const docRef = doc(db, "restaurants", id);
+      const docSnap = await getDoc(docRef);
+      if (!docSnap.exists()) {
+        throw new Error("Restaurant not found");
+      }
+      return { id: docSnap.id, ...docSnap.data() } as IRestaurant;
+    },
+    enabled: !!id,
+    staleTime: Infinity,
+  });
+};

@@ -21,7 +21,6 @@ export const EatList = () => {
     hasNextPage,
     fetchNextPage,
     isFetchingNextPage,
-    eatQuery,
     isTestMode,
   } = useRestaurantList();
 
@@ -34,14 +33,12 @@ export const EatList = () => {
 
   return (
     <div className="flex flex-col gap-5 w-full">
-      {!eatQuery.id && (
-        <PrimaryButton disabled={!User} onClick={() => setIsDialogOpen(true)}>
-          <FontAwesomeIcon icon={faPlus} className="mr-2" />
-          {t("eat.list.addRestaurant")}
-        </PrimaryButton>
-      )}
+      <PrimaryButton disabled={!User} onClick={() => setIsDialogOpen(true)}>
+        <FontAwesomeIcon icon={faPlus} className="mr-2" />
+        {t("eat.list.addRestaurant")}
+      </PrimaryButton>
 
-      {!eatQuery.id && <EatSort />}
+      <EatSort />
 
       {allRestaurants?.map((restaurant: IRestaurant) => (
         <EatCard key={restaurant.id} restaurant={restaurant} />
