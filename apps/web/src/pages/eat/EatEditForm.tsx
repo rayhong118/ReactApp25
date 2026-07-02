@@ -16,6 +16,7 @@ import {
   useEditRestaurant,
 } from "./hooks/hooks";
 import { useTranslation } from "react-i18next";
+import { useSearchParams } from "react-router-dom";
 
 interface IEatEditFormProps {
   restaurant?: IRestaurant;
@@ -29,6 +30,7 @@ export const EatEditForm = (props: IEatEditFormProps) => {
   );
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const placeAutocompleteRef = useRef<HTMLInputElement | null>(null);
+  const [, setSearchParams] = useSearchParams();
   const {
     mutateAsync: addRestaurantMutate,
     isPending: addRestaurantIsPending,
@@ -128,7 +130,10 @@ export const EatEditForm = (props: IEatEditFormProps) => {
           await editRestaurantMutate(eatData);
           closeDialog();
         } else {
-          await addRestaurantMutate(eatData);
+          const newId = await addRestaurantMutate(eatData);
+          if (newId) {
+            setSearchParams({ id: newId });
+          }
           closeDialog();
         }
       }

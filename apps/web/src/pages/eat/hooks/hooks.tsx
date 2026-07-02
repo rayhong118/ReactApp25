@@ -168,6 +168,7 @@ export const useAddRestaurant = () => {
       const newRestaurantId = newRestaurantRef.id;
       restaurant.id = newRestaurantId;
       await setDoc(newRestaurantRef, restaurant);
+      return newRestaurantId;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["restaurants"] });
