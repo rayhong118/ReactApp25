@@ -6,81 +6,105 @@ export const EatRatingHistogram = ({
 }: {
   ratings: Partial<IStarRating>;
 }) => {
-  // convert ratings to complete ratings
+  // Convert ratings to complete star distribution array
   const completeRatings: { stars: number; count: number }[] = [
     5, 4, 3, 2, 1,
-  ].map((star) => {
-    return {
-      stars: star,
-      count: ratings[star as keyof IStarRating] || 0,
-    };
-  });
+  ].map((star) => ({
+    stars: star,
+    count: ratings[star as keyof IStarRating] || 0,
+  }));
 
-  const innerWidth = 320;
-  const innerHeight = 100;
-  const margin = { top: 0, right: 20, bottom: 0, left: 40 };
-  const xScale = d3
-    .scaleLinear()
-    .domain([0, d3.max(completeRatings, (d) => d.count) || 10])
-    .range([0, innerWidth]);
+  // Coordinate space layout definitions
+  const margin = { top: 4, right: 48, bottom: 4, left: 42 };
+  const svgWidth = 380;
+  const svgHeight = 120;
+  const innerWidth = svgWidth - margin.left - margin.right;
+  const innerHeight = svgHeight - margin.top - margin.bottom;
 
-  // 3. Y Scale: Band for the star categories
+  const maxCount = d3.max(completeRatings, (d) => d.count) || 1;
+
+  // Scales
+  const xScale = d3.scaleLinear().domain([0, maxCount]).range([0, innerWidth]);
+
   const yScale = d3
     .scaleBand()
     .domain(completeRatings.map((d) => d.stars.toString()))
     .range([0, innerHeight])
-    .padding(0.3);
+    .padding(0.28);
 
   return (
-    <svg
-      width={innerWidth + margin.left + margin.right}
-      height={innerHeight + margin.top + margin.bottom}
-      viewBox={`0 0 ${innerWidth + margin.left + margin.right} ${
-        innerHeight + margin.top + margin.bottom
-      }`}
-      style={{ width: "100%", height: "100px" }}
-    >
-      <g transform={`translate(${margin.left},${margin.top})`}>
-        {completeRatings.map((d) => (
-          <g key={d.stars}>
-            {/* The Bar */}
+    <div className="w-full max-w-md mx-auto">
+      <svg
+        viewBox={`0 0 ${svgWidth} ${svgHeight}`}
+        preserveAspectRatio="xMidYMid meet"
+        className="w-full h-auto overflow-visible select-none"
+        role="img"
+        aria-label="Rating distribution chart"
+      >
+        <g transform={`translate(${margin.left},${margin.top})`}>
+          {/* Background tracks */}
+          {completeRatings.map((d) => (
             <rect
+              key={`bg-${d.stars}`}
               x={0}
               y={yScale(d.stars.toString())}
-              width={xScale(d.count)}
+              width={innerWidth}
               height={yScale.bandwidth()}
-              fill="var(--color-brand-primary)"
-              rx={8}
-              ry={8}
+              className="fill-gray-100 dark:fill-gray-800"
+              rx={4}
             />
-            {/* The Count Label (at the end of the bar) */}
+          ))}
+
+          {/* Active Rating Bars */}
+          {completeRatings.map((d) => {
+            const barWidth = xScale(d.count);
+            const yPos = yScale(d.stars.toString()) || 0;
+            return (
+              <g key={d.stars} className="group">
+                <rect
+                  x={0}
+                  y={yPos}
+                  width={barWidth}
+                  height={yScale.bandwidth()}
+                  fill="var(--color-brand-primary, #3b82f6)"
+                  rx={4}
+                  className="transition-all duration-300 ease-out"
+                />
+
+                {/* Count Label (Right of bar) */}
+                <text
+                  x={barWidth + 6}
+                  y={yPos + yScale.bandwidth() / 2}
+                  fontSize="12"
+                  fontWeight="600"
+                  fill="currentColor"
+                  className="fill-gray-700 dark:fill-gray-300"
+                  dominantBaseline="central"
+                >
+                  {d.count}
+                </text>
+              </g>
+            );
+          })}
+
+          {/* Y-Axis Star Labels (Left of bar) */}
+          {completeRatings.map((d) => (
             <text
-              x={xScale(d.count) + 5}
+              key={`label-${d.stars}`}
+              x={-8}
               y={(yScale(d.stars.toString()) || 0) + yScale.bandwidth() / 2}
-              fontSize="16"
-              fill="var(--color-foreground)"
+              textAnchor="end"
+              fontSize="13"
+              fontWeight="500"
+              fill="currentColor"
+              className="fill-gray-600 dark:fill-gray-400"
               dominantBaseline="central"
             >
-              {d.count}
+              {d.stars} ★
             </text>
-          </g>
-        ))}
-
-        {/* Y-Axis Labels (Stars) */}
-        {completeRatings.map((d) => (
-          <text
-            key={`label-${d.stars}`}
-            x={-10}
-            y={(yScale(d.stars.toString()) || 0) + yScale.bandwidth() / 2}
-            textAnchor="end"
-            fontSize="16"
-            fill="var(--color-foreground)"
-            dominantBaseline="central"
-          >
-            {d.stars} ★
-          </text>
-        ))}
-      </g>
-    </svg>
+          ))}
+        </g>
+      </svg>
+    </div>
   );
 };
