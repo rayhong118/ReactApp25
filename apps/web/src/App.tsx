@@ -25,6 +25,7 @@ const ImageCarousel = lazy(
   () => import("./pages/experiments/imageCarousel/ImageCarousel"),
 );
 const MoveLists = lazy(() => import("./pages/experiments/MoveLists"));
+const AutoComplete = lazy(() => import("./pages/experiments/Autocomplete"));
 const AuthPage = lazy(() => import("./pages/auth/Auth"));
 const Settings = lazy(() => import("./pages/auth/Settings"));
 const NotFound = lazy(() => import("./pages/notFound/NotFound"));
@@ -102,6 +103,10 @@ const App: React.FC = () => {
         <Route
           path="/experiments/fetchApiLab"
           element={withSuspense(withDefaultPagePadding(<FetchAPILab />))}
+        />
+        <Route
+          path="/experiments/autocomplete"
+          element={withSuspense(withDefaultPagePadding(<AutoComplete />))}
         />
         <Route
           path="/eat"
