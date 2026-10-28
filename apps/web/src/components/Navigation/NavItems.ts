@@ -22,6 +22,7 @@ export const mainNavItems: NavItemProps[] = [
 ];
 
 export const experimentsNavItems: NavItemProps[] = [
+  { label: "navbar.lab.localLlm", to: "/experiments/localLlm" },
   { label: "navbar.lab.formValidation", to: "/experiments/formValidation" },
   { label: "navbar.lab.moveLists", to: "/experiments/moveLists" },
   { label: "navbar.lab.stopWatch", to: "/experiments/stopWatch" },
