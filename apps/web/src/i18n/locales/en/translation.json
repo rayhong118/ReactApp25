@@ -14,7 +14,8 @@
       "imageCarousels": "Image Carousels",
       "fileUpload": "File Upload",
       "ticTacToe": "Tic Tac Toe",
-      "calendarEventGenerator": "Calendar Event Generator"
+      "calendarEventGenerator": "Calendar Event Generator",
+      "localLlm": "LocalLLM Tasks"
     },
     "auth": {
       "login": "Log in / Sign Up",
@@ -137,7 +138,6 @@
       "phoneNumberComment": "Populated by Google Maps",
       "cityAndState": "City and State",
       "cityAndStateComment": "Populated by Google Maps",
-
       "delete": "Delete",
       "deleteConfirmationTitle": "Delete Restaurant",
       "deleteConfirmation": "Are you sure you want to delete this restaurant?",
@@ -211,5 +211,15 @@
     },
     "settings": "Settings",
     "about": "About"
+  },
+  "localLlm": {
+    "readOnly": "Read-Only View",
+    "subtitle": "Synced from Turso Cloud DB — scheduled tasks, execution history, and semantic contexts",
+    "refresh": "Refresh Status",
+    "refreshing": "Refreshing...",
+    "tabs": {
+      "dashboard": "Task Dashboard",
+      "contexts": "Reference Contexts"
+    }
   }
 }

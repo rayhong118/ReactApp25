@@ -40,6 +40,9 @@ const CalendarEventGenerator = lazy(
   () => import("./pages/experiments/CalendarEventGenerator"),
 );
 const FetchAPILab = lazy(() => import("./pages/experiments/FetchAPI"));
+const LocalLlmPage = lazy(
+  () => import("./pages/experiments/localLlm/LocalLlmPage"),
+);
 
 const WithAuthRequired = lazy(() => import("./components/WithAuthRequired"));
 
@@ -107,6 +110,10 @@ const App: React.FC = () => {
         <Route
           path="/experiments/autocomplete"
           element={withSuspense(withDefaultPagePadding(<AutoComplete />))}
+        />
+        <Route
+          path="/experiments/localLlm"
+          element={withSuspense(withDefaultPagePadding(<LocalLlmPage />))}
         />
         <Route
           path="/eat"

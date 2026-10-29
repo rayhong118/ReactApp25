@@ -14,7 +14,8 @@
       "imageCarousels": "图片轮播",
       "fileUpload": "文件上传",
       "ticTacToe": "井字棋",
-      "calendarEventGenerator": "日历事件生成器"
+      "calendarEventGenerator": "日历事件生成器",
+      "localLlm": "LocalLLM 任务"
     },
     "auth": {
       "login": "注册/登录",
@@ -134,7 +135,6 @@
       "phoneNumberComment": "使用 Google Maps 数据",
       "cityAndState": "城市和州",
       "cityAndStateComment": "使用 Google Maps 数据",
-
       "delete": "删除",
       "deleteConfirmationTitle": "删除餐厅",
       "deleteConfirmation": "确定要删除这个餐厅吗？",
@@ -208,5 +208,15 @@
     },
     "settings": "设置",
     "about": "关于"
+  },
+  "localLlm": {
+    "readOnly": "只读模式",
+    "subtitle": "从 Turso 云数据库同步 — 定时任务、执行历史和语义上下文",
+    "refresh": "刷新状态",
+    "refreshing": "刷新中...",
+    "tabs": {
+      "dashboard": "任务看板",
+      "contexts": "参考上下文"
+    }
   }
 }

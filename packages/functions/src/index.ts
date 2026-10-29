@@ -15,3 +15,4 @@ onInit(() => {
 export { verifyRecaptcha } from "./reCaptcha/reCaptcha";
 export * from "./eat";
 export * from "./friends";
+export * from "./localLlm";
