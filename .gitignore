@@ -23,8 +23,10 @@ dist-ssr
 *.sln
 *.sw?
 
-#API keys
-apikeys.ts
+# Environment files
+.env
+.env.*
+!.env.example
 
 #firebase cache
 .firebase/*
