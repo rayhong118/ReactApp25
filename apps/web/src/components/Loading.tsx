@@ -16,3 +16,5 @@ export const Loading = ({ fullHeight }: { fullHeight?: boolean }) => {
     </div>
   );
 };
+
+export default Loading;

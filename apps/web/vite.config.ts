@@ -13,6 +13,7 @@ export default defineConfig({
     }),
     tailwindcss(),
   ],
+  envPrefix: ["VITE_", "TURSO_"],
   resolve: {
     alias: {
       "@": path.resolve("./src"),

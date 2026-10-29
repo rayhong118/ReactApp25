@@ -1,3 +1,4 @@
+import { tursoAuthToken, tursoDatabaseUrl } from "@/apikeys";
 import { firebaseFunctions } from "@/firebase";
 import type {
   ILocalLlmContext,
@@ -15,6 +16,21 @@ interface TursoCell {
 interface TursoExecResult {
   cols: { name: string }[];
   rows: TursoCell[][];
+}
+
+interface TursoPipelineItem {
+  type: "ok" | "error";
+  error?: { message?: string };
+  response?: { result: TursoExecResult };
+}
+
+interface RawTursoTask
+  extends Omit<
+    ILocalLlmTask,
+    "contexts" | "outputs" | "weekday_only" | "silent_if_no_result"
+  > {
+  weekday_only: number | boolean | null;
+  silent_if_no_result: number | boolean | null;
 }
 
 function parseRows<T>(result: TursoExecResult): T[] {
@@ -37,10 +53,14 @@ function parseRows<T>(result: TursoExecResult): T[] {
 }
 
 async function fetchDirectFromTursoEnv(): Promise<ILocalLlmDashboardData> {
-  const rawUrl = import.meta.env.VITE_TURSO_DATABASE_URL as string | undefined;
-  const token = import.meta.env.VITE_TURSO_AUTH_TOKEN as string | undefined;
+  const rawUrl = (tursoDatabaseUrl ||
+    import.meta.env.TURSO_DATABASE_URL ||
+    import.meta.env.VITE_TURSO_DATABASE_URL) as string | undefined;
+  const token = (tursoAuthToken ||
+    import.meta.env.TURSO_AUTH_TOKEN ||
+    import.meta.env.VITE_TURSO_AUTH_TOKEN) as string | undefined;
   if (!rawUrl || !token) {
-    throw new Error("VITE_TURSO_DATABASE_URL or VITE_TURSO_AUTH_TOKEN not set");
+    throw new Error("TURSO_DATABASE_URL or TURSO_AUTH_TOKEN not set");
   }
 
   const httpUrl = rawUrl
@@ -77,17 +97,6 @@ async function fetchDirectFromTursoEnv(): Promise<ILocalLlmDashboardData> {
   if (!res.ok) {
     throw new Error(`Turso HTTP error ${res.status}`);
   }
-
-interface TursoPipelineItem {
-  type: "ok" | "error";
-  error?: { message?: string };
-  response?: { result: TursoExecResult };
-}
-
-interface RawTursoTask extends Omit<ILocalLlmTask, "contexts" | "outputs"> {
-  weekday_only: number | boolean;
-  silent_if_no_result: number | boolean;
-}
 
   const body = (await res.json()) as { results: TursoPipelineItem[] };
   const results = body.results.slice(0, 4).map((r) => {
@@ -160,20 +169,20 @@ export const useLocalLlmData = () => {
     queryKey: ["localLlmData"],
     queryFn: async () => {
       try {
-        const getLocalLlmDataCallable = httpsCallable<
-          void,
-          ILocalLlmDashboardData
-        >(firebaseFunctions, "getLocalLlmData");
-        const result = await getLocalLlmDataCallable();
-        return result.data;
-      } catch (callableError) {
+        return await fetchDirectFromTursoEnv();
+      } catch (tursoEnvError) {
         try {
-          return await fetchDirectFromTursoEnv();
+          const getLocalLlmDataCallable = httpsCallable<
+            void,
+            ILocalLlmDashboardData
+          >(firebaseFunctions, "getLocalLlmData");
+          const result = await getLocalLlmDataCallable();
+          return result.data;
         } catch {
           try {
             return await fetchFromLocalFastApi();
           } catch {
-            throw callableError;
+            throw tursoEnvError;
           }
         }
       }
