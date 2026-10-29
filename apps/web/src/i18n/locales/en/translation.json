@@ -218,7 +218,8 @@
     "refresh": "Refresh Status",
     "refreshing": "Refreshing...",
     "tabs": {
-      "dashboard": "Task Dashboard",
+      "recurring": "Recurring Tasks",
+      "history": "Task History",
       "contexts": "Reference Contexts"
     }
   }

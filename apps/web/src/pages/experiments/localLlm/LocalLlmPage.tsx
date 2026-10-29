@@ -16,12 +16,12 @@ import { useLocalLlmData } from "./hooks/useLocalLlmData";
 import { LocalLlmContextList } from "./LocalLlmContextList";
 import { LocalLlmTaskList } from "./LocalLlmTaskList";
 
-type LocalLlmTab = "dashboard" | "contexts";
+type LocalLlmTab = "recurring" | "history" | "contexts";
 
 const LocalLlmPage: React.FC = () => {
   const { t } = useTranslation();
   const { data, isLoading, isFetching, error, refetch } = useLocalLlmData();
-  const [activeTab, setActiveTab] = useState<LocalLlmTab>("dashboard");
+  const [activeTab, setActiveTab] = useState<LocalLlmTab>("recurring");
 
   const tasks = useMemo(() => data?.tasks || [], [data?.tasks]);
   const contexts = useMemo(() => data?.contexts || [], [data?.contexts]);
@@ -43,20 +43,26 @@ const LocalLlmPage: React.FC = () => {
           item.status === "NO_RESULT" ||
           item.status === "FAILED"),
     ).length;
+    const historyCount = tasks.filter((item) => item.frequency === "ONCE")
+      .length;
 
     return {
       recurringCount,
       pendingCount,
       completedCount,
+      historyCount,
       contextsCount: contexts.length,
     };
   }, [tasks, contexts]);
 
-  const tabs: LocalLlmTab[] = ["dashboard", "contexts"];
+  const tabs: LocalLlmTab[] = ["recurring", "history", "contexts"];
 
   const getTabLabel = (tab: LocalLlmTab) => {
-    if (tab === "dashboard") {
-      return `${t("localLlm.tabs.dashboard", "Task Dashboard")} (${tasks.length})`;
+    if (tab === "recurring") {
+      return `${t("localLlm.tabs.recurring", "Recurring Tasks")} (${stats.recurringCount})`;
+    }
+    if (tab === "history") {
+      return `${t("localLlm.tabs.history", "Task History")} (${stats.historyCount})`;
     }
     return `${t("localLlm.tabs.contexts", "Reference Contexts")} (${contexts.length})`;
   };
@@ -208,8 +214,10 @@ const LocalLlmPage: React.FC = () => {
                 : "Unable to reach Firebase Function getLocalLlmData or local FastAPI server."}
             </p>
           </div>
-        ) : activeTab === "dashboard" ? (
-          <LocalLlmTaskList tasks={tasks} />
+        ) : activeTab === "recurring" ? (
+          <LocalLlmTaskList tasks={tasks} mode="recurring" />
+        ) : activeTab === "history" ? (
+          <LocalLlmTaskList tasks={tasks} mode="history" />
         ) : (
           <LocalLlmContextList contexts={contexts} tasks={tasks} />
         )}

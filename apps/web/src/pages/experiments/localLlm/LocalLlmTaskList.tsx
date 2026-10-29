@@ -13,15 +13,22 @@ import { LocalLlmTaskItem, toLocalDate } from "./LocalLlmTaskItem";
 
 export interface LocalLlmTaskListProps {
   tasks: ILocalLlmTask[];
+  mode?: "all" | "recurring" | "history";
 }
 
 export const LocalLlmTaskList: React.FC<LocalLlmTaskListProps> = ({
   tasks,
+  mode = "all",
 }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("ALL");
   const itemsPerPage = 20;
+
+  useEffect(() => {
+    setStatusFilter("ALL");
+    setCurrentPage(1);
+  }, [mode]);
 
   const filteredTasks = useMemo(() => {
     return tasks.filter((t) => {
@@ -36,7 +43,10 @@ export const LocalLlmTaskList: React.FC<LocalLlmTaskListProps> = ({
       const matchesStatus =
         statusFilter === "ALL" ||
         t.status === statusFilter ||
-        (statusFilter === "RECURRING" && t.frequency !== "ONCE");
+        (statusFilter === "RECURRING" && t.frequency !== "ONCE") ||
+        (statusFilter === "DAILY" && t.frequency === "DAILY") ||
+        (statusFilter === "WEEKLY" && t.frequency === "WEEKLY") ||
+        (statusFilter === "MONTHLY" && t.frequency === "MONTHLY");
 
       return matchesSearch && matchesStatus;
     });
@@ -135,6 +145,19 @@ export const LocalLlmTaskList: React.FC<LocalLlmTaskListProps> = ({
     "px-3 py-1.5 rounded-md border border-stone-200 dark:border-stone-700 " +
     "bg-surface-card text-foreground disabled:opacity-40 cursor-pointer disabled:cursor-not-allowed";
 
+  const showRecurring = mode === "all" || mode === "recurring";
+  const showHistory = mode === "all" || mode === "history";
+
+  const totalForCurrentMode = useMemo(() => {
+    if (mode === "recurring") {
+      return tasks.filter((t) => t.frequency !== "ONCE").length;
+    }
+    if (mode === "history") {
+      return tasks.filter((t) => t.frequency === "ONCE").length;
+    }
+    return tasks.length;
+  }, [tasks, mode]);
+
   return (
     <div className="flex flex-col gap-6">
       {/* Search & Status Filter Bar */}
@@ -170,7 +193,7 @@ export const LocalLlmTaskList: React.FC<LocalLlmTaskListProps> = ({
             htmlFor="local-llm-status-filter"
             className="text-xs font-semibold text-stone-500 whitespace-nowrap"
           >
-            Status:
+            {mode === "recurring" ? "Frequency:" : "Status:"}
           </label>
           <select
             id="local-llm-status-filter"
@@ -185,20 +208,43 @@ export const LocalLlmTaskList: React.FC<LocalLlmTaskListProps> = ({
               "focus:outline-none focus:border-brand-primary"
             }
           >
-            <option value="ALL">All Tasks ({tasks.length})</option>
-            <option value="RECURRING">Recurring Only</option>
-            <option value="SUCCESS">Success</option>
-            <option value="PARTIAL_SUCCESS">Partial Success</option>
-            <option value="NO_RESULT">No Result</option>
-            <option value="FAILED">Failed</option>
-            <option value="PENDING">Pending / Queued</option>
-            <option value="RUNNING">Running</option>
+            {mode === "recurring" ? (
+              <>
+                <option value="ALL">
+                  All Recurring ({totalForCurrentMode})
+                </option>
+                <option value="DAILY">Daily / Weekdays</option>
+                <option value="WEEKLY">Weekly</option>
+                <option value="MONTHLY">Monthly</option>
+              </>
+            ) : mode === "history" ? (
+              <>
+                <option value="ALL">All Runs ({totalForCurrentMode})</option>
+                <option value="SUCCESS">Success</option>
+                <option value="PARTIAL_SUCCESS">Partial Success</option>
+                <option value="NO_RESULT">No Result</option>
+                <option value="FAILED">Failed</option>
+                <option value="PENDING">Pending / Queued</option>
+                <option value="RUNNING">Running</option>
+              </>
+            ) : (
+              <>
+                <option value="ALL">All Tasks ({totalForCurrentMode})</option>
+                <option value="RECURRING">Recurring Only</option>
+                <option value="SUCCESS">Success</option>
+                <option value="PARTIAL_SUCCESS">Partial Success</option>
+                <option value="NO_RESULT">No Result</option>
+                <option value="FAILED">Failed</option>
+                <option value="PENDING">Pending / Queued</option>
+                <option value="RUNNING">Running</option>
+              </>
+            )}
           </select>
         </div>
       </div>
 
       {/* Recurring Tasks Section */}
-      {recurring.length > 0 && (
+      {showRecurring && (mode === "recurring" || recurring.length > 0) && (
         <section>
           <div className={sectionTitleStyle}>
             <FontAwesomeIcon icon={faRotate} />
@@ -208,40 +254,52 @@ export const LocalLlmTaskList: React.FC<LocalLlmTaskListProps> = ({
             </span>
           </div>
           <div className="flex flex-col gap-3">
-            {recurring.map((t) => {
-              const isChildRunning = tasks.some(
-                (other) =>
-                  other.parent_id === t.id && other.status === "RUNNING",
-              );
-              const isChildPending = tasks.some(
-                (other) =>
-                  other.parent_id === t.id && other.status === "PENDING",
-              );
+            {recurring.length === 0 ? (
+              <div
+                className={
+                  "p-10 text-center text-sm text-stone-400 rounded-xl border " +
+                  "border-dashed border-stone-300 dark:border-stone-700 bg-surface-card"
+                }
+              >
+                No recurring tasks matching current filters.
+              </div>
+            ) : (
+              recurring.map((t) => {
+                const isChildRunning = tasks.some(
+                  (other) =>
+                    other.parent_id === t.id && other.status === "RUNNING",
+                );
+                const isChildPending = tasks.some(
+                  (other) =>
+                    other.parent_id === t.id && other.status === "PENDING",
+                );
 
-              let runStage: "IDLE" | "STARTING" | "QUEUED" | "RUNNING" = "IDLE";
-              if (isChildRunning) {
-                runStage = "RUNNING";
-              } else if (isChildPending) {
-                runStage = "QUEUED";
-              }
+                let runStage: "IDLE" | "STARTING" | "QUEUED" | "RUNNING" =
+                  "IDLE";
+                if (isChildRunning) {
+                  runStage = "RUNNING";
+                } else if (isChildPending) {
+                  runStage = "QUEUED";
+                }
 
-              return (
-                <LocalLlmTaskItem
-                  key={t.id}
-                  task={t}
-                  isRecurringRunning={
-                    runStage === "RUNNING" || runStage === "QUEUED"
-                  }
-                  runStage={runStage}
-                />
-              );
-            })}
+                return (
+                  <LocalLlmTaskItem
+                    key={t.id}
+                    task={t}
+                    isRecurringRunning={
+                      runStage === "RUNNING" || runStage === "QUEUED"
+                    }
+                    runStage={runStage}
+                  />
+                );
+              })
+            )}
           </div>
         </section>
       )}
 
       {/* Pending Queue Section */}
-      {pending.length > 0 && (
+      {showHistory && pending.length > 0 && (
         <section>
           <div className={sectionTitleStyle}>
             <FontAwesomeIcon icon={faListCheck} />
@@ -269,68 +327,70 @@ export const LocalLlmTaskList: React.FC<LocalLlmTaskListProps> = ({
       )}
 
       {/* Completed History Section */}
-      <section>
-        <div className={sectionTitleStyle}>
-          <FontAwesomeIcon icon={faClockRotateLeft} />
-          <span>Completed History</span>
-          <span className="px-2 py-0.5 rounded-md bg-stone-200 dark:bg-stone-800 text-foreground text-[11px]">
-            {history.length}
-          </span>
-        </div>
+      {showHistory && (
+        <section>
+          <div className={sectionTitleStyle}>
+            <FontAwesomeIcon icon={faClockRotateLeft} />
+            <span>Completed History</span>
+            <span className="px-2 py-0.5 rounded-md bg-stone-200 dark:bg-stone-800 text-foreground text-[11px]">
+              {history.length}
+            </span>
+          </div>
 
-        <div className="flex flex-col gap-3">
-          {history.length === 0 ? (
+          <div className="flex flex-col gap-3">
+            {history.length === 0 ? (
+              <div
+                className={
+                  "p-10 text-center text-sm text-stone-400 rounded-xl border " +
+                  "border-dashed border-stone-300 dark:border-stone-700 bg-surface-card"
+                }
+              >
+                No completed task history matching current filters.
+              </div>
+            ) : (
+              paginatedHistory.map((t) => (
+                <LocalLlmTaskItem key={t.id} task={t} runStage="IDLE" />
+              ))
+            )}
+          </div>
+
+          {/* Pagination Controls */}
+          {totalPages > 1 && (
             <div
               className={
-                "p-10 text-center text-sm text-stone-400 rounded-xl border " +
-                "border-dashed border-stone-300 dark:border-stone-700 bg-surface-card"
+                "flex justify-center items-center gap-2 mt-8 pt-4 " +
+                "border-t border-stone-200 dark:border-stone-800"
               }
             >
-              No completed task history matching current filters.
+              <button
+                type="button"
+                onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                disabled={currentPage === 1}
+                className={pageNavButtonStyle}
+                aria-label="Previous page"
+              >
+                <FontAwesomeIcon icon={faChevronLeft} className="text-xs" />
+              </button>
+
+              <div className="flex gap-1.5 items-center">
+                {renderPageNumbers()}
+              </div>
+
+              <button
+                type="button"
+                onClick={() =>
+                  setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+                }
+                disabled={currentPage === totalPages}
+                className={pageNavButtonStyle}
+                aria-label="Next page"
+              >
+                <FontAwesomeIcon icon={faChevronRight} className="text-xs" />
+              </button>
             </div>
-          ) : (
-            paginatedHistory.map((t) => (
-              <LocalLlmTaskItem key={t.id} task={t} runStage="IDLE" />
-            ))
           )}
-        </div>
-
-        {/* Pagination Controls */}
-        {totalPages > 1 && (
-          <div
-            className={
-              "flex justify-center items-center gap-2 mt-8 pt-4 " +
-              "border-t border-stone-200 dark:border-stone-800"
-            }
-          >
-            <button
-              type="button"
-              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-              disabled={currentPage === 1}
-              className={pageNavButtonStyle}
-              aria-label="Previous page"
-            >
-              <FontAwesomeIcon icon={faChevronLeft} className="text-xs" />
-            </button>
-
-            <div className="flex gap-1.5 items-center">
-              {renderPageNumbers()}
-            </div>
-
-            <button
-              type="button"
-              onClick={() =>
-                setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-              }
-              disabled={currentPage === totalPages}
-              className={pageNavButtonStyle}
-              aria-label="Next page"
-            >
-              <FontAwesomeIcon icon={faChevronRight} className="text-xs" />
-            </button>
-          </div>
-        )}
-      </section>
+        </section>
+      )}
     </div>
   );
 };

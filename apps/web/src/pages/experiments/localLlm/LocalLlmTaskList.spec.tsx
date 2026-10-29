@@ -52,8 +52,8 @@ const sampleTasks: ILocalLlmTask[] = [
 ];
 
 describe("LocalLlmTaskList (Read-Only)", () => {
-  it("renders recurring tasks, completed history, and context badges", () => {
-    render(<LocalLlmTaskList tasks={sampleTasks} />);
+  it("renders recurring tasks only in recurring mode", () => {
+    render(<LocalLlmTaskList tasks={sampleTasks} mode="recurring" />);
 
     expect(
       screen.getByText("Check Safeway digital coupons"),
@@ -63,8 +63,19 @@ describe("LocalLlmTaskList (Read-Only)", () => {
     expect(screen.getByText("Keep 5 runs")).toBeInTheDocument();
     expect(screen.getByText("Safeway watchlist")).toBeInTheDocument();
 
+    expect(
+      screen.queryByText("Run WSDOT traffic check"),
+    ).not.toBeInTheDocument();
+  });
+
+  it("renders completed history only in history mode", () => {
+    render(<LocalLlmTaskList tasks={sampleTasks} mode="history" />);
+
     expect(screen.getByText("Run WSDOT traffic check")).toBeInTheDocument();
     expect(screen.getByText("SUCCESS")).toBeInTheDocument();
+    expect(
+      screen.queryByText("Check Safeway digital coupons"),
+    ).not.toBeInTheDocument();
   });
 
   it("expands and collapses markdown output results and context preview", () => {
@@ -82,4 +93,3 @@ describe("LocalLlmTaskList (Read-Only)", () => {
     expect(screen.getByText("All clear on I-5.")).toBeInTheDocument();
   });
 });
-

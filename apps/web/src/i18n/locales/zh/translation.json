@@ -215,7 +215,8 @@
     "refresh": "刷新状态",
     "refreshing": "刷新中...",
     "tabs": {
-      "dashboard": "任务看板",
+      "recurring": "定时任务",
+      "history": "任务历史",
       "contexts": "参考上下文"
     }
   }
