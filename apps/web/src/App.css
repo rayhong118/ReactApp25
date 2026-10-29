@@ -4,7 +4,9 @@
 @tailwind utilities;
 
 /* Fix hover beavior on touchscreen laptops */
+/* Fix hover beavior on touchscreen laptops */
 @custom-variant hover (&:hover);
+@custom-variant dark (&:where(.dark, .dark *));
 
 ::-webkit-scrollbar {
   width: 4px;

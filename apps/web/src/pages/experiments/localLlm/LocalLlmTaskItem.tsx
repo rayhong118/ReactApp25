@@ -154,94 +154,94 @@ export const LocalLlmTaskItem: React.FC<LocalLlmTaskItemProps> = ({
       return {
         label: task.weekday_only ? "WEEKDAYS" : "DAILY",
         className:
-          "bg-orange-100 text-orange-800 dark:bg-orange-950/60 " +
-          "dark:text-orange-300 border border-orange-300/60 dark:border-orange-800/60",
+          "bg-orange-100 text-orange-900 dark:bg-orange-950/90 " +
+          "dark:text-orange-200 border border-orange-300 dark:border-orange-700",
       };
     }
     if (task.frequency === "WEEKLY") {
       return {
         label: "WEEKLY",
         className:
-          "bg-purple-100 text-purple-800 dark:bg-purple-950/60 " +
-          "dark:text-purple-300 border border-purple-300/60 dark:border-purple-800/60",
+          "bg-purple-100 text-purple-900 dark:bg-purple-950/90 " +
+          "dark:text-purple-200 border border-purple-300 dark:border-purple-700",
       };
     }
     if (task.frequency === "MONTHLY") {
       return {
         label: "MONTHLY",
         className:
-          "bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 " +
-          "dark:text-emerald-300 border border-emerald-300/60 dark:border-emerald-800/60",
+          "bg-emerald-100 text-emerald-900 dark:bg-emerald-950/90 " +
+          "dark:text-emerald-200 border border-emerald-300 dark:border-emerald-700",
       };
     }
     if (task.status === "SUCCESS" || task.status === "COMPLETED") {
       return {
         label: task.status,
         className:
-          "bg-green-100 text-green-800 dark:bg-green-950/60 " +
-          "dark:text-green-300 border border-green-300/60 dark:border-green-800/60",
+          "bg-green-100 text-green-900 dark:bg-green-950/90 " +
+          "dark:text-green-200 border border-green-300 dark:border-green-700",
       };
     }
     if (task.status === "PARTIAL_SUCCESS") {
       return {
         label: "PARTIAL SUCCESS",
         className:
-          "bg-amber-100 text-amber-800 dark:bg-amber-950/60 " +
-          "dark:text-amber-300 border border-amber-300/60 dark:border-amber-800/60",
+          "bg-amber-100 text-amber-900 dark:bg-amber-950/90 " +
+          "dark:text-amber-200 border border-amber-300 dark:border-amber-700",
       };
     }
     if (task.status === "NO_RESULT") {
       return {
         label: "NO RESULT",
         className:
-          "bg-stone-200 text-stone-700 dark:bg-stone-800 " +
-          "dark:text-stone-300 border border-stone-300 dark:border-stone-700",
+          "bg-stone-200 text-stone-800 dark:bg-stone-800 " +
+          "dark:text-stone-100 border border-stone-300 dark:border-stone-600",
       };
     }
     if (task.status === "RUNNING") {
       return {
         label: "RUNNING",
         className:
-          "bg-amber-100 text-amber-800 dark:bg-amber-950/60 " +
-          "dark:text-amber-300 border border-amber-400 animate-pulse",
+          "bg-amber-100 text-amber-900 dark:bg-amber-950/90 " +
+          "dark:text-amber-200 border border-amber-400 animate-pulse",
       };
     }
     if (task.status === "PENDING") {
       return {
         label: runStage === "STARTING" ? "STARTING" : "QUEUED",
         className:
-          "bg-orange-100 text-orange-800 dark:bg-orange-950/60 " +
-          "dark:text-orange-300 border border-orange-300/60",
+          "bg-orange-100 text-orange-900 dark:bg-orange-950/90 " +
+          "dark:text-orange-200 border border-orange-300 dark:border-orange-700",
       };
     }
     if (task.status === "FAILED") {
       return {
         label: "FAILED",
         className:
-          "bg-red-100 text-red-800 dark:bg-red-950/60 " +
-          "dark:text-red-300 border border-red-300/60 dark:border-red-800/60",
+          "bg-red-100 text-red-900 dark:bg-red-950/90 " +
+          "dark:text-red-200 border border-red-300 dark:border-red-700",
       };
     }
     return {
       label: task.status,
       className:
-        "bg-stone-200 text-stone-700 dark:bg-stone-800 " +
-        "dark:text-stone-300 border border-stone-300 dark:border-stone-700",
+        "bg-stone-200 text-stone-800 dark:bg-stone-800 " +
+        "dark:text-stone-100 border border-stone-300 dark:border-stone-600",
     };
   };
 
   const badge = getBadgeConfig();
   const pillStyle =
     "px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-stone-100 " +
-    "dark:bg-stone-800 text-stone-600 dark:text-stone-300 border " +
-    "border-stone-200 dark:border-stone-700 inline-flex items-center gap-1 whitespace-nowrap";
+    "dark:bg-stone-800 text-stone-700 dark:text-stone-200 border " +
+    "border-stone-300 dark:border-stone-600 inline-flex items-center gap-1 whitespace-nowrap";
 
   return (
     <div
       className={`rounded-xl bg-surface-card p-5 shadow-sm transition-all border ${
         task.status === "RUNNING"
           ? "border-amber-500 ring-1 ring-amber-500/30"
-          : "border-stone-200 dark:border-stone-800 hover:border-brand-primary/50"
+          : "border-stone-200 dark:border-stone-700 hover:border-brand-primary/60"
       }`}
     >
       {/* Top Row: Badges + Prompt + Read-Only Actions */}
@@ -263,8 +263,9 @@ export const LocalLlmTaskItem: React.FC<LocalLlmTaskItemProps> = ({
               <span
                 className={
                   "px-2.5 py-0.5 rounded-full text-[11px] font-semibold " +
-                  "bg-amber-100 text-amber-800 dark:bg-amber-950/60 " +
-                  "dark:text-amber-300 inline-flex items-center gap-1.5"
+                  "bg-amber-100 text-amber-900 dark:bg-amber-950/90 " +
+                  "dark:text-amber-200 border border-amber-300 dark:border-amber-700 " +
+                  "inline-flex items-center gap-1.5"
                 }
               >
                 <FontAwesomeIcon
@@ -298,19 +299,22 @@ export const LocalLlmTaskItem: React.FC<LocalLlmTaskItemProps> = ({
             </span>
           )}
 
-          <span className="text-xs text-stone-400 font-mono">#{task.id}</span>
+          <span className="text-xs text-stone-600 dark:text-stone-300 font-mono font-semibold">
+            #{task.id}
+          </span>
         </div>
 
         <button
           type="button"
           onClick={handleCopyPrompt}
           className={
-            "px-3 py-1 rounded-md text-xs font-medium border transition-colors " +
+            "px-3 py-1 rounded-md text-xs font-semibold border transition-colors " +
             "inline-flex items-center gap-1.5 cursor-pointer " +
             (copied
-              ? "border-green-500 text-green-700 dark:text-green-300 bg-green-50 dark:bg-green-950/40"
-              : "border-stone-200 dark:border-stone-700 text-stone-600 " +
-                "dark:text-stone-300 hover:border-brand-primary hover:text-brand-vibrant")
+              ? "border-green-600 text-green-800 dark:text-green-200 bg-green-100 dark:bg-green-950/80"
+              : "border-stone-300 dark:border-stone-600 bg-stone-50 dark:bg-stone-800 " +
+                "text-stone-800 dark:text-stone-100 hover:border-brand-primary " +
+                "hover:text-brand-vibrant dark:hover:text-brand-primary")
           }
           title="Copy task prompt"
         >
@@ -320,16 +324,16 @@ export const LocalLlmTaskItem: React.FC<LocalLlmTaskItemProps> = ({
       </div>
 
       {/* Prompt Text */}
-      <div className="text-base font-semibold text-foreground mb-3 break-words">
+      <div className="text-base font-bold text-stone-900 dark:text-stone-100 mb-3 break-words leading-snug">
         {task.prompt}
       </div>
 
       {/* Context Badges */}
       <div className="flex flex-wrap items-center gap-1.5 mb-3">
-        <span className="text-xs font-semibold text-stone-500 dark:text-stone-400 inline-flex items-center gap-1.5">
+        <span className="text-xs font-bold text-stone-700 dark:text-stone-300 inline-flex items-center gap-1.5">
           <FontAwesomeIcon
             icon={faBookOpen}
-            className="text-brand-primary text-[11px]"
+            className="text-brand-vibrant dark:text-brand-primary text-[11px]"
           />
           Context:
         </span>
@@ -343,9 +347,10 @@ export const LocalLlmTaskItem: React.FC<LocalLlmTaskItemProps> = ({
                 onClick={() => setSelectedContext(isSelected ? null : ctx)}
                 className={`px-2.5 py-0.5 rounded-full text-xs font-semibold border transition-colors cursor-pointer ${
                   isSelected
-                    ? "bg-brand-primary text-white border-brand-vibrant"
-                    : "bg-brand-light dark:bg-brand-soft text-brand-vibrant " +
-                      "dark:text-brand-primary border-brand-primary/30 hover:border-brand-primary"
+                    ? "bg-brand-vibrant text-white border-brand-vibrant shadow-xs"
+                    : "bg-orange-50 dark:bg-stone-800 text-orange-900 " +
+                      "dark:text-orange-200 border-orange-300 dark:border-orange-700/80 " +
+                      "hover:border-brand-vibrant dark:hover:border-brand-primary"
                 }`}
                 title="Click to preview context content"
               >
@@ -354,26 +359,36 @@ export const LocalLlmTaskItem: React.FC<LocalLlmTaskItemProps> = ({
             );
           })
         ) : (
-          <span className="text-xs italic text-stone-400">None</span>
+          <span className="text-xs italic text-stone-500 dark:text-stone-400">
+            None
+          </span>
         )}
       </div>
 
       {/* Inline Context Content Preview when clicked */}
       {selectedContext && (
-        <div className="mb-3 p-3 rounded-lg bg-stone-50 dark:bg-stone-900/70 border border-brand-primary/30 text-xs">
-          <div className="flex items-center justify-between mb-1">
-            <span className="font-bold text-brand-vibrant dark:text-brand-primary">
+        <div
+          className={
+            "mb-3 p-3.5 rounded-lg bg-stone-100 dark:bg-stone-900 border " +
+            "border-stone-300 dark:border-stone-700 text-xs"
+          }
+        >
+          <div className="flex items-center justify-between mb-1.5">
+            <span className="font-bold text-orange-800 dark:text-orange-300">
               {selectedContext.name}
             </span>
             <button
               type="button"
               onClick={() => setSelectedContext(null)}
-              className="text-stone-400 hover:text-foreground cursor-pointer"
+              className={
+                "font-semibold text-stone-600 dark:text-stone-300 " +
+                "hover:text-stone-900 dark:hover:text-white cursor-pointer"
+              }
             >
               Close
             </button>
           </div>
-          <p className="whitespace-pre-wrap text-stone-700 dark:text-stone-300 m-0">
+          <p className="whitespace-pre-wrap text-stone-900 dark:text-stone-100 m-0 leading-relaxed">
             {selectedContext.content}
           </p>
         </div>
@@ -382,14 +397,14 @@ export const LocalLlmTaskItem: React.FC<LocalLlmTaskItemProps> = ({
       {/* Timestamp & Expand Result Toggle */}
       <div
         className={
-          "flex flex-wrap items-center justify-between gap-2 pt-2 " +
-          "border-t border-stone-100 dark:border-stone-800/80"
+          "flex flex-wrap items-center justify-between gap-2 pt-2.5 " +
+          "border-t border-stone-200 dark:border-stone-700"
         }
       >
-        <span className="text-xs text-stone-500 dark:text-stone-400 inline-flex items-center gap-1.5">
+        <span className="text-xs font-medium text-stone-700 dark:text-stone-300 inline-flex items-center gap-1.5">
           <FontAwesomeIcon
             icon={task.frequency !== "ONCE" ? faClock : faCalendarDays}
-            className="text-[11px]"
+            className="text-[11px] text-stone-500 dark:text-stone-400"
           />
           {task.frequency !== "ONCE"
             ? `${formatSchedule(task)} ${tzAbbreviation}`
@@ -407,7 +422,7 @@ export const LocalLlmTaskItem: React.FC<LocalLlmTaskItemProps> = ({
             type="button"
             onClick={() => setIsExpanded(!isExpanded)}
             className={
-              "text-xs font-semibold text-brand-vibrant dark:text-brand-primary " +
+              "text-xs font-bold text-orange-700 dark:text-orange-300 " +
               "hover:underline inline-flex items-center gap-1 cursor-pointer py-1 px-2 rounded"
             }
           >
@@ -428,45 +443,54 @@ export const LocalLlmTaskItem: React.FC<LocalLlmTaskItemProps> = ({
       {isExpanded && hasOutput && (
         <div
           className={
-            "mt-4 p-4 rounded-lg bg-stone-50 dark:bg-stone-900/80 border " +
-            "border-stone-200 dark:border-stone-800 border-l-4 border-l-brand-primary overflow-x-auto"
+            "mt-4 p-4 rounded-lg bg-stone-100/90 dark:bg-stone-900 border " +
+            "border-stone-300 dark:border-stone-700 border-l-4 border-l-brand-vibrant overflow-x-auto"
           }
           onClick={(e) => e.stopPropagation()}
         >
           {mapAlerts.length > 0 && (
-            <div className="mb-4 p-3 rounded-lg bg-surface-card border border-stone-200 dark:border-stone-700">
+            <div
+              className={
+                "mb-4 p-3.5 rounded-lg bg-white dark:bg-stone-950 border " +
+                "border-stone-300 dark:border-stone-700 shadow-xs"
+              }
+            >
               <div
                 className={
-                  "text-xs font-bold uppercase tracking-wider text-brand-vibrant " +
-                  "mb-2 flex items-center gap-1.5"
+                  "text-xs font-bold uppercase tracking-wider text-orange-700 dark:text-orange-300 " +
+                  "mb-2.5 flex items-center gap-1.5"
                 }
               >
                 <FontAwesomeIcon icon={faRoad} />
                 WSDOT Corridor Alerts ({mapAlerts.length})
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5">
                 {mapAlerts.map((alert, idx) => (
                   <div
                     key={alert.AlertID ?? idx}
-                    className="p-2.5 rounded border border-stone-200 dark:border-stone-800 text-xs"
+                    className={
+                      "p-3 rounded-md bg-stone-50 dark:bg-stone-900 border " +
+                      "border-stone-200 dark:border-stone-700 text-xs"
+                    }
                   >
                     <div className="flex items-center justify-between gap-2 mb-1">
-                      <span className="font-bold text-foreground">
+                      <span className="font-bold text-stone-900 dark:text-stone-100">
                         {alert.Roadway || "Highway"}{" "}
                         {alert.Direction ? `(${alert.Direction})` : ""}
                       </span>
                       {alert.Priority && (
                         <span
                           className={
-                            "px-2 py-0.5 rounded-full text-[10px] font-semibold " +
-                            "bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300"
+                            "px-2 py-0.5 rounded-full text-[10px] font-bold " +
+                            "bg-amber-100 text-amber-900 dark:bg-amber-950 dark:text-amber-200 " +
+                            "border border-amber-300 dark:border-amber-700"
                           }
                         >
                           {alert.Priority}
                         </span>
                       )}
                     </div>
-                    <p className="text-stone-600 dark:text-stone-300 m-0">
+                    <p className="text-stone-800 dark:text-stone-200 m-0 leading-relaxed">
                       {alert.Headline}
                     </p>
                   </div>
@@ -475,7 +499,20 @@ export const LocalLlmTaskItem: React.FC<LocalLlmTaskItemProps> = ({
             </div>
           )}
 
-          <div className="prose prose-sm dark:prose-invert max-w-none text-foreground leading-relaxed break-words">
+          <div
+            className={
+              "text-sm text-stone-900 dark:text-stone-100 leading-relaxed break-words " +
+              "space-y-2 [&_h1]:text-lg [&_h1]:font-bold [&_h1]:text-stone-950 dark:[&_h1]:text-white " +
+              "[&_h2]:text-base [&_h2]:font-bold [&_h2]:text-stone-950 dark:[&_h2]:text-white " +
+              "[&_h3]:text-sm [&_h3]:font-bold [&_h3]:text-stone-950 dark:[&_h3]:text-white " +
+              "[&_strong]:font-bold [&_strong]:text-stone-950 dark:[&_strong]:text-white " +
+              "[&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5 " +
+              "[&_code]:px-1.5 [&_code]:py-0.5 [&_code]:rounded [&_code]:bg-stone-200 " +
+              "dark:[&_code]:bg-stone-800 [&_code]:text-stone-900 dark:[&_code]:text-stone-100 " +
+              "[&_pre]:p-3 [&_pre]:rounded-lg [&_pre]:bg-stone-200 dark:[&_pre]:bg-stone-950 " +
+              "[&_pre]:overflow-x-auto"
+            }
+          >
             <ReactMarkdown
               components={{
                 a: ({ ...props }) => (
@@ -483,7 +520,7 @@ export const LocalLlmTaskItem: React.FC<LocalLlmTaskItemProps> = ({
                     {...props}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-brand-vibrant dark:text-brand-primary underline hover:opacity-80"
+                    className="font-semibold text-orange-700 dark:text-orange-300 underline hover:opacity-80"
                   />
                 ),
               }}
