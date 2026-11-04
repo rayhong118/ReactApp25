@@ -15,6 +15,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import type { ILocalLlmContext, ILocalLlmTask } from "@shared/types";
 import React, { useMemo, useState } from "react";
 import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 interface WsdotMapAlertItem {
   AlertID?: number;
@@ -514,6 +515,7 @@ export const LocalLlmTaskItem: React.FC<LocalLlmTaskItemProps> = ({
             }
           >
             <ReactMarkdown
+              remarkPlugins={[remarkGfm]}
               components={{
                 a: ({ ...props }) => (
                   <a
@@ -521,6 +523,56 @@ export const LocalLlmTaskItem: React.FC<LocalLlmTaskItemProps> = ({
                     target="_blank"
                     rel="noopener noreferrer"
                     className="font-semibold text-orange-700 dark:text-orange-300 underline hover:opacity-80"
+                  />
+                ),
+                table: ({ ...props }) => (
+                  <div className="my-3 overflow-x-auto rounded-lg border border-stone-300 dark:border-stone-700">
+                    <table
+                      {...props}
+                      className="w-full border-collapse text-left text-xs sm:text-sm"
+                    />
+                  </div>
+                ),
+                thead: ({ ...props }) => (
+                  <thead
+                    {...props}
+                    className={
+                      "bg-stone-200/80 dark:bg-stone-800 text-stone-900 dark:text-stone-100 " +
+                      "border-b border-stone-300 dark:border-stone-700"
+                    }
+                  />
+                ),
+                tbody: ({ ...props }) => (
+                  <tbody
+                    {...props}
+                    className={
+                      "divide-y divide-stone-200 dark:divide-stone-800 " +
+                      "bg-white dark:bg-stone-950/60"
+                    }
+                  />
+                ),
+                tr: ({ ...props }) => (
+                  <tr
+                    {...props}
+                    className="hover:bg-stone-100/70 dark:hover:bg-stone-800/50 transition-colors"
+                  />
+                ),
+                th: ({ ...props }) => (
+                  <th
+                    {...props}
+                    className={
+                      "px-3 py-2 font-bold text-stone-950 dark:text-white " +
+                      "border-r last:border-r-0 border-stone-300/70 dark:border-stone-700/70"
+                    }
+                  />
+                ),
+                td: ({ ...props }) => (
+                  <td
+                    {...props}
+                    className={
+                      "px-3 py-2 align-top text-stone-800 dark:text-stone-200 " +
+                      "border-r last:border-r-0 border-stone-200 dark:border-stone-800"
+                    }
                   />
                 ),
               }}

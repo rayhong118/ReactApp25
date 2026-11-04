@@ -43,7 +43,8 @@ const sampleTasks: ILocalLlmTask[] = [
       {
         id: 100,
         task_id: 2,
-        content: "### Traffic Report\nAll clear on I-5.",
+        content:
+          "### Traffic Report\nAll clear on I-5.\n\n| Corridor | Status |\n| --- | --- |\n| I-90 | Open |",
         created_at: "2026-10-28 14:01:00",
       },
     ],
@@ -91,5 +92,8 @@ describe("LocalLlmTaskList (Read-Only)", () => {
     const viewBtn = screen.getByText(/View Result/i);
     fireEvent.click(viewBtn);
     expect(screen.getByText("All clear on I-5.")).toBeInTheDocument();
+    expect(screen.getByRole("table")).toBeInTheDocument();
+    expect(screen.getByText("Corridor")).toBeInTheDocument();
+    expect(screen.getByText("I-90")).toBeInTheDocument();
   });
 });
